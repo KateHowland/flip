@@ -47,10 +47,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			NWN2GameModule module = new NWN2GameModule();
 			module.Name = name;
 			module.LocationType = location;
-			
-			//if (location == ModuleLocationType.File) name += ".mod";
-			//module.FileName = Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,name);
-			//module.FileName = name;
+			module.ModuleInfo.Tag = name;
+			module.ModuleInfo.Description = new OEIShared.Utils.OEIExoLocString();
+			module.ModuleInfo.Description.SetString("I am " + name.ToUpper() + "!",
+			                                        OEIShared.Utils.BWLanguages.CurrentLanguage,
+			                                        OEIShared.Utils.BWLanguages.Gender.Male);
 			
 			SaveModule(module);
 		}
@@ -62,8 +63,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="name">The name of the module to open.</param>
 		/// <param name="location">The serialisation form of the module to open.</param>
 		/// <returns>The opened Neverwinter Nights 2 module.</returns>
+		/// <remarks>Pass ONLY the name of the module - exclude paths and file extensions.
+		/// 
+		/// This method opens modules located in the Neverwinter Nights 2
+		/// modules directory only. To open a file-based module from elsewhere, 
+		/// use the <see cref="OpenFileBasedModule"/> method. (Directory-based modules
+		/// cannot be opened from any other location.)
+		/// </remarks>
 		public static NWN2GameModule OpenModule(string name, ModuleLocationType location)
 		{
+			if (location == ModuleLocationType.File) {
+				string path = GetDefaultModulePathFromName(name);
+				return OpenFileBasedModule(path);
+			}
+			else if (location == ModuleLocationType.Directory) {
+				return OpenDirectoryBasedModule(name);
+			}
+			else {
+				throw new ArgumentException("location","Opening " + location + " modules is not supported.");
+			}
+		}
+		
+		
+		/// <summary>
+		/// Opens a directory-based Neverwinter Nights 2 game module.
+		/// </summary>
+		/// <param name="name">The name of the module to open.</param>
+		/// <returns>The opened Neverwinter Nights 2 module.</returns>
+		public static NWN2GameModule OpenDirectoryBasedModule(string name)
+		{
+			ModuleLocationType location = ModuleLocationType.Directory;
+			
 			ThreadedOpenHelper helper = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,
 			                                                   name,
 			                                                   location);
@@ -73,7 +103,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(module);
 			
-			System.Windows.Forms.MessageBox.Show("Opened '" + name + "' at " + location);
+			return module;
+		}
+		
+		
+		/// <summary>
+		/// Opens a file-based Neverwinter Nights 2 game module.
+		/// </summary>
+		/// <param name="name">The full path of the module to open, including file extension.</param>
+		/// <returns>The opened Neverwinter Nights 2 module.</returns>
+		public static NWN2GameModule OpenFileBasedModule(string path)
+		{
+			ModuleLocationType location = ModuleLocationType.File;
+			
+			ThreadedOpenHelper helper = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,
+			                                                   path,
+			                                                   location);
+			helper.Go();
+			
+			NWN2GameModule module = NWN2ToolsetMainForm.App.Module;
+			
+			NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(module);
 			
 			return module;
 		}
@@ -83,18 +133,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Saves changes to a Neverwinter Nights 2 game module to disk.
 		/// </summary>
 		/// <param name="module">The module to save.</param>
+		/// <remarks>Saves to the default modules directory.</remarks>
 		public static void SaveModule(NWN2GameModule module)
 		{			
-			//string path = Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,module.Name);				
-			//string path = Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,module.Name + ".mod");	
-			Report(module,"before");
-			string path = module.Name;
-			if (module.LocationType == ModuleLocationType.File) {
-				path = Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,path += ".mod");
+			switch (module.LocationType) {
+				case ModuleLocationType.Directory:
+					module.OEISerialize(module.Name);
+					break;
+				case ModuleLocationType.File:
+					string path = GetDefaultModulePathFromName(module.Name);
+					module.OEISerialize(path);
+					break;
+				default:
+					throw new ArgumentException("location","Saving " + module.LocationType + " modules is not supported.");
 			}
-			System.Windows.Forms.MessageBox.Show("serializing to " + path);
-			module.OEISerialize(path);
-			Report(module,"after");
 		}
 		
 		
@@ -105,6 +157,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			                                     + mod.FileName + "\nmodule.Repository.Name= " +
 			                                     mod.Repository.Name + "\nmodule.Repository.DirectoryName= " + 
 			                                     mod.Repository.DirectoryName);
+		}
+		
+		
+		private static string GetDefaultModulePathFromName(string name)
+		{
+			return Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,name + ".mod");
 		}
 	}
 }
