@@ -183,17 +183,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		protected void PluginActivated(object sender, EventArgs e)
 		{			
 			ModuleLocationType location;
-			//ModuleLocationType location = ModuleLocationType.Directory;
 			
-			string name = "module" + DateTime.Now.Millisecond;
+			//string name = "Mod " + DateTime.Now.Millisecond;
 			
 			System.Windows.Forms.DialogResult result = 
 			System.Windows.Forms.MessageBox.Show("Directory?","Yes for Directory, No for File.",
 			                                     System.Windows.Forms.MessageBoxButtons.YesNo);
 			location = result == System.Windows.Forms.DialogResult.Yes ? ModuleLocationType.Directory : ModuleLocationType.File;
 			
-			Nwn2TestingFunctions.CreateTestModule(name,location);
-			Nwn2ModuleFunctions.OpenModule(name,location);
+//			Nwn2TestingFunctions.CreateTestModule(name,location);
+//			Nwn2ModuleFunctions.OpenModule(name,location);			
+			
+			if (location == ModuleLocationType.Directory) {
+				Nwn2ModuleFunctions.OpenModule("module520", ModuleLocationType.Directory);
+			}
+			else {
+				Nwn2ModuleFunctions.OpenModule("module501", ModuleLocationType.File);
+				System.Windows.Forms.MessageBox.Show("Attempting to open mystery.mod on desktop.");
+				Nwn2ModuleFunctions.OpenFileBasedModule(System.IO.Path.Combine(@"\\home-fileserver\kn70\WindowsProfile\Desktop","mystery.mod"));
+			}
 		}
 		
 		#endregion
