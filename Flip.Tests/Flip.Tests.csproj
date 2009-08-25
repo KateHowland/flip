@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Plugin\FlipPluginTests.cs" />
+    <Compile Include="Unit\Utils\Communication\PipeCommunicatorTests.cs" />
     <Compile Include="Unit\Utils\Nwn2ModuleFunctionsTests.cs" />
     <Compile Include="Unit\Utils\Nwn2ToolsetFunctionsTests.cs" />
     <None Include="Licence.txt" />
@@ -143,5 +144,6 @@
     <Folder Include="Unit" />
     <Folder Include="Unit\Utils" />
     <Folder Include="Unit\UI" />
+    <Folder Include="Unit\Utils\Communication" />
   </ItemGroup>
 </Project>
