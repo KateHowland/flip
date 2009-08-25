@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * To contact the authors of this program, email k.nicholson@sussex.ac.uk.
+ * To contact the authors of this program, email flip@sussex.ac.uk.
  *
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
