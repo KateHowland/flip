@@ -150,16 +150,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		}
 		
 		
-		private static void Report(NWN2GameModule mod, string prepend)
-		{			
-			System.Windows.Forms.MessageBox.Show(prepend + "\n\nmodule.Name= "
-			                                     + mod.Name + "\n\nmodule.FileName= "
-			                                     + mod.FileName + "\nmodule.Repository.Name= " +
-			                                     mod.Repository.Name + "\nmodule.Repository.DirectoryName= " + 
-			                                     mod.Repository.DirectoryName);
-		}
-		
-		
 		private static string GetDefaultModulePathFromName(string name)
 		{
 			return Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,name + ".mod");
