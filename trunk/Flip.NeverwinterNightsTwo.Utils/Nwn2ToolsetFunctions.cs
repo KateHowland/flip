@@ -24,25 +24,59 @@
  */
 
 using System;
+using System.Diagnostics;
+using System.IO;
+using Microsoft.Win32;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
 	/// <summary>
-	/// Provides functionality relating to the Neverwinter Nights 2 Electron toolset.
+	/// Provides functionality relating to the Neverwinter Nights 2 toolset.
 	/// </summary>
 	public static class Nwn2ToolsetFunctions
 	{
+		#region Constants
+		
+		public const string ToolsetLauncherDefaultName = "NWN2ToolsetLauncher"; // assumes .exe filename has not changed!
+		
+		#endregion
+		
 		/// <summary>
 		/// Runs the Neverwinter Nights 2 toolset.
 		/// </summary>
+		/// <exception cref="NotSupportedException">Neverwinter Nights 2
+		/// install directory could not be found.</exception>
+		/// <exception cref="Win32Exception">Neverwinter Nights 2
+		/// toolset launcher application could not be found.</exception>
 		public static void RunNeverwinterNightsTwoToolset()
 		{
-			string location = GetNeverwinterNightsTwoLocation();
+			string location = GetNeverwinterNightsTwoInstallPath();
 			
-			if (location == null)
-				throw new NotSupportedException("Neverwinter Nights 2 is not listed in registry.");
+			if (location == null || !System.IO.Directory.Exists(location))
+				throw new NotSupportedException("Failed to locate the Neverwinter Nights 2 install.");
 			
-			System.Diagnostics.Process.Start(location);
+			location = Path.Combine(location,ToolsetLauncherDefaultName + ".exe");
+			
+			Process.Start(location);
+		}
+				
+		
+		/// <summary>
+		/// Immediately shuts down all copies of the Neverwinter Nights 2 toolset.
+		/// </summary>
+		public static void KillNeverwinterNightsTwoToolset()
+		{
+			Process[] processes = Process.GetProcessesByName(ToolsetLauncherDefaultName);
+			foreach (Process toolset in processes) {
+				if (!toolset.HasExited)	{
+					try {
+						toolset.Kill();
+					}
+					catch (InvalidOperationException) { 
+						// process already exited
+					}
+				}
+			}
 		}
 		
 		
@@ -50,10 +84,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Retrieves the path of the Neverwinter Nights 2 installation
 		/// from registry.
 		/// </summary>
+		/// <exception cref="NotSupportedException">Neverwinter Nights 2
+		/// wasn't found in the local machine's registry.</exception>
 		/// <returns>The Neverwinter Nights 2 install path.</returns>
-		public static string GetNeverwinterNightsTwoLocation()
+		public static string GetNeverwinterNightsTwoInstallPath()
 		{
-			throw new NotImplementedException();
+			RegistryKey key = Registry.LocalMachine;
+			
+			key = key.OpenSubKey(@"SOFTWARE\Obsidian\NWN 2\Neverwinter");
+			
+			if (key == null) 
+				throw new NotSupportedException("Neverwinter Nights 2 could not be found " +
+				                                "in the local machine's registry.");
+			
+			string location = (string)key.GetValue("Location");
+			
+			if (location == null)
+				throw new NotSupportedException("The Neverwinter Nights 2 location field " +
+				                                "in the local machine's registry was empty.");
+			
+			return location;
 		}
 	}
 }
