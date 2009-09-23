@@ -54,14 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\ICommunicator.cs" />
-    <Compile Include="Communication\MessageEventArgs.cs" />
-    <Compile Include="Communication\MessageProcessor.cs" />
-    <Compile Include="Communication\PipeCommunicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Licence.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Communication" />
   </ItemGroup>
 </Project>

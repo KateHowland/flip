@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.ServiceModel;
 using NWN2Toolset.Plugins;
 using NWN2Toolset.NWN2.Data;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
@@ -56,6 +57,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// User preferences relating to the operation of this plugin.
 		/// </summary>
 		protected object preferences;
+				
+		/// <summary>
+		/// The host for services provided by this plugin.
+		/// </summary>
+		protected ServiceHostBase host;
 		
 		#endregion
 		
@@ -138,6 +144,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Startup(INWN2PluginHost cHost)
 		{
+			StartServices();
+			
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
 		}
@@ -173,6 +181,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Shutdown(INWN2PluginHost cHost)
 		{
+			StopServices();
 		}
 		
 		
@@ -180,13 +189,43 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// Runs the plugin.
 		/// </summary>
 		protected void PluginActivated(object sender, EventArgs e)
-		{			
+		{	
+			
 		}
 		
 		
-		public object[] GetObject(NWN2GameArea area, Nwn2EventRaiser type, string tag)
+		/// <summary>
+		/// Start hosting services.
+		/// </summary>
+		protected void StartServices()
 		{
-			return null;
+			try {
+				host = new ServiceHost(typeof(Nwn2Session),new Uri[]{ new Uri("http://localhost:8000"),
+				                       					  			  new Uri("net.pipe://localhost") });
+				
+				host.AddServiceEndpoint(typeof(INwn2Session).ToString(),
+				                        new BasicHttpBinding(),
+				                        "HttpEndpoint");
+				
+				host.AddServiceEndpoint(typeof(INwn2Session).ToString(),
+				                        new NetNamedPipeBinding(),
+				                        "NamedPipeEndpoint");				
+				
+				host.Open();
+			} catch (Exception e) {
+				System.Windows.MessageBox.Show("Error starting services.\n\n" + e);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Stop hosting services.
+		/// </summary>
+		protected void StopServices()
+		{
+			if (host != null && host.State != CommunicationState.Closed && host.State != CommunicationState.Closing) {
+				host.Close();
+			}
 		}
 		
 		#endregion
