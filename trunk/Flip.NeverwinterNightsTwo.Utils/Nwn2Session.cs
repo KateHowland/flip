@@ -32,7 +32,8 @@ using NWN2Toolset.NWN2.Data;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
 	/// <summary>
-	/// Description of Nwn2Session.
+	/// Provides functionality relating to a running
+	/// Neverwinter Nights 2 toolset session.
 	/// </summary>
 	public class Nwn2Session : INwn2Session
 	{

@@ -41,6 +41,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// </summary>
 	public static class Nwn2TestingFunctions
 	{		
+		private static INwn2Session session = new Nwn2Session();
+		
+		
 		/// <summary>
 		/// Creates a Neverwinter Nights 2 game module intended for testing purposes.
 		/// </summary>
@@ -49,9 +52,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A serialised Neverwinter Nights 2 game module.</returns>
 		public static NWN2GameModule CreateTestModule(string name, ModuleLocationType location)
 		{
-			Nwn2ModuleFunctions.CreateModule(name,location);
+			session.CreateModule(name,location);
 			
-			NWN2GameModule module = Nwn2ModuleFunctions.OpenModule(name,location);
+			session.OpenModule(name,location);
+			
+			NWN2GameModule module = session.GetCurrentModule();
 			
 			Size small = new Size(Nwn2AreaFunctions.MinimumAreaLength,Nwn2AreaFunctions.MinimumAreaLength);
 			Size large = new Size(Nwn2AreaFunctions.MaximumAreaLength,Nwn2AreaFunctions.MaximumAreaLength);
@@ -92,7 +97,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			area1.OEISerialize();
 			area2.OEISerialize();
 			
-			Nwn2ModuleFunctions.SaveModule(module);
+			session.SaveModule(module);
 			
 			return module;
 		}

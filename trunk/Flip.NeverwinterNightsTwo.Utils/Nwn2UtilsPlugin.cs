@@ -24,9 +24,11 @@
  */
 
 using System;
+using System.Reflection;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.Plugins;
+using TD.SandBar;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -51,12 +53,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// The menu button which activates the plugin.
 		/// </summary>
-		protected TD.SandBar.MenuButtonItem pluginMenuItem;
+		protected MenuButtonItem pluginMenuItem;
 		
 		/// <summary>
 		/// User preferences relating to the operation of this plugin.
 		/// </summary>
 		protected object preferences;
+				
+		/// <summary>
+		/// Provides methods for this NWN2 session.
+		/// </summary>
+		protected INwn2Session session;
 		
 		#endregion
 		
@@ -65,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// The menu button which activates the plugin.
 		/// </summary>
-		public TD.SandBar.MenuButtonItem PluginMenuItem {
+		public MenuButtonItem PluginMenuItem {
 			get {
 				return pluginMenuItem;
 			}
@@ -83,6 +90,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				preferences = value;
 			}
 		}
+		
+		
+		/// <summary>
+		/// Provides methods for this NWN2 session.
+		/// </summary>
+		public INwn2Session Session {
+			get { 
+				return session; 
+			}
+		}		
 		
 		
 		/// <summary>
@@ -124,7 +141,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Nwn2UtilsPlugin()
 		{
 			pluginMenuItem = null;
-			preferences = new object();
+			preferences = new object();		
+			session = new Nwn2Session();
 		}
 		
 		#endregion
@@ -140,7 +158,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void Startup(INWN2PluginHost cHost)
 		{
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
-			pluginMenuItem.Activate += PluginActivated;
+			
+			// Reflect over the INwn2Session object to get all parameterless
+			// public methods and allow the user to call them via the menu:
+			foreach (MethodInfo method in session.GetType().GetMethods()) {
+				MenuButtonItem item = new MenuButtonItem(method.Name);
+				if (method.GetParameters().Length > 0) {
+					item.Enabled = false;
+				}
+				else {
+					item.Activate += delegate 
+					{  
+						object returned = method.Invoke(session,null);
+					};
+				}
+				
+				pluginMenuItem.Items.Add(item);
+			}
 		}
 		
 		
@@ -174,34 +208,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Shutdown(INWN2PluginHost cHost)
 		{
-		}
-		
-	
-		/// <summary>
-		/// Runs the plugin.
-		/// </summary>
-		protected void PluginActivated(object sender, EventArgs e)
-		{			
-			ModuleLocationType location;
-			
-			//string name = "Mod " + DateTime.Now.Millisecond;
-			
-			System.Windows.Forms.DialogResult result = 
-			System.Windows.Forms.MessageBox.Show("Directory?","Yes for Directory, No for File.",
-			                                     System.Windows.Forms.MessageBoxButtons.YesNo);
-			location = result == System.Windows.Forms.DialogResult.Yes ? ModuleLocationType.Directory : ModuleLocationType.File;
-			
-//			Nwn2TestingFunctions.CreateTestModule(name,location);
-//			Nwn2ModuleFunctions.OpenModule(name,location);			
-			
-			if (location == ModuleLocationType.Directory) {
-				Nwn2ModuleFunctions.OpenModule("module520", ModuleLocationType.Directory);
-			}
-			else {
-				Nwn2ModuleFunctions.OpenModule("module501", ModuleLocationType.File);
-				System.Windows.Forms.MessageBox.Show("Attempting to open mystery.mod on desktop.");
-				Nwn2ModuleFunctions.OpenFileBasedModule(System.IO.Path.Combine(@"\\home-fileserver\kn70\WindowsProfile\Desktop","mystery.mod"));
-			}
 		}
 		
 		#endregion

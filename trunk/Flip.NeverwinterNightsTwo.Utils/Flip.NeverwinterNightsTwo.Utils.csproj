@@ -73,7 +73,6 @@
     <Compile Include="INwn2Session.cs" />
     <Compile Include="Nwn2AreaFunctions.cs" />
     <Compile Include="Nwn2GameObjectFunctions.cs" />
-    <Compile Include="Nwn2ModuleFunctions.cs" />
     <Compile Include="Nwn2Session.cs" />
     <Compile Include="Nwn2UtilsPlugin.cs" />
     <Compile Include="Nwn2TestingFunctions.cs" />
