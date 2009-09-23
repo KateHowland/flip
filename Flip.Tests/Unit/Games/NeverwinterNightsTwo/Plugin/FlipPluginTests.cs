@@ -39,6 +39,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin.Tests
 	/// <summary>
 	/// Tests the <see cref="FlipPlugin"/> class.
 	/// </summary>
+	/// <remarks>By contrast with the tests for class Nwn2Session,
+	/// this tests the service methods of that class, as accessed
+	/// by a client via a service contract.</remarks>
 	[TestFixture]
 	public class FlipPluginTests
 	{

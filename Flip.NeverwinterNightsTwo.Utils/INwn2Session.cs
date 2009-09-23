@@ -29,7 +29,8 @@ using System.ServiceModel;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
 	/// <summary>
-	/// Description of INwn2Session.
+	/// Provides functionality relating to a running
+	/// Neverwinter Nights 2 toolset session.
 	/// </summary>
 	[ServiceContract]
 	public interface INwn2Session

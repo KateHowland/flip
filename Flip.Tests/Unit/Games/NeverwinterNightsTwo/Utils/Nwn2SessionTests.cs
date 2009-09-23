@@ -20,19 +20,51 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 25/08/2009 at 09:48.
+ * This file added by Keiron Nicholson on 23/09/2009 at 16:19.
  */
 
 
 using System;
+using System.ServiceModel;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
-namespace Sussex.Flip.Tests.Unit.Utils
-{
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
+{	
+	/// <summary>
+	/// Tests the <see cref="Nwn2Session"/> class.
+	/// </summary>
 	[TestFixture]
-	public class Nwn2ModuleFunctionsTests
-	{		
+	public class Nwn2SessionTests
+	{
+		#region Fields
+		
+		protected INwn2Session nwn2session;
+		
+		#endregion
+		
+		#region Setup
+		
+		[TestFixtureSetUp]
+		public void Init()
+		{			
+			ChannelFactory<INwn2Session> pipeChannelFactory = new ChannelFactory<INwn2Session>(new NetNamedPipeBinding(),
+			                                                                                   "net.pipe://localhost/NamedPipeEndpoint");
+			
+			nwn2session = pipeChannelFactory.CreateChannel();
+		}
+		
+		
+		[TestFixtureTearDown]
+		public void Dispose()
+		{
+		}
+		
+		#endregion
+		
+		#region Tests
+		
 		[Test]
 		public void CreatesDirectoryBasedModule()
 		{
@@ -123,5 +155,7 @@ namespace Sussex.Flip.Tests.Unit.Utils
 		{
 			Assert.Fail();
 		}
+		
+		#endregion
 	}
 }

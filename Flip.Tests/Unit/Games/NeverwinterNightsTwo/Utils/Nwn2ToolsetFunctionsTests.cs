@@ -31,7 +31,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
-namespace Sussex.Flip.Tests.Unit.Utils
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 {
 	[TestFixture]
 	public class Nwn2ToolsetFunctionsTests
