@@ -62,6 +62,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
@@ -69,9 +70,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="INwn2Session.cs" />
     <Compile Include="Nwn2AreaFunctions.cs" />
     <Compile Include="Nwn2GameObjectFunctions.cs" />
     <Compile Include="Nwn2ModuleFunctions.cs" />
+    <Compile Include="Nwn2Session.cs" />
     <Compile Include="Nwn2UtilsPlugin.cs" />
     <Compile Include="Nwn2TestingFunctions.cs" />
     <Compile Include="Nwn2ToolsetFunctions.cs" />
