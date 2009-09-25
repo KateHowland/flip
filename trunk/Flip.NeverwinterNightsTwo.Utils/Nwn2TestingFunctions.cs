@@ -48,21 +48,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Creates a Neverwinter Nights 2 game module intended for testing purposes.
 		/// </summary>
 		/// <param name="name">The name to give the test module.</param>
-		/// <param name="location">The serialisation form of the module.</param>
 		/// <returns>A serialised Neverwinter Nights 2 game module.</returns>
-		public static NWN2GameModule CreateTestModule(string name, ModuleLocationType location)
+		public static NWN2GameModule CreateTestModule(string name)
 		{
-			session.CreateModule(name,location);
-			
-			session.OpenModule(name,location);
+			session.CreateModule(name,ModuleLocationType.Directory);
+					
+			session.OpenDirectoryModule(name);
 			
 			NWN2GameModule module = session.GetCurrentModule();
 			
-			Size small = new Size(Nwn2AreaFunctions.MinimumAreaLength,Nwn2AreaFunctions.MinimumAreaLength);
-			Size large = new Size(Nwn2AreaFunctions.MaximumAreaLength,Nwn2AreaFunctions.MaximumAreaLength);
+			Size small = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			Size large = new Size(Area.MaximumAreaLength,Area.MaximumAreaLength);
 			
-			NWN2GameArea area1 = Nwn2AreaFunctions.CreateArea(ref module,"desert",true,large);
-			NWN2GameArea area2 = Nwn2AreaFunctions.CreateArea(ref module,"castle",false,large);
+			AreaBase area1 = session.AddArea(module,"desert",true,large);
+			AreaBase area2 = session.AddArea(module,"castle",false,large);
 			
 			NWN2ObjectType type = NWN2ObjectType.Creature;
 			
@@ -84,18 +83,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						throw new InvalidOperationException("Blueprint with ResRef '" + resRef.Value + 
 						                                    "' not found.");
 					
-					bool accessible = Nwn2GameObjectFunctions.MustPlaceWithinPlayerAccessibleRegion(blueprint);
-					Vector3 position = Nwn2AreaFunctions.GetRandomPosition(area1,accessible);
+					Vector3 position = area1.GetRandomPosition(true);
 					
-					Nwn2AreaFunctions.AddGameObject(area1,blueprint,tag,position);
+					area1.AddGameObject(blueprint,tag,position);
 				}
 				catch (InvalidOperationException e) {
 					System.Windows.Forms.MessageBox.Show(e.Message);
 				}
 			}
 			
-			area1.OEISerialize();
-			area2.OEISerialize();
+			area1.Save();
+			area2.Save();
 			
 			session.SaveModule(module);
 			

@@ -70,10 +70,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AreaBase.cs" />
+    <Compile Include="INwn2Service.cs" />
     <Compile Include="INwn2Session.cs" />
-    <Compile Include="Nwn2AreaFunctions.cs" />
-    <Compile Include="Nwn2GameObjectFunctions.cs" />
+    <Compile Include="Area.cs" />
     <Compile Include="Nwn2Session.cs" />
+    <Compile Include="Nwn2SessionAdapter.cs" />
     <Compile Include="Nwn2UtilsPlugin.cs" />
     <Compile Include="Nwn2TestingFunctions.cs" />
     <Compile Include="Nwn2ToolsetFunctions.cs" />
