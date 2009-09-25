@@ -200,14 +200,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		protected void StartServices()
 		{
 			try {
-				host = new ServiceHost(typeof(Nwn2Session),new Uri[]{ new Uri("http://localhost:8000"),
+				host = new ServiceHost(typeof(Nwn2SessionAdapter),new Uri[]{ new Uri("http://localhost:8000"),
 				                       					  			  new Uri("net.pipe://localhost") });
 				
-				host.AddServiceEndpoint(typeof(INwn2Session).ToString(),
+				host.AddServiceEndpoint(typeof(INwn2Service).ToString(),
 				                        new BasicHttpBinding(),
 				                        "HttpEndpoint");
 				
-				host.AddServiceEndpoint(typeof(INwn2Session).ToString(),
+				host.AddServiceEndpoint(typeof(INwn2Service).ToString(),
 				                        new NetNamedPipeBinding(),
 				                        "NamedPipeEndpoint");				
 				

@@ -40,7 +40,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 	{
 		#region Fields
 		
-		protected INwn2Session nwn2session;
+		protected INwn2Service service;
 		
 		#endregion
 		
@@ -49,10 +49,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[TestFixtureSetUp]
 		public void Init()
 		{			
-			ChannelFactory<INwn2Session> pipeChannelFactory = new ChannelFactory<INwn2Session>(new NetNamedPipeBinding(),
+			ChannelFactory<INwn2Service> pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),
 			                                                                                   "net.pipe://localhost/NamedPipeEndpoint");
 			
-			nwn2session = pipeChannelFactory.CreateChannel();
+			service = pipeChannelFactory.CreateChannel();
 		}
 		
 		

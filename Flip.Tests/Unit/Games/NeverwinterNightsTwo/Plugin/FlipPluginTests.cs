@@ -72,17 +72,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin.Tests
 		
 		#region Tests
 		
-		[Test]
-		public void ReturnsNameOfCurrentModule()
-		{			
-			nwn2session.OpenDirectoryBasedModule("rar");
-			
-			string name = nwn2session.GetCurrentModuleName();
-			
-			Assert.IsNotNull(name);
-			Assert.AreEqual(name,"rar");			
-		}
-		
 		#endregion
 	}
 }
