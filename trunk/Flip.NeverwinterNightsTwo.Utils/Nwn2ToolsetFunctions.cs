@@ -26,6 +26,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using Microsoft.Win32;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
@@ -53,13 +54,47 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			string location = GetNeverwinterNightsTwoInstallPath();
 			
 			if (location == null || !System.IO.Directory.Exists(location))
-				throw new NotSupportedException("Failed to locate the Neverwinter Nights 2 install.");
+				throw new InvalidOperationException("Failed to locate the Neverwinter Nights 2 install.");
 			
 			location = Path.Combine(location,ToolsetLauncherDefaultName + ".exe");
 			
 			Process.Start(location);
-		}
+		}	
+		
+		
+		/// <summary>
+		/// Runs the Neverwinter Nights 2 toolset and returns true
+		/// once it has loaded, or false after a timeout period has passed.
+		/// </summary>
+		/// <param name="timeout">The number of milliseconds to wait for
+		/// the toolset to run before returning false.</param>
+		/// <returns>True once the toolset has loaded, if this is within
+		/// the timeout period; false
+		/// if the timeout period expired.</returns>
+		/// <exception cref="NotSupportedException">Neverwinter Nights 2
+		/// install directory could not be found.</exception>
+		/// <exception cref="Win32Exception">Neverwinter Nights 2
+		/// toolset launcher application could not be found.</exception>
+		public static bool RunNeverwinterNightsTwoToolset(int timeout)
+		{
+			int wait = 1000;
+		
+			if (timeout < wait) 
+				throw new ArgumentException("Timeout period must exceed 1000ms.","timeout");
+			
+			RunNeverwinterNightsTwoToolset();
+									
+			for (int i = 0; i < timeout/wait; i++) {
+				if (Process.GetProcessesByName(Nwn2ToolsetFunctions.ToolsetLauncherDefaultName).Length > 0) {
+					return true;
+				}
 				
+				Thread.Sleep(wait);
+			}
+			
+			return false;
+		}
+		
 		
 		/// <summary>
 		/// Immediately shuts down all copies of the Neverwinter Nights 2 toolset.

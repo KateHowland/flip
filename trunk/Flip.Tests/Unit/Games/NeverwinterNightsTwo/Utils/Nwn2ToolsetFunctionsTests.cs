@@ -32,16 +32,24 @@ using NUnit.Framework.SyntaxHelpers;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
-{
+{	
+	/// <summary>
+	/// Tests the <see cref="Nwn2ToolsetFunctions"/> class.
+	/// </summary>
 	[TestFixture]
 	public class Nwn2ToolsetFunctionsTests
 	{	
+		#region Setup
+		
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
 			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();		
 		}
 		
+		#endregion
+		
+		#region Tests
 		
 		[Test]
 		public void LaunchesToolset()
@@ -109,5 +117,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.Fail("Toolset process was not ended.");
 		}	
+		
+		#endregion
 	}
 }
