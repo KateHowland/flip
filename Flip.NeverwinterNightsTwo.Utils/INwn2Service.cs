@@ -48,19 +48,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Opens a directory-based Neverwinter Nights 2 game module.
+		/// Opens a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The name of the module to open.</param>
+		/// <param name="name">The path of the module to open.</param>
+		/// <param name="location">The serialisation form of the module.</param>
 		[OperationContract]
-		void OpenDirectoryModule(string name);
-		
-		
-		/// <summary>
-		/// Opens a file-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The full path of the module to open, including file extension.</param>
-		[OperationContract]
-		void OpenFileModule(string path);
+		void OpenModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
 		
 		
 		/// <summary>
@@ -69,6 +62,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <remarks>Saves to the default modules directory.</remarks>
 		[OperationContract]
 		void SaveModule();
+		
+		
+		/// <summary>
+		/// Closes the current module.
+		/// </summary>
+		[OperationContract]
+		void CloseModule();
 		
 		
 		/// <summary>

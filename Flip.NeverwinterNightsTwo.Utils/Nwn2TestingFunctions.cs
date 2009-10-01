@@ -45,15 +45,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Creates a Neverwinter Nights 2 game module intended for testing purposes.
+		/// Creates a Neverwinter Nights 2 directory-based game 
+		/// module intended for testing purposes.
 		/// </summary>
-		/// <param name="name">The name to give the test module.</param>
+		/// <param name="path">The path at which to create the module.</param>
 		/// <returns>A serialised Neverwinter Nights 2 game module.</returns>
-		public static NWN2GameModule CreateTestModule(string name)
+		public static NWN2GameModule CreateTestModule(string path)
 		{
-			session.CreateModule(name,ModuleLocationType.Directory);
+			ModuleLocationType location = ModuleLocationType.Directory;
+			
+			session.CreateModule(path,location);
 					
-			session.OpenDirectoryModule(name);
+			session.OpenModule(path,location);
 			
 			NWN2GameModule module = session.GetCurrentModule();
 			

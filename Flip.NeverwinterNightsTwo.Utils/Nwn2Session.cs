@@ -74,40 +74,38 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			module.ModuleInfo.Description = new OEIShared.Utils.OEIExoLocString();
 			
 			SaveModule(module,path);
-		}
-						
-		
-		/// <summary>
-		/// Opens a directory-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The name of the module to open.</param>
-		public void OpenDirectoryModule(string name)
-		{
-			ModuleLocationType location = ModuleLocationType.Directory;
-			
-			ThreadedOpenHelper helper = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,
-			                                                   name,
-			                                                   location);
-			helper.Go();			
-									
-			NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
-		}
+		}		
 		
 		
 		/// <summary>
-		/// Opens a file-based Neverwinter Nights 2 game module.
+		/// Opens a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The full path of the module to open, including file extension.</param>
-		/// <remarks>Use the static method <see cref="GetExpectedPathForFileBasedModule"/> to
-		/// get the expected path from the module name.</remarks>
-		public void OpenFileModule(string path)
+		/// <param name="name">The path of the module, including file extension
+		/// if appropriate.</param>
+		/// <param name="location">The serialisation form of the module.</param>
+		public void OpenModule(string path, ModuleLocationType location)
 		{
-			ModuleLocationType location = ModuleLocationType.File;
+			if (path == null) throw new ArgumentNullException("path");
+			if (path == String.Empty) throw new ArgumentException("path");
 			
-			ThreadedOpenHelper helper = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,
-			                                                   path,
-			                                                   location);
-			helper.Go();
+			ThreadedOpenHelper opener;
+			
+			switch (location) {
+				case ModuleLocationType.Directory:
+					string name = Path.GetFileName(path);
+					opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,name,location);
+					break;
+					
+				case ModuleLocationType.Temporary:
+				case ModuleLocationType.File:
+					opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,path,location);
+					break;
+					
+				default:
+					throw new NotSupportedException("Opening " + location + " modules is not supported.");
+			}
+			
+			opener.Go();
 									
 			NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
 		}
@@ -163,6 +161,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Closes the current module.
+		/// </summary>
+		public void CloseModule()
+		{
+			int count = -1;
+			string path;
+						
+			string message = String.Empty;
+			
+			while (Directory.Exists(path = Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,"temp"+ ++count))) { message += path + Environment.NewLine;}
+			
+			string name = Path.GetFileName(path);
+			
+			System.Diagnostics.Debug.WriteLine(name);
+			
+			NWN2GameModule module = new NWN2GameModule();
+			module.Name = name;
+			module.LocationType = ModuleLocationType.Temporary;
+			module.ModuleInfo.Tag = name;
+			module.ModuleInfo.Description = new OEIShared.Utils.OEIExoLocString();
+			
+			OpenModule(path,ModuleLocationType.Temporary);
+		}
+		
+		
+		/// <summary>
 		/// Gets the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The current module, or null if no module is open.</returns>
@@ -191,9 +215,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			switch (module.LocationType) {					
 				case ModuleLocationType.File:
-				case ModuleLocationType.Directory:
 					return module.FileName;
 					
+				case ModuleLocationType.Directory:
 				case ModuleLocationType.Temporary:
 					return module.Repository.Name; // module.FileName only has the module name - no path!
 					
