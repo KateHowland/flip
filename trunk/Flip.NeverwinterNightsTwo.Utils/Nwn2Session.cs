@@ -53,13 +53,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Creates a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		/// <param name="location">The type of module to create - either Directory
-		/// or File. Creating Temporary modules is not supported.</param>
-		public void CreateModule(string name, ModuleLocationType location)
-		{
+		/// <param name="path">The path to create the module at. If 'location'
+		/// is set to ModuleLocationType.Directory, this must be the path for
+		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+		/// <param name="location">The serialisation form of the module.</param>
+		public void CreateModule(string path, ModuleLocationType location)
+		{			
 			if (location == ModuleLocationType.Temporary) 
 				throw new NotSupportedException("Creating temporary modules is not supported.");
+			
+			if (path == null) throw new ArgumentNullException("path");
+			if (path == String.Empty) throw new ArgumentException("path");
+						
+			string name = Path.GetFileNameWithoutExtension(path);
 			
 			NWN2GameModule module = new NWN2GameModule();
 			module.Name = name;
@@ -67,27 +73,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			module.ModuleInfo.Tag = name;
 			module.ModuleInfo.Description = new OEIShared.Utils.OEIExoLocString();
 			
-			SaveModule(module);
-		}
-		
-		
-		/// <summary>
-		/// Creates a directory-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		public void CreateDirectoryModule(string name)
-		{
-			CreateModule(name,ModuleLocationType.Directory);
-		}
-				
-		
-		/// <summary>
-		/// Creates a file-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		public void CreateFileModule(string name)
-		{
-			CreateModule(name,ModuleLocationType.File);
+			SaveModule(module,path);
 		}
 						
 		
@@ -125,23 +111,50 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 									
 			NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
 		}
+				
+		
+		/// <summary>
+		/// Saves a Neverwinter Nights 2 game module to its
+		/// current location.
+		/// </summary>
+		/// <param name="module">The module to save.</param>.
+		public void SaveModule(NWN2GameModule module)
+		{
+			SaveModule(module,GetModulePath(module));
+		}
 		
 		
 		/// <summary>
-		/// Saves a Neverwinter Nights 2 game module to the
-		/// modules directory.
+		/// Saves a Neverwinter Nights 2 game module to a given path.
 		/// </summary>
 		/// <param name="module">The module to save.</param>
-		public void SaveModule(NWN2GameModule module)
-		{			
+		/// <param name="path">The path to save the module to.</param>
+		public void SaveModule(NWN2GameModule module, string path)
+		{	
+			string extension = Path.GetExtension(path);
+			string parent = Path.GetDirectoryName(path);
+			
 			switch (module.LocationType) {
+					
 				case ModuleLocationType.Directory:
-					module.OEISerialize(module.Name);
+					if (extension != String.Empty) {
+						throw new ArgumentException("path","Path must be a folder, not a file.");
+					}
+					if (parent != NWN2ToolsetMainForm.ModulesDirectory) {
+						throw new ArgumentException("path","Path must be a folder located within the " +
+						                            "modules directory specified at NWN2Toolset." + 
+						                            "NWN2ToolsetMainForm.ModulesDirectory.");
+					}
+					module.OEISerialize(Path.GetFileName(path));
 					break;
+					
 				case ModuleLocationType.File:
-					string path = GetExpectedPathForFileBasedModule(module.Name);
+					if (extension.ToLower() != ".mod") {
+						throw new ArgumentException("path","Path must be a .mod file.");
+					}
 					module.OEISerialize(path);
 					break;
+					
 				default:
 					throw new ArgumentException("location","Saving " + module.LocationType + 
 					                            " modules is not supported.");
@@ -160,16 +173,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets the expected path for a file-based module of the given name,
-		/// assuming that the module is stored in the modules directory.
+		/// Gets the absolute path of the module that is currently open in the toolset.
 		/// </summary>
-		/// <param name="name">The name of the module.</param>
-		/// <returns>The expected path for a file-based module of the given name.</returns>
-		public static string GetExpectedPathForFileBasedModule(string name)
+		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
+		public string GetCurrentModulePath()
 		{
-			return Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,name + ".mod");
-		}		
+			return GetModulePath(GetCurrentModule());
+		}
 		
+		
+		/// <summary>
+		/// Gets the absolute path of a given module.
+		/// </summary>
+		/// <param name="module">The module to return the path of.</param>
+		/// <returns>The absolute path of the given module.</returns>
+		public string GetModulePath(NWN2GameModule module)
+		{
+			switch (module.LocationType) {					
+				case ModuleLocationType.File:
+				case ModuleLocationType.Directory:
+					return module.FileName;
+					
+				case ModuleLocationType.Temporary:
+					return module.Repository.Name; // module.FileName only has the module name - no path!
+					
+				default:
+					throw new NotSupportedException("Unknown ModuleLocationType: " + module.LocationType);
+			}
+		}
+				
 		
 		/// <summary>
 		/// Adds an area to the current module.

@@ -39,9 +39,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Creates a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		/// <param name="location">The type of module to create.</param>
-		void CreateModule(string name, ModuleLocationType location);
+		/// <param name="path">The path to create the module at. If 'location'
+		/// is set to ModuleLocationType.Directory, this must be the path for
+		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+		/// <param name="location">The serialisation form of the module.</param>
+		void CreateModule(string path, ModuleLocationType location);
 		
 		
 		/// <summary>
@@ -59,11 +61,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Saves changes to a Neverwinter Nights 2 game module to disk.
+		/// Saves a Neverwinter Nights 2 game module to its
+		/// current location.
+		/// </summary>
+		/// <param name="module">The module to save.</param>.
+		void SaveModule(NWN2Toolset.NWN2.Data.NWN2GameModule module);
+		
+		
+		/// <summary>
+		/// Saves a Neverwinter Nights 2 game module to a given path.
 		/// </summary>
 		/// <param name="module">The module to save.</param>
-		/// <remarks>Saves to the default modules directory.</remarks>
-		void SaveModule(NWN2Toolset.NWN2.Data.NWN2GameModule module);
+		/// <param name="path">The path to save the module to.</param>
+		void SaveModule(NWN2Toolset.NWN2.Data.NWN2GameModule module, string path);
 		
 		
 		/// <summary>
@@ -71,6 +81,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <returns>The current module, or null if no module is open.</returns>
 		NWN2Toolset.NWN2.Data.NWN2GameModule GetCurrentModule();
+		
+		
+		/// <summary>
+		/// Gets the absolute path of the module that is currently open in the toolset.
+		/// </summary>
+		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
+		string GetCurrentModulePath();
+		
+		
+		/// <summary>
+		/// Gets the absolute path of a given module.
+		/// </summary>
+		/// <param name="module">The module to return the path of.</param>
+		/// <returns>The absolute path of the given module.</returns>
+		string GetModulePath(NWN2GameModule module);
 		
 		
 		/// <summary>

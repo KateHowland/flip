@@ -31,7 +31,9 @@ using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
+using Sussex.Flip.Utils;
 using NWN2Toolset;
+using NWN2Toolset.NWN2.IO;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 {	
@@ -39,11 +41,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 	/// Tests the <see cref="Nwn2Session"/> class.
 	/// </summary>
 	[TestFixture]
-	public class Nwn2SessionTests
+	public sealed class Nwn2SessionTests
 	{
 		#region Fields
 		
-		protected INwn2Service service;
+		private ChannelFactory<INwn2Service> pipeChannelFactory;
+		
+		private INwn2Service service;
+		
+		private PathChecker pathChecker;
 		
 		#endregion
 		
@@ -51,14 +57,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		[TestFixtureSetUp]
 		public void Init()
-		{			
+		{					
+			pathChecker = new PathChecker();
+			
 //			try {
 //			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();
 			
-			ChannelFactory<INwn2Service> pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),
-			                                                                                   "net.pipe://localhost/NamedPipeEndpoint");
-			
-			service = pipeChannelFactory.CreateChannel();
+			pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),"net.pipe://localhost/NamedPipeEndpoint");
+			CreateService();
 //			
 //			int waited = 0;
 //			while (true) {
@@ -92,90 +98,180 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#endregion
 		
 		#region Tests
-		
+				
 		[Test]
-		public void CreatesDirectoryBasedModule()
+		public void CreatesDirectoryModule()
 		{			
+			string module = "dir module";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,module);
 			
-			// Call some method to create a module of location directory and name X
-			// Wait up to 10 seconds
-			// Assert that folder exists
-			// OEIUnserialize the folder and Assert that you get a valid NWN2GameModule object with properties
-			Assert.Fail();
+			path = pathChecker.GetUnusedDirectoryPath(path);
+					
+			service.CreateModule(path,ModuleLocationType.Directory);
+			
+			DirectoryInfo dir = new DirectoryInfo(path);
+			
+			Assert.IsTrue(dir.Exists,"Module directory was not created.");
+						
+			foreach (string expectedFile in new string[] { "MODULE.IFO", "module.jrl", "repute.fac" }) {
+				Assert.IsTrue(File.Exists(Path.Combine(path,expectedFile)),expectedFile + " was missing from module directory.");
+			}
+			
+			foreach (FileInfo file in dir.GetFiles()) {
+				file.Delete();
+			}
+			dir.Delete();
 		}
 		
 		
 		[Test]
-		public void CreatesFileBasedModule()
+		public void CreatesFileModule()
 		{
-			// Call some method to create a module of location file and name X at some nonModules directory path
-			// Wait up to 10 seconds
-			// Assert that the file exists
-			// OEIUnserialize the file and Assert that you get a valid NWN2GameModule object with properties
-			Assert.Fail();
+			string module = "file module.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,module);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			
+			Assert.IsTrue(File.Exists(path),"Module file was not created.");
+			
+			File.Delete(path);
 		}
 		
 		
 		[Test]
-		public void OpensDirectoryBasedModule()
+		public void RefusesToCreateDirectoryModuleAtFilePath()
 		{
-			Assert.Fail();
+			string module = "dir module.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,module);
+			string expectedException = "System.ArgumentException";
+			
+			path = pathChecker.GetUnusedFilePath(path);
+					
+			try {
+				service.CreateModule(path,ModuleLocationType.Directory);
+				Assert.Fail("Failed to raise " + expectedException + " when asked to " +
+				            "create a directory module at a file path.");
+			}
+			catch (FaultException e) {
+				if (!(e.ToString().Contains(expectedException))) {
+					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
+					            "create a directory module at a file path.");
+				}
+				Assert.IsFalse(Directory.Exists(path),"Created a directory module given a file path.");
+				
+				CreateService(); // service has faulted
+			}
+		}
+				
+		
+		[Test]
+		public void RefusesToCreateFileModuleAtDirectoryPath()
+		{
+			string module = "file module";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,module);
+			string expectedException = "System.ArgumentException";
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+					
+			try {
+				service.CreateModule(path,ModuleLocationType.File);
+				Assert.Fail("Failed to raise " + expectedException + " when asked to " +
+				            "create a file module at a directory path.");
+			}
+			catch (FaultException e) {
+				if (!(e.ToString().Contains(expectedException))) {
+					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
+					            "create a file module at a directory path.");
+				}
+				Assert.IsFalse(File.Exists(path),"Created a file module given a directory path.");
+				
+				CreateService(); // service has faulted
+			}
 		}
 		
 		
-		[Test]
-		public void OpensFileBasedModule()
+//		[Test]
+//		public void OpensDirectoryModule()
+//		{
+//			CreatesDirectoryModule();
+//			service.OpenModule(path,ModuleLocationType.Directory);			
+//			Assert.AreEqual(module,service.GetCurrentModuleName());			
+//		}
+//		
+//		
+//		[Test]
+//		public void OpensFileModule()
+//		{
+//			CreatesFileModule();
+//			service.OpenModule(path,ModuleLocationType.File);			
+//			Assert.AreEqual(module,service.GetCurrentModuleName());
+//		}
+//		
+//		
+//		[Test]
+//		public void SavesDirectoryModule()
+//		{
+//			Assert.Fail();
+//		}
+//		
+//		
+//		[Test]
+//		public void SavesFiledModule()
+//		{
+//			Assert.Fail();
+//		}
+//		
+//		
+//		[Test]
+//		public void DoesNotCreateModuleIfNameIsAlreadyTaken()
+//		{
+//			Assert.Fail();
+//		}
+//		
+//		
+//		[Test]
+//		public void DoesNotCreateModuleIfNameIsInvalid()
+//		{
+//			Assert.Fail();
+//		}
+//		
+//		
+//		[Test]
+//		public void AddsAreaToModule()
+//		{
+//			Assert.Fail();
+//		}
+//		
+//		
+//		[Test]
+//		public void DoesNotAddAreaIfNameIsAlreadyTaken()
+//		{
+//			Assert.Fail();
+//		}
+//		
+//		
+//		[Test]
+//		public void AddsObjectToArea()
+//		{
+//			Assert.Fail();
+//		}
+		
+		#endregion
+		
+		#region Methods
+		
+		/// <summary>
+		/// Creates the service via a channel.
+		/// </summary>
+		private void CreateService()
 		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void SavesDirectoryBasedModule()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void SavesFileBasedModule()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void DoesNotCreateModuleIfNameIsAlreadyTaken()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void DoesNotCreateModuleIfNameIsInvalid()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void AddsAreaToModule()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void DoesNotAddAreaIfNameIsAlreadyTaken()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void AddsObjectToArea()
-		{
-			Assert.Fail();
+			this.service = pipeChannelFactory.CreateChannel();
 		}
 		
 		#endregion
