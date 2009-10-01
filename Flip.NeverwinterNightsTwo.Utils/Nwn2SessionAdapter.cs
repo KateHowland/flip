@@ -45,6 +45,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		#endregion
 		
 		#region Constructors
+				
+		/// <summary>
+		/// Constructs a new <see cref="Nwn2SessionAdapter"/> instance.
+		/// </summary>
+		/// <remarks>This default constructor wraps a Nwn2Session object.</remarks>
+		public Nwn2SessionAdapter()
+		{
+			session = new Nwn2Session();
+		}
+		
 		
 		/// <summary>
 		/// Constructs a new <see cref="Nwn2SessionAdapter"/> instance.

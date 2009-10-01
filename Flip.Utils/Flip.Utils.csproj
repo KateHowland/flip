@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PathChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Licence.txt" />
   </ItemGroup>
