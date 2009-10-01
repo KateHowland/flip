@@ -144,7 +144,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void RefusesToCreateDirectoryModuleAtFilePath()
+		public void DoesNotCreateDirectoryModuleAtFilePath()
 		{
 			INwn2Service service = GetService();
 			
@@ -171,7 +171,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				
 		
 		[Test]
-		public void RefusesToCreateFileModuleAtDirectoryPath()
+		public void DoesNotCreateFileModuleAtDirectoryPath()
 		{
 			INwn2Service service = GetService();
 			
@@ -194,6 +194,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				}
 				Assert.IsFalse(File.Exists(path),"Created a file module given a directory path.");
 			}
+		}
+		
+		
+		[Test]
+		public void DoesNotCreateModuleIfPathIsAlreadyTaken()
+		{
+			INwn2Service service = GetService();
+			
+			string expectedException = "System.IO.IOException";
+			
+			string name = "duplicate.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			
+			try {
+				service.CreateModule(path,ModuleLocationType.File);
+				Assert.Fail("Failed to raise an exception when attempting " +
+				            "to create a module at an existing path.");
+			}
+			catch (FaultException e) {
+				if (!(e.ToString().Contains(expectedException))) {
+					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
+					            "create a file module at a directory path.");
+				}
+			}
+			
+			File.Delete(path);
 		}
 		
 		
@@ -309,55 +340,49 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		}
 		
 				
-//		
-//		
-//		[Test]
-//		public void SavesDirectoryModule()
-//		{
-//			Assert.Fail();
-//		}
-//		
-//		
-//		[Test]
-//		public void SavesFiledModule()
-//		{
-//			Assert.Fail();
-//		}
-//		
-//		
-//		[Test]
-//		public void DoesNotCreateModuleIfNameIsAlreadyTaken()
-//		{
-//			Assert.Fail();
-//		}
-//		
-//		
-//		[Test]
-//		public void DoesNotCreateModuleIfNameIsInvalid()
-//		{
-//			Assert.Fail();
-//		}
-//		
-//		
-//		[Test]
-//		public void AddsAreaToModule()
-//		{
-//			Assert.Fail();
-//		}
-//		
-//		
-//		[Test]
-//		public void DoesNotAddAreaIfNameIsAlreadyTaken()
-//		{
-//			Assert.Fail();
-//		}
-//		
-//		
-//		[Test]
-//		public void AddsObjectToArea()
-//		{
-//			Assert.Fail();
-//		}
+		[Test]
+		public void AddsAreaToModule()
+		{
+			INwn2Service service = GetService();			
+			
+			Assert.Fail();
+		}
+		
+		
+		[Test]
+		public void DoesNotAddAreaIfNameIsAlreadyTaken()
+		{
+			INwn2Service service = GetService();			
+			
+			Assert.Fail();
+		}
+		
+		
+		[Test]
+		public void AddsObjectToArea()
+		{
+			INwn2Service service = GetService();			
+			
+			Assert.Fail();
+		}
+				
+				
+		[Test]
+		public void SavesDirectoryModule()
+		{
+			INwn2Service service = GetService();			
+			
+			Assert.Fail();
+		}
+		
+		
+		[Test]
+		public void SavesFiledModule()
+		{
+			INwn2Service service = GetService();			
+			
+			Assert.Fail();
+		}
 		
 		#endregion
 		

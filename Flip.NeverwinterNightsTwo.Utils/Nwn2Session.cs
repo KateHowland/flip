@@ -64,6 +64,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			if (path == null) throw new ArgumentNullException("path");
 			if (path == String.Empty) throw new ArgumentException("path");
+			
+			if (location == ModuleLocationType.Directory && Directory.Exists(path) ||
+			    location == ModuleLocationType.File && File.Exists(path)) {
+				throw new IOException("The path provided was already occupied (" + path + ").");
+			}
 						
 			string name = Path.GetFileNameWithoutExtension(path);
 			
