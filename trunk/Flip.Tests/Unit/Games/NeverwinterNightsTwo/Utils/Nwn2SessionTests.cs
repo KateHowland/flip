@@ -25,11 +25,13 @@
 
 
 using System;
+using System.IO;
 using System.ServiceModel;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
+using NWN2Toolset;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 {	
@@ -50,41 +52,41 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[TestFixtureSetUp]
 		public void Init()
 		{			
-			try {
-			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();
+//			try {
+//			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();
 			
 			ChannelFactory<INwn2Service> pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),
 			                                                                                   "net.pipe://localhost/NamedPipeEndpoint");
 			
 			service = pipeChannelFactory.CreateChannel();
-			
-			int waited = 0;
-			while (true) {
-				try {
-					service.GetCurrentModuleName();
-					System.Windows.MessageBox.Show("Finished loading.");
-					break;
-				}
-				catch (EndpointNotFoundException) {
-					Thread.Sleep(500);					
-					waited += 500;
-					service = pipeChannelFactory.CreateChannel();
-				}
-			}
-			
-			int seconds = waited < 1000 ? 0 : waited/1000;
-			
-			System.Windows.MessageBox.Show("Waited about " + seconds + " seconds.");
-			} catch (Exception e) {
-				System.Windows.MessageBox.Show(e.ToString());
-			}
+//			
+//			int waited = 0;
+//			while (true) {
+//				try {
+//					service.GetCurrentModuleName();
+//					System.Windows.MessageBox.Show("Finished loading.");
+//					break;
+//				}
+//				catch (EndpointNotFoundException) {
+//					Thread.Sleep(500);					
+//					waited += 500;
+//					service = pipeChannelFactory.CreateChannel();
+//				}
+//			}
+//			
+//			int seconds = waited < 1000 ? 0 : waited/1000;
+//			
+//			System.Windows.MessageBox.Show("Waited about " + seconds + " seconds.");
+//			} catch (Exception e) {
+//				System.Windows.MessageBox.Show(e.ToString());
+//			}
 		}
 		
 		
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
+//			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
 		}
 		
 		#endregion
@@ -93,7 +95,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		[Test]
 		public void CreatesDirectoryBasedModule()
-		{
+		{			
+			
 			// Call some method to create a module of location directory and name X
 			// Wait up to 10 seconds
 			// Assert that folder exists
@@ -128,6 +131,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void SavesDirectoryBasedModule()
+		{
+			Assert.Fail();
+		}
+		
+		
+		[Test]
+		public void SavesFileBasedModule()
+		{
+			Assert.Fail();
+		}
+		
+		
+		[Test]
 		public void DoesNotCreateModuleIfNameIsAlreadyTaken()
 		{
 			Assert.Fail();
@@ -156,28 +173,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void SavesDirectoryBasedModule()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void SavesFileBasedModule()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void ConvertsFileBasedModuleToDirectory()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void ConvertsDirectoryBasedModuleToFile()
+		public void AddsObjectToArea()
 		{
 			Assert.Fail();
 		}
