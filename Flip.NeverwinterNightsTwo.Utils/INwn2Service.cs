@@ -103,6 +103,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// with terrain; false to create an interior area with tiles.</param>
 		/// <param name="size">The size of area to create.</param>
 		[OperationContract]
-		void CreateArea(string name, bool exterior, Size size);
+		void AddArea(string name, bool exterior, Size size);
+		
+		
+		/// <summary>
+		/// Gets a collection of names of every area in the 
+		/// current module.
+		/// </summary>
+		/// <returns>A collection of area names, or null
+		/// if there is no module open.</returns>
+		[OperationContract]
+		System.Collections.Generic.ICollection<string> GetAreas();
 	}
 }

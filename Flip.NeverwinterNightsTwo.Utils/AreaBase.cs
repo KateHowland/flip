@@ -51,19 +51,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		#region Properties
 
 		/// <summary>
-		/// The minimum allowable height/width of an area,
-		/// expressed in the units used by
-		/// <see cref="System.Drawing.Size"/>.
+		/// The smallest possible height/width of an
+		/// area. For interior areas, this is the number
+		/// of tiles. For exterior areas, this is the 
+		/// number of small grid squares, excluding
+		/// the inaccessible outer region.
 		/// </summary>
-		public const byte MinimumAreaLength = 8;
+		/// <remarks>Although interior and exterior
+		/// areas share the same minimum and maximum
+		/// length boundaries, a 10x10 exterior area
+		/// is much larger than a 10x10 interior area.
+		/// Exterior area lengths are automatically
+		/// rounded off to the nearest acceptable length
+		/// (4, 8, 12, 16, 20, 24, 28 or 32).</remarks>
+		public const byte MinimumAreaLength = 1;
 
 
 		/// <summary>
-		/// The minimum allowable height/width of an area,
-		/// expressed in the units used by
-		/// <see cref="System.Drawing.Size"/>.
+		/// The largest possible height/width of an
+		/// area. For interior areas, this is the number
+		/// of tiles. For exterior areas, this is the 
+		/// number of small grid squares, excluding
+		/// the inaccessible outer region.
 		/// </summary>
-		public const byte MaximumAreaLength = 16;
+		/// <remarks>Although interior and exterior
+		/// areas share the same minimum and maximum
+		/// length boundaries, a 10x10 exterior area
+		/// is much larger than a 10x10 interior area.
+		/// Exterior area lengths are automatically
+		/// rounded off to the nearest acceptable length
+		/// (4, 8, 12, 16, 20, 24, 28 or 32).</remarks>
+		public const byte MaximumAreaLength = 8;
 		
 
 		/// <summary>

@@ -25,6 +25,8 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.ServiceModel;
 using System.Threading;
@@ -341,27 +343,126 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 				
 		[Test]
-		public void AddsAreaToModule()
+		public void AddsAreaToFileModule()
 		{
-			INwn2Service service = GetService();			
+			INwn2Service service = GetService();
 			
-			Assert.Fail();
+			string name = "area adding.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			
+			string area1 = "land of wind and ghosts";
+			string area2 = "land of milk and honey";
+			
+			service.AddArea(area1,true,size);
+			service.AddArea(area2,false,size);
+			
+			service.SaveModule();
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			ICollection<string> areas = service.GetAreas();
+			Assert.IsNotNull(areas);
+			Assert.AreEqual(2,areas.Count);
+			Assert.IsTrue(areas.Contains(area1));
+			Assert.IsTrue(areas.Contains(area2));
+			
+			service.CloseModule();
+			
+			File.Delete(path);
+		}
+				
+		
+		[Test]
+		public void AddsAreaToDirectoryModule()
+		{
+			INwn2Service service = GetService();
+			
+			string name = "area adding";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			
+			string area1 = "alaska";
+			string area2 = "hawaii";
+			
+			service.AddArea(area1,true,size);
+			service.AddArea(area2,false,size);
+			
+			service.SaveModule();
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			ICollection<string> areas = service.GetAreas();
+			Assert.IsNotNull(areas);
+			Assert.AreEqual(2,areas.Count);
+			Assert.IsTrue(areas.Contains(area1));
+			Assert.IsTrue(areas.Contains(area2));
+			
+			service.CloseModule();
+			
+			DirectoryInfo dir = new DirectoryInfo(path);
+			foreach (FileInfo file in dir.GetFiles()) {
+				file.Delete();
+			}
+			dir.Delete();
 		}
 		
 		
 		[Test]
 		public void DoesNotAddAreaIfNameIsAlreadyTaken()
 		{
-			INwn2Service service = GetService();			
+			INwn2Service service = GetService();
 			
-			Assert.Fail();
-		}
+			string expectedException = "System.IO.IOException";
+			
+			string name = "area duplication.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string areaName = "duplicate area";
+			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			
+			service.AddArea(areaName,true,size);
+						
+			try {
+				service.AddArea(areaName,false,size);
+				Assert.Fail("Failed to raise an exception when attempting " +
+				            "to add an area with a duplicate name.");
+			}
+			catch (FaultException e) {
+				if (!(e.ToString().Contains(expectedException))) {
+					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
+					            "to add an area with a duplicate name.");
+				}
+			}
+			
+			File.Delete(path);
+		}		
 		
 		
 		[Test]
 		public void AddsObjectToArea()
 		{
-			INwn2Service service = GetService();			
+			INwn2Service service = GetService();
 			
 			Assert.Fail();
 		}
