@@ -37,19 +37,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	public interface INwn2Service
 	{
 		/// <summary>
-		/// Creates a directory-based Neverwinter Nights 2 game module.
+		/// Creates a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The name to give the module.</param>
+		/// <param name="path">The path to create the module at. If 'location'
+		/// is set to ModuleLocationType.Directory, this must be the path for
+		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+		/// <param name="location">The serialisation form of the module.</param>
 		[OperationContract]
-		void CreateDirectoryModule(string name);
-				
-		
-		/// <summary>
-		/// Creates a file-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		[OperationContract]
-		void CreateFileModule(string name);
+		void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
 		
 		
 		/// <summary>
@@ -82,6 +77,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The name of the current module, or null if no module is open.</returns>
 		[OperationContract]
 		string GetCurrentModuleName();
+		
+		
+		/// <summary>
+		/// Gets the absolute path of the module that is currently open in the toolset.
+		/// </summary>
+		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
+		[OperationContract]
+		string GetCurrentModulePath();
 		
 		
 		/// <summary>

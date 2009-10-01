@@ -25,6 +25,7 @@
 
 using System;
 using System.Drawing;
+using System.ServiceModel;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.IO;
 
@@ -33,7 +34,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// <summary>
 	/// A service providing access to a Neverwinter Nights 2 toolset session.
 	/// </summary>
-	public class Nwn2SessionAdapter : INwn2Service, INwn2Session
+	[ServiceBehavior(IncludeExceptionDetailInFaults=true)]
+	public class Nwn2SessionAdapter : INwn2Service
 	{
 		#region Fields
 		
@@ -71,22 +73,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		#region INwn2Service methods
 		
 		/// <summary>
-		/// Creates a directory-based Neverwinter Nights 2 game module.
+		/// Creates a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		public void CreateDirectoryModule(string name)
+		/// <param name="path">The path to create the module at. If 'location'
+		/// is set to ModuleLocationType.Directory, this must be the path for
+		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+		/// <param name="location">The serialisation form of the module.</param>
+		public void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location)
 		{
-			session.CreateModule(name, ModuleLocationType.Directory);
-		}
-				
-		
-		/// <summary>
-		/// Creates a file-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		public void CreateFileModule(string name)
-		{
-			session.CreateModule(name, ModuleLocationType.File);
+			session.CreateModule(path,location);
 		}
 		
 		
@@ -129,6 +124,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			NWN2GameModule module = session.GetCurrentModule();
 			if (module == null) return null;
 			else return module.Name;
+		}		
+		
+		
+		/// <summary>
+		/// Gets the absolute path of the module that is currently open in the toolset.
+		/// </summary>
+		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
+		public string GetCurrentModulePath()
+		{
+			return session.GetCurrentModulePath();
 		}
 		
 		
@@ -152,70 +157,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void CreateArea(string name, bool exterior, Size size)
 		{
 			session.AddArea(name,exterior,size);
-		}
-		
-		#endregion
-		 
-		#region INwn2Session methods
-				
-		/// <summary>
-		/// Creates a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The name to give the module.</param>
-		/// <param name="location">The type of module to create.</param>
-		public void CreateModule(string name, ModuleLocationType location)
-		{
-			session.CreateModule(name,location);
-		}
-		
-		
-		/// <summary>
-		/// Saves changes to a Neverwinter Nights 2 game module to disk.
-		/// </summary>
-		/// <param name="module">The module to save.</param>
-		/// <remarks>Saves to the default modules directory.</remarks>
-		public void SaveModule(NWN2GameModule module)
-		{
-			session.SaveModule(module);
-		}
-		
-		
-		/// <summary>
-		/// Gets the module that is currently open in the toolset.
-		/// </summary>
-		/// <returns>The current module, or null if no module is open.</returns>
-		public NWN2GameModule GetCurrentModule()
-		{
-			return session.GetCurrentModule();
-		}
-		
-		
-		/// <summary>
-		/// Adds an area to the current module.
-		/// </summary>
-		/// <param name="name">The name to give the area.</param>
-		/// <param name="exterior">True to create an exterior area
-		/// with terrain; false to create an interior area with tiles.</param>
-		/// <param name="size">The size of area to create.</param>
-		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
-		public AreaBase AddArea(string name, bool exterior, Size size)
-		{
-			return session.AddArea(name,exterior,size);
-		}
-		
-			
-		/// <summary>
-		/// Adds an area to a given module.
-		/// </summary>
-		/// <param name="module">The module to add the area to.</param>
-		/// <param name="name">The name to give the area.</param>
-		/// <param name="exterior">True to create an exterior area
-		/// with terrain; false to create an interior area with tiles.</param>
-		/// <param name="size">The size of area to create.</param>
-		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
-		public AreaBase AddArea(NWN2GameModule module, string name, bool exterior, Size size)
-		{
-			return session.AddArea(module,name,exterior,size);
 		}
 		
 		#endregion

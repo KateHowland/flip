@@ -47,6 +47,8 @@ namespace Sussex.Flip.Tests.Unit.Utils
 		[Test]
 		public void ProvidesUnusedFilePath()
 		{
+			FileStream file1, file2;
+			
 			string dir = Path.GetTempPath();
 			
 			string filename = "Test file";
@@ -69,15 +71,20 @@ namespace Sussex.Flip.Tests.Unit.Utils
 			// Should return the suggested path:
 			Assert.AreEqual(path1,pathChecker.GetUnusedFilePath(path1));
 			
-			File.Create(path1);
+			file1 = File.Create(path1);
+			file1.Close();
 			
 			// Should return the path for a copy:
 			Assert.AreEqual(path2,pathChecker.GetUnusedFilePath(path1));
 			
-			File.Create(path2);
+			file2 = File.Create(path2);
+			file2.Close();
 			
 			// Should return the path for a second copy:
 			Assert.AreEqual(path3,pathChecker.GetUnusedFilePath(path1));
+			
+			File.Delete(path1);
+			File.Delete(path2);
 		}
 		
 		
@@ -114,6 +121,9 @@ namespace Sussex.Flip.Tests.Unit.Utils
 			
 			// Should return the path for a second copy:
 			Assert.AreEqual(path3,pathChecker.GetUnusedDirectoryPath(path1));
+			
+			Directory.Delete(path1);
+			Directory.Delete(path2);
 		}
 	}
 }

@@ -40,8 +40,8 @@ namespace Sussex.Flip.Utils
 		/// the preferred path itself, or the next available path
 		/// (e.g. C:\file (2).txt, C:\file (3).txt)
 		/// </summary>
-		/// <param name="preferredPath">The preferred path. This path will be
-		/// returned if it is available.</param>
+		/// <param name="preferredPath">The preferred path, including file extension. 
+		/// This path will simply be returned if it is available.</param>
 		/// <returns>Returns an available file path.</returns>
 		public string GetUnusedFilePath(string preferredPath)
 		{
@@ -71,8 +71,8 @@ namespace Sussex.Flip.Utils
 		/// the preferred path itself, or the next available path
 		/// (e.g. C:\folder (2), C:\folder (3))
 		/// </summary>
-		/// <param name="preferredPath">The preferred path. This path will be
-		/// returned if it is available.</param>
+		/// <param name="preferredPath">The preferred path. This path will 
+		/// simply be returned if it is available.</param>
 		/// <returns>Returns an available directory path.</returns>
 		public string GetUnusedDirectoryPath(string preferredPath)
 		{			

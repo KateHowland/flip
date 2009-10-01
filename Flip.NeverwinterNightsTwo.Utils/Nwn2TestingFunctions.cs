@@ -95,7 +95,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			area1.Save();
 			area2.Save();
 			
-			session.SaveModule(module);
+			session.SaveModule(module,session.GetModulePath(module));
 			
 			return module;
 		}
