@@ -261,7 +261,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			if (module == null) throw new ArgumentNullException("module");
 			
-			// TODO: Check that module.Repository.Name works for both types of module:
+			if (module.Areas.ContainsCaseInsensitive(name)) 
+				throw new IOException("An area called '" + name + "' already exists in this module.");
+			
 			NWN2GameArea nwn2area = new NWN2GameArea(name,
 				                                     module.Repository.Name,
 				                                     module.Repository);

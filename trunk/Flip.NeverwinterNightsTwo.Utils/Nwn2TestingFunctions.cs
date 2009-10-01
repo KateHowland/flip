@@ -60,11 +60,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			NWN2GameModule module = session.GetCurrentModule();
 			
-			Size small = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
-			Size large = new Size(Area.MaximumAreaLength,Area.MaximumAreaLength);
+			Size size = new Size(Area.MaximumAreaLength,Area.MinimumAreaLength);
 			
-			AreaBase area1 = session.AddArea(module,"desert",true,large);
-			AreaBase area2 = session.AddArea(module,"castle",false,large);
+			AreaBase area1 = session.AddArea(module,"desert",true,size);
+			AreaBase area2 = session.AddArea(module,"castle",false,size);
 			
 			NWN2ObjectType type = NWN2ObjectType.Creature;
 			

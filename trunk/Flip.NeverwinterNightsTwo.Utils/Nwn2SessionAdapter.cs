@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.ServiceModel;
 using NWN2Toolset.NWN2.Data;
@@ -154,9 +155,30 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="exterior">True to create an exterior area
 		/// with terrain; false to create an interior area with tiles.</param>
 		/// <param name="size">The size of area to create.</param>
-		public void CreateArea(string name, bool exterior, Size size)
+		public void AddArea(string name, bool exterior, Size size)
 		{
 			session.AddArea(name,exterior,size);
+		}
+		
+		
+		/// <summary>
+		/// Gets a list of names of every area in the 
+		/// current module.
+		/// </summary>
+		/// <returns>A list of area names, or null
+		/// if there is no module open.</returns>
+		public ICollection<string> GetAreas()
+		{
+			NWN2GameModule module = session.GetCurrentModule();
+						
+			if (module == null) return null;
+			else {
+				List<string> areas = new List<string>(module.Areas.Count);
+				foreach (string key in module.Areas.Keys) {
+					areas.Add(key);
+				}
+				return areas;
+			}
 		}
 		
 		#endregion
