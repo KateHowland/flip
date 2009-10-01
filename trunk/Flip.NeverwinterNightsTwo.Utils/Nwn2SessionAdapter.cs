@@ -86,22 +86,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Opens a directory-based Neverwinter Nights 2 game module.
+		/// Opens a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The name of the module to open.</param>
-		public void OpenDirectoryModule(string name)
+		/// <param name="name">The path of the module to open.</param>
+		/// <param name="location">The serialisation form of the module.</param>
+		public void OpenModule(string path, ModuleLocationType location)
 		{
-			session.OpenDirectoryModule(name);
-		}
-		
-		
-		/// <summary>
-		/// Opens a file-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The full path of the module to open, including file extension.</param>
-		public void OpenFileModule(string path)
-		{
-			session.OpenFileModule(path);
+			session.OpenModule(path,location);
 		}
 		
 		
@@ -112,6 +103,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void SaveModule()
 		{
 			session.SaveModule(session.GetCurrentModule());
+		}
+		
+		
+		/// <summary>
+		/// Closes the current module.
+		/// </summary>
+		public void CloseModule()
+		{
+			session.CloseModule();
 		}
 		
 		

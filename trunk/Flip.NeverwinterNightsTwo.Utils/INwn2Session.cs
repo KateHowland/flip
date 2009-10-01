@@ -26,8 +26,6 @@
 using System;
 using System.Drawing;
 using System.ServiceModel;
-using NWN2Toolset.NWN2.Data;
-using NWN2Toolset.NWN2.IO;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -43,21 +41,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// is set to ModuleLocationType.Directory, this must be the path for
 		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
 		/// <param name="location">The serialisation form of the module.</param>
-		void CreateModule(string path, ModuleLocationType location);
-		
-		
+		void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
+							
+				
 		/// <summary>
-		/// Opens a directory-based Neverwinter Nights 2 game module.
+		/// Opens a Neverwinter Nights 2 game module.
 		/// </summary>
-		/// <param name="name">The name of the module to open.</param>
-		void OpenDirectoryModule(string name);
-		
-		
-		/// <summary>
-		/// Opens a file-based Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The full path of the module to open, including file extension.</param>
-		void OpenFileModule(string path);
+		/// <param name="name">The path of the module to open.</param>
+		/// <param name="location">The serialisation form of the module.</param>
+		void OpenModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
 		
 		
 		/// <summary>
@@ -74,6 +66,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="module">The module to save.</param>
 		/// <param name="path">The path to save the module to.</param>
 		void SaveModule(NWN2Toolset.NWN2.Data.NWN2GameModule module, string path);
+		
+				
+		/// <summary>
+		/// Closes the current module.
+		/// </summary>
+		void CloseModule();
 		
 		
 		/// <summary>
@@ -95,7 +93,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="module">The module to return the path of.</param>
 		/// <returns>The absolute path of the given module.</returns>
-		string GetModulePath(NWN2GameModule module);
+		string GetModulePath(NWN2Toolset.NWN2.Data.NWN2GameModule module);
 		
 		
 		/// <summary>
@@ -118,6 +116,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// with terrain; false to create an interior area with tiles.</param>
 		/// <param name="size">The size of area to create.</param>
 		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
-		AreaBase AddArea(NWN2GameModule module, string name, bool exterior, Size size);
+		AreaBase AddArea(NWN2Toolset.NWN2.Data.NWN2GameModule module, string name, bool exterior, Size size);
 	}
 }
