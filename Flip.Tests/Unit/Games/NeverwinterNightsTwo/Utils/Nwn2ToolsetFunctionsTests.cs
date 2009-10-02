@@ -41,16 +41,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 	{	
 		#region Setup
 		
-		[TestFixtureTearDown]
-		public void Dispose()
-		{
-			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();		
-		}
+		
 		
 		#endregion
 		
 		#region Tests
-		
+				
 		[Test]
 		public void LaunchesToolset()
 		{

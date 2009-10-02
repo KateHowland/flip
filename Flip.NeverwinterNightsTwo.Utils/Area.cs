@@ -24,13 +24,16 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.DirectX;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
+using NWN2Toolset.NWN2.Data.TypedCollections;
 using OEIShared.OEIMath;
+using OEIShared.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -111,7 +114,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="blueprint">The blueprint to create the game
 		/// object from.</param>
-		/// <param name="tag">The tag to give the newly-created object.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
 		/// <returns>The newly-created game object.</returns>
 		public override INWN2Instance AddGameObject(INWN2Blueprint blueprint, string tag)
 		{
@@ -119,9 +123,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 			INWN2Instance instance = NWN2GlobalBlueprintManager.CreateInstanceFromBlueprint(blueprint);
 
-			((INWN2Object)instance).Tag = tag;
+			if (tag != null) {
+				((INWN2Object)instance).Tag = tag;
+			}
 
 			nwn2Area.AddInstance(instance);
+			
+			Save();
 
 			return instance;
 		}
@@ -132,28 +140,98 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="blueprint">The blueprint to create the game
 		/// object from.</param>
-		/// <param name="tag">The tag to give the newly-created object.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
 		/// <param name="position">The position within the area to place 
 		/// the object.</param>
 		/// <returns>The newly-created game object.</returns>
-		public override INWN2Instance AddGameObject(INWN2Blueprint blueprint, string tag, Vector3 position)
+		public override INWN2Instance AddGameObject(INWN2Blueprint blueprint, string tag, Vector3? position)
 		{
 			INWN2Instance instance = AddGameObject(blueprint, tag);
 			
-			if (position != null) {
+			if (position.HasValue) {
 				INWN2SituatedInstance situated = instance as INWN2SituatedInstance;
 				if (situated == null) {
 					throw new ArgumentException("blueprint", "Instances of the given blueprint have " + 
 					                            "no Position field - their position cannot be set.");
 				}
 				else {
-					situated.Position = position;
+					situated.Position = position.Value;
 				}
 			}
+			
+			Save();
 
 			return instance;
 		}
+
+
+		/// <summary>
+		/// Creates an instance of a blueprint and adds it to the area.
+		/// </summary>
+		/// <param name="type">The type of object to add.</param>
+		/// <param name="resref">The resref of the blueprint to create the object from.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
+		/// <returns>The newly-created game object.</returns>
+		public override INWN2Instance AddGameObject(NWN2ObjectType type, string resref, string tag)
+		{
+			return AddGameObject(type,resref,tag,null);
+		}
+			
+			
+		/// <summary>
+		/// Creates an instance of a blueprint and adds it to the area.
+		/// </summary>
+		/// <param name="type">The type of object to add.</param>
+		/// <param name="resref">The resref of the blueprint to create the object from.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
+		/// <param name="position">The position within the area to place 
+		/// the object.</param>
+		/// <returns>The newly-created game object.</returns>
+		public override INWN2Instance AddGameObject(NWN2ObjectType type, string resref, string tag, Vector3? position)
+		{
+			if (resref == null) throw new ArgumentNullException("resref");
+			if (resref == String.Empty) throw new ArgumentException("resref");			
+			
+			INWN2Blueprint blueprint = NWN2GlobalBlueprintManager.FindBlueprint(type,new OEIResRef(resref),true,true,true);
+			
+			if (blueprint == null) 
+				throw new ArgumentException("resref","No blueprint with the given type and ResRef was found.");
+			
+			return AddGameObject(blueprint,tag,position);
+		}
+						
 		
+		/// <summary>
+		/// Gets the number of objects in this area matching a given description.
+		/// </summary>
+		/// <param name="type">The type of objects to count.</param>
+		/// <param name="tag">Only objects with this tag will be counted.
+		/// Pass null to ignore this criterion.</param>
+		/// <returns>The objects matching the given description.</returns>
+		public override List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag)
+		{
+			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
+			List<INWN2Instance> instances = new List<INWN2Instance>();
+						
+			if (tag == null) {
+				foreach (INWN2Instance instance in all) {
+					instances.Add(instance);
+				}
+			}
+			else {
+				foreach (INWN2Object obj in all) {
+					if (obj.Tag == tag) {
+						instances.Add((INWN2Instance)obj);
+					}
+				}
+			}
+			
+			return instances;
+		}
+					
 		
 		/// <summary>
 		/// Saves the module.

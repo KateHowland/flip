@@ -36,6 +36,7 @@ using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.Utils;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.IO;
+using NWN2Toolset.NWN2.Data.Templates;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 {	
@@ -464,7 +465,80 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		{
 			INwn2Service service = GetService();
 			
-			Assert.Fail();
+			string name = "object adding.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			Size size = new Size(8,8);			
+			string area = "area";
+			service.AddArea(area,true,size);
+			
+			NWN2ObjectType[] types = new NWN2ObjectType[] { NWN2ObjectType.Creature,
+															NWN2ObjectType.Creature,
+															NWN2ObjectType.Creature,
+															NWN2ObjectType.Placeable,
+															NWN2ObjectType.PlacedEffect };
+			string[] resRefs = new string[] { "c_giantfire", "n_greycloak", "n_greycloak", "plc_bs_sunkenf", "n2_fx_bonfire" };
+			string[] tags = new string[] { "giant", "duplicatecloak", "duplicatecloak", "inn", "bonfire" };
+			
+			for (int i = 0; i < types.Length; i++) {
+				service.AddObject(area,types[i],resRefs[i],tags[i]);
+			}
+			
+			Assert.AreEqual(1,service.GetObjectCount(area,NWN2ObjectType.Creature,"giant"));
+			Assert.AreEqual(2,service.GetObjectCount(area,NWN2ObjectType.Creature,"duplicatecloak"));
+			Assert.AreEqual(1,service.GetObjectCount(area,NWN2ObjectType.Placeable,"inn"));
+			Assert.AreEqual(1,service.GetObjectCount(area,NWN2ObjectType.PlacedEffect,"bonfire"));
+			
+			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.Creature,"bonfire"));
+			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.Placeable,"giant"));
+			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.PlacedEffect,"inn"));
+			
+			service.CloseModule();
+			File.Delete(path);
+		}
+		
+		
+		[Test]
+		public void DoesNotAddObjectWithUnknownResref()
+		{
+			INwn2Service service = GetService();
+			
+			string expectedException = "System.ArgumentException";
+			
+			string name = "unknown resref object adding.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			Size size = new Size(8,8);			
+			string area = "area";
+			service.AddArea(area,true,size);
+			
+			try {
+				service.AddObject(area,NWN2ObjectType.Creature,"I am not a real resref","tag");
+				Assert.Fail("Failed to raise " + expectedException + " when attempting " +
+				            "to add an object.");
+			}
+			catch (FaultException e) {
+				if (!(e.ToString().Contains(expectedException))) {
+					Assert.Fail("Failed to raise " + expectedException + " when attempting " +
+					            "to add an object." + Environment.NewLine + "Instead raised: " + e);
+				}
+				service = GetService();
+			}
+						
+			service.CloseModule();
+			File.Delete(path);
 		}
 				
 				
@@ -478,7 +552,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void SavesFiledModule()
+		public void SavesFileModule()
 		{
 			INwn2Service service = GetService();			
 			

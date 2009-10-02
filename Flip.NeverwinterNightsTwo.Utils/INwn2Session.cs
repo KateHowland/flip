@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.ServiceModel;
 
@@ -117,5 +118,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="size">The size of area to create.</param>
 		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
 		AreaBase AddArea(NWN2Toolset.NWN2.Data.NWN2GameModule module, string name, bool exterior, Size size);
+				
+		
+		/// <summary>
+		/// Constructs a new <see cref="AreaBase"/> instance.
+		/// </summary>
+		/// <param name="nwn2area">The Neverwinter Nights 2 area
+		/// the <see cref="AreaBase"/> facade will wrap.</param>
+		/// <returns>A new <see cref="AreaBase"/> instance.</returns>
+		/// <remarks>This is a Factory Method.</remarks>
+		AreaBase CreateAreaBase(NWN2Toolset.NWN2.Data.NWN2GameArea nwn2area);
 	}
 }

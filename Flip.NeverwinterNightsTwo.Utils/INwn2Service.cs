@@ -113,6 +113,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A collection of area names, or null
 		/// if there is no module open.</returns>
 		[OperationContract]
-		System.Collections.Generic.ICollection<string> GetAreas();
+		System.Collections.Generic.ICollection<string> GetAreas();		
+		
+		
+		/// <summary>
+		/// Adds an object to the given area.
+		/// </summary>
+		/// <param name="areaName">The name of the area in the current module to add the object to.</param>
+		/// <param name="type">The type of object to add.</param>
+		/// <param name="resref">The resref of the blueprint to create the object from.</param>
+		/// <param name="tag">The tag of the object.</param>
+		[OperationContract]
+		void AddObject(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string resref, string tag);
+		
+		
+		/// <summary>
+		/// Gets the number of objects matching a given description
+		/// in a given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to count.</param>
+		/// <param name="tag">Only objects with this tag will be counted.
+		/// Pass null to ignore this criterion.</param>
+		/// <returns>The number of objects matching the given description
+		/// in the given area.</returns>
+		[OperationContract]
+		int GetObjectCount(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string tag);	
 	}
 }
