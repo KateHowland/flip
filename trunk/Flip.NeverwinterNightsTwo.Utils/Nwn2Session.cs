@@ -24,11 +24,17 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
+using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
+using NWN2Toolset.NWN2.Data.TypedCollections;
+using OEIShared.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -286,7 +292,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// the <see cref="AreaBase"/> facade will wrap.</param>
 		/// <returns>A new <see cref="AreaBase"/> instance.</returns>
 		/// <remarks>This is a Factory Method.</remarks>
-		protected AreaBase CreateAreaBase(NWN2GameArea nwn2area)
+		public AreaBase CreateAreaBase(NWN2GameArea nwn2area)
 		{
 			return new Area(nwn2area);
 		}

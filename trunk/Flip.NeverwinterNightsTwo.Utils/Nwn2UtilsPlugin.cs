@@ -175,6 +175,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				pluginMenuItem.Items.Add(item);
 			}
+			
+			EnableDebuggingMethods();
 		}
 		
 		
@@ -208,6 +210,51 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Shutdown(INWN2PluginHost cHost)
 		{
+		}
+		
+		
+		/// <summary>
+		/// Makes a set of methods available through the plugin menu
+		/// which are for debugging purposes.
+		/// </summary>
+		private void EnableDebuggingMethods()
+		{			
+			MenuButtonItem debuggingMethods = new MenuButtonItem("Debugging methods");
+			pluginMenuItem.Items.Add(debuggingMethods);
+			
+			MenuButtonItem checkAreaTerrainProperties = new MenuButtonItem("Check area terrain properties");
+			debuggingMethods.Items.Add(checkAreaTerrainProperties);
+			checkAreaTerrainProperties.Activate += delegate 
+			{
+				string message;
+				NWN2GameArea area = NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area;
+				if (area == null) {
+					message = "No module open.";
+				}
+				else {
+					message = 	
+						"-- " + area.Natural + " --" + Environment.NewLine +
+						"HasTerrain: " + area.HasTerrain + Environment.NewLine +
+						"Interior: " + area.Interior + Environment.NewLine +
+						"Natural: " + area.Natural + Environment.NewLine +
+						"Skybox: " + area.Skybox + Environment.NewLine +
+						"TerrainFlags: " + area.TerrainFlags + Environment.NewLine +
+						"TerrainResource: " + area.TerrainResource + Environment.NewLine +
+						"TerrainWalkmeshResource: " + area.TerrainWalkmeshResource + Environment.NewLine +
+						"Tiles: " + area.Tiles + Environment.NewLine +
+						"Underground: " + area.Underground;
+				}
+				System.Windows.Forms.MessageBox.Show(message);
+			};
+			
+			MenuButtonItem createInteriorAndExteriorArea = new MenuButtonItem("Create interior and exterior area");
+			debuggingMethods.Items.Add(createInteriorAndExteriorArea);
+			createInteriorAndExteriorArea.Activate += delegate 
+			{
+				System.Drawing.Size size = new System.Drawing.Size(8,16);
+				session.AddArea("interior",false,size);
+				session.AddArea("exterior",true,size);
+			};
 		}
 		
 		#endregion

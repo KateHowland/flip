@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.DirectX;
 using NWN2Toolset.NWN2.Data;
@@ -143,7 +144,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="blueprint">The blueprint to create the game
 		/// object from.</param>
-		/// <param name="tag">The tag to give the newly-created object.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
 		/// <returns>The newly-created game object.</returns>
 		public abstract INWN2Instance AddGameObject(INWN2Blueprint blueprint, string tag);
 
@@ -153,11 +155,46 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="blueprint">The blueprint to create the game
 		/// object from.</param>
-		/// <param name="tag">The tag to give the newly-created object.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
 		/// <param name="position">The position within the area to place 
 		/// the object.</param>
 		/// <returns>The newly-created game object.</returns>
-		public abstract INWN2Instance AddGameObject(INWN2Blueprint blueprint, string tag, Vector3 position);
+		public abstract INWN2Instance AddGameObject(INWN2Blueprint blueprint, string tag, Vector3? position);
+				
+		
+		/// <summary>
+		/// Creates an instance of a blueprint and adds it to the area.
+		/// </summary>
+		/// <param name="type">The type of object to add.</param>
+		/// <param name="resref">The resref of the blueprint to create the object from.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
+		/// <returns>The newly-created game object.</returns>
+		public abstract INWN2Instance AddGameObject(NWN2ObjectType type, string resref, string tag);
+			
+			
+		/// <summary>
+		/// Creates an instance of a blueprint and adds it to the area.
+		/// </summary>
+		/// <param name="type">The type of object to add.</param>
+		/// <param name="resref">The resref of the blueprint to create the object from.</param>
+		/// <param name="tag">The tag to give the newly-created object.
+		/// Pass null to use the default tag.</param>
+		/// <param name="position">The position within the area to place 
+		/// the object.</param>
+		/// <returns>The newly-created game object.</returns>
+		public abstract INWN2Instance AddGameObject(NWN2ObjectType type, string resref, string tag, Vector3? position);
+		
+		
+		/// <summary>
+		/// Gets the number of objects in this area matching a given description.
+		/// </summary>
+		/// <param name="type">The type of objects to count.</param>
+		/// <param name="tag">Only objects with this tag will be counted.
+		/// Pass null to ignore this criterion.</param>
+		/// <returns>The objects matching the given description.</returns>
+		public abstract List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag);
 		
 		
 		/// <summary>

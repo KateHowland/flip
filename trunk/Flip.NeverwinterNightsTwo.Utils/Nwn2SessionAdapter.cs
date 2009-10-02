@@ -28,6 +28,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.ServiceModel;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.IO;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
@@ -179,6 +181,67 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				return areas;
 			}
+		}
+				
+				
+		/// <summary>
+		/// Adds an object to the given area.
+		/// </summary>
+		/// <param name="areaName">The name of the area in the current module to add the object to.</param>
+		/// <param name="type">The type of object to add.</param>
+		/// <param name="resref">The resref of the blueprint to create the object from.</param>
+		/// <param name="tag">The tag of the object.</param>
+		public void AddObject(string areaName, NWN2ObjectType type, string resref, string tag)
+		{
+			if (areaName == null) 
+				throw new ArgumentNullException();
+			if (areaName == String.Empty) 
+				throw new ArgumentException();
+			
+			NWN2GameModule module = session.GetCurrentModule();
+			if (module == null) 
+				throw new InvalidOperationException("No module is currently open.");
+			
+			if (!module.Areas.ContainsCaseInsensitive(areaName)) 
+				throw new ArgumentException("No such area in module '" + module.Name + "'.");
+			
+			NWN2GameArea nwn2area = module.Areas[areaName];
+			Area area = new Area(nwn2area);
+			
+			Microsoft.DirectX.Vector3 position = area.GetRandomPosition(true);
+			
+			area.AddGameObject(type,resref,tag,position);
+		}
+		
+		
+		/// <summary>
+		/// Gets the number of objects matching a given description
+		/// in a given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to count.</param>
+		/// <param name="tag">Only objects with this tag will be counted.
+		/// Pass null to ignore this criterion.</param>
+		/// <returns>The number of objects matching the given description
+		/// in the given area.</returns>
+		public int GetObjectCount(string areaName, NWN2ObjectType type, string tag)
+		{
+			if (areaName == null) 
+				throw new ArgumentNullException();
+			if (areaName == String.Empty) 
+				throw new ArgumentException();
+			
+			NWN2GameModule module = session.GetCurrentModule();
+			if (module == null) 
+				throw new InvalidOperationException("No module is currently open.");
+			
+			if (!module.Areas.ContainsCaseInsensitive(areaName)) 
+				throw new ArgumentException("No such area in module '" + module.Name + "'.");
+			
+			NWN2GameArea nwn2area = module.Areas[areaName];
+			AreaBase area = session.CreateAreaBase(nwn2area);
+			
+			return area.GetObjects(type,tag).Count;
 		}
 		
 		#endregion
