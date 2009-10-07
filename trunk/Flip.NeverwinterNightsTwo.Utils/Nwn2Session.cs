@@ -35,6 +35,7 @@ using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using OEIShared.Utils;
+using OEIShared.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -65,28 +66,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="location">The serialisation form of the module.</param>
 		public void CreateModule(string path, ModuleLocationType location)
 		{			
-			if (location == ModuleLocationType.Temporary) 
+			if (location == ModuleLocationType.Temporary) {	
 				throw new NotSupportedException("Creating temporary modules is not supported.");
+			}
 			
-			if (path == null) throw new ArgumentNullException("path");
-			if (path == String.Empty) throw new ArgumentException("path");
+			if (path == null) {
+				throw new ArgumentNullException("path");
+			}
+			if (path == String.Empty) {
+				throw new ArgumentException("path");
+			}
 			
 			if (location == ModuleLocationType.Directory && Directory.Exists(path) ||
 			    location == ModuleLocationType.File && File.Exists(path)) {
 				throw new IOException("The path provided was already occupied (" + path + ").");
 			}
-						
+									
 			string name = Path.GetFileNameWithoutExtension(path);
-			
+							
 			NWN2GameModule module = new NWN2GameModule();
+			
 			module.Name = name;
 			module.LocationType = location;
 			module.ModuleInfo.Tag = name;
 			module.ModuleInfo.Description = new OEIShared.Utils.OEIExoLocString();
 			
-			SaveModule(module,path);
+			SaveModule(module,path);			
 		}		
-		
+				
 		
 		/// <summary>
 		/// Opens a Neverwinter Nights 2 game module.
@@ -99,26 +106,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (path == null) throw new ArgumentNullException("path");
 			if (path == String.Empty) throw new ArgumentException("path");
 			
-			ThreadedOpenHelper opener;
+			ThreadedOpenHelper opener;						
 			
-			switch (location) {
-				case ModuleLocationType.Directory:
-					string name = Path.GetFileName(path);
-					opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,name,location);
-					break;
+			NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
+						
+			try {				
+				if (NWN2ToolsetMainForm.App.CloseModule(true)) {					
+					string parameter;
+					if (location == ModuleLocationType.Directory) {
+						parameter = Path.GetFileName(path);
+					}
+					else {
+						parameter = path;
+					}
 					
-				case ModuleLocationType.Temporary:
-				case ModuleLocationType.File:
-					opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,path,location);
-					break;
-					
-				default:
-					throw new NotSupportedException("Opening " + location + " modules is not supported.");
+			        opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,parameter,location);
+			        
+			        ThreadedProgressDialog progress = new ThreadedProgressDialog();
+			        progress.Text = "Opening module";
+			        progress.Message = "Opening module of type " + location + " at " + path + ".";
+			        progress.WorkerThread = new ThreadedProgressDialog.WorkerThreadDelegate(opener.Go);
+			        progress.ShowDialog();
+			        
+			        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
+		        }
 			}
-			
-			opener.Go();
-									
-			NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
+		    catch (Exception) {
+		        NWN2ToolsetMainForm.App.DoNewModule(false);
+		    }
+		    finally {
+		    	NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
+		    }
 		}
 				
 		
@@ -154,13 +172,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						                            "modules directory specified at NWN2Toolset." + 
 						                            "NWN2ToolsetMainForm.ModulesDirectory.");
 					}
-					module.OEISerialize(Path.GetFileName(path));
+					
+					string name = Path.GetFileName(path);			
+					module.OEISerialize(name);
 					break;
 					
 				case ModuleLocationType.File:
 					if (extension.ToLower() != ".mod") {
 						throw new ArgumentException("path","Path must be a .mod file.");
 					}
+					
 					module.OEISerialize(path);
 					break;
 					
@@ -176,24 +197,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		public void CloseModule()
 		{
-			int count = -1;
-			string path;
-						
-			string message = String.Empty;
-			
-			while (Directory.Exists(path = Path.Combine(NWN2ToolsetMainForm.ModulesDirectory,"temp"+ ++count))) { message += path + Environment.NewLine;}
-			
-			string name = Path.GetFileName(path);
-			
-			System.Diagnostics.Debug.WriteLine(name);
-			
-			NWN2GameModule module = new NWN2GameModule();
-			module.Name = name;
-			module.LocationType = ModuleLocationType.Temporary;
-			module.ModuleInfo.Tag = name;
-			module.ModuleInfo.Description = new OEIShared.Utils.OEIExoLocString();
-			
-			OpenModule(path,ModuleLocationType.Temporary);
+			NWN2ToolsetMainForm.App.DoNewModule(false);
 		}
 		
 		
@@ -224,6 +228,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The absolute path of the given module.</returns>
 		public string GetModulePath(NWN2GameModule module)
 		{
+			if (module == null) throw new ArgumentNullException("module");
+			
 			switch (module.LocationType) {					
 				case ModuleLocationType.File:
 					return module.FileName;

@@ -52,6 +52,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		private PathChecker pathChecker;
 		
+		private INwn2Service service;
+		
 		#endregion
 		
 		#region Setup
@@ -65,6 +67,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 //			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();
 			
 			pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),"net.pipe://localhost/NamedPipeEndpoint");
+			
+			CreateService();
 //			
 //			int waited = 0;
 //			while (true) {
@@ -102,8 +106,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void CreatesDirectoryModule()
 		{			
-			INwn2Service service = GetService();
-			
 			string name = "dir module";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -120,18 +122,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				Assert.IsTrue(File.Exists(Path.Combine(path,expectedFile)),expectedFile + " was missing from module directory.");
 			}
 			
-			foreach (FileInfo file in dir.GetFiles()) {
-				file.Delete();
-			}
-			dir.Delete();
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void CreatesFileModule()
-		{
-			INwn2Service service = GetService();
-			
+		{			
 			string name = "file module.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -142,15 +139,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.IsTrue(File.Exists(path),"Module file was not created.");
 			
-			File.Delete(path);
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void DoesNotCreateDirectoryModuleAtFilePath()
 		{
-			INwn2Service service = GetService();
-			
 			string name = "dir module.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -169,6 +164,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					            "create a directory module at a file path.");
 				}
 				Assert.IsFalse(Directory.Exists(path),"Created a directory module given a file path.");
+				CreateService(); // recreate the service if a fault has occurred
 			}
 		}
 				
@@ -176,8 +172,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void DoesNotCreateFileModuleAtDirectoryPath()
 		{
-			INwn2Service service = GetService();
-			
 			string name = "file module";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -196,6 +190,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					            "create a file module at a directory path.");
 				}
 				Assert.IsFalse(File.Exists(path),"Created a file module given a directory path.");
+				CreateService(); // recreate the service if a fault has occurred
 			}
 		}
 		
@@ -203,8 +198,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void DoesNotCreateModuleIfPathIsAlreadyTaken()
 		{
-			INwn2Service service = GetService();
-			
 			string expectedException = "System.IO.IOException";
 			
 			string name = "duplicate.mod";
@@ -225,17 +218,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
 					            "create a file module at a directory path.");
 				}
+				CreateService(); // recreate the service if a fault has occurred
 			}
 			
-			File.Delete(path);
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void OpensDirectoryModule()
 		{
-			INwn2Service service = GetService();
-			
 			string name = "dir module";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -251,19 +243,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.CloseModule();
 			
-			DirectoryInfo dir = new DirectoryInfo(path);
-			foreach (FileInfo file in dir.GetFiles()) {
-				file.Delete();
-			}
-			dir.Delete();		
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void OpensFileModule()
 		{
-			INwn2Service service = GetService();
-			
 			string name = "file module.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -279,15 +265,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.CloseModule();
 			
-			File.Delete(path);
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void OpensFileModuleFromOutsideModulesDirectory()
+		{
+			string name = "file module from outside path.mod";
+			string parent = @"N:\WindowsProfile\Desktop";
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			name = Path.GetFileNameWithoutExtension(path);
+		
+			service.CreateModule(path,ModuleLocationType.File);
+			
+			service.OpenModule(path,ModuleLocationType.File);	
+			
+			Assert.AreEqual(name,service.GetCurrentModuleName());
+			
+			service.CloseModule();
+			
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void CloseModule()
 		{
-			INwn2Service service = GetService();
-			
 			string name = "test module.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -309,28 +315,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.AreNotEqual(name,service.GetCurrentModuleName());
 			Assert.AreNotEqual(path,service.GetCurrentModulePath());
+			
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void ReturnsCorrectModulePath()
 		{
-			INwn2Service service = GetService();			
-			
-			string name = "file module.mod";
+			string name = "file returns correct path.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
 			
 			path = pathChecker.GetUnusedFilePath(path);
 			name = Path.GetFileNameWithoutExtension(path);
+			
+			service.GetCurrentModuleName();
 					
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path, ModuleLocationType.File);
 			
 			Assert.AreEqual(path,service.GetCurrentModulePath());
 							
+			service.CloseModule();
 			
-			name = "dir module";
+			Delete(path);
+			
+			name = "dir returns correct path";
 			path = Path.Combine(parent,name);
 			
 			path = pathChecker.GetUnusedDirectoryPath(path);
@@ -340,21 +351,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path, ModuleLocationType.Directory);
 			
 			Assert.AreEqual(path,service.GetCurrentModulePath());
+			
+			service.CloseModule();
+			
+			Delete(path);
 		}
 		
 				
 		[Test]
 		public void AddsAreaToFileModule()
 		{
-			INwn2Service service = GetService();
-			
-			string name = "area adding.mod";
+			string name = "area adding file.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
 			
 			path = pathChecker.GetUnusedFilePath(path);
 			
 			service.CreateModule(path,ModuleLocationType.File);
+			
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
@@ -366,7 +380,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area2,false,size);
 			
 			service.SaveModule();
+			
 			service.CloseModule();
+			
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			ICollection<string> areas = service.GetAreas();
@@ -377,16 +393,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.CloseModule();
 			
-			File.Delete(path);
+			Delete(path);
 		}
 				
 		
 		[Test]
 		public void AddsAreaToDirectoryModule()
 		{
-			INwn2Service service = GetService();
-			
-			string name = "area adding";
+			string name = "area adding directory";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
 			
@@ -415,19 +429,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.CloseModule();
 			
-			DirectoryInfo dir = new DirectoryInfo(path);
-			foreach (FileInfo file in dir.GetFiles()) {
-				file.Delete();
-			}
-			dir.Delete();
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void DoesNotAddAreaIfNameIsAlreadyTaken()
 		{
-			INwn2Service service = GetService();
-			
 			string expectedException = "System.IO.IOException";
 			
 			string name = "area duplication.mod";
@@ -454,17 +462,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
 					            "to add an area with a duplicate name.");
 				}
+				CreateService();
 			}
 			
-			File.Delete(path);
+			service.CloseModule();
+			
+			Delete(path);
 		}		
 		
 		
 		[Test]
 		public void AddsObjectToArea()
 		{
-			INwn2Service service = GetService();
-			
 			string name = "object adding.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -500,15 +509,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.PlacedEffect,"inn"));
 			
 			service.CloseModule();
-			File.Delete(path);
+			
+			Delete(path);
 		}
 		
 		
 		[Test]
 		public void DoesNotAddObjectWithUnknownResref()
 		{
-			INwn2Service service = GetService();
-			
 			string expectedException = "System.ArgumentException";
 			
 			string name = "unknown resref object adding.mod";
@@ -534,41 +542,64 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					Assert.Fail("Failed to raise " + expectedException + " when attempting " +
 					            "to add an object." + Environment.NewLine + "Instead raised: " + e);
 				}
-				service = GetService();
+				CreateService();
 			}
 						
 			service.CloseModule();
-			File.Delete(path);
+			
+			Delete(path);
 		}
 				
 				
-		[Test]
-		public void SavesDirectoryModule()
-		{
-			INwn2Service service = GetService();			
-			
-			Assert.Fail();
-		}
-		
-		
-		[Test]
-		public void SavesFileModule()
-		{
-			INwn2Service service = GetService();			
-			
-			Assert.Fail();
-		}
+//		[Test]
+//		public void SavesDirectoryModule()
+//		{
+//			INwn2Service service = GetService();			
+//			
+//			Assert.Fail();
+//		}
+//		
+//		
+//		[Test]
+//		public void SavesFileModule()
+//		{
+//			INwn2Service service = GetService();			
+//			
+//			Assert.Fail();
+//		}
 		
 		#endregion
 		
 		#region Methods
-		
+				
 		/// <summary>
 		/// Creates and returns a proxy for the service.
 		/// </summary>
-		private INwn2Service GetService()
+		private void CreateService()
 		{
-			return pipeChannelFactory.CreateChannel();
+			service = pipeChannelFactory.CreateChannel();
+		}
+		
+		
+		/// <summary>
+		/// Deletes the file or directory at the given path.
+		/// </summary>
+		/// <param name="path">The path to delete.</param>
+		private void Delete(string path)
+		{
+			if (File.Exists(path)) {
+				File.Delete(path);
+			}
+			else {
+				DirectoryInfo dir = new DirectoryInfo(path);
+				if (!dir.Exists) {
+					throw new ArgumentException("path","No file or directory found at the given path (" + path + ").");
+				}
+				foreach (FileInfo file in dir.GetFiles()) {
+					file.Delete();
+				}
+				dir.Delete();
+			}
 		}
 		
 		#endregion
