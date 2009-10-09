@@ -198,7 +198,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Saves the module.
+		/// Saves the area.
 		/// </summary>
 		public abstract void Save();
 
