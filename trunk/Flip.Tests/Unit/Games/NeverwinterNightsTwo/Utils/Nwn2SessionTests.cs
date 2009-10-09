@@ -61,6 +61,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[TestFixtureSetUp]
 		public void Init()
 		{					
+			// Don't try to delete modules files at the start of the test fixture
+			// as it causes IO access exceptions with the NWN2 toolset.
+			
 			pathChecker = new PathChecker();
 			
 //			try {
@@ -69,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),"net.pipe://localhost/NamedPipeEndpoint");
 			
 			CreateService();
-//			
+			
 //			int waited = 0;
 //			while (true) {
 //				try {
@@ -196,11 +199,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void DoesNotCreateModuleIfPathIsAlreadyTaken()
+		public void DoesNotCreateFileModuleIfPathIsAlreadyTaken()
 		{
 			string expectedException = "System.IO.IOException";
 			
-			string name = "duplicate.mod";
+			string name = "file duplicate.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
 			
@@ -226,6 +229,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void DoesNotCreateDirectoryModuleIfPathIsAlreadyTaken()
+		{
+			string expectedException = "System.IO.IOException";
+			
+			string name = "dir duplicate";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			
+			try {
+				service.CreateModule(path,ModuleLocationType.Directory);
+				Assert.Fail("Failed to raise an exception when attempting " +
+				            "to create a module at an existing path.");
+			}
+			catch (FaultException e) {
+				if (!(e.ToString().Contains(expectedException))) {
+					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
+					            "create a directory module at a directory path.");
+				}
+				CreateService(); // recreate the service if a fault has occurred
+			}
+			
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void OpensDirectoryModule()
 		{
 			string name = "dir module";
@@ -236,7 +269,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			name = Path.GetFileNameWithoutExtension(path);
 					
 			service.CreateModule(path,ModuleLocationType.Directory);
-			
+									
 			service.OpenModule(path,ModuleLocationType.Directory);	
 			
 			Assert.AreEqual(name,service.GetCurrentModuleName());	
@@ -379,10 +412,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area1,true,size);
 			service.AddArea(area2,false,size);
 			
+			// When adding to a file module, we DO need to save the module for the area to persist:
 			service.SaveModule();
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			ICollection<string> areas = service.GetAreas();
@@ -417,7 +450,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area1,true,size);
 			service.AddArea(area2,false,size);
 			
-			service.SaveModule();
+			// When adding to a directory module, we DON'T need to save the module for the area to persist.
+			
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
@@ -499,10 +533,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				service.AddObject(area,types[i],resRefs[i],tags[i]);
 			}
 			
+			service.SaveModule();
+			
 			Assert.AreEqual(1,service.GetObjectCount(area,NWN2ObjectType.Creature,"giant"));
 			Assert.AreEqual(2,service.GetObjectCount(area,NWN2ObjectType.Creature,"duplicatecloak"));
 			Assert.AreEqual(1,service.GetObjectCount(area,NWN2ObjectType.Placeable,"inn"));
 			Assert.AreEqual(1,service.GetObjectCount(area,NWN2ObjectType.PlacedEffect,"bonfire"));
+			Assert.AreEqual(3,service.GetObjectCount(area,NWN2ObjectType.Creature,null));
 			
 			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.Creature,"bonfire"));
 			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.Placeable,"giant"));
@@ -551,22 +588,134 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		}
 				
 				
-//		[Test]
-//		public void SavesDirectoryModule()
-//		{
-//			INwn2Service service = GetService();			
-//			
-//			Assert.Fail();
-//		}
-//		
-//		
-//		[Test]
-//		public void SavesFileModule()
-//		{
-//			INwn2Service service = GetService();			
-//			
-//			Assert.Fail();
-//		}
+		[Test]
+		public void SavesDirectoryModule()
+		{
+			string name = "saves dir module";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			Size size = new Size(8,8);			
+			string area = "desert"; // areas are identified by their name in lower-case
+			service.AddArea(area,true,size);
+						
+			NWN2ObjectType[] types = new NWN2ObjectType[] { NWN2ObjectType.Creature,
+															NWN2ObjectType.Creature,
+															NWN2ObjectType.Creature,
+															NWN2ObjectType.Placeable,
+															NWN2ObjectType.PlacedEffect };
+			string[] resRefs = new string[] { "c_giantfire", "n_greycloak", "n_greycloak", "plc_bs_sunkenf", "n2_fx_bonfire" };
+			string[] tags = new string[] { "giant", "duplicatecloak", "duplicatecloak", "inn", "bonfire" };
+			
+			for (int i = 0; i < types.Length; i++) {
+				service.AddObject(area,types[i],resRefs[i],tags[i]);
+			}
+			
+			service.SaveModule();
+			
+			service.CloseModule();
+			
+			service.OpenModule(path,ModuleLocationType.Directory);
+						
+			Assert.AreEqual(service.GetCurrentModuleName(),Path.GetFileNameWithoutExtension(path));
+			Assert.AreEqual(1,service.GetAreas().Count);
+			Assert.IsTrue(service.GetAreas().Contains(area));
+			Assert.AreEqual(3,service.GetObjectCount(area,NWN2ObjectType.Creature,null));
+			
+			service.CloseModule();
+			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void SavesFileModule()
+		{
+			string name = "saves file module.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			Size size = new Size(8,8);			
+			string area = "desert"; // areas are identified by their name in lower-case
+			service.AddArea(area,true,size);
+						
+			NWN2ObjectType[] types = new NWN2ObjectType[] { NWN2ObjectType.Creature,
+															NWN2ObjectType.Creature,
+															NWN2ObjectType.Creature,
+															NWN2ObjectType.Placeable,
+															NWN2ObjectType.PlacedEffect };
+			string[] resRefs = new string[] { "c_giantfire", "n_greycloak", "n_greycloak", "plc_bs_sunkenf", "n2_fx_bonfire" };
+			string[] tags = new string[] { "giant", "duplicatecloak", "duplicatecloak", "inn", "bonfire" };
+			
+			for (int i = 0; i < types.Length; i++) {
+				service.AddObject(area,types[i],resRefs[i],tags[i]);
+			}
+			
+			service.SaveModule();
+			
+			service.CloseModule();
+			
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			Assert.AreEqual(service.GetCurrentModuleName(),Path.GetFileNameWithoutExtension(path));
+			Assert.AreEqual(1,service.GetAreas().Count);
+			Assert.IsTrue(service.GetAreas().Contains(area));
+			Assert.AreEqual(3,service.GetObjectCount(area,NWN2ObjectType.Creature,null));
+			
+			service.CloseModule();
+			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void RefusesToOpenNonExistentDirectoryModule()
+		{
+			string name = "dir module that does not exist";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			try {
+				service.OpenModule(path,ModuleLocationType.Directory);	
+				Assert.Fail("Didn't raise an ArgumentException when asked to open a non-existent directory module.");
+			}
+			catch (FaultException) {
+				CreateService();
+			}
+			//catch (FaultException<ArgumentException>) {} TODO
+		}
+		
+		
+		[Test]
+		public void RefusesToOpenNonExistentFileModule()
+		{
+			string name = "file module that does not exist.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			try {
+				service.OpenModule(path,ModuleLocationType.File);	
+				Assert.Fail("Didn't raise an ArgumentException when asked to open a non-existent file module.");
+			}
+			catch (FaultException) {			
+				CreateService();
+			}
+			//catch (FaultException<ArgumentException>) {} TODO
+		}
 		
 		#endregion
 		

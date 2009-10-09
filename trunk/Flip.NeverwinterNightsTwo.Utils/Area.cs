@@ -129,8 +129,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 			nwn2Area.AddInstance(instance);
 			
-			Save();
-
 			return instance;
 		}
 
@@ -159,8 +157,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					situated.Position = position.Value;
 				}
 			}
-			
-			Save();
 
 			return instance;
 		}
@@ -213,6 +209,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The objects matching the given description.</returns>
 		public override List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag)
 		{
+			if (!nwn2Area.Loaded) nwn2Area.Demand();
+			
 			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
 			List<INWN2Instance> instances = new List<INWN2Instance>();
 						
@@ -229,12 +227,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 			}
 			
+			nwn2Area.Release();
+			
 			return instances;
 		}
 					
 		
 		/// <summary>
-		/// Saves the module.
+		/// Saves the area.
 		/// </summary>
 		public override void Save()
 		{

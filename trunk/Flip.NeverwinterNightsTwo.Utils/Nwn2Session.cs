@@ -42,6 +42,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// <summary>
 	/// A facade for a Neverwinter Nights 2 toolset session.
 	/// </summary>
+	/// <remarks>Operations on a module must be followed
+	/// by an explicit SaveModule() call if the changes are to persist -
+	/// this includes adding objects to an area, and adding areas to
+	/// a file-based module (but not to a directory-based module - this
+	/// is a quirk of the Neverwinter Nights 2 software.)</remarks>
 	public class Nwn2Session : INwn2Session
 	{
 		#region Constructors
@@ -81,18 +86,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			    location == ModuleLocationType.File && File.Exists(path)) {
 				throw new IOException("The path provided was already occupied (" + path + ").");
 			}
-									
+						
 			string name = Path.GetFileNameWithoutExtension(path);
-							
+						
 			NWN2GameModule module = new NWN2GameModule();
+// Possible that this is more correct?.. but breaks existing test logic so need to do carefully:
+//			NWN2ToolsetMainForm.App.DoNewModule(true);
+//			NWN2GameModule module = GetCurrentModule();
 			
 			module.Name = name;
 			module.LocationType = location;
 			module.ModuleInfo.Tag = name;
-			module.ModuleInfo.Description = new OEIShared.Utils.OEIExoLocString();
+			module.ModuleInfo.Description = new OEIExoLocString();
 			
-			SaveModule(module,path);			
-		}		
+			SaveModule(module,path);	
+		}
 				
 		
 		/// <summary>
@@ -105,6 +113,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			if (path == null) throw new ArgumentNullException("path");
 			if (path == String.Empty) throw new ArgumentException("path");
+			
+			if (location == ModuleLocationType.Directory && !(Directory.Exists(path))) {
+				throw new IOException("Directory at " + path + " does not exist.");
+			}
+			else if (location == ModuleLocationType.File && !(File.Exists(path))) {
+				throw new IOException("File at " + path + " does not exist.");
+			}
 			
 			ThreadedOpenHelper opener;						
 			
@@ -131,7 +146,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
 		        }
 			}
-		    catch (Exception) {
+		    catch (Exception e) {
+				System.Windows.Forms.MessageBox.Show("Something went wrong when opening a module." + Environment.NewLine + e);
 		        NWN2ToolsetMainForm.App.DoNewModule(false);
 		    }
 		    finally {
@@ -173,6 +189,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						                            "NWN2ToolsetMainForm.ModulesDirectory.");
 					}
 					
+					foreach (NWN2GameArea area in module.Areas.Values) {
+						area.OEISerialize();
+					}
+					
 					string name = Path.GetFileName(path);			
 					module.OEISerialize(name);
 					break;
@@ -180,6 +200,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				case ModuleLocationType.File:
 					if (extension.ToLower() != ".mod") {
 						throw new ArgumentException("path","Path must be a .mod file.");
+					}
+					
+					foreach (NWN2GameArea area in module.Areas.Values) {
+						area.OEISerialize();
 					}
 					
 					module.OEISerialize(path);
@@ -242,7 +266,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new NotSupportedException("Unknown ModuleLocationType: " + module.LocationType);
 			}
 		}
-				
+		
 		
 		/// <summary>
 		/// Adds an area to the current module.
@@ -252,42 +276,42 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// with terrain; false to create an interior area with tiles.</param>
 		/// <param name="size">The size of area to create.</param>
 		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
+		/// <remarks>NOTE: adding areas to a non directory based module
+		/// requires the module to be saved afterwards in order for the
+		/// area to persist. An area added to a directory-based module
+		/// will be saved automatically.</remarks>
 		public AreaBase AddArea(string name, bool exterior, Size size)
-		{
-			if (GetCurrentModule() == null) throw new InvalidOperationException("No module open.");
+		{			
+		    NWN2GameArea oObject = new NWN2GameArea();
+		    oObject.Size = size;
+		    oObject.HasTerrain = exterior;
+		    oObject.Interior = !exterior;
+		    oObject.Name = name;
+		    oObject.Tag = name;
+		    oObject.DisplayName[BWLanguages.CurrentLanguage] = name;
+		    
+			NWN2GameModule module = GetCurrentModule();
 			
-			return AddArea(GetCurrentModule(),name,exterior,size);
-		}
-		
+			if (module == null) {
+				throw new InvalidOperationException("No module open.");
+			}			
+			if (module.Areas.ContainsCaseInsensitive(name)) {
+				throw new IOException("An area with the given name ('" + name + "') already exists.");
+			}
 			
-		/// <summary>
-		/// Adds an area to a given module.
-		/// </summary>
-		/// <param name="module">The module to add the area to.</param>
-		/// <param name="name">The name to give the area.</param>
-		/// <param name="exterior">True to create an exterior area
-		/// with terrain; false to create an interior area with tiles.</param>
-		/// <param name="size">The size of area to create.</param>
-		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
-		public AreaBase AddArea(NWN2GameModule module, string name, bool exterior, Size size)
-		{
-			if (module == null) throw new ArgumentNullException("module");
+		    NWN2GameArea oResource = module.AddResource(oObject) as NWN2GameArea;
+		    if (oObject == oResource) {
+		        oObject.InitializeArea(name, module.TempDirectory, module.Repository);
+		    }
+		    oObject.SetAreaTypePropertiesToDefault();
+		    if (!exterior) {
+		        foreach (OEIShared.NetDisplay.DayNightStage stage in oObject.DayNightStages) {
+		            stage.SetToDefaultInteriorValues();
+		        }
+		    }
+		    oObject.OEISerialize();
 			
-			if (module.Areas.ContainsCaseInsensitive(name)) 
-				throw new IOException("An area called '" + name + "' already exists in this module.");
-			
-			NWN2GameArea nwn2area = new NWN2GameArea(name,
-				                                     module.Repository.Name,
-				                                     module.Repository);
-			nwn2area.Tag = name;
-			nwn2area.HasTerrain = exterior;
-			nwn2area.Size = size;
-			
-			module.AddResource(nwn2area);
-			
-			nwn2area.OEISerialize();
-			
-			return CreateAreaBase(nwn2area);
+			return CreateAreaBase(oObject);
 		}
 		
 		

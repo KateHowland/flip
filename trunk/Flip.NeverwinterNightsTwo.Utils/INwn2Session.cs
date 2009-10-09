@@ -106,18 +106,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="size">The size of area to create.</param>
 		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
 		AreaBase AddArea(string name, bool exterior, Size size);
-		
-			
-		/// <summary>
-		/// Adds an area to a given module.
-		/// </summary>
-		/// <param name="module">The module to add the area to.</param>
-		/// <param name="name">The name to give the area.</param>
-		/// <param name="exterior">True to create an exterior area
-		/// with terrain; false to create an interior area with tiles.</param>
-		/// <param name="size">The size of area to create.</param>
-		/// <returns>A facade for an empty Neverwinter Nights 2 area.</returns>
-		AreaBase AddArea(NWN2Toolset.NWN2.Data.NWN2GameModule module, string name, bool exterior, Size size);
 				
 		
 		/// <summary>
