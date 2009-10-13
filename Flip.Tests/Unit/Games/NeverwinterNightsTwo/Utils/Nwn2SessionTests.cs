@@ -749,7 +749,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			else {
 				DirectoryInfo dir = new DirectoryInfo(path);
 				if (!dir.Exists) {
-					throw new ArgumentException("path","No file or directory found at the given path (" + path + ").");
+					throw new ArgumentException("No file or directory found at the given path (" + path + ").","path");
 				}
 				foreach (FileInfo file in dir.GetFiles()) {
 					file.Delete();

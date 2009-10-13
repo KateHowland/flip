@@ -150,8 +150,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (position.HasValue) {
 				INWN2SituatedInstance situated = instance as INWN2SituatedInstance;
 				if (situated == null) {
-					throw new ArgumentException("blueprint", "Instances of the given blueprint have " + 
-					                            "no Position field - their position cannot be set.");
+					throw new ArgumentException("Instances of the given blueprint have " + 
+					                            "no Position field - their position cannot be set.","blueprint");
 				}
 				else {
 					situated.Position = position.Value;
@@ -189,12 +189,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public override INWN2Instance AddGameObject(NWN2ObjectType type, string resref, string tag, Vector3? position)
 		{
 			if (resref == null) throw new ArgumentNullException("resref");
-			if (resref == String.Empty) throw new ArgumentException("resref");			
+			if (resref == String.Empty) throw new ArgumentException("resref cannot be an empty string.","resref");			
 			
 			INWN2Blueprint blueprint = NWN2GlobalBlueprintManager.FindBlueprint(type,new OEIResRef(resref),true,true,true);
 			
 			if (blueprint == null) 
-				throw new ArgumentException("resref","No blueprint with the given type and ResRef was found.");
+				throw new ArgumentException("No blueprint with the given type and ResRef was found.","resref");
 			
 			return AddGameObject(blueprint,tag,position);
 		}

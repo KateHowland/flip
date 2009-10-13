@@ -84,7 +84,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new ArgumentNullException("path");
 			}			
 			if (path == String.Empty) {
-				throw new ArgumentException("path");
+				throw new ArgumentException("Path cannot be an empty string.","path");
 			}			
 			if (location == ModuleLocationType.Directory && Directory.Exists(path) ||
 			    location == ModuleLocationType.File && File.Exists(path)) {
@@ -120,7 +120,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void OpenModule(string path, ModuleLocationType location)
 		{
 			if (path == null) throw new ArgumentNullException("path");
-			if (path == String.Empty) throw new ArgumentException("path");
+			if (path == String.Empty) throw new ArgumentException("Path cannot be an empty string.","path");
 			
 			if (location == ModuleLocationType.Directory && !(Directory.Exists(path))) {
 				throw new IOException("Directory at " + path + " does not exist.");
@@ -190,12 +190,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 				case ModuleLocationType.Directory:
 					if (extension != String.Empty) {
-						throw new ArgumentException("path","Path must be a folder, not a file.");
+						throw new ArgumentException("Path must be a folder, not a file.","path");
 					}
 					if (parent != NWN2ToolsetMainForm.ModulesDirectory) {
-						throw new ArgumentException("path","Path must be a folder located within the " +
+						throw new ArgumentException("Path must be a folder located within the " +
 						                            "modules directory specified at NWN2Toolset." + 
-						                            "NWN2ToolsetMainForm.ModulesDirectory.");
+						                            "NWN2ToolsetMainForm.ModulesDirectory.","path");
 					}
 					
 					lock (padlock) {
@@ -210,7 +210,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 				case ModuleLocationType.File:
 					if (extension.ToLower() != ".mod") {
-						throw new ArgumentException("path","Path must be a .mod file.");
+						throw new ArgumentException("Path must be a .mod file.","path");
 					}
 					
 					lock (padlock) {
@@ -223,8 +223,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					break;
 					
 				default:
-					throw new ArgumentException("location","Saving " + module.LocationType + 
-					                            " modules is not supported.");
+					throw new ArgumentException("Saving " + module.LocationType + 
+					                            " modules is not supported.","location");
 			}
 		}
 		

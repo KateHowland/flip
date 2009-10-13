@@ -288,7 +288,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentNullException("areaName","No area name was provided (was null).");
 				}			
 				if (areaName == String.Empty) {
-					throw new ArgumentException("areaName","No area name was provided (was empty).");
+					throw new ArgumentException("No area name was provided (was empty).","areaName");
 				}
 				
 				NWN2GameModule module = session.GetCurrentModule();
@@ -297,7 +297,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new InvalidOperationException("No module is currently open.");
 				}						
 				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.");
+					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.","areaName");
 				}
 				
 				NWN2GameArea nwn2area = module.Areas[areaName];
@@ -339,7 +339,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentNullException("areaName","No area name was provided (was null).");
 				}			
 				if (areaName == String.Empty) {
-					throw new ArgumentException("areaName","No area name was provided (was empty).");
+					throw new ArgumentException("No area name was provided (was empty).","areaName");
 				}
 				
 				NWN2GameModule module = session.GetCurrentModule();
@@ -348,7 +348,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new InvalidOperationException("No module is currently open.");
 				}						
 				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.");
+					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.","areaName");
 				}
 				
 				NWN2GameArea nwn2area = module.Areas[areaName];

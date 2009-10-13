@@ -46,7 +46,7 @@ namespace Sussex.Flip.Utils
 		public string GetUnusedFilePath(string preferredPath)
 		{
 			if (preferredPath == null) throw new ArgumentNullException("preferredPath");
-			if (preferredPath == String.Empty) throw new ArgumentException("preferredPath");
+			if (preferredPath == String.Empty) throw new ArgumentException("Preferred path must not be an empty string.","preferredPath");
 			
 			string parent = Path.GetDirectoryName(preferredPath);
 			string preferredFilename = Path.GetFileNameWithoutExtension(preferredPath);
@@ -77,7 +77,7 @@ namespace Sussex.Flip.Utils
 		public string GetUnusedDirectoryPath(string preferredPath)
 		{			
 			if (preferredPath == null) throw new ArgumentNullException("preferredPath");
-			if (preferredPath == String.Empty) throw new ArgumentException("preferredPath");
+			if (preferredPath == String.Empty) throw new ArgumentException("Preferred path must not be an empty string.","preferredPath");
 			
 			string parent = Path.GetDirectoryName(preferredPath);
 			string preferredFolder = Path.GetFileName(preferredPath);
