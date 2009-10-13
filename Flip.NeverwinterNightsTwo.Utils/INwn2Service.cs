@@ -98,7 +98,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Gets the location type of the module that is currently open in the toolset.
 		/// </summary>
-		/// <returns>The location type of the current module.</returns>
+		/// <returns>The location type of the current module, or null if no module is open.</returns>
 		[OperationContract]
 		NWN2Toolset.NWN2.IO.ModuleLocationType? GetCurrentModuleLocation();
 		

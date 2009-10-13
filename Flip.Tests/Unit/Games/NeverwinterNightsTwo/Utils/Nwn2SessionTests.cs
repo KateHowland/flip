@@ -330,19 +330,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					
 			service.CreateModule(path,ModuleLocationType.File);
 			
+			service.OpenModule(path,ModuleLocationType.File);
+			
 			string moduleName, modulePath;
-			
-			moduleName = service.GetCurrentModuleName();
-			modulePath = service.GetCurrentModulePath();			
-			if (moduleName != null) {
-				Assert.AreNotEqual(name,moduleName);
-			}
-			if (modulePath != null) {
-				Assert.AreNotEqual(path,modulePath);
-			}
-			
-			service.OpenModule(path, ModuleLocationType.File);
-			
 			moduleName = service.GetCurrentModuleName();
 			modulePath = service.GetCurrentModulePath();		
 			Assert.IsNotNull(moduleName);
