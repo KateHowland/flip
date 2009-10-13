@@ -79,39 +79,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{			
 			if (location == ModuleLocationType.Temporary) {	
 				throw new NotSupportedException("Creating temporary modules is not supported.");
-			}
-			
+			}			
 			if (path == null) {
 				throw new ArgumentNullException("path");
-			}
+			}			
 			if (path == String.Empty) {
 				throw new ArgumentException("path");
-			}
-			
+			}			
 			if (location == ModuleLocationType.Directory && Directory.Exists(path) ||
 			    location == ModuleLocationType.File && File.Exists(path)) {
 				throw new IOException("The path provided was already occupied (" + path + ").");
 			}
 						
 			string name = Path.GetFileNameWithoutExtension(path);
-						
-			// Possible that this is more correct?.. but breaks existing test logic so need to do carefully:
-			//NWN2ToolsetMainForm.App.DoNewModule(true);
-			//NWN2GameModule module = GetCurrentModule();
 			
 			NWN2GameModule module;
 			
-			lock (padlock) {
-				module = new NWN2GameModule();
+			lock (padlock) {							
+				NWN2ToolsetMainForm.App.DoNewModule(true);
+				module = GetCurrentModule();
+				
 				module.Name = name;
 				module.LocationType = location;
 				module.ModuleInfo.Tag = name;
 				module.ModuleInfo.Description = new OEIExoLocString();
 			}
 				
-			SaveModule(module,path);	
+			SaveModule(module,path);
 			
-			module.Dispose();
+			CloseModule();
 		}
 				
 		
@@ -315,30 +311,30 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new IOException("An area with the given name ('" + name + "') already exists.");
 			}
 				
-			using (NWN2GameArea oObject = new NWN2GameArea()) {
-			    oObject.Size = size;
-			    oObject.HasTerrain = exterior;
-			    oObject.Interior = !exterior;
-			    oObject.Name = name;
-			    oObject.Tag = name;
-			    oObject.DisplayName[BWLanguages.CurrentLanguage] = name;
+			NWN2GameArea oObject = new NWN2GameArea();
+			
+			oObject.Size = size;			    
+			oObject.HasTerrain = exterior;			    
+			oObject.Interior = !exterior;			    
+			oObject.Name = name;			    
+			oObject.Tag = name;			    
+			oObject.DisplayName[BWLanguages.CurrentLanguage] = name;
 				
-			    lock (padlock) {
-				    NWN2GameArea oResource = module.AddResource(oObject) as NWN2GameArea;
-				    if (oObject == oResource) {
-				        oObject.InitializeArea(name, module.TempDirectory, module.Repository);
+			lock (padlock) {
+				NWN2GameArea oResource = module.AddResource(oObject) as NWN2GameArea;
+				if (oObject == oResource) {
+					oObject.InitializeArea(name, module.TempDirectory, module.Repository);
+				}
+				oObject.SetAreaTypePropertiesToDefault();
+				if (!exterior) {
+				    foreach (OEIShared.NetDisplay.DayNightStage stage in oObject.DayNightStages) {
+					    stage.SetToDefaultInteriorValues();
 				    }
-				    oObject.SetAreaTypePropertiesToDefault();
-				    if (!exterior) {
-				        foreach (OEIShared.NetDisplay.DayNightStage stage in oObject.DayNightStages) {
-				            stage.SetToDefaultInteriorValues();
-				        }
-				    }
-				    oObject.OEISerialize();
-			    }
-				
-				return CreateAreaBase(oObject);
+				}
+				oObject.OEISerialize();
 			}
+				
+			return CreateAreaBase(oObject);
 		}
 		
 		
