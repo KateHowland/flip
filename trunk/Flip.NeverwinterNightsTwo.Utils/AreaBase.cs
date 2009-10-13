@@ -53,10 +53,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 		/// <summary>
 		/// The smallest possible height/width of an
-		/// area. For interior areas, this is the number
-		/// of tiles. For exterior areas, this is the 
-		/// number of small grid squares, excluding
-		/// the inaccessible outer region.
+		/// area (not counting the inaccessible outer region
+		/// for exterior areas.)
 		/// </summary>
 		/// <remarks>Although interior and exterior
 		/// areas share the same minimum and maximum
@@ -70,10 +68,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 		/// <summary>
 		/// The largest possible height/width of an
-		/// area. For interior areas, this is the number
-		/// of tiles. For exterior areas, this is the 
-		/// number of small grid squares, excluding
-		/// the inaccessible outer region.
+		/// area (not counting the inaccessible outer region
+		/// for exterior areas.)
 		/// </summary>
 		/// <remarks>Although interior and exterior
 		/// areas share the same minimum and maximum
@@ -82,7 +78,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Exterior area lengths are automatically
 		/// rounded off to the nearest acceptable length
 		/// (4, 8, 12, 16, 20, 24, 28 or 32).</remarks>
-		public const byte MaximumAreaLength = 8;
+		public const byte MaximumAreaLength = 32;
+		
+		
+		/// <summary>
+		/// The smallest possible area size.
+		/// </summary>
+		public static readonly Size SmallestAreaSize = new Size(MinimumAreaLength,MinimumAreaLength);
+		
+		
+		/// <summary>
+		/// The largest possible area size.
+		/// </summary>
+		public static readonly Size LargestAreaSize = new Size(MaximumAreaLength,MaximumAreaLength);
 		
 
 		/// <summary>
