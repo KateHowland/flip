@@ -47,12 +47,15 @@
     <Reference Include="Microsoft.DirectX" />
     <Reference Include="NWN2Toolset">
       <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="OEIShared">
       <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\OEIShared.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SandBar">
       <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\SandBar.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

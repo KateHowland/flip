@@ -26,10 +26,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.ServiceModel;
 using System.Threading;
+using System.Windows.Automation;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
@@ -57,49 +59,47 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#endregion
 		
 		#region Setup
-		
+				
 		[TestFixtureSetUp]
 		public void Init()
 		{					
 			// Don't try to delete modules files at the start of the test fixture
 			// as it causes IO access exceptions with the NWN2 toolset.
 			
-			pathChecker = new PathChecker();
+			pathChecker = new PathChecker();				
 			
-//			try {
-//			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();
+			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();				
+						
+			Console.WriteLine("Waiting for toolset to load...");
 			
-			pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),"net.pipe://localhost/NamedPipeEndpoint");
+			AutomationElement toolset = null;
 			
+			while (toolset == null) {
+				foreach (AutomationElement e in AutomationElement.RootElement.FindAll(TreeScope.Children,Condition.TrueCondition)) {
+					string name = (string)e.GetCurrentPropertyValue(AutomationElement.NameProperty);
+					if (name.Contains("Obsidian Neverwinter Nights 2 Toolset:")) {
+						toolset = e;
+						break;
+					}
+				}
+				Thread.Sleep(500);
+			} 
+			
+			((WindowPattern)toolset.GetCurrentPattern(WindowPattern.Pattern)).SetWindowVisualState(WindowVisualState.Minimized);
+					
+			pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),"net.pipe://localhost/NamedPipeEndpoint");									
 			CreateService();
 			
-//			int waited = 0;
-//			while (true) {
-//				try {
-//					service.GetCurrentModuleName();
-//					System.Windows.MessageBox.Show("Finished loading.");
-//					break;
-//				}
-//				catch (EndpointNotFoundException) {
-//					Thread.Sleep(500);					
-//					waited += 500;
-//					service = pipeChannelFactory.CreateChannel();
-//				}
-//			}
-//			
-//			int seconds = waited < 1000 ? 0 : waited/1000;
-//			
-//			System.Windows.MessageBox.Show("Waited about " + seconds + " seconds.");
-//			} catch (Exception e) {
-//				System.Windows.MessageBox.Show(e.ToString());
-//			}
+			Console.WriteLine("Toolset loaded. Running test suite.");
 		}
 		
 		
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-//			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
+			Console.WriteLine("Test suite completed. Closing toolset.");
+			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
+			Thread.Sleep(250);
 		}
 		
 		#endregion

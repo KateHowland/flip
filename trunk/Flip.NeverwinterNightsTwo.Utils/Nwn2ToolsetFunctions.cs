@@ -51,14 +51,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// toolset launcher application could not be found.</exception>
 		public static void RunNeverwinterNightsTwoToolset()
 		{
-			string location = GetNeverwinterNightsTwoInstallPath();
-			
-			if (location == null || !System.IO.Directory.Exists(location))
-				throw new InvalidOperationException("Failed to locate the Neverwinter Nights 2 install.");
-			
-			location = Path.Combine(location,ToolsetLauncherDefaultName + ".exe");
-			
-			Process.Start(location);
+			ProcessStartInfo psi = new ProcessStartInfo();
+			psi.WorkingDirectory = GetNeverwinterNightsTwoInstallPath();
+			psi.FileName = ToolsetLauncherDefaultName + ".exe";
+			Process.Start(psi);			
 		}	
 		
 		
