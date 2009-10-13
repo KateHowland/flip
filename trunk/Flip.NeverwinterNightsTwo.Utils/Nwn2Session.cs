@@ -48,6 +48,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// this is a quirk of the way Neverwinter Nights 2 is implemented.)</remarks>
 	public class Nwn2Session : INwn2Session
 	{
+		#region Fields
+		
+		protected object padlock;
+		
+		#endregion
+		
 		#region Constructors
 		
 		/// <summary>
@@ -55,6 +61,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		public Nwn2Session()
 		{
+			padlock = new object();
 		}
 		
 		#endregion
@@ -88,17 +95,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						
 			string name = Path.GetFileNameWithoutExtension(path);
 						
-			NWN2GameModule module = new NWN2GameModule();
-// Possible that this is more correct?.. but breaks existing test logic so need to do carefully:
-//			NWN2ToolsetMainForm.App.DoNewModule(true);
-//			NWN2GameModule module = GetCurrentModule();
+			// Possible that this is more correct?.. but breaks existing test logic so need to do carefully:
+			//NWN2ToolsetMainForm.App.DoNewModule(true);
+			//NWN2GameModule module = GetCurrentModule();
 			
-			module.Name = name;
-			module.LocationType = location;
-			module.ModuleInfo.Tag = name;
-			module.ModuleInfo.Description = new OEIExoLocString();
+			NWN2GameModule module;
 			
+			lock (padlock) {
+				module = new NWN2GameModule();
+				module.Name = name;
+				module.LocationType = location;
+				module.ModuleInfo.Tag = name;
+				module.ModuleInfo.Description = new OEIExoLocString();
+			}
+				
 			SaveModule(module,path);	
+			
+			module.Dispose();
 		}
 				
 		
@@ -123,35 +136,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			ThreadedOpenHelper opener;						
 			
 			NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
-						
-			try {				
-				if (NWN2ToolsetMainForm.App.CloseModule(true)) {					
-					string parameter;
-					if (location == ModuleLocationType.Directory) {
-						parameter = Path.GetFileName(path);
-					}
-					else {
-						parameter = path;
-					}
 					
-			        opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,parameter,location);
-			        
-			        ThreadedProgressDialog progress = new ThreadedProgressDialog();
-			        progress.Text = "Opening module";
-			        progress.Message = "Opening module of type " + location + " at " + path + ".";
-			        progress.WorkerThread = new ThreadedProgressDialog.WorkerThreadDelegate(opener.Go);
-			        progress.ShowDialog();
-			        
-			        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
-		        }
+			lock (padlock) {
+				try {				
+					if (NWN2ToolsetMainForm.App.CloseModule(true)) {					
+						string parameter;
+						if (location == ModuleLocationType.Directory) {
+							parameter = Path.GetFileName(path);
+						}
+						else {
+							parameter = path;
+						}
+						
+				        opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,parameter,location);
+				        
+				        ThreadedProgressDialog progress = new ThreadedProgressDialog();
+				        progress.Text = "Opening module";
+				        progress.Message = "Opening module of type " + location + " at " + path + ".";
+				        progress.WorkerThread = new ThreadedProgressDialog.WorkerThreadDelegate(opener.Go);
+				        progress.ShowDialog();
+				        
+				        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
+			        }
+				}
+			    catch (Exception) {
+			        NWN2ToolsetMainForm.App.DoNewModule(false);
+			    }
+			    finally {
+			    	NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
+			    }
 			}
-		    catch (Exception e) {
-				System.Windows.Forms.MessageBox.Show("Something went wrong when opening a module." + Environment.NewLine + e);
-		        NWN2ToolsetMainForm.App.DoNewModule(false);
-		    }
-		    finally {
-		    	NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
-		    }
 		}
 				
 		
@@ -188,12 +202,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						                            "NWN2ToolsetMainForm.ModulesDirectory.");
 					}
 					
-					foreach (NWN2GameArea area in module.Areas.Values) {
-						area.OEISerialize();
+					lock (padlock) {
+						foreach (NWN2GameArea area in module.Areas.Values) {
+							area.OEISerialize();
+						}					
+						string name = Path.GetFileName(path);			
+						module.OEISerialize(name);
 					}
 					
-					string name = Path.GetFileName(path);			
-					module.OEISerialize(name);
 					break;
 					
 				case ModuleLocationType.File:
@@ -201,11 +217,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						throw new ArgumentException("path","Path must be a .mod file.");
 					}
 					
-					foreach (NWN2GameArea area in module.Areas.Values) {
-						area.OEISerialize();
+					lock (padlock) {
+						foreach (NWN2GameArea area in module.Areas.Values) {
+							area.OEISerialize();
+						}					
+						module.OEISerialize(path);
 					}
 					
-					module.OEISerialize(path);
 					break;
 					
 				default:
@@ -220,7 +238,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		public void CloseModule()
 		{
-			NWN2ToolsetMainForm.App.DoNewModule(false);
+			lock (padlock) {
+				NWN2ToolsetMainForm.App.DoNewModule(false);
+			}
 		}
 		
 		
@@ -285,37 +305,40 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// area to persist. An area added to a directory-based module
 		/// will be saved automatically.</remarks>
 		public AreaBase AddArea(string name, bool exterior, Size size)
-		{			
-		    NWN2GameArea oObject = new NWN2GameArea();
-		    oObject.Size = size;
-		    oObject.HasTerrain = exterior;
-		    oObject.Interior = !exterior;
-		    oObject.Name = name;
-		    oObject.Tag = name;
-		    oObject.DisplayName[BWLanguages.CurrentLanguage] = name;
-		    
+		{					    
 			NWN2GameModule module = GetCurrentModule();
-			
+				
 			if (module == null) {
 				throw new InvalidOperationException("No module is currently open.");
 			}			
 			if (module.Areas.ContainsCaseInsensitive(name)) {
 				throw new IOException("An area with the given name ('" + name + "') already exists.");
 			}
-			
-		    NWN2GameArea oResource = module.AddResource(oObject) as NWN2GameArea;
-		    if (oObject == oResource) {
-		        oObject.InitializeArea(name, module.TempDirectory, module.Repository);
-		    }
-		    oObject.SetAreaTypePropertiesToDefault();
-		    if (!exterior) {
-		        foreach (OEIShared.NetDisplay.DayNightStage stage in oObject.DayNightStages) {
-		            stage.SetToDefaultInteriorValues();
-		        }
-		    }
-		    oObject.OEISerialize();
-			
-			return CreateAreaBase(oObject);
+				
+			using (NWN2GameArea oObject = new NWN2GameArea()) {
+			    oObject.Size = size;
+			    oObject.HasTerrain = exterior;
+			    oObject.Interior = !exterior;
+			    oObject.Name = name;
+			    oObject.Tag = name;
+			    oObject.DisplayName[BWLanguages.CurrentLanguage] = name;
+				
+			    lock (padlock) {
+				    NWN2GameArea oResource = module.AddResource(oObject) as NWN2GameArea;
+				    if (oObject == oResource) {
+				        oObject.InitializeArea(name, module.TempDirectory, module.Repository);
+				    }
+				    oObject.SetAreaTypePropertiesToDefault();
+				    if (!exterior) {
+				        foreach (OEIShared.NetDisplay.DayNightStage stage in oObject.DayNightStages) {
+				            stage.SetToDefaultInteriorValues();
+				        }
+				    }
+				    oObject.OEISerialize();
+			    }
+				
+				return CreateAreaBase(oObject);
+			}
 		}
 		
 		
