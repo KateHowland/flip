@@ -187,7 +187,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="cHost">A plugin host component which
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
-		{
+		{			
 		}
 		
 		
