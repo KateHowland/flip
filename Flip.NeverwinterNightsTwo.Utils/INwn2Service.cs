@@ -44,6 +44,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
 		/// <param name="location">The serialisation form of the module.</param>
 		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		[FaultContract(typeof(System.NotSupportedException))]
 		void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
 		
 		
@@ -53,6 +57,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="name">The path of the module to open.</param>
 		/// <param name="location">The serialisation form of the module.</param>
 		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.IO.IOException))]
 		void OpenModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
 		
 		
@@ -61,6 +68,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <remarks>Saves to the default modules directory.</remarks>
 		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
 		void SaveModule();
 		
 		
@@ -92,7 +100,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <returns>The location type of the current module.</returns>
 		[OperationContract]
-		NWN2Toolset.NWN2.IO.ModuleLocationType GetCurrentModuleLocation();
+		NWN2Toolset.NWN2.IO.ModuleLocationType? GetCurrentModuleLocation();
 		
 		
 		/// <summary>
@@ -103,6 +111,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// with terrain; false to create an interior area with tiles.</param>
 		/// <param name="size">The size of area to create.</param>
 		[OperationContract]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
 		void AddArea(string name, bool exterior, Size size);
 		
 		
@@ -124,6 +134,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="resref">The resref of the blueprint to create the object from.</param>
 		/// <param name="tag">The tag of the object.</param>
 		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
 		void AddObject(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string resref, string tag);
 		
 		
@@ -138,6 +151,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The number of objects matching the given description
 		/// in the given area.</returns>
 		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
 		int GetObjectCount(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string tag);	
 	}
 }

@@ -152,22 +152,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string name = "dir module.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
-			string expectedException = "System.ArgumentException";
 			
 			path = pathChecker.GetUnusedFilePath(path);
 					
 			try {
 				service.CreateModule(path,ModuleLocationType.Directory);
-				Assert.Fail("Failed to raise " + expectedException + " when asked to " +
-				            "create a directory module at a file path.");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to create a directory " +
+			            	"module at a path only suitable for file modules.");
 			}
-			catch (FaultException e) {
-				if (!(e.ToString().Contains(expectedException))) {
-					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
-					            "create a directory module at a file path.");
-				}
+			catch (FaultException<ArgumentException>) {
+				// expected result
 				Assert.IsFalse(Directory.Exists(path),"Created a directory module given a file path.");
-				CreateService(); // recreate the service if a fault has occurred
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to create a directory " +
+			            	"module at a path only suitable for file modules.");
 			}
 		}
 				
@@ -178,22 +178,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string name = "file module";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
-			string expectedException = "System.ArgumentException";
 			
 			path = pathChecker.GetUnusedDirectoryPath(path);
 					
 			try {
 				service.CreateModule(path,ModuleLocationType.File);
-				Assert.Fail("Failed to raise " + expectedException + " when asked to " +
-				            "create a file module at a directory path.");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to create a file " +
+			            	"module at a path only suitable for directory modules.");
 			}
-			catch (FaultException e) {
-				if (!(e.ToString().Contains(expectedException))) {
-					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
-					            "create a file module at a directory path.");
-				}
+			catch (FaultException<ArgumentException>) {
+				// expected result
 				Assert.IsFalse(File.Exists(path),"Created a file module given a directory path.");
-				CreateService(); // recreate the service if a fault has occurred
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to create a file " +
+			            	"module at a path only suitable for directory modules.");
 			}
 		}
 		
@@ -201,8 +201,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void DoesNotCreateFileModuleIfPathIsAlreadyTaken()
 		{
-			string expectedException = "System.IO.IOException";
-			
 			string name = "file duplicate.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -213,15 +211,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			try {
 				service.CreateModule(path,ModuleLocationType.File);
-				Assert.Fail("Failed to raise an exception when attempting " +
-				            "to create a module at an existing path.");
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to create a file module at an occupied path.");
 			}
-			catch (FaultException e) {
-				if (!(e.ToString().Contains(expectedException))) {
-					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
-					            "create a file module at a directory path.");
-				}
-				CreateService(); // recreate the service if a fault has occurred
+			catch (FaultException<IOException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to create a file module at an occupied path.");
 			}
 			
 			Delete(path);
@@ -231,27 +228,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void DoesNotCreateDirectoryModuleIfPathIsAlreadyTaken()
 		{
-			string expectedException = "System.IO.IOException";
-			
 			string name = "dir duplicate";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
 			
-			path = pathChecker.GetUnusedFilePath(path);
+			path = pathChecker.GetUnusedDirectoryPath(path);
 			
 			service.CreateModule(path,ModuleLocationType.Directory);
 			
 			try {
 				service.CreateModule(path,ModuleLocationType.Directory);
-				Assert.Fail("Failed to raise an exception when attempting " +
-				            "to create a module at an existing path.");
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to create a directory module at an occupied path.");
 			}
-			catch (FaultException e) {
-				if (!(e.ToString().Contains(expectedException))) {
-					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
-					            "create a directory module at a directory path.");
-				}
-				CreateService(); // recreate the service if a fault has occurred
+			catch (FaultException<IOException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to create a directory module at an occupied path.");
 			}
 			
 			Delete(path);
@@ -336,18 +330,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					
 			service.CreateModule(path,ModuleLocationType.File);
 			
-			Assert.AreNotEqual(name,service.GetCurrentModuleName());
-			Assert.AreNotEqual(path,service.GetCurrentModulePath());
+			string moduleName, modulePath;
+			
+			moduleName = service.GetCurrentModuleName();
+			modulePath = service.GetCurrentModulePath();			
+			if (moduleName != null) {
+				Assert.AreNotEqual(name,moduleName);
+			}
+			if (modulePath != null) {
+				Assert.AreNotEqual(path,modulePath);
+			}
 			
 			service.OpenModule(path, ModuleLocationType.File);
 			
-			Assert.AreEqual(name,service.GetCurrentModuleName());
-			Assert.AreEqual(path,service.GetCurrentModulePath());
+			moduleName = service.GetCurrentModuleName();
+			modulePath = service.GetCurrentModulePath();		
+			Assert.IsNotNull(moduleName);
+			Assert.IsNotNull(modulePath);
+			Assert.AreEqual(name,moduleName);
+			Assert.AreEqual(path,modulePath);
 			
 			service.CloseModule();
 			
-			Assert.AreNotEqual(name,service.GetCurrentModuleName());
-			Assert.AreNotEqual(path,service.GetCurrentModulePath());
+			moduleName = service.GetCurrentModuleName();
+			modulePath = service.GetCurrentModulePath();				
+			if (moduleName != null) {
+				Assert.AreNotEqual(name,moduleName);
+			}
+			if (modulePath != null) {
+				Assert.AreNotEqual(path,modulePath);
+			}
 			
 			Delete(path);
 		}
@@ -470,8 +482,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void DoesNotAddAreaIfNameIsAlreadyTaken()
 		{
-			string expectedException = "System.IO.IOException";
-			
 			string name = "area duplication.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -488,15 +498,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			try {
 				service.AddArea(areaName,false,size);
-				Assert.Fail("Failed to raise an exception when attempting " +
+				Assert.Fail("Didn't raise a FaultException<IOException> when attempting " +
 				            "to add an area with a duplicate name.");
 			}
-			catch (FaultException e) {
-				if (!(e.ToString().Contains(expectedException))) {
-					Assert.Fail("Failed to raise " + expectedException + " when asked to " +
-					            "to add an area with a duplicate name.");
-				}
+			catch (FaultException<IOException>) {
+				// expected result
+			}
+			catch (FaultException) {
 				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when attempting " +
+				            "to add an area with a duplicate name.");
 			}
 			
 			service.CloseModule();
@@ -554,8 +565,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void DoesNotAddObjectWithUnknownResref()
 		{
-			string expectedException = "System.ArgumentException";
-			
 			string name = "unknown resref object adding.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -571,17 +580,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			try {
 				service.AddObject(area,NWN2ObjectType.Creature,"I am not a real resref","tag");
-				Assert.Fail("Failed to raise " + expectedException + " when attempting " +
-				            "to add an object.");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add an object with unknown resref.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
 			}
 			catch (FaultException e) {
-				if (!(e.ToString().Contains(expectedException))) {
-					Assert.Fail("Failed to raise " + expectedException + " when attempting " +
-					            "to add an object." + Environment.NewLine + "Instead raised: " + e);
-				}
 				CreateService();
+				System.Windows.MessageBox.Show(e.ToString() + e.Message + e.Reason);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add an object with unknown resref.");
 			}
-						
+			
 			service.CloseModule();
 			
 			Delete(path);
@@ -591,7 +600,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void SavesDirectoryModule()
 		{
-			string name = "saves dir module";
+			string name = "saves directory module";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
 			
@@ -689,12 +698,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			try {
 				service.OpenModule(path,ModuleLocationType.Directory);	
-				Assert.Fail("Didn't raise an ArgumentException when asked to open a non-existent directory module.");
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to open a non-existent directory module.");
+			}
+			catch (FaultException<IOException>) {
+				// expected result
 			}
 			catch (FaultException) {
 				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to open a non-existent directory module " +
+				            "(raised a different exception).");
 			}
-			//catch (FaultException<ArgumentException>) {} TODO
 		}
 		
 		
@@ -709,12 +722,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			try {
 				service.OpenModule(path,ModuleLocationType.File);	
-				Assert.Fail("Didn't raise an ArgumentException when asked to open a non-existent file module.");
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to open a non-existent file module.");
 			}
-			catch (FaultException) {			
+			catch (FaultException<IOException>) {
+				// expected result
+			}
+			catch (FaultException) {
 				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to open a non-existent file module " +
+				            "(raised a different exception).");
 			}
-			//catch (FaultException<ArgumentException>) {} TODO
 		}
 		
 		#endregion

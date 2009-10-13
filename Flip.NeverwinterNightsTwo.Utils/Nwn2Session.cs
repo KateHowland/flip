@@ -42,11 +42,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// <summary>
 	/// A facade for a Neverwinter Nights 2 toolset session.
 	/// </summary>
-	/// <remarks>Operations on a module must be followed
-	/// by an explicit SaveModule() call if the changes are to persist -
-	/// this includes adding objects to an area, and adding areas to
-	/// a file-based module (but not to a directory-based module - this
-	/// is a quirk of the Neverwinter Nights 2 software.)</remarks>
+	/// <remarks>Any operation on a module must be followed
+	/// by an explicit SaveModule() call if the changes are to persist.
+	/// (The only exception is adding an area to a directory-based module -
+	/// this is a quirk of the way Neverwinter Nights 2 is implemented.)</remarks>
 	public class Nwn2Session : INwn2Session
 	{
 		#region Constructors
@@ -241,7 +240,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
 		public string GetCurrentModulePath()
 		{
-			return GetModulePath(GetCurrentModule());
+			NWN2GameModule module = GetCurrentModule();
+			if (module == null) 
+				return null;
+			else {
+				return GetModulePath(module);
+			}
 		}
 		
 		
@@ -293,7 +297,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			NWN2GameModule module = GetCurrentModule();
 			
 			if (module == null) {
-				throw new InvalidOperationException("No module open.");
+				throw new InvalidOperationException("No module is currently open.");
 			}			
 			if (module.Areas.ContainsCaseInsensitive(name)) {
 				throw new IOException("An area with the given name ('" + name + "') already exists.");

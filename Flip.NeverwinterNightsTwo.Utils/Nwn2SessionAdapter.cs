@@ -26,6 +26,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.ServiceModel;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Instances;
@@ -83,8 +85,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
 		/// <param name="location">The serialisation form of the module.</param>
 		public void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location)
-		{
-			session.CreateModule(path,location);
+		{			
+			try {
+				session.CreateModule(path,location);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (IOException e) {
+				throw new FaultException<IOException>(e,e.Message);
+			}
+			catch (NotSupportedException e) {
+				throw new FaultException<NotSupportedException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -95,7 +114,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="location">The serialisation form of the module.</param>
 		public void OpenModule(string path, ModuleLocationType location)
 		{
-			session.OpenModule(path,location);
+			try {
+				session.OpenModule(path,location);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (IOException e) {
+				throw new FaultException<IOException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -105,7 +138,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <remarks>Saves to the default modules directory.</remarks>
 		public void SaveModule()
 		{
-			session.SaveModule(session.GetCurrentModule());
+			try {
+				session.SaveModule(session.GetCurrentModule());
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -114,7 +155,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		public void CloseModule()
 		{
-			session.CloseModule();
+			try {
+				session.CloseModule();
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -124,19 +170,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The name of the current module, or null if no module is open.</returns>
 		public string GetCurrentModuleName()
 		{
-			NWN2GameModule module = session.GetCurrentModule();
-			if (module == null) return null;
-			else return module.Name;
+			try {
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					return null;
+				}
+				else {
+					return module.Name;
+				}
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}		
 		
 		
 		/// <summary>
 		/// Gets the absolute path of the module that is currently open in the toolset.
 		/// </summary>
-		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
+		/// <returns>The absolute path of the current module, or null if no module is currently open.</returns>
 		public string GetCurrentModulePath()
 		{
-			return session.GetCurrentModulePath();
+			try {
+				return session.GetCurrentModulePath();
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -144,9 +204,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the location type of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The location type of the current module.</returns>
-		public ModuleLocationType GetCurrentModuleLocation()
+		public ModuleLocationType? GetCurrentModuleLocation()
 		{
-			return session.GetCurrentModule().LocationType;
+			try {
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					return null;
+				}
+				else {
+					return (ModuleLocationType?)module.LocationType;
+				}
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -159,7 +230,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="size">The size of area to create.</param>
 		public void AddArea(string name, bool exterior, Size size)
 		{
-			session.AddArea(name,exterior,size);
+			try {
+				session.AddArea(name,exterior,size);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (IOException e) {
+				throw new FaultException<System.IO.IOException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -171,15 +253,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// if there is no module open.</returns>
 		public ICollection<string> GetAreas()
 		{
-			NWN2GameModule module = session.GetCurrentModule();
-						
-			if (module == null) return null;
-			else {
+			try {
+				NWN2GameModule module = session.GetCurrentModule();
+							
+				if (module == null) {
+					InvalidOperationException e = new InvalidOperationException("No module is currently open.");
+					FaultReasonText text = new FaultReasonText(e.Message,CultureInfo.CurrentCulture);
+					throw new FaultException<InvalidOperationException>(e,new FaultReason(text));
+				}
+				
 				List<string> areas = new List<string>(module.Areas.Count);
 				foreach (string key in module.Areas.Keys) {
 					areas.Add(key);
 				}
 				return areas;
+			}			
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
 		}
 				
@@ -192,25 +282,43 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="resref">The resref of the blueprint to create the object from.</param>
 		/// <param name="tag">The tag of the object.</param>
 		public void AddObject(string areaName, NWN2ObjectType type, string resref, string tag)
-		{
-			if (areaName == null) 
-				throw new ArgumentNullException();
-			if (areaName == String.Empty) 
-				throw new ArgumentException();
-			
-			NWN2GameModule module = session.GetCurrentModule();
-			if (module == null) 
-				throw new InvalidOperationException("No module is currently open.");
-			
-			if (!module.Areas.ContainsCaseInsensitive(areaName)) 
-				throw new ArgumentException("No such area in module '" + module.Name + "'.");
-			
-			NWN2GameArea nwn2area = module.Areas[areaName];
-			Area area = new Area(nwn2area);
-			
-			Microsoft.DirectX.Vector3 position = area.GetRandomPosition(true);
-			
-			area.AddGameObject(type,resref,tag,position);
+		{			
+			try {
+				if (areaName == null) {
+					throw new ArgumentNullException("areaName","No area name was provided (was null).");
+				}			
+				if (areaName == String.Empty) {
+					throw new ArgumentException("areaName","No area name was provided (was empty).");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}						
+				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.");
+				}
+				
+				NWN2GameArea nwn2area = module.Areas[areaName];
+				Area area = new Area(nwn2area);
+				
+				Microsoft.DirectX.Vector3 position = area.GetRandomPosition(true);
+				
+				area.AddGameObject(type,resref,tag,position);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		
@@ -225,23 +333,41 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The number of objects matching the given description
 		/// in the given area.</returns>
 		public int GetObjectCount(string areaName, NWN2ObjectType type, string tag)
-		{
-			if (areaName == null) 
-				throw new ArgumentNullException();
-			if (areaName == String.Empty) 
-				throw new ArgumentException();
-			
-			NWN2GameModule module = session.GetCurrentModule();
-			if (module == null) 
-				throw new InvalidOperationException("No module is currently open.");
-			
-			if (!module.Areas.ContainsCaseInsensitive(areaName)) 
-				throw new ArgumentException("No such area in module '" + module.Name + "'.");
-			
-			NWN2GameArea nwn2area = module.Areas[areaName];
-			AreaBase area = session.CreateAreaBase(nwn2area);
-			
-			return area.GetObjects(type,tag).Count;
+		{	
+			try {
+				if (areaName == null) {
+					throw new ArgumentNullException("areaName","No area name was provided (was null).");
+				}			
+				if (areaName == String.Empty) {
+					throw new ArgumentException("areaName","No area name was provided (was empty).");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}						
+				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.");
+				}
+				
+				NWN2GameArea nwn2area = module.Areas[areaName];
+				AreaBase area = session.CreateAreaBase(nwn2area);
+							
+				return area.GetObjects(type,tag).Count;
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
 		}
 		
 		#endregion
