@@ -13,14 +13,14 @@
     <AssemblyOriginatorKeyFile>..\Flip.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
-    <BaseIntermediateOutputPath>..\Compiled\Flip.DragonAge\obj\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\Compiled\Flip.NeverwinterNights\obj\</BaseIntermediateOutputPath>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>..\Compiled\Flip.DragonAge\bin\Debug</OutputPath>
+    <OutputPath>..\Compiled\Flip.NeverwinterNights\bin\Debug</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
