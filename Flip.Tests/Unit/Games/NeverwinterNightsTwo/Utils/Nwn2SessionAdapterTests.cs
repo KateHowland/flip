@@ -228,8 +228,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotEmpty(swordID);
 			Assert.AreNotEqual(catID,swordID);
 			
-			Bean retrievedCat = service.GetObject(area,NWN2ObjectType.Creature,"cat7",new Guid(catID));
-			Bean retrievedSword = service.GetObject(area,NWN2ObjectType.Item,"sword4",new Guid(swordID));
+			Bean retrievedCat = service.GetObject(area,NWN2ObjectType.Creature,new Guid(catID));
+			Bean retrievedSword = service.GetObject(area,NWN2ObjectType.Item,new Guid(swordID));
 			
 			Assert.AreEqual(cat,retrievedCat);
 			Assert.AreEqual(sword,retrievedSword);

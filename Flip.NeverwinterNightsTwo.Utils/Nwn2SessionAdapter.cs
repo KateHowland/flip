@@ -433,11 +433,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="areaName">The area which has the object.</param>
 		/// <param name="type">The type of the object.</param>
-		/// <param name="tag">The tag of the object.</param>
 		/// <param name="guid">The unique Guid of the object.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
-		public Bean GetObject(string areaName, NWN2ObjectType type, string tag, Guid guid)
+		public Bean GetObject(string areaName, NWN2ObjectType type, Guid guid)
 		{
 			try {
 				if (guid == null) {
@@ -461,13 +460,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				NWN2GameArea nwn2area = module.Areas[areaName];
 				AreaBase area = session.CreateAreaBase(nwn2area);
-							
-				List<INWN2Instance> instances = area.GetObjects(type,tag);
 				
-				foreach (INWN2Instance instance in instances) {
-					if (instance.ObjectID == guid) return new Bean(instance);
-				}
-				return null;
+				INWN2Instance unique = area.GetObject(type,guid);
+				
+				if (unique == null) return null;
+				else return new Bean(unique);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
