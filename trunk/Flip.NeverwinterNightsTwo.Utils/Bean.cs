@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -147,6 +148,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			if (body.ContainsKey(key)) body[key] = val;
 			else body.Add(key,val);
+		}
+		
+		
+		public override bool Equals(object obj)
+		{
+			return body.SequenceEqual(((Bean)obj).Body);
+		}
+		
+		
+		public override int GetHashCode()
+		{
+			return body.GetHashCode();
 		}
 		
 		#endregion
