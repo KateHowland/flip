@@ -113,7 +113,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.SaveModule();
 			
-			ICollection<Bean> beans = service.GetObjects(area,NWN2ObjectType.Creature,null);
+			IList<Bean> beans = service.GetObjects(area,NWN2ObjectType.Creature,null);
 			Assert.IsNotNull(beans);
 			Assert.AreEqual(2,beans.Count);
 					
@@ -188,6 +188,54 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			beans = service.GetObjects(area,NWN2ObjectType.Creature,"giant");
 			Assert.IsNotNull(beans);
 			Assert.AreEqual(1,beans.Count);
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void GetsObjectGivenGuid()
+		{
+			string name = "gets object given guid.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string area = "area";
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
+			
+			for (int i = 0; i < 20; i++) {
+				service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat" + i);
+				service.AddObject(area,NWN2ObjectType.Item,"mst_swgs_drk_3","sword" + i);	
+			}			
+			service.SaveModule();
+			
+			Assert.AreEqual(1,service.GetObjects(area,NWN2ObjectType.Creature,"cat7").Count);
+			Assert.AreEqual(1,service.GetObjects(area,NWN2ObjectType.Item,"sword4").Count);
+			Bean cat = service.GetObjects(area,NWN2ObjectType.Creature,"cat7")[0];
+			Bean sword = service.GetObjects(area,NWN2ObjectType.Item,"sword4")[0];
+			
+			Assert.IsTrue(cat.HasValue("ObjectID"));
+			Assert.IsTrue(sword.HasValue("ObjectID"));			
+			string catID = cat.GetValue("ObjectID");
+			string swordID = sword.GetValue("ObjectID");			
+			Assert.IsNotEmpty(catID);
+			Assert.IsNotEmpty(swordID);
+			Assert.AreNotEqual(catID,swordID);
+			
+			Bean retrievedCat = service.GetObject(area,NWN2ObjectType.Creature,"cat7",new Guid(catID));
+			Bean retrievedSword = service.GetObject(area,NWN2ObjectType.Item,"sword4",new Guid(swordID));
+			
+			Assert.AreEqual(cat,retrievedCat);
+			Assert.AreEqual(sword,retrievedSword);
+			
+			service.CloseModule();
+			Delete(path);
 		}
 		
 		
