@@ -37,7 +37,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		Creature,
 		Door,
 		Encounter,
-		Item,
 		Placeable,
 		Store,
 		Trigger
