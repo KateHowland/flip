@@ -39,14 +39,15 @@ using Sussex.Flip.Utils;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Data.Templates;
+using OEIShared.IO.GFF;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 {	
 	/// <summary>
-	/// Tests the <see cref="Nwn2Session"/> class.
+	/// Tests the <see cref="Nwn2SessionAdapter"/> class.
 	/// </summary>
 	[TestFixture]
-	public sealed class Nwn2SessionTests
+	public sealed partial class Nwn2SessionAdapterTests
 	{
 		#region Fields
 		
@@ -66,26 +67,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			// Don't try to delete modules files at the start of the test fixture
 			// as it causes IO access exceptions with the NWN2 toolset.
 			
-			pathChecker = new PathChecker();				
-			
-			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();				
+			pathChecker = new PathChecker();			
 						
-			Console.WriteLine("Waiting for toolset to load...");
+			Console.WriteLine("Waiting for toolset to load...");	
 			
-			AutomationElement toolset = null;
-			
-			while (toolset == null) {
-				foreach (AutomationElement e in AutomationElement.RootElement.FindAll(TreeScope.Children,Condition.TrueCondition)) {
-					string name = (string)e.GetCurrentPropertyValue(AutomationElement.NameProperty);
-					if (name.Contains("Obsidian Neverwinter Nights 2 Toolset:")) {
-						toolset = e;
-						break;
-					}
-				}
-				Thread.Sleep(500);
-			} 
-			
-			((WindowPattern)toolset.GetCurrentPattern(WindowPattern.Pattern)).SetWindowVisualState(WindowVisualState.Minimized);
+			WaitForToolsetToLoad(true);
 					
 			pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),"net.pipe://localhost/NamedPipeEndpoint");									
 			CreateService();
@@ -106,6 +92,101 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		#region Tests
 				
+		[Test]
+		public void GetsSerialisedInfoAboutObjects()
+		{
+			string name = "gets info.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string area = "area";
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);
+			
+			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
+			service.AddObject(area,NWN2ObjectType.Creature,"c_giantfire","giant");
+			service.AddObject(area,NWN2ObjectType.Item,"mst_swgs_drk_3","sword");
+			
+			service.SaveModule();
+			
+			ICollection<Bean> beans = service.GetObjects(area,NWN2ObjectType.Creature);
+			Assert.IsNotNull(beans);
+			Assert.AreEqual(2,beans.Count);
+					
+			Bean cat = null, giant = null;
+			
+			foreach (Bean bean in beans) {
+				Assert.IsTrue(bean.HasValue("Tag"),"Bean did not serialise tag as it was expected to.");
+				
+				string tag = bean.GetValue("Tag");
+				Assert.IsNotNull(tag,"Bean did not serialise tag as it was expected to.");
+				
+				if (tag == "cat") {
+					cat = bean;
+				}
+				else if (tag == "giant") {
+					giant = bean;
+				}
+				else {
+					Assert.Fail("No bean provided an expected tag (tag was '" + tag + "'.");
+				}
+			}
+		
+			Assert.IsNotNull(cat);
+			Assert.IsNotNull(giant);
+		
+			Assert.IsTrue(cat.HasValue("Strength"));
+			Assert.AreEqual(3,int.Parse(cat.GetValue("Strength")));
+		
+			Assert.IsTrue(cat.HasValue("FactionID"));
+			Assert.AreEqual(2,int.Parse(cat.GetValue("FactionID")));
+		
+			Assert.IsTrue(giant.HasValue("Strength"));
+			Assert.AreEqual(31,int.Parse(giant.GetValue("Strength")));
+		
+			Assert.IsTrue(giant.HasValue("FactionID"));
+			Assert.AreEqual(1,int.Parse(giant.GetValue("FactionID")));
+			
+			
+			beans = service.GetObjects(area,NWN2ObjectType.Item);
+			Assert.IsNotNull(beans);
+			Assert.AreEqual(1,beans.Count);
+			
+			Bean sword = null;
+			foreach (Bean bean in beans) {
+				Assert.IsTrue(bean.HasValue("Tag"),"Bean did not serialise tag as it was expected to.");
+				
+				string tag = bean.GetValue("Tag");
+				Assert.IsNotNull(tag,"Bean did not serialise tag as it was expected to.");
+				
+				if (tag == "sword") {
+					sword = bean;
+				}
+				else {
+					Assert.Fail("No bean provided an expected tag (tag was '" + tag + "'.");
+				}
+			}
+						
+			Assert.IsTrue(sword.HasValue("LocalizedName"));
+			Assert.AreEqual("Darksteel Greatsword",sword.GetValue("LocalizedName"));
+			
+			Assert.IsTrue(sword.HasValue("LocalizedDescriptionIdentified"));
+			Assert.AreEqual("Darksteel is silvery in hue when polished or cut, but " +
+			                "its exposed surfaces have a deep, gleaming purple luster. " +
+			                "This alloy of meteoric iron and steel is tempered with rare, " +
+			                "magical oils to give the metal its uncanny abilities. Darksteel " +
+			                "is commonly used in the crafting of magic items related to storms " +
+			                "or lightning.",sword.GetValue("LocalizedDescriptionIdentified"));
+			
+			Assert.IsTrue(sword.HasValue("Stolen"));
+			Assert.AreEqual("False",sword.GetValue("Stolen"));
+		}
+		
+		
 		[Test]
 		public void CreatesDirectoryModule()
 		{			
@@ -129,7 +210,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		}
 		
 		
-		[Test]
+		[Test]  
 		public void CreatesFileModule()
 		{			
 			string name = "file module.mod";
@@ -734,6 +815,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		private void CreateService()
 		{
 			service = pipeChannelFactory.CreateChannel();
+		}
+		
+		
+		/// <summary>
+		/// Runs the toolset, waits until it has loaded, and minimises it.
+		/// </summary>
+		/// <param name="minimise">True to minimise the toolset upon loading, 
+		/// false otherwise.</param>
+		private void WaitForToolsetToLoad(bool minimise)
+		{			
+			Nwn2ToolsetFunctions.RunNeverwinterNightsTwoToolset();	
+			
+			AutomationElement toolset = null;
+			
+			while (toolset == null) {
+				foreach (AutomationElement e in AutomationElement.RootElement.FindAll(TreeScope.Children,Condition.TrueCondition)) {
+					string name = (string)e.GetCurrentPropertyValue(AutomationElement.NameProperty);
+					if (name.Contains("Obsidian Neverwinter Nights 2 Toolset:")) {
+						toolset = e;
+						break;
+					}
+				}
+				Thread.Sleep(500);
+			} 
+			
+			((WindowPattern)toolset.GetCurrentPattern(WindowPattern.Pattern)).SetWindowVisualState(WindowVisualState.Minimized);
 		}
 		
 		

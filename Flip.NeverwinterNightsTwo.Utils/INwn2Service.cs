@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.ServiceModel;
 using NWN2Toolset.NWN2.Data;
@@ -155,5 +156,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		int GetObjectCount(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string tag);	
+		
+		
+		/// <summary>
+		/// Gets a collection of beans containing information about objects
+		/// matching a given description in a given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to count.</param>
+		/// <returns>A collection of beans containing information about
+		/// objects matching the description.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		ICollection<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetObjects(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);	
 	}
 }
