@@ -211,6 +211,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Pass null to ignore this criterion.</param>
 		/// <returns>The objects matching the given description.</returns>
 		public abstract List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag);
+				
+		
+		/// <summary>
+		/// Gets an object in this area with a given ObjectID.
+		/// </summary>
+		/// <param name="type">The type of the object.</param>
+		/// <param name="guid">The unique ID of the object.</param>
+		/// <returns>The object matching the given description,
+		/// or null if none was found.</returns>
+		public abstract INWN2Instance GetObject(NWN2ObjectType type, Guid guid);
 		
 		
 		/// <summary>

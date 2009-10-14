@@ -182,7 +182,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="areaName">The area which has the object.</param>
 		/// <param name="type">The type of the object.</param>
-		/// <param name="tag">The tag of the object.</param>
 		/// <param name="guid">The unique Guid of the object.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
@@ -192,7 +191,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.InvalidOperationException))]
 		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetObject(string areaName, 
 		                                                     NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, 
-		                                                     string tag, 
 		                                                     Guid guid);
 	}
 }

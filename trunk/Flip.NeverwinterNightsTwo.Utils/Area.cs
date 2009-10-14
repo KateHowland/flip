@@ -242,6 +242,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			return instances;
 		}
+						
+		
+		/// <summary>
+		/// Gets an object in this area with a given ObjectID.
+		/// </summary>
+		/// <param name="type">The type of the object.</param>
+		/// <param name="guid">The unique ID of the object.</param>
+		/// <returns>The object matching the given description,
+		/// or null if none was found.</returns>
+		public override INWN2Instance GetObject(NWN2ObjectType type, Guid guid)
+		{
+			if (!nwn2Area.Loaded) nwn2Area.Demand();
+			
+			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
+			INWN2Instance unique = null;
+								
+			foreach (INWN2Instance instance in all) {
+				if (instance.ObjectID == guid) {
+					unique = instance;
+					break;
+				}
+			}
+			
+			nwn2Area.Release();			
+			return unique;
+		}
 					
 		
 		/// <summary>
