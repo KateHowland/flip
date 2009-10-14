@@ -163,13 +163,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// matching a given description in a given area.
 		/// </summary>
 		/// <param name="areaName">The area which has the objects.</param>
-		/// <param name="type">The type of objects to count.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <param name="tag">The tag that objects must have to be collected.
+		/// Pass null to ignore this requirement.</param>
 		/// <returns>A collection of beans containing information about
 		/// objects matching the description.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		ICollection<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetObjects(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);	
+		ICollection<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetObjects(string areaName, 
+					                                                       NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type,
+					                                                       string tag);
 	}
 }
