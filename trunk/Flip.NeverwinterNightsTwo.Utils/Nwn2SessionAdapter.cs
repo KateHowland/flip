@@ -369,7 +369,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
-		}		
+		}	
 		
 		
 		/// <summary>
@@ -377,10 +377,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// matching a given description in a given area.
 		/// </summary>
 		/// <param name="areaName">The area which has the objects.</param>
-		/// <param name="type">The type of objects to count.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <param name="tag">The tag that objects must have to be collected.
+		/// Pass null to ignore this requirement.</param>
 		/// <returns>A collection of beans containing information about
 		/// objects matching the description.</returns>
-		public ICollection<Bean> GetObjects(string areaName, NWN2ObjectType type)
+		public ICollection<Bean> GetObjects(string areaName, NWN2ObjectType type, string tag)
 		{
 			try {
 				if (areaName == null) {
@@ -402,7 +404,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2GameArea nwn2area = module.Areas[areaName];
 				AreaBase area = session.CreateAreaBase(nwn2area);
 							
-				List<INWN2Instance> instances = area.GetObjects(type,null);				
+				List<INWN2Instance> instances = area.GetObjects(type,tag);				
 				List<Bean> beans = new List<Bean>(instances.Count);
 				
 				foreach (INWN2Instance instance in instances) {

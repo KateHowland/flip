@@ -113,7 +113,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.SaveModule();
 			
-			ICollection<Bean> beans = service.GetObjects(area,NWN2ObjectType.Creature);
+			ICollection<Bean> beans = service.GetObjects(area,NWN2ObjectType.Creature,null);
 			Assert.IsNotNull(beans);
 			Assert.AreEqual(2,beans.Count);
 					
@@ -152,7 +152,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(1,int.Parse(giant.GetValue("FactionID")));
 			
 			
-			beans = service.GetObjects(area,NWN2ObjectType.Item);
+			beans = service.GetObjects(area,NWN2ObjectType.Item,null);
 			Assert.IsNotNull(beans);
 			Assert.AreEqual(1,beans.Count);
 			
@@ -184,6 +184,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.IsTrue(sword.HasValue("Stolen"));
 			Assert.AreEqual("False",sword.GetValue("Stolen"));
+						
+			beans = service.GetObjects(area,NWN2ObjectType.Creature,"giant");
+			Assert.IsNotNull(beans);
+			Assert.AreEqual(1,beans.Count);
 		}
 		
 		
