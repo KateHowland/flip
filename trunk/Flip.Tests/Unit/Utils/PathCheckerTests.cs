@@ -29,7 +29,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Sussex.Flip.Utils;
 
-namespace Sussex.Flip.Tests.Unit.Utils
+namespace Sussex.Flip.Utils.Tests
 {
 	[TestFixture]
 	public class PathCheckerTests

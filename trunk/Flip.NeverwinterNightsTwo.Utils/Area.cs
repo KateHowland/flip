@@ -198,6 +198,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			return AddGameObject(blueprint,tag,position);
 		}
+		
+						
+		/// <summary>
+		/// Gets the number of objects in this area matching a given description.
+		/// </summary>
+		/// <param name="type">The type of objects to count.</param>
+		/// <returns>The objects matching the given description.</returns>
+		public override List<INWN2Instance> GetObjects(NWN2ObjectType type)
+		{
+			return GetObjects(type,null);
+		}
 						
 		
 		/// <summary>

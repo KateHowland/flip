@@ -199,6 +199,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the number of objects in this area matching a given description.
 		/// </summary>
 		/// <param name="type">The type of objects to count.</param>
+		/// <returns>The objects matching the given description.</returns>
+		public abstract List<INWN2Instance> GetObjects(NWN2ObjectType type);
+		
+		
+		/// <summary>
+		/// Gets the number of objects in this area matching a given description.
+		/// </summary>
+		/// <param name="type">The type of objects to count.</param>
 		/// <param name="tag">Only objects with this tag will be counted.
 		/// Pass null to ignore this criterion.</param>
 		/// <returns>The objects matching the given description.</returns>

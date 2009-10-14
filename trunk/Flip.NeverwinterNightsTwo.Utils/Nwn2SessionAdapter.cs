@@ -33,6 +33,7 @@ using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.IO;
+using OEIShared.IO.GFF;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -355,6 +356,60 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				AreaBase area = session.CreateAreaBase(nwn2area);
 							
 				return area.GetObjects(type,tag).Count;
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}		
+		
+		
+		/// <summary>
+		/// Gets a collection of beans containing information about objects
+		/// matching a given description in a given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to count.</param>
+		/// <returns>A collection of beans containing information about
+		/// objects matching the description.</returns>
+		public ICollection<Bean> GetObjects(string areaName, NWN2ObjectType type)
+		{
+			try {
+				if (areaName == null) {
+					throw new ArgumentNullException("areaName","No area name was provided (was null).");
+				}			
+				if (areaName == String.Empty) {
+					throw new ArgumentException("No area name was provided (was empty).","areaName");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}						
+				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.","areaName");
+				}
+				
+				NWN2GameArea nwn2area = module.Areas[areaName];
+				AreaBase area = session.CreateAreaBase(nwn2area);
+							
+				List<INWN2Instance> instances = area.GetObjects(type,null);				
+				List<Bean> beans = new List<Bean>(instances.Count);
+				
+				foreach (INWN2Instance instance in instances) {
+					beans.Add(new Bean(instance));
+				}
+				
+				return beans;
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
