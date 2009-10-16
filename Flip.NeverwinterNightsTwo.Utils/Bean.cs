@@ -75,19 +75,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Constructs a new <see cref="Bean"/> instance.
 		/// </summary>
-		/// <param name="instance">An instance of a game
-		/// object, the fields of which will be serialised
-		/// (as strings) on this bean.</param>
-		public Bean(INWN2Instance instance)
+		/// <param name="capturing">An object which will have
+		/// its fields serialised as string values
+		/// and stored on the bean.</param>
+		public Bean(object capturing)
 		{
-			if (instance == null) throw new ArgumentNullException("instance");
+			if (capturing == null) throw new ArgumentNullException("capturing");
 			
 			body = new Dictionary<string,string>();
 			
-			foreach (PropertyInfo pi in instance.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | 
-			                                                      		 BindingFlags.Static | BindingFlags.NonPublic)) 
+			foreach (PropertyInfo pi in capturing.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | 
+			                                                    	   	  BindingFlags.Static | BindingFlags.NonPublic)) 
 			{				
-				object o = pi.GetValue(instance,null);
+				object o = pi.GetValue(capturing,null);
 				string val;
 				
 				if (o == null) val = String.Empty;
@@ -160,6 +160,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public override int GetHashCode()
 		{
 			return body.GetHashCode();
+		}
+		
+		
+		public override string ToString()
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			string val = null;
+			foreach (string key in body.Keys) {
+				body.TryGetValue(key,out val);
+				sb.AppendLine(key + ": " + val);
+			}
+			return sb.ToString();
 		}
 		
 		#endregion
