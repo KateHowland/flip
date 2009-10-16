@@ -255,6 +255,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				session.AddArea("interior",false,size);
 				session.AddArea("exterior",true,size);
 			};
+			
+			MenuButtonItem reportOnAllScripts = new MenuButtonItem("reportOnAllScripts");
+			debuggingMethods.Items.Add(reportOnAllScripts);
+			reportOnAllScripts.Activate += delegate 
+			{
+				NWN2GameModule module = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
+				if (module != null) {
+					foreach (NWN2GameScript script in module.Scripts.Values) {
+						script.Demand();
+						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString() + Environment.NewLine +
+						                                    Environment.NewLine + "Data: " + script.Data);
+						script.Release();
+					}
+				}
+				else {
+					System.Windows.Forms.MessageBox.Show("Module was null.");
+				}
+			};
 		}
 		
 		#endregion

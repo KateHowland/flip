@@ -33,7 +33,9 @@ using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.IO;
+using OEIShared.IO;
 using OEIShared.IO.GFF;
+using OEIShared.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -474,6 +476,111 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+						
+		
+		/// <summary>
+		/// Gets a list of beans representing all of the
+		/// scripts owned by the current module.
+		/// </summary>
+		/// <returns>A list of beans representing all of the
+		/// scripts owned by the current module.</returns>
+		public IList<Bean> GetScripts()
+		{
+			try {
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}			
+				
+				IList<Bean> beans = new List<Bean>();
+				
+				foreach (NWN2GameScript script in module.Scripts.Values) {
+					script.Demand();
+					beans.Add(new Bean(script));
+					script.Release(); //necessary?
+				}
+				
+				return beans;
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+
+		/// <summary>
+		/// Adds a compiled script to the current module.
+		/// </summary>
+		/// <param name="path">The path to the compiled
+		/// script, which will be an .NCS file.</param>
+		public void AddCompiledScript(string path)
+		{
+			try {
+				if (path == null) {
+					throw new ArgumentNullException("path");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				
+				FileInfo f = new FileInfo(path);
+				if (!f.Exists) {
+					throw new IOException("There is no file at " + path + ".");
+				}
+				if (f.Extension.ToLower() != ".ncs") {
+					throw new IOException("The file at " + path + " has the wrong extension - " +
+					                      "file has " + f.Extension + ", while compiled NWN2 " +
+					                      "scripts have the extension .NCS.");
+				}
+				
+				
+				string folder = Path.GetDirectoryName(path);
+				DirectoryResourceRepository repos = new DirectoryResourceRepository(folder);
+				string filename = Path.GetFileName(path);
+				
+				IResourceEntry resource = null;
+				
+				/*
+				 * There is another DirectoryResourceRepository method for finding resources:
+				 * repos.FindResources(OEIResRef,ushort). This would be much quicker! And if we
+				 * have lots of scripts in a module, that might be an important difference.
+				 * However, I can't get it to work - an OEIResRef with an identical value is
+				 * not seen as being equal. This comes down to its GetHashCode() method, but
+				 * I'm not sure exactly why.
+				 */
+				foreach (IResourceEntry r in repos.FindResourcesByType(2010)) {
+					if (r.FullName == filename) {
+						resource = r;
+					}
+				}		
+				
+				if (resource == null) {
+					throw new InvalidOperationException("Something went wrong - when trying" +
+					                                    "to add a script to the module, the script " +
+					                                    "resource was null.");
+				}
+							
+				NWN2GameScript script = new NWN2GameScript(resource);
+				module.Scripts.Add(script);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (IOException e) {
+				throw new FaultException<IOException>(e,e.Message);
 			}
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);

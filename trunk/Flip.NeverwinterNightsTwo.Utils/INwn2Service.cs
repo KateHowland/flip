@@ -192,5 +192,28 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetObject(string areaName, 
 		                                                     NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, 
 		                                                     Guid guid);
+		
+		
+		/// <summary>
+		/// Gets a list of beans representing all of the
+		/// scripts owned by the current module.
+		/// </summary>
+		/// <returns>A list of beans representing all of the
+		/// scripts owned by the current module.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetScripts();	
+				
+
+		/// <summary>
+		/// Adds a compiled script to the current module.
+		/// </summary>
+		/// <param name="path">The path to the compiled
+		/// script, which will be an .NCS file.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		void AddCompiledScript(string path);	
 	}
 }

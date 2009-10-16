@@ -38,6 +38,7 @@ using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.Utils;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.IO;
+using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Templates;
 using OEIShared.IO.GFF;
 
@@ -90,7 +91,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		#endregion
 		
-		#region Tests
+		#region Tests - Scripts
 				
 		[Test]
 		public void GetsSerialisedInfoAboutObjects()
@@ -238,6 +239,178 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Delete(path);
 		}
 		
+		
+		[Test]
+		public void AddsScriptToModule()
+		{
+			string name = "retrieves module scripts.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			IList<Bean> scripts = service.GetScripts();
+			Assert.AreEqual(0,scripts.Count);
+			
+			string filename = "99bottles.NCS";
+			string resourcesPath = @"C:\Libraries\Flip unit test resources";
+			string compiledScriptPath = Path.Combine(resourcesPath,filename);
+			Assert.IsTrue(File.Exists(compiledScriptPath));
+			
+			service.AddCompiledScript(compiledScriptPath);
+			
+			scripts = service.GetScripts();
+			Assert.AreEqual(1,scripts.Count);
+			Bean script = scripts[0];
+			
+			Assert.AreEqual(Path.GetFileNameWithoutExtension(filename),script.GetValue("Name"));
+			Assert.AreEqual(filename.ToLower(),script.GetValue("VersionControlName").ToLower());
+			
+			
+			// Try to add missing files, nonsense files and uncompiled scripts:
+			string nonsensePath = Path.Combine(resourcesPath,"idonotexist.NCS");
+			Assert.IsFalse(File.Exists(nonsensePath));
+			try {
+				service.AddCompiledScript(nonsensePath);
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+			            	"a non-existent script to the module.");
+			}
+			catch (FaultException<IOException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+			            	"a non-existent script to the module.");
+			}
+			
+			string uncompiledScriptPath = Path.Combine(resourcesPath,"99bottles.NSS");
+			Assert.IsTrue(File.Exists(uncompiledScriptPath));
+			try {
+				service.AddCompiledScript(uncompiledScriptPath);
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+			            	"an uncompiled script with AddCompiledScript.");
+			}
+			catch (FaultException<IOException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+			            	"an uncompiled script with AddCompiledScript.");
+			}
+			
+			string wrongFileTypePath = Path.Combine(resourcesPath,"New Text Document.txt");
+			Assert.IsTrue(File.Exists(wrongFileTypePath));
+			try {
+				service.AddCompiledScript(wrongFileTypePath);
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+			            	"a file of inappropriate type to the module.");
+			}
+			catch (FaultException<IOException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+			            	"a file of inappropriate type to the module.");
+			}
+				
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+//		[Test]
+//		public void AddsModuleScriptToUniqueScriptSlot()
+//		{
+//			string name = "attaches script.mod";
+//			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+//			string path = Path.Combine(parent,name);
+//			
+//			path = pathChecker.GetUnusedFilePath(path);
+//			
+//			service.CreateModule(path,ModuleLocationType.File);
+//			service.OpenModule(path,ModuleLocationType.File);
+//					
+//			string area = "area";
+//			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
+//			
+//			for (int i = 0; i < 20; i++) {
+//				service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat" + i);
+//				service.AddObject(area,NWN2ObjectType.Creature,"c_umber","hulk" + i);
+//				service.AddObject(area,NWN2ObjectType.Creature,"c_mindflayer","flayer" + i);
+//			}			
+//			service.SaveModule();
+//			
+//			// Check that ObjectIDs are unique:
+//			List<Guid> idlist = new List<Guid>(60);
+//			foreach (Bean bean in service.GetObjects(area,NWN2ObjectType.Creature,null)) {
+//				Assert.IsTrue(bean.HasValue("ObjectID"));
+//				Guid id = new Guid(bean.GetValue("ObjectID"));
+//				Assert.IsFalse(idlist.Contains(id));
+//				idlist.Add(id);
+//			}
+//			
+//			IList<Bean> cats = service.GetObjects(area,NWN2ObjectType.Creature,"cat9");
+//			Assert.AreEqual(1,cats.Count);
+//			Bean cat9 = cats[0];
+//			
+//			Assert.IsTrue(cat9.HasValue("OnSpawnIn"));
+//			string scrVal = cat9.GetValue("OnSpawnIn");
+//			Assert.IsNotNull(scrVal);
+//			Assert.AreNotEqual("99bottles",scrVal);
+//			
+//			Assert.IsTrue(cat9.HasValue("ObjectID"));
+//			string idVal = cat9.GetValue("ObjectID");
+//			Assert.IsNotNull(idVal);
+//			Assert.IsNotEmpty(idVal);
+//			Guid cat9id = new Guid(idVal);
+//			
+//			// Attach script:			
+//			string compiledScriptPath = Path.Combine(@"C:\Libraries\Flip unit test resources","99bottles.NCS");
+//			Assert.IsTrue(File.Exists(compiledScriptPath));
+//			
+//			service.AddCompiledScript(compiledScriptPath);
+//			
+//			NWN2Toolset.NWN2.Data.NWN2GameModule m; m.Scripts.
+//			
+//			
+//			
+//			
+//			cats = service.GetObjects(area,NWN2ObjectType.Creature,"cat9");
+//			Assert.AreEqual(1,cats.Count);
+//			cat9 = cats[0];
+//						
+//			Assert.IsTrue(cat9.HasValue("OnSpawnIn"));
+//			string scrVal = cat9.GetValue("OnSpawnIn");
+//			Assert.IsNotNull(scrVal);
+//			Assert.AreNotEqual("99bottles",scrVal);
+//			
+//			
+//			
+//			
+//			
+//			
+//			
+//			
+//			
+//			Bean retrievedCat = service.GetObject(area,NWN2ObjectType.Creature,new Guid(catID));
+//			Bean retrievedSword = service.GetObject(area,NWN2ObjectType.Item,new Guid(swordID));
+//			
+//			Assert.AreEqual(cat,retrievedCat);
+//			Assert.AreEqual(sword,retrievedSword);
+//			
+//			service.CloseModule();
+//			Delete(path);
+//		}
+		
+		#endregion
+		
+		#region Tests - I/O
 		
 		[Test]
 		public void CreatesDirectoryModule()
