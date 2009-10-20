@@ -117,6 +117,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="name">The path of the module, including file extension
 		/// if appropriate.</param>
 		/// <param name="location">The serialisation form of the module.</param>
+		/// <remarks>Also calls Demand() on all areas, simulating the effect
+		/// of having each area open in the toolset. (The same is NOT true for
+		/// any other type of resource, e.g. scripts, conversations.)</remarks>
 		public void OpenModule(string path, ModuleLocationType location)
 		{
 			if (path == null) throw new ArgumentNullException("path");
@@ -153,6 +156,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				        progress.ShowDialog();
 				        
 				        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
+				        
+				        /*
+				         * Calling Demand() on each area when opening the module means we don't have to worry
+				         * about whether the area object is 'fully loaded' (for example, if Demand() has not
+				         * been called, the area object will appear to contain no instances.) However, it isn't
+				         * very efficient, and it is important to note that if working with a module that HASN'T
+				         * been opened using this method the areas won't be fully loaded. (In the unaugmented
+				         * version of the toolset, any area you can operate on will already have been Demand()ed
+				         * when it was opened in a 3D window, and will be Release()d when that window is closed.)
+				         * Rather than forcing the user to pointlessly open areas via a service, it seems simpler
+				         * for the moment to Demand() each area from the start.
+				         * 
+				         * (Note that we can't just Demand() at the start of an area method and Release() at the
+				         * end - both Demand() and Release() overwrite the copy of the area that is in memory,
+				         * so any unsaved changes would immediately be lost.)
+				         */
+				        foreach (NWN2GameArea area in NWN2ToolsetMainForm.App.Module.Areas.Values) area.Demand();
 			        }
 				}
 			    catch (Exception) {
@@ -216,7 +236,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					lock (padlock) {
 						foreach (NWN2GameArea area in module.Areas.Values) {
 							area.OEISerialize();
-						}					
+						}			
+						foreach (NWN2GameScript script in module.Scripts.Values) {
+							script.OEISerialize();
+						}							
 						module.OEISerialize(path);
 					}
 					

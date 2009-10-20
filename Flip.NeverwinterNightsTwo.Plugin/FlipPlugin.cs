@@ -202,8 +202,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			try {
 				host = new ServiceHost(typeof(Nwn2SessionAdapter),new Uri[]{ new Uri("net.pipe://localhost") });
 				
+				NetNamedPipeBinding binding = new NetNamedPipeBinding();
+				binding.MaxReceivedMessageSize = Int32.MaxValue;
+				
 				host.AddServiceEndpoint(typeof(INwn2Service).ToString(),
-				                        new NetNamedPipeBinding(),
+				                        binding,
 				                        "NamedPipeEndpoint");				
 				
 				host.Open();

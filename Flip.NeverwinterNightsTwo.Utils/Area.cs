@@ -80,7 +80,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				                          bounds.Max.Z);
 				bounds = new BoundingBox3(min, max);
 			}
-
+			
 			return bounds;
 		}
 
@@ -104,7 +104,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			float x = random.Next((int)bounds.Min.X, (int)bounds.Max.X);
 			float y = random.Next((int)bounds.Min.Y, (int)bounds.Max.Y);
 			float z = 0;
-
+			
 			return new Vector3(x, y, z);
 		}
 
@@ -120,7 +120,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public override INWN2Instance AddGameObject(INWN2Blueprint blueprint, string tag)
 		{
 			if (blueprint == null) throw new ArgumentNullException("blueprint", "Need a blueprint to create object from."); 
-
+			
 			INWN2Instance instance = NWN2GlobalBlueprintManager.CreateInstanceFromBlueprint(blueprint);
 
 			if (tag != null) {
@@ -219,9 +219,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Pass null to ignore this criterion.</param>
 		/// <returns>The objects matching the given description.</returns>
 		public override List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag)
-		{
-			if (!nwn2Area.Loaded) nwn2Area.Demand();
-			
+		{			
 			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
 			List<INWN2Instance> instances = new List<INWN2Instance>();
 						
@@ -238,8 +236,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 			}
 			
-			nwn2Area.Release();
-			
 			return instances;
 		}
 						
@@ -253,8 +249,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// or null if none was found.</returns>
 		public override INWN2Instance GetObject(NWN2ObjectType type, Guid guid)
 		{
-			if (!nwn2Area.Loaded) nwn2Area.Demand();
-			
 			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
 			INWN2Instance unique = null;
 								
@@ -265,7 +259,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 			}
 			
-			nwn2Area.Release();			
 			return unique;
 		}
 					

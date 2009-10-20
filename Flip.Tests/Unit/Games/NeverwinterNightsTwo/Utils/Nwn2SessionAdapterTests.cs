@@ -72,9 +72,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			Console.WriteLine("Waiting for toolset to load...");	
 			
-			WaitForToolsetToLoad(true);
-					
-			pipeChannelFactory = new ChannelFactory<INwn2Service>(new NetNamedPipeBinding(),"net.pipe://localhost/NamedPipeEndpoint");									
+			WaitForToolsetToLoad(true);					
+			
+			NetNamedPipeBinding binding = new NetNamedPipeBinding();
+			binding.MaxReceivedMessageSize = Int32.MaxValue;
+			pipeChannelFactory = new ChannelFactory<INwn2Service>(binding,"net.pipe://localhost/NamedPipeEndpoint");									
 			CreateService();
 			
 			Console.WriteLine("Toolset loaded. Running test suite.");
@@ -324,89 +326,78 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		}
 		
 		
-//		[Test]
-//		public void AddsModuleScriptToUniqueScriptSlot()
-//		{
-//			string name = "attaches script.mod";
-//			string parent = NWN2ToolsetMainForm.ModulesDirectory;
-//			string path = Path.Combine(parent,name);
-//			
-//			path = pathChecker.GetUnusedFilePath(path);
-//			
-//			service.CreateModule(path,ModuleLocationType.File);
-//			service.OpenModule(path,ModuleLocationType.File);
-//					
-//			string area = "area";
-//			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
-//			
-//			for (int i = 0; i < 20; i++) {
-//				service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat" + i);
-//				service.AddObject(area,NWN2ObjectType.Creature,"c_umber","hulk" + i);
-//				service.AddObject(area,NWN2ObjectType.Creature,"c_mindflayer","flayer" + i);
-//			}			
-//			service.SaveModule();
-//			
-//			// Check that ObjectIDs are unique:
-//			List<Guid> idlist = new List<Guid>(60);
-//			foreach (Bean bean in service.GetObjects(area,NWN2ObjectType.Creature,null)) {
-//				Assert.IsTrue(bean.HasValue("ObjectID"));
-//				Guid id = new Guid(bean.GetValue("ObjectID"));
-//				Assert.IsFalse(idlist.Contains(id));
-//				idlist.Add(id);
-//			}
-//			
-//			IList<Bean> cats = service.GetObjects(area,NWN2ObjectType.Creature,"cat9");
-//			Assert.AreEqual(1,cats.Count);
-//			Bean cat9 = cats[0];
-//			
-//			Assert.IsTrue(cat9.HasValue("OnSpawnIn"));
-//			string scrVal = cat9.GetValue("OnSpawnIn");
-//			Assert.IsNotNull(scrVal);
-//			Assert.AreNotEqual("99bottles",scrVal);
-//			
-//			Assert.IsTrue(cat9.HasValue("ObjectID"));
-//			string idVal = cat9.GetValue("ObjectID");
-//			Assert.IsNotNull(idVal);
-//			Assert.IsNotEmpty(idVal);
-//			Guid cat9id = new Guid(idVal);
-//			
-//			// Attach script:			
-//			string compiledScriptPath = Path.Combine(@"C:\Libraries\Flip unit test resources","99bottles.NCS");
-//			Assert.IsTrue(File.Exists(compiledScriptPath));
-//			
-//			service.AddCompiledScript(compiledScriptPath);
-//			
-//			NWN2Toolset.NWN2.Data.NWN2GameModule m; m.Scripts.
-//			
-//			
-//			
-//			
-//			cats = service.GetObjects(area,NWN2ObjectType.Creature,"cat9");
-//			Assert.AreEqual(1,cats.Count);
-//			cat9 = cats[0];
-//						
-//			Assert.IsTrue(cat9.HasValue("OnSpawnIn"));
-//			string scrVal = cat9.GetValue("OnSpawnIn");
-//			Assert.IsNotNull(scrVal);
-//			Assert.AreNotEqual("99bottles",scrVal);
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			Bean retrievedCat = service.GetObject(area,NWN2ObjectType.Creature,new Guid(catID));
-//			Bean retrievedSword = service.GetObject(area,NWN2ObjectType.Item,new Guid(swordID));
-//			
-//			Assert.AreEqual(cat,retrievedCat);
-//			Assert.AreEqual(sword,retrievedSword);
-//			
-//			service.CloseModule();
-//			Delete(path);
-//		}
+		[Test]
+		public void AttachesScriptToObject()
+		{
+			string name = "attaches script.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string area = "area";
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);
+			
+			service.SaveModule();	
+						
+			for (int i = 0; i < 20; i++) {
+				service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat" + i);
+				service.AddObject(area,NWN2ObjectType.Creature,"c_umber","hulk" + i);
+				service.AddObject(area,NWN2ObjectType.Creature,"c_mindflayer","flayer" + i);
+			}			
+			service.SaveModule();			
+			
+			// Check that ObjectIDs are unique (shouldn't be an issue, but just for safety):
+			List<Guid> idlist = new List<Guid>(60);
+			foreach (Bean bean in service.GetObjects(area,NWN2ObjectType.Creature,null)) {
+				Assert.IsTrue(bean.HasValue("ObjectID"));
+				Guid id = new Guid(bean.GetValue("ObjectID"));
+				Assert.IsFalse(idlist.Contains(id));
+				idlist.Add(id);
+			}
+			
+			IList<Bean> cats = service.GetObjects(area,NWN2ObjectType.Creature,"cat9");
+			Assert.AreEqual(1,cats.Count);
+			Bean cat = cats[0];
+			
+			Assert.IsTrue(cat.HasValue("OnSpawnIn"));
+			string catSpawnScript = cat.GetValue("OnSpawnIn");
+			Assert.IsNotNull(catSpawnScript);
+			string defaultScript = "nw_c2_default9";
+			Assert.AreEqual(defaultScript,catSpawnScript);
+			
+			Assert.IsTrue(cat.HasValue("ObjectID"));
+			string idVal = cat.GetValue("ObjectID");
+			Assert.IsNotNull(idVal);
+			Assert.IsNotEmpty(idVal);
+			Guid catID = new Guid(idVal);	
+			
+			string scriptFilename = "99bottles.NCS";
+			string resourcesPath = @"C:\Libraries\Flip unit test resources";
+			string compiledScriptPath = Path.Combine(resourcesPath,scriptFilename);
+			Assert.IsTrue(File.Exists(compiledScriptPath));			
+			service.AddCompiledScript(compiledScriptPath);
+			
+			string scriptName = Path.GetFileNameWithoutExtension(scriptFilename);
+			
+			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");			
+			
+			service.SaveModule();	
+						
+			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			Assert.IsNotNull(cat);
+			
+			Assert.IsTrue(cat.HasValue("OnSpawnIn"));
+			catSpawnScript = cat.GetValue("OnSpawnIn");
+			Assert.IsNotNull(catSpawnScript);
+			Assert.AreEqual(scriptName,catSpawnScript);
+			
+			service.CloseModule();			
+			Delete(path);
+		}
 		
 		#endregion
 		
