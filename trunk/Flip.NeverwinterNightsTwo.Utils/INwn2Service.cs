@@ -203,6 +203,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetScripts();	
+		
+		
+		/// <summary>
+		/// Gets a bean representing a
+		/// script in the current module.
+		/// </summary>
+		/// <returns>A bean representing a
+		/// script in the current module, or null if no
+		/// such script exists.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetScript(string name);	
 				
 
 		/// <summary>
@@ -215,5 +229,30 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.InvalidOperationException))]
 		[FaultContract(typeof(System.IO.IOException))]
 		void AddCompiledScript(string path);	
+		
+				
+		/// <summary>
+		/// Finds the script with the given name which 
+		/// is already present in the module's script 
+		/// collection, and attaches it to a particular
+		/// script slot on a particular object in a 
+		/// particular area.
+		/// </summary>
+		/// <param name="scriptName">The name of the script to use.</param>
+		/// <param name="areaName">The area which has the object.</param>
+		/// <param name="type">The type of the receiving object.</param>
+		/// <param name="objectID">The unique ObjectID of the 
+		/// receiving object.</param>
+		/// <param name="scriptSlot">The script slot to attach
+		/// the script to.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		void AttachScriptToObject(string scriptName, 
+				                  string areaName, 
+				                  Nwn2EventRaiser type, 
+				                  Guid objectID, 
+				                  string scriptSlot);
 	}
 }

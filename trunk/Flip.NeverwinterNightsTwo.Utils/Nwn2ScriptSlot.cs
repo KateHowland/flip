@@ -43,30 +43,69 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// of this type, which may be empty.</returns>
 		public static IList<string> GetScriptSlotNames(NWN2ObjectType type)
 		{
-			Nwn2EventRaiser eventRaiser;
+			Nwn2EventRaiser? eventRaiser = GetObjectType(type);
+			if (!eventRaiser.HasValue) {
+				return new List<string>(0);
+			}
+			else {
+				return GetScriptSlotNames(eventRaiser.Value);
+			}
+		}
+				
+		
+		/// <summary>
+		/// Gets the Nwn2EventRaiserType value which corresponds to the 
+		/// given NWN2ObjectType value, or null if there is
+		/// no corresponding type.
+		/// </summary>
+		/// <param name="type">The type to return a corresponding type for.</param>
+		/// <returns>A nullable Nwn2EventRaiser.</returns>
+		public static Nwn2EventRaiser? GetObjectType(NWN2ObjectType type)
+		{
 			switch (type) {
 				case NWN2ObjectType.Creature:
-					eventRaiser = Nwn2EventRaiser.Creature;
-					break;
+					return Nwn2EventRaiser.Creature;
 				case NWN2ObjectType.Door:
-					eventRaiser = Nwn2EventRaiser.Door;
-					break;
+					return Nwn2EventRaiser.Door;
 				case NWN2ObjectType.Encounter:
-					eventRaiser = Nwn2EventRaiser.Encounter;
-					break;
+					return Nwn2EventRaiser.Encounter;
 				case NWN2ObjectType.Placeable:
-					eventRaiser = Nwn2EventRaiser.Placeable;
-					break;
+					return Nwn2EventRaiser.Placeable;
 				case NWN2ObjectType.Store:
-					eventRaiser = Nwn2EventRaiser.Store;
-					break;
+					return Nwn2EventRaiser.Store;
 				case NWN2ObjectType.Trigger:
-					eventRaiser = Nwn2EventRaiser.Trigger;
-					break;
+					return Nwn2EventRaiser.Trigger;
 				default:
-					return new List<string>(0);
+					return null;
 			}
-			return GetScriptSlotNames(eventRaiser);
+		}
+				
+		
+		/// <summary>
+		/// Gets the NWN2ObjectType value which corresponds to the 
+		/// given Nwn2EventRaiser value, or null if there is
+		/// no corresponding type.
+		/// </summary>
+		/// <param name="type">The type to return a corresponding type for.</param>
+		/// <returns>A nullable NWN2ObjectType.</returns>
+		public static NWN2ObjectType? GetObjectType(Nwn2EventRaiser type)
+		{
+			switch (type) {
+				case Nwn2EventRaiser.Creature:
+					return NWN2ObjectType.Creature;
+				case Nwn2EventRaiser.Door:
+					return NWN2ObjectType.Door;
+				case Nwn2EventRaiser.Encounter:
+					return NWN2ObjectType.Encounter;
+				case Nwn2EventRaiser.Placeable:
+					return NWN2ObjectType.Placeable;
+				case Nwn2EventRaiser.Store:
+					return NWN2ObjectType.Store;
+				case Nwn2EventRaiser.Trigger:
+					return NWN2ObjectType.Trigger;
+				default:
+					return null;
+			}
 		}
 		
 		

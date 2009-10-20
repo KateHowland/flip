@@ -28,10 +28,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.ServiceModel;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
+using NWN2Toolset.NWN2.Data.TypedCollections;
 using NWN2Toolset.NWN2.IO;
 using OEIShared.IO;
 using OEIShared.IO.GFF;
@@ -500,12 +502,66 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				IList<Bean> beans = new List<Bean>();
 				
 				foreach (NWN2GameScript script in module.Scripts.Values) {
-					script.Demand();
+					bool loaded = script.Loaded;
+					if (!loaded) script.Demand();
 					beans.Add(new Bean(script));
-					script.Release(); //necessary?
+					if (!loaded) script.Release();
 				}
 				
 				return beans;
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Gets a bean representing a
+		/// script in the current module.
+		/// </summary>
+		/// <returns>A bean representing a
+		/// script in the current module, or null if no
+		/// such script exists.</returns>
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public Bean GetScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name","No script name was provided (was null).");
+				}	
+				if (name == String.Empty) {
+					throw new ArgumentException("name","No script name was provided (was empty).");
+				}		
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}	
+				
+				if (!module.Scripts.ContainsCaseInsensitive(name)) {
+					return null;
+				}
+				else {
+					NWN2GameScript script = module.Scripts[name];
+					bool loaded = script.Loaded;
+					if (!loaded) script.Demand();
+					Bean bean = new Bean(script);
+					if (!loaded) script.Release();
+					return bean;
+				}
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
@@ -581,6 +637,117 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 			catch (IOException e) {
 				throw new FaultException<IOException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}		
+		
+		
+		/// <summary>
+		/// Finds the script with the given name which 
+		/// is already present in the module's script 
+		/// collection, and attaches it to a particular
+		/// script slot on a particular object in a 
+		/// particular area.
+		/// </summary>
+		/// <param name="scriptName">The name of the script to use.</param>
+		/// <param name="areaName">The area which has the object.</param>
+		/// <param name="type">The type of the receiving object.</param>
+		/// <param name="objectID">The unique ObjectID of the 
+		/// receiving object.</param>
+		/// <param name="scriptSlot">The script slot to attach
+		/// the script to.</param>
+		/// <remarks>To attach scripts to areas and modules,
+		/// use AttachScriptToArea() and AttachScriptToModule().</remarks>
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		public void AttachScriptToObject(string scriptName, string areaName, Nwn2EventRaiser type, Guid objectID, string scriptSlot)
+		{
+			try {
+				if (scriptName == null) {
+					throw new ArgumentNullException("scriptName");
+				}
+				if (scriptName == String.Empty) {
+					throw new ArgumentException("scriptName");
+				}
+				if (areaName == null) {
+					throw new ArgumentNullException("areaName");
+				}
+				if (areaName == String.Empty) {
+					throw new ArgumentException("areaName");
+				}
+				if (scriptSlot == null) {
+					throw new ArgumentNullException("scriptSlot");
+				}
+				if (scriptSlot == String.Empty) {
+					throw new ArgumentException("scriptSlot");
+				}
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(type).Contains(scriptSlot)) {
+					throw new ArgumentException("Objects of type " + type + " do not have a script slot " +
+					                            "named " + scriptSlot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+					                            "script slot names.","scriptSlot");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no area named '" + areaName + "'.","areaName");
+				}
+				if (!module.Scripts.ContainsCaseInsensitive(scriptName)) {
+					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+				}
+								
+				switch (type) {
+					case Nwn2EventRaiser.Area:
+						throw new InvalidOperationException("Correct usage: To add scripts to areas, use AttachScriptToArea().");
+						
+					case Nwn2EventRaiser.Module:
+						throw new InvalidOperationException("Correct usage: To add scripts to areas, use AttachScriptToModule().");
+						
+					default:				
+						NWN2ObjectType? nwn2Type = Nwn2ScriptSlot.GetObjectType(type);
+						if (!nwn2Type.HasValue) {
+							throw new ArgumentException("Couldn't understand Nwn2EventRaiserType " + type +
+							                            " - it is not a module, an area, or one of the NWN2ObjectType " +
+							                            "values!","type");
+						}
+						
+						NWN2GameArea nwn2area = module.Areas[areaName];
+						NWN2InstanceCollection instances = nwn2area.GetInstancesForObjectType(nwn2Type.Value);
+						
+						foreach (INWN2Instance instance in instances) {
+							if (instance.ObjectID == objectID) {								
+								foreach (PropertyInfo pi in instance.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)) {
+									if (pi.Name == scriptSlot) {										
+										NWN2GameScript script = module.Scripts[scriptName];		
+										bool loaded = script.Loaded;
+										if (!loaded) script.Demand();
+										pi.SetValue(instance,script.Resource,null);
+										if (!loaded) script.Release();
+										return;
+									}
+								}								
+								throw new ArgumentException("Couldn't find a script slot named " + scriptSlot + ".","scriptSlot");
+							}
+						}
+						throw new ArgumentException("No " + type + " with ObjectID " + objectID + " could be found in area " + areaName + ".",
+						                            "objectID");
+				}
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
 			}
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);

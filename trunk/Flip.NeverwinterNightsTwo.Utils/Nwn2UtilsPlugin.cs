@@ -260,18 +260,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			debuggingMethods.Items.Add(reportOnAllScripts);
 			reportOnAllScripts.Activate += delegate 
 			{
+				session.OpenModule(@"\\home-fileserver\kn70\WindowsProfile\My Documents\Neverwinter Nights 2\modules\test.mod",ModuleLocationType.File);
 				NWN2GameModule module = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
 				if (module != null) {
 					foreach (NWN2GameScript script in module.Scripts.Values) {
-						script.Demand();
+						bool loaded = script.Loaded;
+						if (!loaded) script.Demand();
 						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString() + Environment.NewLine +
 						                                    Environment.NewLine + "Data: " + script.Data);
-						script.Release();
+						if (!loaded) script.Release();
 					}
 				}
 				else {
 					System.Windows.Forms.MessageBox.Show("Module was null.");
 				}
+				session.CloseModule();
 			};
 		}
 		
