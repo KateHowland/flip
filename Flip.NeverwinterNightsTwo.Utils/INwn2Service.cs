@@ -205,27 +205,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		/// <summary>
 		/// Gets a list of beans representing all of the
-		/// scripts owned by the current module.
+		/// uncompiled scripts owned by the current module.
 		/// </summary>
 		/// <returns>A list of beans representing all of the
-		/// scripts owned by the current module.</returns>
+		/// uncompiled scripts owned by the current module.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetScripts();	
+		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetUncompiledScripts();	
 		
 		
 		/// <summary>
-		/// Gets a bean representing a
+		/// Gets a bean representing an uncompiled
 		/// script in the current module.
 		/// </summary>
-		/// <returns>A bean representing a
+		/// <returns>A bean representing an uncompiled
 		/// script in the current module, or null if no
 		/// such script exists.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetScript(string name);	
+		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetUncompiledScript(string name);	
 				
 
 		/// <summary>
