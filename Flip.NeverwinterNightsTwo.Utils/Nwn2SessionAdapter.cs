@@ -776,7 +776,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("Scripts collection for this module did not feature a script named '" + name + "'.");
 				}
 								
-				NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetCurrentModuleTempPath());
+				NWN2Toolset.NWN2ToolsetMainForm.Compiler.GenerateDebugInfo = true;
+				string debug = NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetCurrentModuleTempPath());
+				if (debug.Length > 0) {
+					throw new InvalidDataException("'" + name + "' could not be compiled: " + debug);
+				}
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -815,6 +819,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
 		[FaultContract(typeof(System.IO.IOException))]
 		public void AttachScriptToObject(string scriptName, string areaName, Nwn2EventRaiser type, Guid objectID, string scriptSlot)
 		{
@@ -851,9 +856,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
 					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no area named '" + areaName + "'.","areaName");
 				}
-				if (!module.Scripts.ContainsCaseInsensitive(scriptName)) {
-					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
-				}
+				if (!HasCompiled(scriptName)) {
+					if (HasUncompiled(scriptName)) {
+						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
+					}
+					else {
+						throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+					}
+				}	
 								
 				switch (type) {
 					case Nwn2EventRaiser.Area:
@@ -897,6 +907,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 			catch (ArgumentException e) {
 				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidDataException e) {
+				throw new FaultException<InvalidDataException>(e,e.Message);
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);

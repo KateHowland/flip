@@ -550,7 +550,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void _RefusesToCompileIllegalScript()
+		public void RefusesToCompileIllegalScript()
 		{
 			string name = "refuses to compile illegal script.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -654,9 +654,69 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				
 		
 		[Test]
-		public void _RefusesToAttachUncompiledScriptToObject()
+		public void RefusesToAttachUncompiledOrMissingScriptToObject()
 		{
-			Assert.Fail();
+			string name = "refuses to attach uncompiled script.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string area = "area";
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();	
+						
+			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
+			service.SaveModule();		
+			
+			Bean cat = service.GetObjects(area,NWN2ObjectType.Creature,"cat")[0];
+			Guid catID = new Guid(cat.GetValue("ObjectID"));
+			
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "uncompiled script";
+			
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();
+			
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			Assert.IsFalse(service.HasCompiled(scriptName));	
+			
+			try {
+				service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");
+				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to attach " +
+			            	"an uncompiled script to an object.");
+			}
+			catch (FaultException<InvalidDataException>) {
+				// expected result				
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to attach " +
+			            	"an uncompiled script to an object.");
+			}
+			
+			scriptName = "script that does not exist";
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			try {
+				service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"a script that doesn't exist.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"a script that doesn't exist.");
+			}
+			
+			service.CloseModule();			
+			Delete(path);
 		}		
 		
 		
