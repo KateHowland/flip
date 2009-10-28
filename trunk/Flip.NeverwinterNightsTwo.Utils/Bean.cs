@@ -76,7 +76,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Constructs a new <see cref="Bean"/> instance.
 		/// </summary>
 		/// <param name="capturing">An object which will have
-		/// its fields serialised as string values
+		/// its properties and fields serialised as string values
 		/// and stored on the bean.</param>
 		public Bean(object capturing)
 		{
@@ -84,18 +84,28 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			body = new Dictionary<string,string>();
 			
-			foreach (PropertyInfo pi in capturing.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | 
-			                                                    	   	  BindingFlags.Static | BindingFlags.NonPublic)) 
+			foreach (MemberInfo mi in capturing.GetType().GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) 
 			{				
-				object o = pi.GetValue(capturing,null);
+				object o;
+				switch (mi.MemberType) {
+					case MemberTypes.Property:
+						o = ((PropertyInfo)mi).GetValue(capturing,null);
+						break;
+					case MemberTypes.Field:
+						o = ((FieldInfo)mi).GetValue(capturing);
+						break;
+					default:
+						continue;
+				}
+				
 				string val;
 				
 				if (o == null) val = String.Empty;
 				else val = o.ToString();
 				
 				int count = 1;
-				string key = pi.Name;
-				while (body.ContainsKey(key)) key = pi.Name + ++count;
+				string key = mi.Name;
+				while (body.ContainsKey(key)) key = mi.Name + ++count;
 				body.Add(key,val);
 			}
 		}

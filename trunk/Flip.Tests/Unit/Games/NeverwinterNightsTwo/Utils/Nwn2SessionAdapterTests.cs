@@ -243,7 +243,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void AddsScriptToModule()
+		public void _AddsUncompiledScriptToModule()
 		{
 			string name = "retrieves module scripts.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -257,77 +257,283 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			IList<Bean> scripts = service.GetScripts();
 			Assert.AreEqual(0,scripts.Count);
 			
-			string filename = "99bottles.NCS";
-			string resourcesPath = @"C:\Libraries\Flip unit test resources";
-			string compiledScriptPath = Path.Combine(resourcesPath,filename);
-			Assert.IsTrue(File.Exists(compiledScriptPath));
+			// This script compiles in the toolset as entered here (hand-tested):
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "uncompiled";
 			
-			service.AddCompiledScript(compiledScriptPath);
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();
 			
 			scripts = service.GetScripts();
 			Assert.AreEqual(1,scripts.Count);
 			Bean script = scripts[0];
 			
-			Assert.AreEqual(Path.GetFileNameWithoutExtension(filename),script.GetValue("Name"));
-			Assert.AreEqual(filename.ToLower(),script.GetValue("VersionControlName").ToLower());
-			
-			
-			// Try to add missing files, nonsense files and uncompiled scripts:
-			string nonsensePath = Path.Combine(resourcesPath,"idonotexist.NCS");
-			Assert.IsFalse(File.Exists(nonsensePath));
+			Assert.AreEqual(scriptName,script.GetValue("Name"));
+			Assert.AreEqual(scriptName + ".nss",script.GetValue("VersionControlName").ToLower());
+			Assert.AreEqual(scriptData,script.GetValue("Data"));
+					
 			try {
-				service.AddCompiledScript(nonsensePath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a non-existent script to the module.");
+				service.AddUncompiledScript(scriptName,scriptData);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add " +
+			            	"a script with an existing name.");
 			}
-			catch (FaultException<IOException>) {
+			catch (FaultException<ArgumentException>) {
 				// expected result
 			}
 			catch (FaultException) {
 				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a non-existent script to the module.");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add " +
+			            	"a script with an existing name.");
 			}
-			
-			string uncompiledScriptPath = Path.Combine(resourcesPath,"99bottles.NSS");
-			Assert.IsTrue(File.Exists(uncompiledScriptPath));
-			try {
-				service.AddCompiledScript(uncompiledScriptPath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"an uncompiled script with AddCompiledScript.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"an uncompiled script with AddCompiledScript.");
-			}
-			
-			string wrongFileTypePath = Path.Combine(resourcesPath,"New Text Document.txt");
-			Assert.IsTrue(File.Exists(wrongFileTypePath));
-			try {
-				service.AddCompiledScript(wrongFileTypePath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a file of inappropriate type to the module.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a file of inappropriate type to the module.");
-			}
-				
+									
 			service.CloseModule();
 			Delete(path);
 		}
 		
 		
 		[Test]
-		public void AttachesScriptToObject()
+		public void _ReturnsModuleTempPathForFileModule()
+		{
+			string name = "module for temp path checking.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string temp = service.GetCurrentModuleTempPath();
+			Assert.IsNotNull(temp);
+			Assert.IsNotEmpty(temp);
+			Assert.IsTrue(Directory.Exists(temp));
+			string folder = Path.GetFileName(temp);
+			Assert.IsTrue(folder.StartsWith("temp"));
+			Assert.IsTrue(folder.EndsWith(Path.GetFileNameWithoutExtension(path)),"Was: " + folder);
+			
+			service.SaveModule();
+			
+			Assert.IsFalse(Directory.Exists(temp)); // the old temp directory should now be gone
+			
+			temp = service.GetCurrentModuleTempPath();
+			
+			Assert.IsNotNull(temp);
+			Assert.IsNotEmpty(temp);
+			Assert.IsTrue(Directory.Exists(temp));			
+			Assert.AreEqual(Path.GetFileNameWithoutExtension(path),Path.GetFileNameWithoutExtension(temp));
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void _ReturnsModuleTempPathForDirectoryModule()
+		{
+			string name = "dir module for temp path checking";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			Assert.AreEqual(service.GetCurrentModulePath(),service.GetCurrentModuleTempPath());
+			
+			service.SaveModule();
+			
+			Assert.AreEqual(service.GetCurrentModulePath(),service.GetCurrentModuleTempPath());
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void _ReportsWhetherScriptHasBeenCompiled()
+		{
+			string name = "reports compiled script.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);	
+						
+			// First check for a pre-compiled script, so we're not relying on CompileScript() being implemented.
+			string precompiledScriptName = "99bottles";
+			string filename = precompiledScriptName + ".NCS";
+			string resourcesPath = @"C:\Libraries\Flip unit test resources";
+			string precompiledScriptPath = Path.Combine(resourcesPath,filename);
+			Assert.IsTrue(File.Exists(precompiledScriptPath),"A file necessary for running the unit test was missing.");
+			
+			string tempPath = service.GetCurrentModuleTempPath();
+			Assert.IsTrue(Directory.Exists(tempPath));
+						
+			Assert.IsFalse(service.HasCompiled(precompiledScriptName));
+			Assert.IsFalse(service.HasUncompiled(precompiledScriptName));
+			
+			string copiedPath = Path.Combine(tempPath,filename);
+			Assert.IsFalse(File.Exists(copiedPath));
+			File.Copy(precompiledScriptPath,copiedPath);
+			Assert.IsTrue(File.Exists(copiedPath));
+						
+			Assert.IsTrue(service.HasCompiled(precompiledScriptName));
+			Assert.IsFalse(service.HasUncompiled(precompiledScriptName));
+			
+			// Then add a new uncompiled script and compile it.
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "uncompiled";
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			
+			service.CompileScript(scriptName);		
+			service.SaveModule();
+			
+			Assert.IsTrue(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+		}
+		
+		
+		[Test]
+		public void _CompilesScriptForFileModule()
+		{
+			string name = "compiles script file.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);			
+			
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "uncompiled";
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			Assert.AreEqual(0,service.GetScripts().Count);
+			
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();			
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			Assert.AreEqual(1,service.GetScripts().Count);
+			
+			service.CompileScript(scriptName);
+			service.SaveModule();
+									
+			Assert.IsTrue(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			Assert.AreEqual(1,service.GetScripts().Count);
+			
+			try {
+				scriptName = "imaginary script";
+				service.CompileScript(scriptName);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to compile a non-existent script.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to compile a non-existent script.");
+			}
+		}
+		
+		
+		[Test]
+		public void _CompilesScriptForDirectoryModule()
+		{
+			string name = "compiles script dir";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);			
+			
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "uncompiled";
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			Assert.AreEqual(0,service.GetScripts().Count);
+			
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();			
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			Assert.AreEqual(1,service.GetScripts().Count);
+			
+			service.CompileScript(scriptName);
+			service.SaveModule();
+									
+			Assert.IsTrue(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			Assert.AreEqual(1,service.GetScripts().Count);
+			
+			try {
+				scriptName = "imaginary script";
+				service.CompileScript(scriptName);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to compile a non-existent script.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to compile a non-existent script.");
+			}
+		}
+		
+		
+		[Test]
+		public void _RefusesToCompileIllegalScript()
+		{
+			string name = "refuses to compile illegal script.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);			
+			
+			// Deliberately broken script (calls NonExistentMethod()):
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = NonExistentMethod(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "illegalscript";
+						
+			try {
+				service.AddUncompiledScript(scriptName,scriptData);
+				service.SaveModule();
+				service.CompileScript(scriptName);
+				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to compile an illegal script.");
+			}
+			catch (FaultException<InvalidDataException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to compile an illegal script.");
+			}
+		}
+				
+		
+		[Test]
+		public void _AttachesCompiledScriptToObject()
 		{
 			string name = "attaches script.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -345,13 +551,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			for (int i = 0; i < 20; i++) {
 				service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat" + i);
-				service.AddObject(area,NWN2ObjectType.Creature,"c_umber","hulk" + i);
-				service.AddObject(area,NWN2ObjectType.Creature,"c_mindflayer","flayer" + i);
 			}			
 			service.SaveModule();			
 			
 			// Check that ObjectIDs are unique (shouldn't be an issue, but just for safety):
-			List<Guid> idlist = new List<Guid>(60);
+			List<Guid> idlist = new List<Guid>(20);
 			foreach (Bean bean in service.GetObjects(area,NWN2ObjectType.Creature,null)) {
 				Assert.IsTrue(bean.HasValue("ObjectID"));
 				Guid id = new Guid(bean.GetValue("ObjectID"));
@@ -375,17 +579,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotEmpty(idVal);
 			Guid catID = new Guid(idVal);	
 			
-			string scriptFilename = "99bottles.NCS";
-			string resourcesPath = @"C:\Libraries\Flip unit test resources";
-			string compiledScriptPath = Path.Combine(resourcesPath,scriptFilename);
-			Assert.IsTrue(File.Exists(compiledScriptPath));			
-			service.AddCompiledScript(compiledScriptPath);
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "attachingscript";
 			
-			string scriptName = Path.GetFileNameWithoutExtension(scriptFilename);
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();			
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			Assert.IsTrue(service.HasCompiled(scriptName));
 			
-			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");			
-			
-			service.SaveModule();	
+			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");	
+			service.SaveModule();
 						
 			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
 			Assert.IsNotNull(cat);
@@ -398,7 +602,231 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CloseModule();			
 			Delete(path);
 		}
+				
 		
+		[Test]
+		public void _RefusesToAttachUncompiledScriptToObject()
+		{
+			Assert.Fail();
+		}
+		
+		
+		
+//		[Test]
+//		public void AddsCompiledScriptToModule()
+//		{
+//			string name = "retrieves module scripts.mod";
+//			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+//			string path = Path.Combine(parent,name);
+//			
+//			path = pathChecker.GetUnusedFilePath(path);
+//			
+//			service.CreateModule(path,ModuleLocationType.File);
+//			service.OpenModule(path,ModuleLocationType.File);
+//			
+//			IList<Bean> scripts = service.GetScripts();
+//			Assert.AreEqual(0,scripts.Count);
+//			
+//			string filename = "99bottles.NCS";
+//			string resourcesPath = @"C:\Libraries\Flip unit test resources";
+//			string compiledScriptPath = Path.Combine(resourcesPath,filename);
+//			Assert.IsTrue(File.Exists(compiledScriptPath));
+//			
+//			service.AddCompiledScript(compiledScriptPath);
+//			
+//			scripts = service.GetScripts();
+//			Assert.AreEqual(1,scripts.Count);
+//			Bean script = scripts[0];
+//			
+//			Assert.AreEqual(Path.GetFileNameWithoutExtension(filename),script.GetValue("Name"));
+//			Assert.AreEqual(filename.ToLower(),script.GetValue("VersionControlName").ToLower());
+//			
+//			
+//			// Try to add missing files, nonsense files and uncompiled scripts:
+//			string nonsensePath = Path.Combine(resourcesPath,"idonotexist.NCS");
+//			Assert.IsFalse(File.Exists(nonsensePath));
+//			try {
+//				service.AddCompiledScript(nonsensePath);
+//				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+//			            	"a non-existent script to the module.");
+//			}
+//			catch (FaultException<IOException>) {
+//				// expected result
+//			}
+//			catch (FaultException) {
+//				CreateService();
+//				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+//			            	"a non-existent script to the module.");
+//			}
+//			
+//			string uncompiledScriptPath = Path.Combine(resourcesPath,"99bottles.NSS");
+//			Assert.IsTrue(File.Exists(uncompiledScriptPath));
+//			try {
+//				service.AddCompiledScript(uncompiledScriptPath);
+//				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+//			            	"an uncompiled script with AddCompiledScript.");
+//			}
+//			catch (FaultException<IOException>) {
+//				// expected result
+//			}
+//			catch (FaultException) {
+//				CreateService();
+//				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+//			            	"an uncompiled script with AddCompiledScript.");
+//			}
+//			
+//			string wrongFileTypePath = Path.Combine(resourcesPath,"New Text Document.txt");
+//			Assert.IsTrue(File.Exists(wrongFileTypePath));
+//			try {
+//				service.AddCompiledScript(wrongFileTypePath);
+//				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+//			            	"a file of inappropriate type to the module.");
+//			}
+//			catch (FaultException<IOException>) {
+//				// expected result
+//			}
+//			catch (FaultException) {
+//				CreateService();
+//				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
+//			            	"a file of inappropriate type to the module.");
+//			}
+//				
+//			service.CloseModule();
+//			Delete(path);
+//		}
+//		
+//		
+//		
+//		[Test]
+//		public void CompiledScriptPersistsInFileModule()
+//		{
+//			string name = "script persists in file module.mod";
+//			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+//			string path = Path.Combine(parent,name);
+//			
+//			path = pathChecker.GetUnusedFilePath(path);
+//			
+//			service.CreateModule(path,ModuleLocationType.File);
+//			service.OpenModule(path,ModuleLocationType.File);
+//					
+//			string area = "area";
+//			service.AddArea(area,true,AreaBase.SmallestAreaSize);
+//			
+//			service.SaveModule();	
+//			
+//			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
+//			
+//			service.SaveModule();	
+//			
+//			IList<Bean> cats = service.GetObjects(area,NWN2ObjectType.Creature,"cat");
+//			Assert.AreEqual(1,cats.Count);
+//			Bean cat = cats[0];
+//			
+//			Assert.IsTrue(cat.HasValue("ObjectID"));
+//			string idVal = cat.GetValue("ObjectID");
+//			Assert.IsNotNull(idVal);
+//			Assert.IsNotEmpty(idVal);
+//			Guid catID = new Guid(idVal);	
+//			
+//			string scriptFilename = "99bottles.NCS";
+//			string resourcesPath = @"C:\Libraries\Flip unit test resources";
+//			string compiledScriptPath = Path.Combine(resourcesPath,scriptFilename);
+//			Assert.IsTrue(File.Exists(compiledScriptPath));			
+//			
+//			service.AddCompiledScript(compiledScriptPath);
+//			
+//			service.SaveModule();	
+//			
+//			string scriptName = Path.GetFileNameWithoutExtension(scriptFilename);
+//			
+//			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");			
+//			
+//			service.SaveModule();	
+//						
+//			service.CloseModule();
+//			service.OpenModule(path,ModuleLocationType.File);
+//						
+//			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+//			Assert.IsNotNull(cat);
+//			
+//			Assert.IsTrue(cat.HasValue("OnSpawnIn"));
+//			string catSpawnScript = cat.GetValue("OnSpawnIn");
+//			Assert.IsNotNull(catSpawnScript);
+//			Assert.AreEqual(scriptName,catSpawnScript);
+//			
+//			Assert.AreEqual(1,service.GetScripts().Count,"Script did not persist.");
+//			Bean script = service.GetScript("99bottles");
+//			Assert.IsNotNull(script,"Script did not persist.");
+//			
+//			service.CloseModule();			
+//			Delete(path);
+//		}
+//		
+//		
+//		[Test]
+//		public void CompiledScriptPersistsInDirectoryModule()
+//		{
+//			string name = "script persists in directory module";
+//			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+//			string path = Path.Combine(parent,name);
+//			
+//			path = pathChecker.GetUnusedDirectoryPath(path);
+//			
+//			service.CreateModule(path,ModuleLocationType.Directory);
+//			service.OpenModule(path,ModuleLocationType.Directory);
+//					
+//			string area = "area";
+//			service.AddArea(area,true,AreaBase.SmallestAreaSize);
+//			
+//			service.SaveModule();	
+//			
+//			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
+//			
+//			service.SaveModule();	
+//			
+//			IList<Bean> cats = service.GetObjects(area,NWN2ObjectType.Creature,"cat");
+//			Assert.AreEqual(1,cats.Count);
+//			Bean cat = cats[0];
+//			
+//			Assert.IsTrue(cat.HasValue("ObjectID"));
+//			string idVal = cat.GetValue("ObjectID");
+//			Assert.IsNotNull(idVal);
+//			Assert.IsNotEmpty(idVal);
+//			Guid catID = new Guid(idVal);	
+//			
+//			string scriptFilename = "99bottles.NCS";
+//			string resourcesPath = @"C:\Libraries\Flip unit test resources";
+//			string compiledScriptPath = Path.Combine(resourcesPath,scriptFilename);
+//			Assert.IsTrue(File.Exists(compiledScriptPath));			
+//			
+//			service.AddCompiledScript(compiledScriptPath);
+//			
+//			service.SaveModule();	
+//						
+////			string scriptName = Path.GetFileNameWithoutExtension(scriptFilename);
+////			
+////			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");			
+////			
+////			service.SaveModule();	
+//			service.CloseModule();
+//			service.OpenModule(path,ModuleLocationType.Directory);
+//									
+//			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+//			Assert.IsNotNull(cat);
+//			
+////			Assert.IsTrue(cat.HasValue("OnSpawnIn"));
+////			string catSpawnScript = cat.GetValue("OnSpawnIn");
+////			Assert.IsNotNull(catSpawnScript);
+////			Assert.AreEqual(scriptName,catSpawnScript);
+//						
+//			Assert.AreEqual(1,service.GetScripts().Count,"Script did not persist.");
+//			Bean script = service.GetScript("99bottles");
+//			Assert.IsNotNull(script,"Script did not persist.");
+//			
+//			service.CloseModule();			
+//			Delete(path);
+//		}
+//		
 		#endregion
 		
 		#region Tests - I/O
