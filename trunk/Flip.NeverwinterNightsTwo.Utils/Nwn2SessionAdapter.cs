@@ -505,11 +505,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		/// <summary>
 		/// Gets a list of beans representing all of the
-		/// scripts owned by the current module.
+		/// uncompiled scripts owned by the current module.
 		/// </summary>
 		/// <returns>A list of beans representing all of the
-		/// scripts owned by the current module.</returns>
-		public IList<Bean> GetScripts()
+		/// uncompiled scripts owned by the current module.</returns>
+		public IList<Bean> GetUncompiledScripts()
 		{
 			try {
 				NWN2GameModule module = session.GetCurrentModule();
@@ -536,16 +536,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a bean representing a
+		/// Gets a bean representing an uncompiled
 		/// script in the current module.
 		/// </summary>
-		/// <returns>A bean representing a
+		/// <returns>A bean representing an uncompiled
 		/// script in the current module, or null if no
 		/// such script exists.</returns>
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		public Bean GetScript(string name)
+		public Bean GetUncompiledScript(string name)
 		{
 			try {
 				if (name == null) {
@@ -721,39 +721,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                      "scripts have the extension .NCS.");
 				}
 				
-				
-				string folder = Path.GetDirectoryName(path);
-				DirectoryResourceRepository repos = new DirectoryResourceRepository(folder);
 				string filename = Path.GetFileName(path);
+				string temp = session.GetCurrentModuleTempPath();
+				string newPath = Path.Combine(temp,filename);
 				
-				IResourceEntry resource = null;
-				
-				/*
-				 * There is another DirectoryResourceRepository method for finding resources:
-				 * repos.FindResources(OEIResRef,ushort). This would be much quicker! And if we
-				 * have lots of scripts in a module, that might be an important difference.
-				 * However, I can't get it to work - an OEIResRef with an identical value is
-				 * not seen as being equal. This comes down to its GetHashCode() method, but
-				 * I'm not sure exactly why.
-				 */
-				foreach (IResourceEntry r in repos.FindResourcesByType(2010)) {
-					if (r.FullName == filename) {
-						resource = r;
-					}
-				}		
-				
-				if (resource == null) {
-					throw new InvalidOperationException("Something went wrong - when trying " +
-					                                    "to add a script to the module, the script " +
-					                                    "resource was null.");
-				}				
-								    
-				NWN2GameScript script = new NWN2GameScript(resource);
-				script.Module = module;				
-				module.Scripts.Add(script);
-				
-				/* or module.AddResource(script) - neither makes the script
-				 * persist, even if the toolset's own Save menu button is used. */
+				File.Copy(path,newPath);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
