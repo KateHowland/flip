@@ -307,8 +307,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="scriptSlot">The script slot to attach
 		/// the script to.</param>
 		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
 		[FaultContract(typeof(System.IO.IOException))]
 		void AttachScriptToObject(string scriptName, 
 				                  string areaName, 
