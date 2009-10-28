@@ -206,6 +206,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets the path to the working ('temp') copy of the module that is currently open in the toolset.
+		/// </summary>
+		/// <returns>The temp path of the current module, or null if no module is open.</returns>
+		public string GetCurrentModuleTempPath()
+		{
+			try {
+				return session.GetCurrentModuleTempPath();
+			}
+			catch (ApplicationException e) {
+				throw new FaultException<ApplicationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
 		/// Gets the location type of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The location type of the current module.</returns>
@@ -502,10 +520,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				IList<Bean> beans = new List<Bean>();
 				
 				foreach (NWN2GameScript script in module.Scripts.Values) {
-					bool loaded = script.Loaded;
-					if (!loaded) script.Demand();
-					beans.Add(new Bean(script));
-					if (!loaded) script.Release();
+					Bean bean = new Bean(script);
+					beans.Add(bean);
 				}
 				
 				return beans;
@@ -550,12 +566,115 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				else {
 					NWN2GameScript script = module.Scripts[name];
-					bool loaded = script.Loaded;
-					if (!loaded) script.Demand();
 					Bean bean = new Bean(script);
-					if (!loaded) script.Release();
 					return bean;
 				}
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}	
+		
+		
+		/// <summary>
+		/// Checks whether the current module has a compiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NCS compiled
+		/// script file of the given name, and false otherwise.</returns>
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public bool HasCompiled(string name)
+		{
+			try {
+				return session.HasCompiled(name);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+
+		/// <summary>
+		/// Checks whether the current module has an uncompiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NSS uncompiled
+		/// script file of the given name, and false otherwise.</returns>
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public bool HasUncompiled(string name)
+		{
+			try {
+				return session.HasUncompiled(name);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+				
+
+		/// <summary>
+		/// Adds an uncompiled script to the current module.
+		/// </summary>
+		/// <param name="name">The name to save the script under.</param>
+		/// <param name="code">The contents of the script.</param>
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public void AddUncompiledScript(string name, string code)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (code == null) {
+					throw new ArgumentNullException("code");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+								
+				NWN2GameScript script = new NWN2GameScript(name,
+				                                           module.Repository.DirectoryName,
+				                                           module.Repository);				
+				script.Module = module;
+				script.Data = code;
+				
+				module.Scripts.Add(script);	/* or module.AddResource(script) */
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -577,6 +696,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="path">The path to the compiled
 		/// script, which will be an .NCS file.</param>
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
 		public void AddCompiledScript(string path)
 		{
 			try {
@@ -621,13 +743,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}		
 				
 				if (resource == null) {
-					throw new InvalidOperationException("Something went wrong - when trying" +
+					throw new InvalidOperationException("Something went wrong - when trying " +
 					                                    "to add a script to the module, the script " +
 					                                    "resource was null.");
-				}
-							
+				}				
+								    
 				NWN2GameScript script = new NWN2GameScript(resource);
+				script.Module = module;				
 				module.Scripts.Add(script);
+				
+				/* or module.AddResource(script) - neither makes the script
+				 * persist, even if the toolset's own Save menu button is used. */
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -641,7 +767,61 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
-		}		
+		}			
+		
+		
+		/// <summary>
+		/// Compiles a script in the current module.
+		/// </summary>
+		/// <param name="name">The name of the script to compile.</param>
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
+		public void CompileScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name");
+				}
+								
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!session.HasUncompiled(name)) {
+					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no uncompiled script named '" + name + "'.","name");
+				}
+				
+				NWN2GameScript script;
+				try {
+					script = module.Scripts[name];
+				}
+				catch (ArgumentOutOfRangeException) {
+					throw new ArgumentException("Scripts collection for this module did not feature a script named '" + name + "'.");
+				}
+								
+				NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetCurrentModuleTempPath());
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidDataException e) {
+				throw new FaultException<InvalidDataException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
 		
 		
 		/// <summary>

@@ -34,6 +34,7 @@ using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
+using OEIShared.IO;
 using OEIShared.Utils;
 using OEIShared.UI;
 
@@ -222,6 +223,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						foreach (NWN2GameArea area in module.Areas.Values) {
 							area.OEISerialize();
 						}					
+						foreach (NWN2GameScript script in module.Scripts.Values) {
+							script.OEISerialize();
+						}			
 						string name = Path.GetFileName(path);			
 						module.OEISerialize(name);
 					}
@@ -236,7 +240,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					lock (padlock) {
 						foreach (NWN2GameArea area in module.Areas.Values) {
 							area.OEISerialize();
-						}			
+						}									
 						foreach (NWN2GameScript script in module.Scripts.Values) {
 							script.OEISerialize();
 						}							
@@ -284,6 +288,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				return null;
 			else {
 				return GetModulePath(module);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Gets the path to the working ('temp') copy of the module that is currently open in the toolset.
+		/// </summary>
+		/// <returns>The temp path of the current module, or null if no module is open.</returns>
+		public string GetCurrentModuleTempPath()
+		{
+			NWN2GameModule module = GetCurrentModule();
+			if (module == null) {
+				return null;
+			}
+			else if (module.Repository == null) {
+				throw new ApplicationException("Repository of current module was unexpectedly null.");
+			}
+			else {
+				return module.Repository.DirectoryName;
 			}
 		}
 		
@@ -371,6 +394,71 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public AreaBase CreateAreaBase(NWN2GameArea nwn2area)
 		{
 			return new Area(nwn2area);
+		}
+		
+		
+		/// <summary>
+		/// Checks whether the current module has a resource
+		/// of the given name and resource type.
+		/// </summary>
+		/// <param name="name">The name of the resource.</param>
+		/// <param name="resourceType">The number indicating the type 
+		/// of the resource.</param>
+		/// <returns>True if the current module has a resource
+		/// of the given name and type, and false otherwise.</returns>
+		public bool HasResource(string name, ushort resourceType)
+		{
+			if (name == null) {
+				throw new ArgumentNullException("name","No name was provided (was null).");
+			}	
+			if (name == String.Empty) {
+				throw new ArgumentException("name","No name was provided (was empty).");
+			}		
+			
+			NWN2GameModule module = GetCurrentModule();
+			
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}					
+			if (module.Repository == null) {
+				throw new ApplicationException("The module's repository was missing.");
+			}
+			
+			OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(resourceType);
+			
+			foreach (IResourceEntry r in resources) {
+				string resourceName = Path.GetFileNameWithoutExtension(r.FullName);
+				if (resourceName == name) return true;
+			}
+			return false;
+		}
+		
+		
+		/// <summary>
+		/// Checks whether the current module has a compiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NCS compiled
+		/// script file of the given name, and false otherwise.</returns>
+		public bool HasCompiled(string name)
+		{
+			ushort NCS = 2010;
+			return HasResource(name,NCS);
+		}
+		
+
+		/// <summary>
+		/// Checks whether the current module has an uncompiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NSS uncompiled
+		/// script file of the given name, and false otherwise.</returns>
+		public bool HasUncompiled(string name)
+		{
+			ushort NSS = 2009;
+			return HasResource(name,NSS);
 		}
 		
 		#endregion

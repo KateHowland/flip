@@ -90,6 +90,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets the path to the working ('temp') copy of the module that is currently open in the toolset.
+		/// </summary>
+		/// <returns>The temp path of the current module, or null if no module is open.</returns>
+		string GetCurrentModuleTempPath();
+		
+		
+		/// <summary>
 		/// Gets the absolute path of a given module.
 		/// </summary>
 		/// <param name="module">The module to return the path of.</param>
@@ -116,5 +123,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A new <see cref="AreaBase"/> instance.</returns>
 		/// <remarks>This is a Factory Method.</remarks>
 		AreaBase CreateAreaBase(NWN2Toolset.NWN2.Data.NWN2GameArea nwn2area);
+		
+		
+		/// <summary>
+		/// Checks whether the current module has a compiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NCS compiled
+		/// script file of the given name, and false otherwise.</returns>
+		bool HasCompiled(string name);
+		
+
+		/// <summary>
+		/// Checks whether the current module has an uncompiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NSS uncompiled
+		/// script file of the given name, and false otherwise.</returns>
+		bool HasUncompiled(string name);
 	}
 }

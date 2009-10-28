@@ -97,6 +97,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets the path to the working ('temp') copy of the module that is currently open in the toolset.
+		/// </summary>
+		/// <returns>The temp path of the current module, or null if no module is open.</returns>
+		[OperationContract]		
+		[FaultContract(typeof(System.ApplicationException))]
+		string GetCurrentModuleTempPath();
+		
+		
+		/// <summary>
 		/// Gets the location type of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The location type of the current module, or null if no module is open.</returns>
@@ -220,6 +229,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 
 		/// <summary>
+		/// Checks whether the current module has a compiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NCS compiled
+		/// script file of the given name, and false otherwise.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		bool HasCompiled(string name);		
+		
+
+		/// <summary>
+		/// Checks whether the current module has an uncompiled script
+		/// of the given name.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if the current module has a .NSS uncompiled
+		/// script file of the given name, and false otherwise.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		bool HasUncompiled(string name);	
+				
+
+		/// <summary>
 		/// Adds a compiled script to the current module.
 		/// </summary>
 		/// <param name="path">The path to the compiled
@@ -229,6 +266,30 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.InvalidOperationException))]
 		[FaultContract(typeof(System.IO.IOException))]
 		void AddCompiledScript(string path);	
+				
+
+		/// <summary>
+		/// Adds an uncompiled script to the current module.
+		/// </summary>
+		/// <param name="name">The name to save the script under.</param>
+		/// <param name="code">The contents of the script.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void AddUncompiledScript(string name, string code);	
+				
+
+		/// <summary>
+		/// Compiles a script in the current module.
+		/// </summary>
+		/// <param name="name">The name of the script to compile.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void CompileScript(string name);	
 		
 				
 		/// <summary>
