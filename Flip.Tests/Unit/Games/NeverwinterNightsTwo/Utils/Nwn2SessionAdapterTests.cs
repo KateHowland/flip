@@ -715,6 +715,52 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void RefusesToAttachScriptToNonExistentArea()
+		{
+			string name = "RefusesToAttachScriptToNonExistentArea.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string areaName = "area";
+			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();
+						
+			string scriptName = "givegold";
+			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			
+			string scriptSlot = "OnHeartbeat";	
+			string wrongAreaName = "non existent area";
+			Assert.IsNull(service.GetArea(wrongAreaName));
+			
+			try {
+				service.AttachScriptToArea(wrongAreaName,areaName,scriptSlot);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"an area that doesn't exist.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"an area that doesn't exist.");
+			}
+		
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void ReturnsDataAboutAreas()
 		{
 			string name = "ReturnsDataAboutAreas.mod";
