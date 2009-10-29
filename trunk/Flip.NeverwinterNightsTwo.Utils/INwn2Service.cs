@@ -214,7 +214,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// areas owned by the current module.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetAreas();
+		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetAreas();	
+		
+		
+		/// <summary>
+		/// Gets a bean representing the current module.
+		/// </summary>
+		/// <returns>A bean representing the current module.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetModule();
 		
 		
 		/// <summary>

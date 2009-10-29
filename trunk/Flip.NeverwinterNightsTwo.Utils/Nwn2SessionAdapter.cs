@@ -549,6 +549,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
 		}
+		
+				
+		/// <summary>
+		/// Gets a bean representing the current module.
+		/// </summary>
+		/// <returns>A bean representing the current module.</returns>
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public Bean GetModule()
+		{
+			try {
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}			
+				return new Bean(module);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
 						
 		
 		/// <summary>
