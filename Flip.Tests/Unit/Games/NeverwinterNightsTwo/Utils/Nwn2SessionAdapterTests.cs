@@ -768,6 +768,46 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CloseModule();			
 			Delete(path);
 		}
+		
+		
+		[Test]
+		public void ReturnsDataAboutModule()
+		{
+			string name = "ReturnsDataAboutModule.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			Bean module = service.GetModule();
+			Assert.IsNotNull(module);
+			Assert.IsTrue(module.HasValue("LocationType"));
+			Assert.AreEqual("File",module.GetValue("LocationType"));
+			Assert.IsTrue(module.HasValue("Name"));
+			Assert.AreEqual(Path.GetFileNameWithoutExtension(path),module.GetValue("Name"));
+			
+			service.CloseModule();
+			
+			name = "ReturnsDataAboutModule directory";
+			path = Path.Combine(parent,name);
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			module = service.GetModule();
+			Assert.IsNotNull(module);
+			Assert.IsTrue(module.HasValue("LocationType"));
+			Assert.AreEqual("Directory",module.GetValue("LocationType"));
+			Assert.IsTrue(module.HasValue("Name"));
+			Assert.AreEqual(Path.GetFileNameWithoutExtension(path),module.GetValue("Name"));
+			
+			service.CloseModule();			
+			Delete(path);
+		}
 				
 		
 		[Test]
