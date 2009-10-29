@@ -671,47 +671,47 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		}
 		
 		
-//		[Test]
-//		public void _AttachesCompiledScriptToArea()
-//		{
-//			string name = "AttachesCompiledScriptToArea";
-//			string parent = NWN2ToolsetMainForm.ModulesDirectory;
-//			string path = Path.Combine(parent,name);
-//			
-//			path = pathChecker.GetUnusedFilePath(path);
-//			
-//			service.CreateModule(path,ModuleLocationType.File);
-//			service.OpenModule(path,ModuleLocationType.File);
-//					
-//			string areaName = "area";
-//			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);			
-//			service.SaveModule();
-//						
-//			string scriptName = "givegold";
-//			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
-//			service.AddUncompiledScript(scriptName,scriptData);
-//			service.SaveModule();
-//			service.CompileScript(scriptName);
-//			service.SaveModule();
-//			
-//			string scriptSlot = "OnHeartbeat";			
-//			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
-//			service.SaveModule();
-//			
-//			Bean areaBean = service.GetArea(areaName);
-//			Assert.IsTrue(areaBean.HasValue(scriptSlot));
-//			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
-//			
-//			service.CloseModule();
-//			service.OpenModule(path,ModuleLocationType.File);
-//			
-//			Bean areaBean = service.GetArea(areaName);
-//			Assert.IsTrue(areaBean.HasValue(scriptSlot));
-//			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
-//		
-//			service.CloseModule();			
-//			Delete(path);
-//		}
+		[Test]
+		public void AttachesCompiledScriptToArea()
+		{
+			string name = "AttachesCompiledScriptToArea.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string areaName = "area";
+			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();
+						
+			string scriptName = "givegold";
+			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			
+			string scriptSlot = "OnHeartbeat";			
+			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
+			service.SaveModule();
+			
+			Bean areaBean = service.GetArea(areaName);
+			Assert.IsTrue(areaBean.HasValue(scriptSlot));
+			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+			
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			areaBean = service.GetArea(areaName);
+			Assert.IsTrue(areaBean.HasValue(scriptSlot));
+			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+		
+			service.CloseModule();			
+			Delete(path);
+		}
 		
 		
 		[Test]
@@ -875,6 +875,67 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CloseModule();			
 			Delete(path);
 		}		
+				
+		
+		[Test]
+		public void RefusesToAttachUncompiledOrMissingScriptToArea()
+		{
+			string name = "refuses to attach uncompiled script to area.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string area = "area";
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();	
+			
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "uncompiled script";
+			
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();
+			
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			Assert.IsFalse(service.HasCompiled(scriptName));	
+			
+			try {
+				service.AttachScriptToArea(scriptName,area,"OnHeartbeat");
+				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to attach " +
+			            	"an uncompiled script to an area.");
+			}
+			catch (FaultException<InvalidDataException>) {
+				// expected result				
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to attach " +
+			            	"an uncompiled script to an area.");
+			}
+			
+			scriptName = "script that does not exist";
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			try {
+				service.AttachScriptToArea(scriptName,area,"OnHeartbeat");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"a script that doesn't exist.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"a script that doesn't exist.");
+			}
+			
+			service.CloseModule();			
+			Delete(path);
+		}	
 		
 		
 		[Test]

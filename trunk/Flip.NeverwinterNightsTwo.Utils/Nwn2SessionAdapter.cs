@@ -1096,6 +1096,98 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
 		}
+				
+				
+		/// <summary>
+		/// Finds the compiled script with the given name which 
+		/// is already present in the module's script 
+		/// collection, and attaches it to the nominated
+		/// script slot on the area of the given name.
+		/// </summary>
+		/// <param name="scriptName">The name of the compiled script.</param>
+		/// <param name="areaName">The area to attach the script to.</param>
+		/// <param name="scriptSlot">The script slot to attach
+		/// the script to.</param>
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		public void AttachScriptToArea(string scriptName, string areaName, string scriptSlot)
+		{
+			try {
+				if (scriptName == null) {
+					throw new ArgumentNullException("scriptName");
+				}
+				if (scriptName == String.Empty) {
+					throw new ArgumentException("scriptName cannot be empty.","scriptName");
+				}
+				if (areaName == null) {
+					throw new ArgumentNullException("areaName");
+				}
+				if (areaName == String.Empty) {
+					throw new ArgumentException("areaName cannot be empty.","areaName");
+				}
+				if (scriptSlot == null) {
+					throw new ArgumentNullException("scriptSlot");
+				}
+				if (scriptSlot == String.Empty) {
+					throw new ArgumentException("scriptSlot cannot be empty.","scriptSlot");
+				}
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(scriptSlot)) {
+					throw new ArgumentException("Areas do not have a script slot " +
+					                            "named " + scriptSlot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+					                            "script slot names.","scriptSlot");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no area named '" + areaName + "'.","areaName");
+				}
+				if (!HasCompiled(scriptName)) {
+					if (HasUncompiled(scriptName)) {
+						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
+					}
+					else {
+						throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+					}
+				}	
+				
+				NWN2GameArea area = module.Areas[areaName];			
+				
+				PropertyInfo p = area.GetType().GetProperty(scriptSlot);
+				if (p == null) {
+					throw new ArgumentException("No property named " + scriptSlot +
+					                            " could be found on area " + areaName + ".");
+				}
+				
+				NWN2GameScript script = module.Scripts[scriptName];
+				
+				bool loaded = script.Loaded;
+				if (!loaded) script.Demand();
+				p.SetValue(area,script.Resource,null);
+				if (!loaded) script.Release();
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidDataException e) {
+				throw new FaultException<InvalidDataException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
 		
 		#endregion
 	}

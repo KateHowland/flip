@@ -366,5 +366,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				                  Nwn2EventRaiser type, 
 				                  Guid objectID, 
 				                  string scriptSlot);
+		
+				
+		/// <summary>
+		/// Finds the compiled script with the given name which 
+		/// is already present in the module's script 
+		/// collection, and attaches it to the nominated
+		/// script slot on the area of the given name.
+		/// </summary>
+		/// <param name="scriptName">The name of the compiled script.</param>
+		/// <param name="areaName">The area to attach the script to.</param>
+		/// <param name="scriptSlot">The script slot to attach
+		/// the script to.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		void AttachScriptToArea(string scriptName, string areaName, string scriptSlot);
 	}
 }
