@@ -127,16 +127,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a collection of names of every area in the 
-		/// current module.
-		/// </summary>
-		/// <returns>A collection of area names, or null
-		/// if there is no module open.</returns>
-		[OperationContract]
-		System.Collections.Generic.ICollection<string> GetAreas();		
-		
-		
-		/// <summary>
 		/// Adds an object to the given area.
 		/// </summary>
 		/// <param name="areaName">The name of the area in the current module to add the object to.</param>
@@ -200,7 +190,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.InvalidOperationException))]
 		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetObject(string areaName, 
 		                                                     NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, 
-		                                                     Guid guid);
+		                                                     Guid guid);		
+		
+		
+		/// <summary>
+		/// Gets a bean representing an area in the current module.
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		/// <returns>A bean representing the named area, or null 
+		/// if the area could not be found.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetArea(string name);
+		
+		
+		/// <summary>
+		/// Gets a list of beans representing 
+		/// the areas in the current module.
+		/// </summary>
+		/// <returns>A list of beans representing all of the
+		/// areas owned by the current module.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetAreas();
 		
 		
 		/// <summary>

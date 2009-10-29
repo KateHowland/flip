@@ -266,35 +266,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
 		}
-		
-		
-		/// <summary>
-		/// Gets a list of names of every area in the 
-		/// current module.
-		/// </summary>
-		/// <returns>A list of area names, or null
-		/// if there is no module open.</returns>
-		public ICollection<string> GetAreas()
-		{
-			try {
-				NWN2GameModule module = session.GetCurrentModule();
-							
-				if (module == null) {
-					InvalidOperationException e = new InvalidOperationException("No module is currently open.");
-					FaultReasonText text = new FaultReasonText(e.Message,CultureInfo.CurrentCulture);
-					throw new FaultException<InvalidOperationException>(e,new FaultReason(text));
-				}
-				
-				List<string> areas = new List<string>(module.Areas.Count);
-				foreach (string key in module.Areas.Keys) {
-					areas.Add(key);
-				}
-				return areas;
-			}			
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}
 				
 				
 		/// <summary>
@@ -493,6 +464,83 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 			catch (ArgumentException e) {
 				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Gets an area in the current module.
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		/// <returns>The named area, or null if one could not be found.</returns>
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public Bean GetArea(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name","No area name was provided (was null).");
+				}			
+				if (name == String.Empty) {
+					throw new ArgumentException("No area name was provided (was empty).","name");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}						
+				if (!module.Areas.ContainsCaseInsensitive(name)) {
+					return null;
+				}
+				
+				NWN2GameArea nwn2area = module.Areas[name];
+				return new Bean(nwn2area);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}		
+		
+		
+		/// <summary>
+		/// Gets a list of beans representing 
+		/// the areas in the current module.
+		/// </summary>
+		/// <returns>A list of beans representing all of the
+		/// areas owned by the current module.</returns>
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public IList<Bean> GetAreas()
+		{
+			try {
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}			
+				
+				IList<Bean> beans = new List<Bean>();
+				
+				foreach (NWN2GameArea area in module.Areas.Values) {
+					beans.Add(new Bean(area));
+				}
+				
+				return beans;
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);

@@ -83,7 +83,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				Console.WriteLine("Toolset loaded. Running test suite.");
 			}
 			catch (Exception e) {
-				System.Windows.MessageBox.Show("Error setting up test suite. " + Environment.NewLine + Environment.NewLine);
+				System.Windows.MessageBox.Show("Error setting up test suite. " + Environment.NewLine + Environment.NewLine + e);
 				throw e;
 			}
 		}
@@ -665,6 +665,105 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			catSpawnScript = cat.GetValue("OnSpawnIn");
 			Assert.IsNotNull(catSpawnScript);
 			Assert.AreEqual(scriptName,catSpawnScript);
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+//		[Test]
+//		public void _AttachesCompiledScriptToArea()
+//		{
+//			string name = "AttachesCompiledScriptToArea";
+//			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+//			string path = Path.Combine(parent,name);
+//			
+//			path = pathChecker.GetUnusedFilePath(path);
+//			
+//			service.CreateModule(path,ModuleLocationType.File);
+//			service.OpenModule(path,ModuleLocationType.File);
+//					
+//			string areaName = "area";
+//			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);			
+//			service.SaveModule();
+//						
+//			string scriptName = "givegold";
+//			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+//			service.AddUncompiledScript(scriptName,scriptData);
+//			service.SaveModule();
+//			service.CompileScript(scriptName);
+//			service.SaveModule();
+//			
+//			string scriptSlot = "OnHeartbeat";			
+//			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
+//			service.SaveModule();
+//			
+//			Bean areaBean = service.GetArea(areaName);
+//			Assert.IsTrue(areaBean.HasValue(scriptSlot));
+//			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+//			
+//			service.CloseModule();
+//			service.OpenModule(path,ModuleLocationType.File);
+//			
+//			Bean areaBean = service.GetArea(areaName);
+//			Assert.IsTrue(areaBean.HasValue(scriptSlot));
+//			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+//		
+//			service.CloseModule();			
+//			Delete(path);
+//		}
+		
+		
+		[Test]
+		public void ReturnsDataAboutAreas()
+		{
+			string name = "ReturnsDataAboutAreas.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string area1 = "outside";
+			service.AddArea(area1,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();
+			
+			string area2 = "inside";
+			service.AddArea(area2,false,AreaBase.SmallestAreaSize);	
+			service.SaveModule();
+			
+			Bean area1Bean = service.GetArea(area1);
+			Assert.IsNotNull(area1Bean);
+			Assert.IsTrue(area1Bean.HasValue("HasTerrain"));
+			Assert.AreEqual("True",area1Bean.GetValue("HasTerrain"));
+			
+			Bean area2Bean = service.GetArea(area2);
+			Assert.IsNotNull(area2Bean);
+			Assert.IsTrue(area2Bean.HasValue("HasTerrain"));
+			Assert.AreEqual("False",area2Bean.GetValue("HasTerrain"));
+			
+			area1Bean = null;
+			area2Bean = null;
+			
+			IList<Bean> areas = service.GetAreas();
+			Assert.IsNotNull(areas);
+			Assert.AreEqual(2,areas.Count);
+			
+			foreach (Bean b in areas) {
+				string n = b.GetValue("Name");
+				if (n == area1) area1Bean = b;
+				else if (n == area2) area2Bean = b;
+			}
+						
+			Assert.IsNotNull(area1Bean);
+			Assert.IsTrue(area1Bean.HasValue("HasTerrain"));
+			Assert.AreEqual("True",area1Bean.GetValue("HasTerrain"));
+			
+			Assert.IsNotNull(area2Bean);
+			Assert.IsTrue(area2Bean.HasValue("HasTerrain"));
+			Assert.AreEqual("False",area2Bean.GetValue("HasTerrain"));
 			
 			service.CloseModule();			
 			Delete(path);
@@ -1324,8 +1423,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.AreEqual(name,service.GetCurrentModuleName());	
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
@@ -1346,8 +1444,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.AreEqual(name,service.GetCurrentModuleName());
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
@@ -1368,8 +1465,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.AreEqual(name,service.GetCurrentModuleName());
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
@@ -1443,8 +1539,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.AreEqual(path,service.GetCurrentModulePath());
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
@@ -1476,14 +1571,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CloseModule();			
 			service.OpenModule(path,ModuleLocationType.File);
 			
-			ICollection<string> areas = service.GetAreas();
+			IList<Bean> areas = service.GetAreas();
 			Assert.IsNotNull(areas);
 			Assert.AreEqual(2,areas.Count);
-			Assert.IsTrue(areas.Contains(area1));
-			Assert.IsTrue(areas.Contains(area2));
+						
+			bool area1found = false;
+			bool area2found = false;
+			foreach (Bean b in areas) {
+				string n = b.GetValue("Name");
+				if (n == area1) area1found = true;
+				else if (n == area2) area2found = true;
+			}
+			Assert.IsTrue(area1found);
+			Assert.IsTrue(area2found);
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 				
@@ -1513,14 +1615,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
-			ICollection<string> areas = service.GetAreas();
+			IList<Bean> areas = service.GetAreas();
 			Assert.IsNotNull(areas);
 			Assert.AreEqual(2,areas.Count);
-			Assert.IsTrue(areas.Contains(area1));
-			Assert.IsTrue(areas.Contains(area2));
+						
+			bool area1found = false;
+			bool area2found = false;
+			foreach (Bean b in areas) {
+				string n = b.GetValue("Name");
+				if (n == area1) area1found = true;
+				else if (n == area2) area2found = true;
+			}
+			Assert.IsTrue(area1found);
+			Assert.IsTrue(area2found);
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
@@ -1556,8 +1665,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				            "to add an area with a duplicate name.");
 			}
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}		
 		
@@ -1602,8 +1710,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.Placeable,"giant"));
 			Assert.AreEqual(0,service.GetObjectCount(area,NWN2ObjectType.PlacedEffect,"inn"));
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
@@ -1637,8 +1744,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add an object with unknown resref.");
 			}
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 				
@@ -1679,11 +1785,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			Assert.AreEqual(service.GetCurrentModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreas().Count);
-			Assert.IsTrue(service.GetAreas().Contains(area));
+			Assert.IsNotNull(service.GetArea(area));
 			Assert.AreEqual(3,service.GetObjectCount(area,NWN2ObjectType.Creature,null));
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
@@ -1724,11 +1829,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			Assert.AreEqual(service.GetCurrentModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreas().Count);
-			Assert.IsTrue(service.GetAreas().Contains(area));
+			Assert.IsNotNull(service.GetArea(area));
 			Assert.AreEqual(3,service.GetObjectCount(area,NWN2ObjectType.Creature,null));
 			
-			service.CloseModule();
-			
+			service.CloseModule();			
 			Delete(path);
 		}
 		
