@@ -260,21 +260,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			debuggingMethods.Items.Add(reportOnAllScripts);
 			reportOnAllScripts.Activate += delegate 
 			{
-				session.OpenModule(@"\\home-fileserver\kn70\WindowsProfile\My Documents\Neverwinter Nights 2\modules\test.mod",ModuleLocationType.File);
 				NWN2GameModule module = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
 				if (module != null) {
+					System.Windows.Forms.MessageBox.Show("uncompiled scripts:");
 					foreach (NWN2GameScript script in module.Scripts.Values) {
 						bool loaded = script.Loaded;
 						if (!loaded) script.Demand();
-						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString() + Environment.NewLine +
-						                                    Environment.NewLine + "Data: " + script.Data);
+						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString());
 						if (!loaded) script.Release();
+					}
+					
+					System.Windows.Forms.MessageBox.Show("compiled scripts:");
+										
+					ushort NCS = 2010;
+					OEIShared.Utils.OEIGenericCollectionWithEvents<OEIShared.IO.IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
+					
+					foreach (OEIShared.IO.IResourceEntry r in resources) {
+						NWN2GameScript script = new NWN2GameScript(r);
+						script.Demand();
+						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString());
+						script.Release();
 					}
 				}
 				else {
 					System.Windows.Forms.MessageBox.Show("Module was null.");
 				}
-				session.CloseModule();
 			};
 		}
 		

@@ -64,22 +64,28 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				
 		[TestFixtureSetUp]
 		public void Init()
-		{					
-			// Don't try to delete modules files at the start of the test fixture
-			// as it causes IO access exceptions with the NWN2 toolset.
-			
-			pathChecker = new PathChecker();			
-						
-			Console.WriteLine("Waiting for toolset to load...");	
-			
-			WaitForToolsetToLoad(true);					
-			
-			NetNamedPipeBinding binding = new NetNamedPipeBinding();
-			binding.MaxReceivedMessageSize = Int32.MaxValue;
-			pipeChannelFactory = new ChannelFactory<INwn2Service>(binding,"net.pipe://localhost/NamedPipeEndpoint");									
-			CreateService();
-			
-			Console.WriteLine("Toolset loaded. Running test suite.");
+		{			
+			try {
+				// Don't try to delete modules files at the start of the test fixture
+				// as it causes IO access exceptions with the NWN2 toolset.
+				
+				pathChecker = new PathChecker();			
+							
+				Console.WriteLine("Waiting for toolset to load...");	
+				
+				WaitForToolsetToLoad(true);					
+				
+				NetNamedPipeBinding binding = new NetNamedPipeBinding();
+				binding.MaxReceivedMessageSize = Int32.MaxValue;
+				pipeChannelFactory = new ChannelFactory<INwn2Service>(binding,"net.pipe://localhost/NamedPipeEndpoint");									
+				CreateService();
+				
+				Console.WriteLine("Toolset loaded. Running test suite.");
+			}
+			catch (Exception e) {
+				System.Windows.MessageBox.Show("Error setting up test suite. " + Environment.NewLine + Environment.NewLine);
+				throw e;
+			}
 		}
 		
 		
@@ -450,6 +456,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
+			
+			service.CloseModule();
+			Delete(path);
 		}
 		
 		
@@ -498,6 +507,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				CreateService();
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to compile a non-existent script.");
 			}
+			
+			service.CloseModule();
+			Delete(path);
 		}
 		
 		
@@ -546,6 +558,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				CreateService();
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to compile a non-existent script.");
 			}
+			
+			service.CloseModule();
+			Delete(path);
 		}
 		
 		
@@ -578,6 +593,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				CreateService();
 				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to compile an illegal script.");
 			}
+			
+			service.CloseModule();
+			Delete(path);
 		}
 				
 		
@@ -1049,6 +1067,93 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			script = service.GetUncompiledScript(scriptName);
 			Assert.IsNotNull(script);
 			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ReturnsDataAboutScripts()
+		{
+			string name = "returns data about scripts";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+										
+			string givegold = "givegold";
+			string givegoldData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			string changename = "changename";
+			string changenameData = "void main() { SetFirstName(OBJECT_SELF,\"Brian\"); }";
+			string _99bottles = "99bottles";
+			
+			// End up with 2 uncompiled scripts (givegold, changename) and 2 compiled scripts (givegold, 99bottles):
+			service.AddUncompiledScript(givegold,givegoldData);
+			service.SaveModule();			
+			service.CompileScript(givegold);
+			service.SaveModule();
+			service.AddUncompiledScript(changename,changenameData);
+			service.SaveModule();
+			string filename = _99bottles + ".NCS";
+			string resourcesPath = @"C:\Libraries\Flip unit test resources";
+			string compiledScriptPath = Path.Combine(resourcesPath,filename);
+			service.AddCompiledScript(compiledScriptPath);
+			service.SaveModule();	
+			
+			Bean givegoldBean, changenameBean, _99bottlesBean;
+			
+			// GetUncompiledScript
+			Assert.IsNotNull(givegoldBean = service.GetUncompiledScript(givegold));
+			Assert.IsNotNull(changenameBean = service.GetUncompiledScript(changename));
+			Assert.IsNull(_99bottlesBean = service.GetUncompiledScript(_99bottles));
+			Assert.AreEqual(givegoldData,givegoldBean.GetValue("Data"));
+			Assert.AreEqual(changenameData,changenameBean.GetValue("Data"));
+						
+			// GetUncompiledScripts
+			givegoldBean = null;
+			changenameBean = null;
+			_99bottlesBean = null;
+			IList<Bean> beans = service.GetUncompiledScripts();
+			foreach (Bean bean in beans) {
+				string n = bean.GetValue("Name");
+				if (n == givegold) givegoldBean = bean;
+				else if (n == changename) changenameBean = bean;
+				else if (n == _99bottles) _99bottlesBean = bean;
+			}			
+			
+			Assert.IsNotNull(givegoldBean);
+			Assert.IsNotNull(changenameBean);
+			Assert.IsNull(_99bottlesBean);
+			Assert.AreEqual(givegoldData,givegoldBean.GetValue("Data"));
+			Assert.AreEqual(changenameData,changenameBean.GetValue("Data"));
+			
+			// GetCompiledScript
+			givegoldBean = null;
+			changenameBean = null;
+			_99bottlesBean = null;
+			Assert.IsNotNull(givegoldBean = service.GetCompiledScript(givegold));
+			Assert.IsNull(changenameBean = service.GetCompiledScript(changename));
+			Assert.IsNotNull(_99bottlesBean = service.GetCompiledScript(_99bottles));
+			
+			// GetCompiledScripts
+			givegoldBean = null;
+			changenameBean = null;
+			_99bottlesBean = null;
+			beans = service.GetCompiledScripts();
+			foreach (Bean bean in beans) {
+				string n = bean.GetValue("Name");
+				if (n == givegold) givegoldBean = bean;
+				else if (n == changename) changenameBean = bean;
+				else if (n == _99bottles) _99bottlesBean = bean;
+			}			
+			
+			Assert.IsNotNull(givegoldBean);
+			Assert.IsNull(changenameBean);
+			Assert.IsNotNull(_99bottlesBean);
+						
 			service.CloseModule();			
 			Delete(path);
 		}

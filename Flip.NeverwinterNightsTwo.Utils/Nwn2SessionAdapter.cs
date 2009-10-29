@@ -582,7 +582,114 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
-		}	
+		}			
+		
+		
+		/// <summary>
+		/// Gets a list of beans representing all of the
+		/// compiled scripts owned by the current module.
+		/// </summary>
+		/// <returns>A list of beans representing all of the
+		/// compiled scripts owned by the current module.</returns>
+		[FaultContract(typeof(System.ApplicationException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public IList<Bean> GetCompiledScripts()
+		{
+			try {
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}				
+				if (module.Repository == null) {
+					throw new ApplicationException("The module's repository was missing.");
+				}	
+								
+				IList<Bean> beans = new List<Bean>();
+				
+				ushort NCS = 2010;
+				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
+				
+				foreach (IResourceEntry r in resources) {
+					NWN2GameScript script = new NWN2GameScript(r);
+					script.Demand();
+					beans.Add(new Bean(script));
+					script.Release();
+				}
+				
+				return beans;
+			}
+			catch (ApplicationException e) {
+				throw new FaultException<ApplicationException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+							
+		/// <summary>
+		/// Gets a bean representing an compiled
+		/// script in the current module.
+		/// </summary>
+		/// <returns>A bean representing an compiled
+		/// script in the current module, or null if no
+		/// such script exists.</returns>
+		[FaultContract(typeof(System.ApplicationException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public Bean GetCompiledScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name","No script name was provided (was null).");
+				}	
+				if (name == String.Empty) {
+					throw new ArgumentException("name","No script name was provided (was empty).");
+				}		
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}				
+				if (module.Repository == null) {
+					throw new ApplicationException("The module's repository was missing.");
+				}
+				
+				ushort NCS = 2010;
+				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
+				
+				foreach (IResourceEntry r in resources) {
+					if (r.ResRef.Value == name) {
+						NWN2GameScript script = new NWN2GameScript(r);
+						script.Demand();
+						Bean bean = new Bean(script);
+						script.Release();
+						return bean;
+					}
+				}
+				
+				return null;
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (ApplicationException e) {
+				throw new FaultException<ApplicationException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
 		
 		
 		/// <summary>
