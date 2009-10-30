@@ -680,7 +680,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 								
 				IList<Bean> beans = new List<Bean>();
 				
-				ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
+				ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");					
 				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
 				
 				foreach (IResourceEntry r in resources) {
@@ -733,20 +733,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ApplicationException("The module's repository was missing.");
 				}
 				
-				ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
-				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
-				
-				foreach (IResourceEntry r in resources) {
-					if (r.ResRef.Value == name) {
-						NWN2GameScript script = new NWN2GameScript(r);
-						script.Demand();
-						Bean bean = new Bean(script);
-						script.Release();
-						return bean;
-					}
+				ushort resourceType = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
+				OEIResRef cResRef = new OEIResRef(name);
+				IResourceEntry r = module.Repository.FindResource(cResRef,resourceType);
+							
+				if (r == null) return null;
+				else {
+					NWN2GameScript script = new NWN2GameScript(r);
+					script.Demand();
+					Bean bean = new Bean(script);
+					script.Release();
+					return bean;
 				}
-				
-				return null;
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
