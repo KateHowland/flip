@@ -754,6 +754,88 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void RefusesToAttachScriptToNonExistentScriptSlot()
+		{
+			string name = "RefusesToAttachScriptToNonExistentScriptSlot.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string area = "desert";
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();	
+			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
+			service.SaveModule();		
+			
+			Bean cat = service.GetObjects(area,NWN2ObjectType.Creature,"cat")[0];						
+			Guid catID = new Guid(cat.GetValue("ObjectID"));
+			
+			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptName = "attachingscript";
+			
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();			
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			Assert.IsTrue(service.HasCompiled(scriptName));
+			
+			string scriptSlot = "fake script slot";
+			foreach (Nwn2EventRaiser eventRaiser in Enum.GetValues(typeof(Nwn2EventRaiser))) {
+				Assert.IsTrue(!(Nwn2ScriptSlot.GetScriptSlotNames(eventRaiser).Contains(scriptSlot)));
+			}
+			
+			try {
+				service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,scriptSlot);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"to a script slot that doesn't exist.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"to a script slot that doesn't exist.");
+			}
+			
+			try {
+				service.AttachScriptToArea(scriptName,area,scriptSlot);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"to a script slot that doesn't exist.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"to a script slot that doesn't exist.");
+			}
+			
+			try {
+				service.AttachScriptToModule(scriptName,scriptSlot);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"to a script slot that doesn't exist.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
+			            	"to a script slot that doesn't exist.");
+			}
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void ModuleBeanCapturesScriptInformation()
 		{
 			string name = "ModuleBeanCapturesScriptInformation.mod";
