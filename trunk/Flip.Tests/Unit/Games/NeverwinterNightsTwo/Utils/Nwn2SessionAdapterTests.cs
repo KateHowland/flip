@@ -56,6 +56,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		private PathChecker pathChecker;
 		
+		private SampleScriptProvider sampleScripts;
+		
 		private INwn2Service service;
 		
 		#endregion
@@ -69,7 +71,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				// Don't try to delete modules files at the start of the test fixture
 				// as it causes IO access exceptions with the NWN2 toolset.
 				
-				pathChecker = new PathChecker();			
+				pathChecker = new PathChecker();
+				sampleScripts = new SampleScriptProvider();
 							
 				Console.WriteLine("Waiting for toolset to load...");	
 				
@@ -264,7 +267,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(0,scripts.Count);
 			
 			// This script compiles in the toolset as entered here (hand-tested):
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -313,7 +316,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(0,scripts.Count);
 			
 			// This script compiles in the toolset as entered here (hand-tested):
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -439,7 +442,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasUncompiled(precompiledScriptName));
 			
 			// Then add a new uncompiled script and compile it.
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled";
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
@@ -474,7 +477,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);			
 			
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled";
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
@@ -525,7 +528,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.Directory);
 			service.OpenModule(path,ModuleLocationType.Directory);			
 			
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled";
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
@@ -576,8 +579,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);			
 			
-			// Deliberately broken script (calls NonExistentMethod()):
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = NonExistentMethod(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.BrokenScript;
 			string scriptName = "illegalscript";
 						
 			try {
@@ -646,7 +648,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotEmpty(idVal);
 			Guid catID = new Guid(idVal);	
 			
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -688,7 +690,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.SaveModule();
 						
 			string scriptName = "givegold";
-			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			string scriptData = sampleScripts.GiveGold;
 			service.AddUncompiledScript(scriptName,scriptData);
 			service.SaveModule();
 			service.CompileScript(scriptName);
@@ -727,7 +729,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 						
 			string scriptName = "givegold";
-			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			string scriptData = sampleScripts.GiveGold;
 			service.AddUncompiledScript(scriptName,scriptData);
 			service.SaveModule();
 			service.CompileScript(scriptName);
@@ -774,7 +776,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Bean cat = service.GetObjects(area,NWN2ObjectType.Creature,"cat")[0];						
 			Guid catID = new Guid(cat.GetValue("ObjectID"));
 			
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -875,7 +877,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.SaveModule();
 						
 			string scriptName = "givegold";
-			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			string scriptData = sampleScripts.GiveGold;
 			service.AddUncompiledScript(scriptName,scriptData);
 			service.SaveModule();
 			service.CompileScript(scriptName);
@@ -1022,7 +1024,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Bean cat = service.GetObjects(area,NWN2ObjectType.Creature,"cat")[0];
 			Guid catID = new Guid(cat.GetValue("ObjectID"));
 			
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled script";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -1083,7 +1085,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
 			service.SaveModule();	
 			
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled script";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -1331,7 +1333,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Guid catID = new Guid(cat.GetValue("ObjectID"));
 						
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -1410,7 +1412,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Guid catID = new Guid(cat.GetValue("ObjectID"));
 						
-			string scriptData = "void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString(\"\" + current + \" bottles of beer on the wall, \" + current + \" bottles of beer, if one of the bottles should happen to fall, \" + next + \" bottles of beer on the wall!\"); ActionWait(3.0f); } }";
+			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
 			service.AddUncompiledScript(scriptName,scriptData);
@@ -1475,9 +1477,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.Directory);
 										
 			string givegold = "givegold";
-			string givegoldData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			string givegoldData = sampleScripts.GiveGold;
 			string changename = "changename";
-			string changenameData = "void main() { SetFirstName(OBJECT_SELF,\"Brian\"); }";
+			string changenameData = sampleScripts.ChangeName;
 			string _99bottles = "99bottles";
 			
 			// End up with 2 uncompiled scripts (givegold, changename) and 2 compiled scripts (givegold, 99bottles):
