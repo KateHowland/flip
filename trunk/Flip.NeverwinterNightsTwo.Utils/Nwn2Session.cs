@@ -443,7 +443,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script file of the given name, and false otherwise.</returns>
 		public bool HasCompiled(string name)
 		{
-			ushort NCS = 2010;
+			ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");			
 			return HasResource(name,NCS);
 		}
 		
@@ -457,7 +457,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script file of the given name, and false otherwise.</returns>
 		public bool HasUncompiled(string name)
 		{
-			ushort NSS = 2009;
+			ushort NSS = OEIShared.Utils.BWResourceTypes.GetResourceType("NSS");	
 			return HasResource(name,NSS);
 		}
 		
