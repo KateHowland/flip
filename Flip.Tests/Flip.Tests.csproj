@@ -85,6 +85,7 @@
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2ScriptSlotTests.cs" />
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2SessionAdapterTests.cs" />
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2ToolsetFunctionsTests.cs" />
+    <Compile Include="Unit\Utils\BeanTests.cs" />
     <Compile Include="Unit\Utils\PathCheckerTests.cs" />
     <None Include="Licence.txt" />
   </ItemGroup>

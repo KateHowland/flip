@@ -38,6 +38,7 @@ using NWN2Toolset.NWN2.IO;
 using OEIShared.IO;
 using OEIShared.IO.GFF;
 using OEIShared.Utils;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -563,7 +564,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}			
-				return new Bean(module);
+				Bean bean = new Bean(module);
+				bean.Capture(module.ModuleInfo,false);
+				return bean;
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
@@ -1170,6 +1173,86 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				bool loaded = script.Loaded;
 				if (!loaded) script.Demand();
 				p.SetValue(area,script.Resource,null);
+				if (!loaded) script.Release();
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidDataException e) {
+				throw new FaultException<InvalidDataException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+				
+		/// <summary>
+		/// Finds the compiled script with the given name which 
+		/// is already present in the module's script 
+		/// collection, and attaches it to the nominated
+		/// script slot on the module.
+		/// </summary>
+		/// <param name="scriptName">The name of the compiled script.</param>
+		/// <param name="scriptSlot">The script slot to attach
+		/// the script to.</param>
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		public void AttachScriptToModule(string scriptName, string scriptSlot)
+		{
+			try {
+				if (scriptName == null) {
+					throw new ArgumentNullException("scriptName");
+				}
+				if (scriptName == String.Empty) {
+					throw new ArgumentException("scriptName cannot be empty.","scriptName");
+				}
+				if (scriptSlot == null) {
+					throw new ArgumentNullException("scriptSlot");
+				}
+				if (scriptSlot == String.Empty) {
+					throw new ArgumentException("scriptSlot cannot be empty.","scriptSlot");
+				}
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(scriptSlot)) {
+					throw new ArgumentException("Modules do not have a script slot " +
+					                            "named " + scriptSlot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+					                            "script slot names.","scriptSlot");
+				}
+				
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!HasCompiled(scriptName)) {
+					if (HasUncompiled(scriptName)) {
+						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
+					}
+					else {
+						throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+					}
+				}	
+				
+				PropertyInfo p = module.ModuleInfo.GetType().GetProperty(scriptSlot);
+				if (p == null) {
+					throw new ArgumentException("No property named " + scriptSlot +
+					                            " could be found on the module.");
+				}
+				
+				NWN2GameScript script = module.Scripts[scriptName];
+				
+				bool loaded = script.Loaded;
+				if (!loaded) script.Demand();
+				p.SetValue(module.ModuleInfo,script.Resource,null);
 				if (!loaded) script.Release();
 			}
 			catch (ArgumentNullException e) {

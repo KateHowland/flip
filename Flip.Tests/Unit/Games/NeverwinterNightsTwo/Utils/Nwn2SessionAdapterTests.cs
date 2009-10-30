@@ -715,6 +715,68 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void AttachesCompiledScriptToModule()
+		{
+			string name = "AttachesCompiledScriptToModule.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string scriptName = "givegold";
+			string scriptData = "void main() { GiveGoldToCreature(GetFirstPC(),100); }";
+			service.AddUncompiledScript(scriptName,scriptData);
+			service.SaveModule();
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			
+			string scriptSlot = "OnPlayerLevelUp";			
+			service.AttachScriptToModule(scriptName,scriptSlot);
+			service.SaveModule();
+			
+			Bean moduleBean = service.GetModule();			
+			Assert.IsTrue(moduleBean.HasValue(scriptSlot));
+			Assert.AreEqual(scriptName,moduleBean.GetValue(scriptSlot));
+			
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			moduleBean = service.GetModule();
+			Assert.IsTrue(moduleBean.HasValue(scriptSlot));
+			Assert.AreEqual(scriptName,moduleBean.GetValue(scriptSlot));
+		
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ModuleBeanCapturesScriptInformation()
+		{
+			string name = "ModuleBeanCapturesScriptInformation.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			Bean moduleBean = service.GetModule();
+			foreach (string scriptSlot in Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module)) {
+				Assert.IsTrue(moduleBean.HasValue(scriptSlot));
+			}
+			Assert.AreEqual("nw_o0_death",moduleBean.GetValue("OnPlayerDeath"));
+		
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void RefusesToAttachScriptToNonExistentArea()
 		{
 			string name = "RefusesToAttachScriptToNonExistentArea.mod";

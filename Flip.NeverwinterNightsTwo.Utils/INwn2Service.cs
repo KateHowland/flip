@@ -171,9 +171,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetObjects(string areaName, 
-					                                                 NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type,
-					                                                 string tag);
+		IList<Flip.Utils.Bean> GetObjects(string areaName, 
+					                      NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type,
+					                      string tag);
 		
 		
 		/// <summary>
@@ -188,9 +188,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetObject(string areaName, 
-		                                                     NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, 
-		                                                     Guid guid);		
+		Flip.Utils.Bean GetObject(string areaName, 
+		                          NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, 
+		                          Guid guid);		
 		
 		
 		/// <summary>
@@ -203,7 +203,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetArea(string name);
+		Flip.Utils.Bean GetArea(string name);
 		
 		
 		/// <summary>
@@ -214,7 +214,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// areas owned by the current module.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetAreas();	
+		IList<Flip.Utils.Bean> GetAreas();	
 		
 		
 		/// <summary>
@@ -223,7 +223,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A bean representing the current module.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetModule();
+		Flip.Utils.Bean GetModule();
 		
 		
 		/// <summary>
@@ -234,7 +234,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// uncompiled scripts owned by the current module.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetUncompiledScripts();	
+		IList<Flip.Utils.Bean> GetUncompiledScripts();	
 		
 		
 		/// <summary>
@@ -248,7 +248,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetUncompiledScript(string name);	
+		Flip.Utils.Bean GetUncompiledScript(string name);	
 		
 		
 		/// <summary>
@@ -260,7 +260,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[OperationContract]
 		[FaultContract(typeof(System.ApplicationException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Games.NeverwinterNightsTwo.Utils.Bean> GetCompiledScripts();	
+		IList<Flip.Utils.Bean> GetCompiledScripts();	
 		
 		
 		/// <summary>
@@ -274,7 +274,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Games.NeverwinterNightsTwo.Utils.Bean GetCompiledScript(string name);	
+		Flip.Utils.Bean GetCompiledScript(string name);	
 				
 
 		/// <summary>
@@ -385,5 +385,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.IO.InvalidDataException))]
 		[FaultContract(typeof(System.IO.IOException))]
 		void AttachScriptToArea(string scriptName, string areaName, string scriptSlot);
+		
+				
+		/// <summary>
+		/// Finds the compiled script with the given name which 
+		/// is already present in the module's script 
+		/// collection, and attaches it to the nominated
+		/// script slot on the module.
+		/// </summary>
+		/// <param name="scriptName">The name of the compiled script.</param>
+		/// <param name="scriptSlot">The script slot to attach
+		/// the script to.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		void AttachScriptToModule(string scriptName, string scriptSlot);
 	}
 }
