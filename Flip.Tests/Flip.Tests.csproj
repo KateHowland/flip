@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unit\Games\NeverwinterNightsTwo\SampleScriptProvider.cs" />
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2ScriptSlotTests.cs" />
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2SessionAdapterTests.cs" />
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2ToolsetFunctionsTests.cs" />
