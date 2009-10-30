@@ -72,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaBase.cs" />
-    <Compile Include="Bean.cs" />
     <Compile Include="INwn2Service.cs" />
     <Compile Include="INwn2Session.cs" />
     <Compile Include="Area.cs" />
@@ -84,5 +83,12 @@
     <Compile Include="Nwn2EventRaiser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Licence.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
+      <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>
+      <Name>Flip.Utils</Name>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
 </Project>

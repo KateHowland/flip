@@ -29,6 +29,7 @@ using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.Plugins;
 using TD.SandBar;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {

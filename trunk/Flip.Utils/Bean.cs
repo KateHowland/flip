@@ -29,13 +29,11 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.ServiceModel;
-using OEIShared.IO.GFF;
-using NWN2Toolset.NWN2.Data.Instances;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
+namespace Sussex.Flip.Utils
 {
 	/// <summary>
-	/// A bean representing information about a NWN2 game object for
+	/// A bean representing information about an object for
 	/// sending in serialised form.
 	/// </summary>
 	[DataContract]
@@ -84,6 +82,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			body = new Dictionary<string,string>();
 			
+			Capture(capturing,false);
+		}
+		
+		#endregion
+		
+		#region Methods
+		
+		/// <summary>
+		/// Captures the fields and properties of the given object
+		/// in seralised form.
+		/// </summary>
+		/// <param name="capturing">An object which will have
+		/// its properties and fields serialised as string values
+		/// and stored on the bean.</param>
+		/// <param name="overwrite">True to overwrite any existing
+		/// values with the same key; false otherwise.</param>
+		public void Capture(object capturing, bool overwrite)
+		{			
 			foreach (MemberInfo mi in capturing.GetType().GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) 
 			{				
 				object o;
@@ -105,14 +121,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				int count = 1;
 				string key = mi.Name;
-				while (body.ContainsKey(key)) key = mi.Name + ++count;
-				body.Add(key,val);
+				
+				if (!body.ContainsKey(key)) {
+					body.Add(key,val);
+				}
+				else {
+					if (overwrite) {
+						body[key] = val;
+					}
+					else {
+						while (body.ContainsKey(key)) {
+							key = mi.Name + ++count;
+						}
+						body.Add(key,val);
+					}
+				}
 			}
 		}
 		
-		#endregion
-		
-		#region Methods
 		
 		/// <summary>
 		/// Checks whether a value is stored for a particular key.
