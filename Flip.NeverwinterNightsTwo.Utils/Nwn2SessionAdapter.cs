@@ -1027,7 +1027,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("Objects of type " + type + " do not have a script slot " +
 					                            "named " + scriptSlot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
-					                            "script slot names.","scriptSlot");
+					                            "script slot names.)","scriptSlot");
 				}
 				
 				NWN2GameModule module = session.GetCurrentModule();
@@ -1065,18 +1065,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						NWN2InstanceCollection instances = nwn2area.GetInstancesForObjectType(nwn2Type.Value);
 						
 						foreach (INWN2Instance instance in instances) {
-							if (instance.ObjectID == objectID) {								
-								foreach (PropertyInfo pi in instance.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)) {
-									if (pi.Name == scriptSlot) {										
-										NWN2GameScript script = module.Scripts[scriptName];		
-										bool loaded = script.Loaded;
-										if (!loaded) script.Demand();
-										pi.SetValue(instance,script.Resource,null);
-										if (!loaded) script.Release();
-										return;
-									}
-								}								
-								throw new ArgumentException("Couldn't find a script slot named " + scriptSlot + ".","scriptSlot");
+							if (instance.ObjectID == objectID) {		
+								PropertyInfo pi = instance.GetType().GetProperty(scriptSlot);
+															
+								NWN2GameScript script = module.Scripts[scriptName];		
+								bool loaded = script.Loaded;
+								if (!loaded) script.Demand();
+								pi.SetValue(instance,script.Resource,null);
+								if (!loaded) script.Release();
+								return;
 							}
 						}
 						throw new ArgumentException("No " + type + " with ObjectID " + objectID + " could be found in area " + areaName + ".",
