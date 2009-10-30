@@ -424,13 +424,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new ApplicationException("The module's repository was missing.");
 			}
 			
-			OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(resourceType);
-			
-			foreach (IResourceEntry r in resources) {
-				string resourceName = Path.GetFileNameWithoutExtension(r.FullName);
-				if (resourceName == name) return true;
-			}
-			return false;
+			OEIResRef cResRef = new OEIResRef(name);
+			return module.Repository.FindResource(cResRef,resourceType) != null;
 		}
 		
 		
