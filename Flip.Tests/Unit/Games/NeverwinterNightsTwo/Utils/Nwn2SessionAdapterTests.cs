@@ -2188,7 +2188,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		{
 			service = pipeChannelFactory.CreateChannel();
 		}
-		
+				
 		
 		/// <summary>
 		/// Runs the toolset, waits until it has loaded, and minimises it.
@@ -2202,12 +2202,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			AutomationElement toolset = null;
 			
 			while (toolset == null) {
-				foreach (AutomationElement e in AutomationElement.RootElement.FindAll(TreeScope.Children,Condition.TrueCondition)) {
-					string name = (string)e.GetCurrentPropertyValue(AutomationElement.NameProperty);
-					if (name.Contains("Obsidian Neverwinter Nights 2 Toolset:")) {
-						toolset = e;
-						break;
+				foreach (AutomationElement e in AutomationElement.RootElement.FindAll(TreeScope.Children,Condition.TrueCondition)) {						
+					try {
+						string name = (string)e.GetCurrentPropertyValue(AutomationElement.NameProperty);
+						if (name.Contains("Obsidian Neverwinter Nights 2 Toolset:")) {
+							toolset = e;
+							break;
+						}
 					}
+					catch (ElementNotAvailableException) {
+						/* From MSDN:
+						 * Raised when an attempt is made to access an UI Automation element 
+						 * corresponding to a part of the user interface that is no longer available.
+						 * 
+						 * This exception can be raised if the element was in a dialog box that was closed, 
+						 * or an application that was closed or terminated. 
+						 */
+					}
+					
 				}
 				Thread.Sleep(500);
 			} 
