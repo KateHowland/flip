@@ -680,7 +680,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 								
 				IList<Bean> beans = new List<Bean>();
 				
-				ushort NCS = 2010;
+				ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
 				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
 				
 				foreach (IResourceEntry r in resources) {
@@ -733,7 +733,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ApplicationException("The module's repository was missing.");
 				}
 				
-				ushort NCS = 2010;
+				ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
 				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
 				
 				foreach (IResourceEntry r in resources) {

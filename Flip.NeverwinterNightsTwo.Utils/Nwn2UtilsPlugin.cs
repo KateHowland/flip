@@ -273,7 +273,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 					System.Windows.Forms.MessageBox.Show("compiled scripts:");
 										
-					ushort NCS = 2010;
+					ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
 					OEIShared.Utils.OEIGenericCollectionWithEvents<OEIShared.IO.IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
 					
 					foreach (OEIShared.IO.IResourceEntry r in resources) {
