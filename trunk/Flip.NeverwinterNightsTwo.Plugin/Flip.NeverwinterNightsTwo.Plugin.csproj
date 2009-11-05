@@ -77,7 +77,10 @@
   <ItemGroup>
     <Compile Include="FlipPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Licence.txt" />
+    <EmbeddedResource Include="Licence.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LogicalName>licence</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Utils\Flip.NeverwinterNightsTwo.Utils.csproj">

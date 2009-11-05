@@ -59,6 +59,10 @@
     <Compile Include="Bean.cs" />
     <Compile Include="PathChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Licence.txt" />
+    <Compile Include="ResourceWriter.cs" />
+    <EmbeddedResource Include="Licence.txt">
+      <LogicalName>licence</LogicalName>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

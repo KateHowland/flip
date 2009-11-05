@@ -88,7 +88,11 @@
     <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2ToolsetFunctionsTests.cs" />
     <Compile Include="Unit\Utils\BeanTests.cs" />
     <Compile Include="Unit\Utils\PathCheckerTests.cs" />
-    <None Include="Licence.txt" />
+    <Compile Include="Unit\Utils\ResourceWriterTests.cs" />
+    <EmbeddedResource Include="Licence.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LogicalName>licence</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
