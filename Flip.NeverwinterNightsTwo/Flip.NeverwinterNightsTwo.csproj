@@ -64,7 +64,10 @@
   <ItemGroup>
     <Compile Include="Nwn2FlipCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Licence.txt" />
+    <EmbeddedResource Include="Licence.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LogicalName>licence</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">

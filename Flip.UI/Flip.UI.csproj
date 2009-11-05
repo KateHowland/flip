@@ -79,6 +79,9 @@
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
     <Page Include="Window1.xaml" />
-    <None Include="Licence.txt" />
+    <EmbeddedResource Include="Licence.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LogicalName>licence</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
