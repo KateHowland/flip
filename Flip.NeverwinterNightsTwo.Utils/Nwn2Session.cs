@@ -151,8 +151,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				        opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,parameter,location);
 				        
 				        ThreadedProgressDialog progress = new ThreadedProgressDialog();
-				        progress.Text = "Opening module";
-				        progress.Message = "Opening module of type " + location + " at " + path + ".";
+				        progress.Text = "Opening " + location + " module";	
+				        progress.Message = "Opening module '" + Path.GetFileName(path) + "'...";
 				        progress.WorkerThread = new ThreadedProgressDialog.WorkerThreadDelegate(opener.Go);
 				        progress.ShowDialog();
 				        
