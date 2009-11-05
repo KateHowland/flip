@@ -56,9 +56,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		private PathChecker pathChecker;
 		
+		private ResourceWriter resourceWriter;
+		
 		private SampleScriptProvider sampleScripts;
 		
 		private INwn2Service service;
+		
+		private string compiledTestScriptPath;
+		
+		private string uncompiledTestScriptPath;
 		
 		#endregion
 		
@@ -70,9 +76,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			try {
 				// Don't try to delete modules files at the start of the test fixture
 				// as it causes IO access exceptions with the NWN2 toolset.
+				// Update: No longer sure whether this was true, may have been
+				// another issue...
 				
 				pathChecker = new PathChecker();
+				resourceWriter = new ResourceWriter();
 				sampleScripts = new SampleScriptProvider();
+				
+				compiledTestScriptPath = Path.Combine(Path.GetTempPath(),"99.ncs");
+				compiledTestScriptPath = pathChecker.GetUnusedFilePath(compiledTestScriptPath);
+				uncompiledTestScriptPath = Path.Combine(Path.GetTempPath(),"99.nss");
+				uncompiledTestScriptPath = pathChecker.GetUnusedFilePath(uncompiledTestScriptPath);
+				
+				System.Windows.MessageBox.Show(compiledTestScriptPath);
+				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+				resourceWriter.Write("99bottles_Compiled",assembly,compiledTestScriptPath);
+				resourceWriter.Write("99bottles_Uncompiled",assembly,uncompiledTestScriptPath);
 							
 				Console.WriteLine("Waiting for toolset to load...");	
 				
@@ -97,6 +116,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		{
 			Console.WriteLine("Test suite completed. Closing toolset.");
 			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
+			
+			if (File.Exists(compiledTestScriptPath)) File.Delete(compiledTestScriptPath);
+			if (File.Exists(uncompiledTestScriptPath)) File.Delete(uncompiledTestScriptPath);
+			
 			Thread.Sleep(250);
 		}
 		
