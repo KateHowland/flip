@@ -1,0 +1,1 @@
+void main() { int i = 99; for (i = 99; i > 0; i--) { string current = IntToString(i); string next = IntToString(i-1); ActionSpeakString("" + current + " bottles of beer on the wall, " + current + " bottles of beer, if one of the bottles should happen to fall, " + next + " bottles of beer on the wall!"); ActionWait(3.0f); } }

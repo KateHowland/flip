@@ -93,6 +93,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\99bottles.NCS">
+      <LogicalName>99bottles_Compiled</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\99bottles.NSS">
+      <LogicalName>99bottles_Uncompiled</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
@@ -128,6 +134,7 @@
       <Name>Flip.Utils</Name>
     </ProjectReference>
     <Folder Include="Integration" />
+    <Folder Include="Resources" />
     <Folder Include="Unit\Core" />
     <Folder Include="Unit\Games" />
     <Folder Include="Unit\Games\DragonAge" />
