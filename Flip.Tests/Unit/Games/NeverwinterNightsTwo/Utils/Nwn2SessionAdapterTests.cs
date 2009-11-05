@@ -62,9 +62,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		private INwn2Service service;
 		
-		private string compiledTestScriptPath;
+		private string precompiled99bottlesScriptPath;
 		
-		private string uncompiledTestScriptPath;
+		private string uncompiled99bottlesScriptPath;
 		
 		#endregion
 		
@@ -83,15 +83,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				resourceWriter = new ResourceWriter();
 				sampleScripts = new SampleScriptProvider();
 				
-				compiledTestScriptPath = Path.Combine(Path.GetTempPath(),"99.ncs");
-				compiledTestScriptPath = pathChecker.GetUnusedFilePath(compiledTestScriptPath);
-				uncompiledTestScriptPath = Path.Combine(Path.GetTempPath(),"99.nss");
-				uncompiledTestScriptPath = pathChecker.GetUnusedFilePath(uncompiledTestScriptPath);
+				precompiled99bottlesScriptPath = Path.Combine(Path.GetTempPath(),"99bottles.NCS");
+				precompiled99bottlesScriptPath = pathChecker.GetUnusedFilePath(precompiled99bottlesScriptPath);
+				uncompiled99bottlesScriptPath = Path.Combine(Path.GetTempPath(),"99bottles.NSS");
+				uncompiled99bottlesScriptPath = pathChecker.GetUnusedFilePath(uncompiled99bottlesScriptPath);
 				
-				System.Windows.MessageBox.Show(compiledTestScriptPath);
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-				resourceWriter.Write("99bottles_Compiled",assembly,compiledTestScriptPath);
-				resourceWriter.Write("99bottles_Uncompiled",assembly,uncompiledTestScriptPath);
+				resourceWriter.Write("99bottles_Compiled",assembly,precompiled99bottlesScriptPath);
+				resourceWriter.Write("99bottles_Uncompiled",assembly,uncompiled99bottlesScriptPath);
 							
 				Console.WriteLine("Waiting for toolset to load...");	
 				
@@ -117,8 +116,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Console.WriteLine("Test suite completed. Closing toolset.");
 			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
 			
-			if (File.Exists(compiledTestScriptPath)) File.Delete(compiledTestScriptPath);
-			if (File.Exists(uncompiledTestScriptPath)) File.Delete(uncompiledTestScriptPath);
+			if (File.Exists(precompiled99bottlesScriptPath)) File.Delete(precompiled99bottlesScriptPath);
+			if (File.Exists(uncompiled99bottlesScriptPath)) File.Delete(uncompiled99bottlesScriptPath);
 			
 			Thread.Sleep(250);
 		}
@@ -444,21 +443,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);	
 						
 			// First check for a pre-compiled script, so we're not relying on CompileScript() being implemented.
-			string precompiledScriptName = "99bottles";
-			string filename = precompiledScriptName + ".NCS";
-			string resourcesPath = @"C:\Libraries\Flip unit test resources";
-			string precompiledScriptPath = Path.Combine(resourcesPath,filename);
-			Assert.IsTrue(File.Exists(precompiledScriptPath),"A file necessary for running the unit test was missing.");
-			
-			string tempPath = service.GetCurrentModuleTempPath();
-			Assert.IsTrue(Directory.Exists(tempPath));
-						
+			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
+									
+			string precompiledScriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);			
 			Assert.IsFalse(service.HasCompiled(precompiledScriptName));
 			Assert.IsFalse(service.HasUncompiled(precompiledScriptName));
 			
-			string copiedPath = Path.Combine(tempPath,filename);
+			string copiedPath = Path.Combine(service.GetCurrentModuleTempPath(),precompiledScriptName+".NCS");
 			Assert.IsFalse(File.Exists(copiedPath));
-			File.Copy(precompiledScriptPath,copiedPath);
+			File.Copy(precompiled99bottlesScriptPath,copiedPath);
 			Assert.IsTrue(File.Exists(copiedPath));
 						
 			Assert.IsTrue(service.HasCompiled(precompiledScriptName));
@@ -1168,17 +1161,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			IList<Bean> scripts = service.GetUncompiledScripts();
 			Assert.AreEqual(0,scripts.Count);
 			
-			string filename = "99bottles.NCS";
-			string resourcesPath = @"C:\Libraries\Flip unit test resources";
-			string compiledScriptPath = Path.Combine(resourcesPath,filename);
-			Assert.IsTrue(File.Exists(compiledScriptPath));
+			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
 			
-			string scriptName = Path.GetFileNameWithoutExtension(filename);
+			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			
-			service.AddCompiledScript(compiledScriptPath);
+			service.AddCompiledScript(precompiled99bottlesScriptPath);
 			service.SaveModule();
 			
 			Assert.IsTrue(service.HasCompiled(scriptName));
@@ -1188,7 +1178,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
 			
 			// Try to add missing files, nonsense files and uncompiled scripts:
-			string nonsensePath = Path.Combine(resourcesPath,"idonotexist.NCS");
+			string nonsensePath = Path.Combine(Path.GetTempPath(),"idonotexist.NCS");
 			Assert.IsFalse(File.Exists(nonsensePath));
 			try {
 				service.AddCompiledScript(nonsensePath);
@@ -1204,10 +1194,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			            	"a non-existent script to the module.");
 			}
 			
-			string uncompiledScriptPath = Path.Combine(resourcesPath,"99bottles.NSS");
-			Assert.IsTrue(File.Exists(uncompiledScriptPath));
+			Assert.IsTrue(File.Exists(uncompiled99bottlesScriptPath));
 			try {
-				service.AddCompiledScript(uncompiledScriptPath);
+				service.AddCompiledScript(uncompiled99bottlesScriptPath);
 				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
 			            	"an uncompiled script with AddCompiledScript.");
 			}
@@ -1220,7 +1209,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			            	"an uncompiled script with AddCompiledScript.");
 			}
 			
-			string wrongFileTypePath = Path.Combine(resourcesPath,"New Text Document.txt");
+			string wrongFileTypePath = Path.GetTempFileName();
 			Assert.IsTrue(File.Exists(wrongFileTypePath));
 			try {
 				service.AddCompiledScript(wrongFileTypePath);
@@ -1254,19 +1243,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
 			IList<Bean> scripts = service.GetUncompiledScripts();
-			Assert.AreEqual(0,scripts.Count);
+			Assert.AreEqual(0,scripts.Count);			
 			
-			string filename = "99bottles.NCS";
-			string resourcesPath = @"C:\Libraries\Flip unit test resources";
-			string compiledScriptPath = Path.Combine(resourcesPath,filename);
-			Assert.IsTrue(File.Exists(compiledScriptPath));
+			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
 			
-			string scriptName = Path.GetFileNameWithoutExtension(filename);
+			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			
-			service.AddCompiledScript(compiledScriptPath);
+			service.AddCompiledScript(precompiled99bottlesScriptPath);
 			service.SaveModule();
 			
 			Assert.IsTrue(service.HasCompiled(scriptName));
@@ -1276,7 +1262,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
 			
 			// Try to add missing files, nonsense files and uncompiled scripts:
-			string nonsensePath = Path.Combine(resourcesPath,"idonotexist.NCS");
+			string nonsensePath = Path.Combine(Path.GetTempPath(),"idonotexist.NCS");
 			Assert.IsFalse(File.Exists(nonsensePath));
 			try {
 				service.AddCompiledScript(nonsensePath);
@@ -1292,10 +1278,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			            	"a non-existent script to the module.");
 			}
 			
-			string uncompiledScriptPath = Path.Combine(resourcesPath,"99bottles.NSS");
-			Assert.IsTrue(File.Exists(uncompiledScriptPath));
+			Assert.IsTrue(File.Exists(uncompiled99bottlesScriptPath));
 			try {
-				service.AddCompiledScript(uncompiledScriptPath);
+				service.AddCompiledScript(uncompiled99bottlesScriptPath);
 				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
 			            	"an uncompiled script with AddCompiledScript.");
 			}
@@ -1308,7 +1293,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			            	"an uncompiled script with AddCompiledScript.");
 			}
 			
-			string wrongFileTypePath = Path.Combine(resourcesPath,"New Text Document.txt");
+			string wrongFileTypePath = Path.GetTempFileName();
 			Assert.IsTrue(File.Exists(wrongFileTypePath));
 			try {
 				service.AddCompiledScript(wrongFileTypePath);
@@ -1488,6 +1473,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void EmbeddedResourceScriptsCanBeAddedToModule()
+		{
+			string name = "embedded resource test";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			DirectoryInfo dir = new DirectoryInfo(service.GetCurrentModuleTempPath());
+			
+			string filename = Path.GetFileName(precompiled99bottlesScriptPath);
+			string script = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
+			
+			Assert.AreEqual(0,dir.GetFiles(filename).Length);
+			Assert.IsFalse(service.HasCompiled(script));
+			
+			service.AddCompiledScript(precompiled99bottlesScriptPath);
+			
+			Assert.AreEqual(1,dir.GetFiles(filename).Length);
+			Assert.IsTrue(service.HasCompiled(script));
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void ReturnsDataAboutScripts()
 		{
 			string name = "returns data about scripts";
@@ -1503,7 +1518,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string givegoldData = sampleScripts.GiveGold;
 			string changename = "changename";
 			string changenameData = sampleScripts.ChangeName;
-			string _99bottles = "99bottles";
+			string _99bottles = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
 			
 			// End up with 2 uncompiled scripts (givegold, changename) and 2 compiled scripts (givegold, 99bottles):
 			service.AddUncompiledScript(givegold,givegoldData);
@@ -1512,10 +1527,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.SaveModule();
 			service.AddUncompiledScript(changename,changenameData);
 			service.SaveModule();
-			string filename = _99bottles + ".NCS";
-			string resourcesPath = @"C:\Libraries\Flip unit test resources";
-			string compiledScriptPath = Path.Combine(resourcesPath,filename);
-			service.AddCompiledScript(compiledScriptPath);
+			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
+			service.AddCompiledScript(precompiled99bottlesScriptPath);
 			service.SaveModule();	
 			
 			Bean givegoldBean, changenameBean, _99bottlesBean;
