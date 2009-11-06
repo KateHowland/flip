@@ -480,9 +480,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="name">The name of the area.</param>
 		/// <returns>The named area, or null if one could not be found.</returns>
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public Bean GetArea(string name)
 		{
 			try {
@@ -526,7 +523,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <returns>A list of beans representing all of the
 		/// areas owned by the current module.</returns>
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public IList<Bean> GetAreas()
 		{
 			try {
@@ -556,7 +552,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets a bean representing the current module.
 		/// </summary>
 		/// <returns>A bean representing the current module.</returns>
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public Bean GetModule()
 		{
 			try {
@@ -616,9 +611,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A bean representing an uncompiled
 		/// script in the current module, or null if no
 		/// such script exists.</returns>
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public Bean GetUncompiledScript(string name)
 		{
 			try {
@@ -665,8 +657,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <returns>A list of beans representing all of the
 		/// compiled scripts owned by the current module.</returns>
-		[FaultContract(typeof(System.ApplicationException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public IList<Bean> GetCompiledScripts()
 		{
 			try {
@@ -711,10 +701,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A bean representing an compiled
 		/// script in the current module, or null if no
 		/// such script exists.</returns>
-		[FaultContract(typeof(System.ApplicationException))]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public Bean GetCompiledScript(string name)
 		{
 			try {
@@ -771,9 +757,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="name">The name of the script.</param>
 		/// <returns>True if the current module has a .NCS compiled
 		/// script file of the given name, and false otherwise.</returns>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public bool HasCompiled(string name)
 		{
 			try {
@@ -801,9 +784,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="name">The name of the script.</param>
 		/// <returns>True if the current module has a .NSS uncompiled
 		/// script file of the given name, and false otherwise.</returns>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public bool HasUncompiled(string name)
 		{
 			try {
@@ -829,9 +809,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="name">The name to save the script under.</param>
 		/// <param name="code">The contents of the script.</param>
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public void AddScript(string name, string code)
 		{
 			try {
@@ -876,10 +853,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="name">The name of the script.</param>
 		/// <remarks>Both compiled and uncompiled copies
 		/// of the script are deleted.</remarks>
-		[FaultContract(typeof(ArgumentException))]
-		[FaultContract(typeof(ArgumentNullException))]
-		[FaultContract(typeof(InvalidOperationException))]
-		[FaultContract(typeof(System.IO.IOException))]
 		public void DeleteScript(string name)
 		{
 			try {
@@ -944,10 +917,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Compiles a script in the current module.
 		/// </summary>
 		/// <param name="name">The name of the script to compile.</param>
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		[FaultContract(typeof(System.IO.InvalidDataException))]
 		public void CompileScript(string name)
 		{
 			try {
@@ -1014,11 +983,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// the script to.</param>
 		/// <remarks>To attach scripts to areas and modules,
 		/// use AttachScriptToArea() and AttachScriptToModule().</remarks>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		[FaultContract(typeof(System.IO.InvalidDataException))]
-		[FaultContract(typeof(System.IO.IOException))]
 		public void AttachScriptToObject(string scriptName, string areaName, Nwn2EventRaiser type, Guid objectID, string scriptSlot)
 		{
 			try {
@@ -1128,11 +1092,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="areaName">The area to attach the script to.</param>
 		/// <param name="scriptSlot">The script slot to attach
 		/// the script to.</param>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		[FaultContract(typeof(System.IO.InvalidDataException))]
-		[FaultContract(typeof(System.IO.IOException))]
 		public void AttachScriptToArea(string scriptName, string areaName, string scriptSlot)
 		{
 			try {
@@ -1221,11 +1180,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="scriptName">The name of the compiled script.</param>
 		/// <param name="scriptSlot">The script slot to attach
 		/// the script to.</param>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		[FaultContract(typeof(System.IO.InvalidDataException))]
-		[FaultContract(typeof(System.IO.IOException))]
 		public void AttachScriptToModule(string scriptName, string scriptSlot)
 		{
 			try {
@@ -1304,9 +1258,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// object with the given script slot.</param>
 		/// <param name="scriptSlot">The script slot to remove
 		/// any scripts from.</param>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public void ClearScriptSlotOnObject(string areaName, Guid objectID, Nwn2EventRaiser type, string scriptSlot)
 		{
 			try {
@@ -1376,9 +1327,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (ArgumentException e) {
 				throw new FaultException<ArgumentException>(e,e.Message);
 			}
-			catch (InvalidDataException e) {
-				throw new FaultException<InvalidDataException>(e,e.Message);
-			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
 			}
@@ -1395,9 +1343,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="areaName">The area with the given script slot.</param>
 		/// <param name="scriptSlot">The script slot to remove
 		/// any scripts from.</param>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public void ClearScriptSlotOnArea(string areaName, string scriptSlot)
 		{
 			try {
@@ -1447,9 +1392,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (ArgumentException e) {
 				throw new FaultException<ArgumentException>(e,e.Message);
 			}
-			catch (InvalidDataException e) {
-				throw new FaultException<InvalidDataException>(e,e.Message);
-			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
 			}
@@ -1465,9 +1407,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="scriptSlot">The script slot to remove
 		/// any scripts from.</param>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
 		public void ClearScriptSlotOnModule(string scriptSlot)
 		{
 			try {
@@ -1503,9 +1442,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 			catch (ArgumentException e) {
 				throw new FaultException<ArgumentException>(e,e.Message);
-			}
-			catch (InvalidDataException e) {
-				throw new FaultException<InvalidDataException>(e,e.Message);
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
