@@ -141,5 +141,27 @@ namespace Sussex.Flip.Utils.Tests
 			Assert.AreEqual(d.ToString(),bean.GetValue("D"));
 			Assert.AreEqual(e.ToString(),bean.GetValue("E"));
 		}
+		
+		
+		[Test]
+		public void BeanIsIndexable()
+		{
+			int a = 330;
+			float b = 12.784f;
+			string c = "paradigm";
+			
+			TestClass captive = new TestClass(a,b,c);
+			
+			Bean bean = new Bean(captive);
+			
+			Assert.AreEqual(bean.GetValue("A"),bean["A"]);
+			Assert.AreEqual("330",bean["A"]);
+			
+			Assert.AreEqual(bean.GetValue("B"),bean["B"]);
+			Assert.AreEqual("12.784",bean["B"]);
+			
+			Assert.AreEqual(bean.GetValue("C"),bean["C"]);
+			Assert.AreEqual("paradigm",bean["C"]);
+		}
 	}
 }
