@@ -417,5 +417,49 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.IO.InvalidDataException))]
 		[FaultContract(typeof(System.IO.IOException))]
 		void AttachScriptToModule(string scriptName, string scriptSlot);
+		
+		
+		/// <summary>
+		/// Detaches the script from the given script slot on the given
+		/// object, if a script was attached.
+		/// </summary>
+		/// <param name="areaName">The area containing the object.</param>
+		/// <param name="objectID">The unique ObjectID of the 
+		/// object with the given script slot.</param>
+		/// <param name="type">The type of the receiving object.</param>
+		/// <param name="scriptSlot">The script slot to remove
+		/// any scripts from.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void ClearScriptSlotOnObject(string areaName, Guid objectID, Nwn2EventRaiser type, string scriptSlot);
+		
+		
+		/// <summary>
+		/// Detaches the script from the given script slot on the given
+		/// area, if a script was attached.
+		/// </summary>
+		/// <param name="areaName">The area with the given script slot.</param>
+		/// <param name="scriptSlot">The script slot to remove
+		/// any scripts from.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void ClearScriptSlotOnArea(string areaName, string scriptSlot);
+		
+		
+		/// <summary>
+		/// Detaches the script from the given script slot on the current
+		/// module, if a script was attached.
+		/// </summary>
+		/// <param name="scriptSlot">The script slot to remove
+		/// any scripts from.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void ClearScriptSlotOnModule(string scriptSlot);
 	}
 }

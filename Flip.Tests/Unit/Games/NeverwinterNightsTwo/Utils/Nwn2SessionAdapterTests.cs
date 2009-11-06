@@ -125,6 +125,227 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#endregion
 		
 		#region Tests - Scripts
+		
+		[Test]
+		public void PreCompiledScriptsAttachSuccessfully()
+		{
+			string name = "PreCompiledScriptsAttachSuccessfully.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+					
+			string areaName = "area";
+			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();
+						
+			service.AddCompiledScript(precompiled99bottlesScriptPath);
+			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
+			
+			string scriptSlot = "OnHeartbeat";			
+			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
+			service.SaveModule();
+			
+			Bean areaBean = service.GetArea(areaName);
+			Assert.IsTrue(areaBean.HasValue(scriptSlot));
+			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+			
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			areaBean = service.GetArea(areaName);
+			Assert.IsTrue(areaBean.HasValue(scriptSlot));
+			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+		
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void RefusesToAttachUnknownScript()
+		{
+			Assert.Fail();
+		}
+		
+		
+		[Test]
+		public void ClearsScriptSlotOnModule()
+		{
+			string name = "ClearsScriptSlotOnModule.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string scriptName = "givegold";
+			service.AddUncompiledScript(scriptName,sampleScripts.GiveGold);
+			service.SaveModule();
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			
+			service.AttachScriptToModule(scriptName,"OnCutsceneAbort");
+			service.SaveModule();
+			
+			Bean module = service.GetModule();			
+			string attachedScriptName = module.GetValue("OnCutsceneAbort");
+			Assert.AreEqual(scriptName,attachedScriptName);
+			
+			service.ClearScriptSlotOnModule("OnCutsceneAbort");
+			service.SaveModule();
+			
+			module = service.GetModule();
+			attachedScriptName = module.GetValue("OnCutsceneAbort");
+			Assert.IsNotNull(attachedScriptName);
+			Assert.IsEmpty(attachedScriptName);
+			
+			// Refuses to clear unknown script slot:		
+			try {
+				service.ClearScriptSlotOnModule("BishBashBosh");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to clear " +
+			            	"a non-existent script slot.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to clear " +
+			            	"a non-existent script slot.");
+			}
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ClearsScriptSlotOnArea()
+		{
+			string name = "ClearsScriptSlotOnArea.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string areaName = "forest";
+			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);
+			service.SaveModule();
+			
+			string scriptName = "givegold";
+			service.AddUncompiledScript(scriptName,sampleScripts.GiveGold);
+			service.SaveModule();
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			
+			service.AttachScriptToArea(scriptName,areaName,"OnExitScript");
+			service.SaveModule();
+			
+			Bean area = service.GetArea(areaName);
+			Assert.IsNotNull(area);			
+			
+			string attachedScriptName = area.GetValue("OnExitScript");
+			Assert.AreEqual(scriptName,attachedScriptName);
+			
+			service.ClearScriptSlotOnArea(areaName,"OnExitScript");
+			service.SaveModule();
+			
+			area = service.GetArea(areaName);
+			attachedScriptName = area.GetValue("OnExitScript");
+			Assert.IsNotNull(attachedScriptName);
+			Assert.IsEmpty(attachedScriptName);
+			
+			// Refuses to clear unknown script slot:		
+			try {
+				service.ClearScriptSlotOnArea(areaName,"BishBashBosh");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to clear " +
+			            	"a non-existent script slot.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to clear " +
+			            	"a non-existent script slot.");
+			}
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ClearsScriptSlotOnObject()
+		{
+			string name = "ClearsScriptSlotOnObject.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string areaName = "forest";
+			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);
+			service.SaveModule();
+			
+			service.AddObject(areaName,NWN2ObjectType.Door,"plc_dc_basic01","door");
+			service.SaveModule();
+			
+			string scriptName = "givegold";
+			service.AddUncompiledScript(scriptName,sampleScripts.GiveGold);
+			service.SaveModule();
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			
+			Bean door = service.GetObjects(areaName,NWN2ObjectType.Door,"door")[0];
+			Guid objectId = new Guid(door.GetValue("ObjectID"));
+			
+			service.AttachScriptToObject(scriptName,areaName,Nwn2EventRaiser.Door,objectId,"OnFailToOpen");
+			service.SaveModule();
+			
+			door = service.GetObject(areaName,NWN2ObjectType.Door,objectId);			
+			string attachedScriptName = door.GetValue("OnFailToOpen");
+			Assert.AreEqual(scriptName,attachedScriptName);
+			
+			service.ClearScriptSlotOnObject(areaName,objectId,Nwn2EventRaiser.Door,"OnFailToOpen");
+			service.SaveModule();
+			
+			door = service.GetObject(areaName,NWN2ObjectType.Door,objectId);			
+			attachedScriptName = door.GetValue("OnFailToOpen");
+			Assert.IsNotNull(attachedScriptName);
+			Assert.IsEmpty(attachedScriptName);
+			
+			// Refuses to clear unknown script slot:		
+			try {
+				service.ClearScriptSlotOnObject(areaName,objectId,Nwn2EventRaiser.Door,"BishBashBosh");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to clear " +
+			            	"a non-existent script slot.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to clear " +
+			            	"a non-existent script slot.");
+			}
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
 				
 		[Test]
 		public void DeletesScript()
