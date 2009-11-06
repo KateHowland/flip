@@ -1505,10 +1505,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + name + "'.","areaName");
 				}
 				
+				if (NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers().Count == 3) {
+					throw new InvalidOperationException("3 is the maximum number of areas which can be open at once.");
+				}
+				
 				NWN2GameArea area = module.Areas[name];	
 				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
 				                                              name + "') could not be found.");	
-				
+								
 				NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(area);
 			}
 			catch (ArgumentNullException e) {

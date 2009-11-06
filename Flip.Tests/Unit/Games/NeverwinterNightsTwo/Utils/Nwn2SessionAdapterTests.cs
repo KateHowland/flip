@@ -2306,6 +2306,54 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Delete(path);
 		}
 		
+		
+		[Test]
+		public void RefusesToOpenMoreThanThreeAreas()
+		{
+			string name = "RefusesToOpenMoreThanThreeAreas.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string area1 = "desert";
+			string area2 = "castle";
+			string area3 = "forest";
+			string area4 = "island";
+			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
+			service.AddArea(area2,false,AreaBase.SmallestAreaSize);		
+			service.AddArea(area3,true,AreaBase.SmallestAreaSize);	
+			service.AddArea(area4,true,AreaBase.SmallestAreaSize);			
+			service.SaveModule();
+			
+			service.OpenArea(area1);			
+			service.OpenArea(area2);
+			service.OpenArea(area3);
+			Assert.AreEqual(3,service.GetOpenAreas().Count);
+			
+			try {
+				service.OpenArea(area4);
+				Assert.Fail("Didn't raise a FaultException<InvalidOperationException> when asked " +
+				            "to open a fourth area (where 3 is the maximum).");
+			}
+			catch (FaultException<InvalidOperationException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<InvalidOperationException> when asked " +
+				            "to open a fourth area (where 3 is the maximum).");
+			}
+			
+			Assert.AreEqual(3,service.GetOpenAreas().Count);
+						
+			service.CloseModule();			
+			Delete(path);
+		}
+		
 		#endregion
 		
 		#region Methods
