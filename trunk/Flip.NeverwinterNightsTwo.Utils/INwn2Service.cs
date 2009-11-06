@@ -271,6 +271,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script in the current module, or null if no
 		/// such script exists.</returns>
 		[OperationContract]
+		[FaultContract(typeof(System.ApplicationException))]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
@@ -338,8 +339,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.IO.InvalidDataException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.InvalidDataException))]
 		void CompileScript(string name);	
 		
 				
@@ -362,7 +363,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		[FaultContract(typeof(System.IO.InvalidDataException))]
-		[FaultContract(typeof(System.IO.IOException))]
 		void AttachScriptToObject(string scriptName, 
 				                  string areaName, 
 				                  Nwn2EventRaiser type, 
@@ -385,7 +385,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		[FaultContract(typeof(System.IO.InvalidDataException))]
-		[FaultContract(typeof(System.IO.IOException))]
 		void AttachScriptToArea(string scriptName, string areaName, string scriptSlot);
 		
 				
@@ -403,7 +402,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		[FaultContract(typeof(System.IO.InvalidDataException))]
-		[FaultContract(typeof(System.IO.IOException))]
 		void AttachScriptToModule(string scriptName, string scriptSlot);
 		
 		
