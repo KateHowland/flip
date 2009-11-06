@@ -145,7 +145,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void SaveModule()
 		{
 			try {
-				session.SaveModule(session.GetCurrentModule());
+				session.SaveModule(session.GetModule());
 			}
 			catch (ArgumentException e) {
 				throw new FaultException<ArgumentException>(e,e.Message);
@@ -174,10 +174,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the name of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The name of the current module, or null if no module is open.</returns>
-		public string GetCurrentModuleName()
+		public string GetModuleName()
 		{
 			try {
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					return null;
 				}
@@ -195,10 +195,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the absolute path of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The absolute path of the current module, or null if no module is currently open.</returns>
-		public string GetCurrentModulePath()
+		public string GetModulePath()
 		{
 			try {
-				return session.GetCurrentModulePath();
+				return session.GetModulePath();
 			}
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
@@ -210,10 +210,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the path to the working ('temp') copy of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The temp path of the current module, or null if no module is open.</returns>
-		public string GetCurrentModuleTempPath()
+		public string GetModuleTempPath()
 		{
 			try {
-				return session.GetCurrentModuleTempPath();
+				return session.GetModuleTempPath();
 			}
 			catch (ApplicationException e) {
 				throw new FaultException<ApplicationException>(e,e.Message);
@@ -228,10 +228,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the location type of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The location type of the current module.</returns>
-		public ModuleLocationType? GetCurrentModuleLocation()
+		public ModuleLocationType? GetModuleLocation()
 		{
 			try {
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					return null;
 				}
@@ -286,7 +286,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("No area name was provided (was empty).","areaName");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
@@ -337,7 +337,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("No area name was provided (was empty).","areaName");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
@@ -386,7 +386,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("No area name was provided (was empty).","areaName");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
@@ -443,7 +443,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("No area name was provided (was empty).","areaName");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
@@ -493,7 +493,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("No area name was provided (was empty).","name");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
@@ -530,7 +530,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public IList<Bean> GetAreas()
 		{
 			try {
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}			
@@ -560,7 +560,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Bean GetModule()
 		{
 			try {
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}			
@@ -586,7 +586,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public IList<Bean> GetUncompiledScripts()
 		{
 			try {
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}			
@@ -629,7 +629,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("name","No script name was provided (was empty).");
 				}		
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
@@ -670,7 +670,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public IList<Bean> GetCompiledScripts()
 		{
 			try {
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}				
@@ -725,7 +725,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("name","No script name was provided (was empty).");
 				}		
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}				
@@ -832,7 +832,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		public void AddUncompiledScript(string name, string code)
+		public void AddScript(string name, string code)
 		{
 			try {
 				if (name == null) {
@@ -842,7 +842,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentNullException("code");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
@@ -867,58 +867,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
-		}
-		
-
-		/// <summary>
-		/// Adds a compiled script to the current module.
-		/// </summary>
-		/// <param name="path">The path to the compiled
-		/// script, which will be an .NCS file.</param>
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		[FaultContract(typeof(System.IO.IOException))]
-		public void AddCompiledScript(string path)
-		{
-			try {
-				if (path == null) {
-					throw new ArgumentNullException("path");
-				}
-				
-				NWN2GameModule module = session.GetCurrentModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}
-				
-				FileInfo f = new FileInfo(path);
-				if (!f.Exists) {
-					throw new IOException("There is no file at " + path + ".");
-				}
-				if (f.Extension.ToLower() != ".ncs") {
-					throw new IOException("The file at " + path + " has the wrong extension - " +
-					                      "file has " + f.Extension + ", while compiled NWN2 " +
-					                      "scripts have the extension .NCS.");
-				}
-				
-				string filename = Path.GetFileName(path);
-				string temp = session.GetCurrentModuleTempPath();
-				string newPath = Path.Combine(temp,filename);
-				
-				File.Copy(path,newPath);
-			}
-			catch (ArgumentNullException e) {
-				throw new FaultException<ArgumentNullException>(e,e.Message);
-			}
-			catch (InvalidOperationException e) {
-				throw new FaultException<InvalidOperationException>(e,e.Message);
-			}
-			catch (IOException e) {
-				throw new FaultException<IOException>(e,e.Message);
-			}
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}		
+		}	
 		
 		
 		/// <summary>
@@ -941,12 +890,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("name");
 				}
 								
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
 				if (!session.HasUncompiled(name) && !session.HasCompiled(name)) {
-					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + name + "'.","name");
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + name + "'.","name");
 				}
 													
 				try {					
@@ -1009,12 +958,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("name");
 				}
 								
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
 				if (!session.HasUncompiled(name)) {
-					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no uncompiled script named '" + name + "'.","name");
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no uncompiled script named '" + name + "'.","name");
 				}
 				
 				NWN2GameScript script;
@@ -1026,7 +975,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 								
 				NWN2Toolset.NWN2ToolsetMainForm.Compiler.GenerateDebugInfo = true;
-				string debug = NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetCurrentModuleTempPath());
+				string debug = NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetModuleTempPath());
 				if (debug.Length > 0) {
 					throw new InvalidDataException("'" + name + "' could not be compiled: " + debug);
 				}
@@ -1098,19 +1047,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            "script slot names.)","scriptSlot");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
 				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no area named '" + areaName + "'.","areaName");
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
 				}
 				if (!HasCompiled(scriptName)) {
 					if (HasUncompiled(scriptName)) {
 						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
 					}
 					else {
-						throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+						throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
 					}
 				}	
 								
@@ -1212,19 +1161,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            "script slot names.","scriptSlot");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
 				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no area named '" + areaName + "'.","areaName");
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
 				}
 				if (!HasCompiled(scriptName)) {
 					if (HasUncompiled(scriptName)) {
 						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
 					}
 					else {
-						throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+						throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
 					}
 				}	
 				
@@ -1299,7 +1248,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            "script slot names.","scriptSlot");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
@@ -1308,7 +1257,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
 					}
 					else {
-						throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+						throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
 					}
 				}	
 				
@@ -1380,12 +1329,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            "script slot names.)","scriptSlot");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
 				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no area named '" + areaName + "'.","areaName");
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
 				}
 					
 				switch (type) {
@@ -1471,12 +1420,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            "script slot names.","scriptSlot");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
 				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no area named '" + areaName + "'.","areaName");
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
 				}
 				
 				NWN2GameArea area = module.Areas[areaName];	
@@ -1535,7 +1484,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            "script slot names.","scriptSlot");
 				}
 				
-				NWN2GameModule module = session.GetCurrentModule();
+				NWN2GameModule module = session.GetModule();
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}

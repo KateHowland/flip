@@ -85,7 +85,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <returns>The name of the current module, or null if no module is open.</returns>
 		[OperationContract]
-		string GetCurrentModuleName();
+		string GetModuleName();
 		
 		
 		/// <summary>
@@ -93,7 +93,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
 		[OperationContract]
-		string GetCurrentModulePath();
+		string GetModulePath();
 		
 		
 		/// <summary>
@@ -102,7 +102,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The temp path of the current module, or null if no module is open.</returns>
 		[OperationContract]		
 		[FaultContract(typeof(System.ApplicationException))]
-		string GetCurrentModuleTempPath();
+		string GetModuleTempPath();
 		
 		
 		/// <summary>
@@ -110,7 +110,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <returns>The location type of the current module, or null if no module is open.</returns>
 		[OperationContract]
-		NWN2Toolset.NWN2.IO.ModuleLocationType? GetCurrentModuleLocation();
+		NWN2Toolset.NWN2.IO.ModuleLocationType? GetModuleLocation();
 		
 		
 		/// <summary>
@@ -314,19 +314,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		void AddUncompiledScript(string name, string code);	
-				
-
-		/// <summary>
-		/// Adds a compiled script to the current module.
-		/// </summary>
-		/// <param name="path">The path to the compiled
-		/// script, which will be an .NCS file.</param>
-		[OperationContract]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		[FaultContract(typeof(System.IO.IOException))]
-		void AddCompiledScript(string path);	
+		void AddScript(string name, string code);	
 		
 		
 		/// <summary>
