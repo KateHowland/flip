@@ -210,6 +210,17 @@ namespace Sussex.Flip.Utils
 			return sb.ToString();
 		}
 		
+		
+		public string this[string index]
+		{
+			get {
+				return GetValue(index);
+			}
+			set {
+				SetValue(index,value);
+			}
+		}
+		
 		#endregion
 	}
 }
