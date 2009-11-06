@@ -2269,6 +2269,43 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			}
 		}
 		
+		
+		[Test]
+		public void OpensAndClosesAreas()
+		{
+			string name = "OpensAndClosesAreas.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string area1 = "desert";
+			string area2 = "castle";
+			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
+			service.AddArea(area2,false,AreaBase.SmallestAreaSize);			
+			service.SaveModule();
+			
+			Assert.AreEqual(0,service.GetOpenAreas().Count);
+			
+			service.OpenArea(area1);			
+			Assert.AreEqual(1,service.GetOpenAreas().Count);
+			
+			service.OpenArea(area2);			
+			Assert.AreEqual(2,service.GetOpenAreas().Count);
+			
+			service.CloseArea(area2);			
+			Assert.AreEqual(1,service.GetOpenAreas().Count);
+			
+			service.CloseArea(area1);			
+			Assert.AreEqual(0,service.GetOpenAreas().Count);
+						
+			service.CloseModule();			
+			Delete(path);
+		}
+		
 		#endregion
 		
 		#region Methods
