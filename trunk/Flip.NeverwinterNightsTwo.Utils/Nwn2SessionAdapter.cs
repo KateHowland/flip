@@ -918,7 +918,77 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
-		}			
+		}		
+		
+		
+		/// <summary>
+		/// Deletes a script from the current module.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <remarks>Both compiled and uncompiled copies
+		/// of the script are deleted.</remarks>
+		[FaultContract(typeof(ArgumentException))]
+		[FaultContract(typeof(ArgumentNullException))]
+		[FaultContract(typeof(InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		public void DeleteScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name");
+				}
+								
+				NWN2GameModule module = session.GetCurrentModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!session.HasUncompiled(name) && !session.HasCompiled(name)) {
+					throw new ArgumentException("Module '" + GetCurrentModuleName() + "' has no script named '" + name + "'.","name");
+				}
+													
+				try {					
+					// Deleting an uncompiled script also deletes the compiled version, but deleting a compiled
+					// script DOESN'T also delete the uncompiled version, and a subsequent attempt to delete
+					// the uncompiled version explicitly will fail. Always delete uncompiled, then compiled.
+					
+					OEIResRef resRef = new OEIResRef(name);
+										
+					IResourceEntry uncompiled = module.Repository.FindResource(resRef,BWResourceTypes.GetResourceType("NSS"));
+					if (uncompiled != null) {
+						NWN2GameScript u = new NWN2GameScript(uncompiled);
+						if (u != null) {
+							module.RemoveResource(u);
+						}
+					}
+					
+					IResourceEntry compiled = module.Repository.FindResource(resRef,BWResourceTypes.GetResourceType("NCS"));
+					if (compiled != null) {
+						module.Repository.Resources.Remove(compiled);
+					}
+				}
+				catch (ArgumentOutOfRangeException) {
+					throw new ArgumentException("Scripts collection for this module did not feature a script named '" + name + "'.");
+				}
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidDataException e) {
+				throw new FaultException<InvalidDataException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
 		
 		
 		/// <summary>

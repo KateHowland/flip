@@ -127,6 +127,84 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#region Tests - Scripts
 				
 		[Test]
+		public void DeletesScript()
+		{
+			string name = "DeleteScript.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string scriptData = sampleScripts.Sing;
+			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
+			
+			// Deletes both compiled and uncompiled if present:
+			service.AddUncompiledScript(scriptName,sampleScripts.Sing);
+			service.SaveModule();
+			service.CompileScript(scriptName);
+			service.SaveModule();
+			
+			Assert.IsTrue(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			
+			service.DeleteScript(scriptName);
+			service.SaveModule();
+						
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			
+			// Deletes compiled if only compiled is present:
+			service.AddCompiledScript(precompiled99bottlesScriptPath);
+			service.SaveModule();
+			
+			Assert.IsTrue(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			
+			service.DeleteScript(scriptName);
+			service.SaveModule();
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			
+			// Deletes uncompiled if only uncompiled is present:
+			service.AddUncompiledScript(scriptName,sampleScripts.Sing);
+			service.SaveModule();
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsTrue(service.HasUncompiled(scriptName));
+			
+			service.DeleteScript(scriptName);
+			service.SaveModule();
+			
+			Assert.IsFalse(service.HasCompiled(scriptName));
+			Assert.IsFalse(service.HasUncompiled(scriptName));
+			
+			// Refuses to delete non-existent script:
+			string nonExistentScriptName = "does not exist";
+			Assert.IsFalse(service.HasUncompiled(nonExistentScriptName));				
+			try {
+				service.DeleteScript(nonExistentScriptName);
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to delete " +
+			            	"a non-existent script.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to delete " +
+			            	"a non-existent script.");
+			}
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void GetsSerialisedInfoAboutObjects()
 		{
 			string name = "gets info.mod";
