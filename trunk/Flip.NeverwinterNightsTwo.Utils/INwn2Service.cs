@@ -480,5 +480,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		void CloseArea(string name);
+		
+		
+		/// <summary>
+		/// Checks whether an area viewer is currently open
+		/// for a particular area.
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		/// <returns>True if an area viewer for the named
+		/// area is currently open in the toolset; false
+		/// otherwise.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		bool AreaIsOpen(string name);
 	}
 }
