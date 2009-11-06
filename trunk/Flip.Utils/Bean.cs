@@ -211,13 +211,13 @@ namespace Sussex.Flip.Utils
 		}
 		
 		
-		public string this[string index]
+		public string this[string key]
 		{
 			get {
-				return GetValue(index);
+				return GetValue(key);
 			}
 			set {
-				SetValue(index,value);
+				SetValue(key,value);
 			}
 		}
 		
