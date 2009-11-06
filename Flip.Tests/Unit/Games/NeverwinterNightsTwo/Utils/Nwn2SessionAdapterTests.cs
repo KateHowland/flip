@@ -127,52 +127,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#region Tests - Scripts
 		
 		[Test]
-		public void PreCompiledScriptsAttachSuccessfully()
-		{
-			string name = "PreCompiledScriptsAttachSuccessfully.mod";
-			string parent = NWN2ToolsetMainForm.ModulesDirectory;
-			string path = Path.Combine(parent,name);
-			
-			path = pathChecker.GetUnusedFilePath(path);
-			
-			service.CreateModule(path,ModuleLocationType.File);
-			service.OpenModule(path,ModuleLocationType.File);
-					
-			string areaName = "area";
-			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);			
-			service.SaveModule();
-						
-			service.AddCompiledScript(precompiled99bottlesScriptPath);
-			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
-			
-			string scriptSlot = "OnHeartbeat";			
-			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
-			service.SaveModule();
-			
-			Bean areaBean = service.GetArea(areaName);
-			Assert.IsTrue(areaBean.HasValue(scriptSlot));
-			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
-			
-			service.CloseModule();
-			service.OpenModule(path,ModuleLocationType.File);
-			
-			areaBean = service.GetArea(areaName);
-			Assert.IsTrue(areaBean.HasValue(scriptSlot));
-			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
-		
-			service.CloseModule();			
-			Delete(path);
-		}
-		
-		
-		[Test]
-		public void RefusesToAttachUnknownScript()
-		{
-			Assert.Fail();
-		}
-		
-		
-		[Test]
 		public void ClearsScriptSlotOnModule()
 		{
 			string name = "ClearsScriptSlotOnModule.mod";
@@ -185,7 +139,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			string scriptName = "givegold";
-			service.AddUncompiledScript(scriptName,sampleScripts.GiveGold);
+			service.AddScript(scriptName,sampleScripts.GiveGold);
 			service.SaveModule();
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -242,7 +196,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.SaveModule();
 			
 			string scriptName = "givegold";
-			service.AddUncompiledScript(scriptName,sampleScripts.GiveGold);
+			service.AddScript(scriptName,sampleScripts.GiveGold);
 			service.SaveModule();
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -304,7 +258,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.SaveModule();
 			
 			string scriptName = "givegold";
-			service.AddUncompiledScript(scriptName,sampleScripts.GiveGold);
+			service.AddScript(scriptName,sampleScripts.GiveGold);
 			service.SaveModule();
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -363,7 +317,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
 			
 			// Deletes both compiled and uncompiled if present:
-			service.AddUncompiledScript(scriptName,sampleScripts.Sing);
+			service.AddScript(scriptName,sampleScripts.Sing);
 			service.SaveModule();
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -378,7 +332,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			
 			// Deletes compiled if only compiled is present:
-			service.AddCompiledScript(precompiled99bottlesScriptPath);
+			File.Copy(precompiled99bottlesScriptPath,Path.Combine(service.GetModuleTempPath(),Path.GetFileName(precompiled99bottlesScriptPath)));
 			service.SaveModule();
 			
 			Assert.IsTrue(service.HasCompiled(scriptName));
@@ -391,7 +345,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			
 			// Deletes uncompiled if only uncompiled is present:
-			service.AddUncompiledScript(scriptName,sampleScripts.Sing);
+			service.AddScript(scriptName,sampleScripts.Sing);
 			service.SaveModule();
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
@@ -591,7 +545,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			
 			scripts = service.GetUncompiledScripts();
@@ -603,7 +557,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(scriptData,script.GetValue("Data"));
 					
 			try {
-				service.AddUncompiledScript(scriptName,scriptData);
+				service.AddScript(scriptName,scriptData);
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add " +
 			            	"a script with an existing name.");
 			}
@@ -640,7 +594,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			
 			scripts = service.GetUncompiledScripts();
@@ -652,7 +606,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(scriptData,script.GetValue("Data"));
 					
 			try {
-				service.AddUncompiledScript(scriptName,scriptData);
+				service.AddScript(scriptName,scriptData);
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add " +
 			            	"a script with an existing name.");
 			}
@@ -682,7 +636,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);
 			
-			string temp = service.GetCurrentModuleTempPath();
+			string temp = service.GetModuleTempPath();
 			Assert.IsNotNull(temp);
 			Assert.IsNotEmpty(temp);
 			Assert.IsTrue(Directory.Exists(temp));
@@ -694,7 +648,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.IsFalse(Directory.Exists(temp)); // the old temp directory should now be gone
 			
-			temp = service.GetCurrentModuleTempPath();
+			temp = service.GetModuleTempPath();
 			
 			Assert.IsNotNull(temp);
 			Assert.IsNotEmpty(temp);
@@ -718,11 +672,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.Directory);
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
-			Assert.AreEqual(service.GetCurrentModulePath(),service.GetCurrentModuleTempPath());
+			Assert.AreEqual(service.GetModulePath(),service.GetModuleTempPath());
 			
 			service.SaveModule();
 			
-			Assert.AreEqual(service.GetCurrentModulePath(),service.GetCurrentModuleTempPath());
+			Assert.AreEqual(service.GetModulePath(),service.GetModuleTempPath());
 			
 			service.CloseModule();
 			Delete(path);
@@ -748,7 +702,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasCompiled(precompiledScriptName));
 			Assert.IsFalse(service.HasUncompiled(precompiledScriptName));
 			
-			string copiedPath = Path.Combine(service.GetCurrentModuleTempPath(),precompiledScriptName+".NCS");
+			string copiedPath = Path.Combine(service.GetModuleTempPath(),precompiledScriptName+".NCS");
 			Assert.IsFalse(File.Exists(copiedPath));
 			File.Copy(precompiled99bottlesScriptPath,copiedPath);
 			Assert.IsTrue(File.Exists(copiedPath));
@@ -763,7 +717,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
@@ -799,7 +753,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();			
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
@@ -850,7 +804,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();			
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
@@ -898,7 +852,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptName = "illegalscript";
 						
 			try {
-				service.AddUncompiledScript(scriptName,scriptData);
+				service.AddScript(scriptName,scriptData);
 				service.SaveModule();
 				service.CompileScript(scriptName);
 				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to compile an illegal script.");
@@ -966,7 +920,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();			
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -1006,7 +960,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			string scriptName = "givegold";
 			string scriptData = sampleScripts.GiveGold;
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -1045,7 +999,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			string scriptName = "givegold";
 			string scriptData = sampleScripts.GiveGold;
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -1094,7 +1048,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();			
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -1193,7 +1147,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			string scriptName = "givegold";
 			string scriptData = sampleScripts.GiveGold;
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			service.CompileScript(scriptName);
 			service.SaveModule();
@@ -1342,7 +1296,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled script";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			
 			Assert.IsTrue(service.HasUncompiled(scriptName));
@@ -1403,7 +1357,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled script";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();
 			
 			Assert.IsTrue(service.HasUncompiled(scriptName));
@@ -1446,174 +1400,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void AddsPreCompiledScriptToFileModule()
-		{
-			string name = "adds precompiled script.mod";
-			string parent = NWN2ToolsetMainForm.ModulesDirectory;
-			string path = Path.Combine(parent,name);
-			
-			path = pathChecker.GetUnusedFilePath(path);
-			
-			service.CreateModule(path,ModuleLocationType.File);
-			service.OpenModule(path,ModuleLocationType.File);
-			
-			IList<Bean> scripts = service.GetUncompiledScripts();
-			Assert.AreEqual(0,scripts.Count);
-			
-			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
-			
-			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
-			
-			Assert.IsFalse(service.HasCompiled(scriptName));
-			Assert.IsFalse(service.HasUncompiled(scriptName));
-			
-			service.AddCompiledScript(precompiled99bottlesScriptPath);
-			service.SaveModule();
-			
-			Assert.IsTrue(service.HasCompiled(scriptName));
-			Assert.IsFalse(service.HasUncompiled(scriptName));
-			
-			scripts = service.GetUncompiledScripts();
-			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
-			
-			// Try to add missing files, nonsense files and uncompiled scripts:
-			string nonsensePath = Path.Combine(Path.GetTempPath(),"idonotexist.NCS");
-			Assert.IsFalse(File.Exists(nonsensePath));
-			try {
-				service.AddCompiledScript(nonsensePath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a non-existent script to the module.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a non-existent script to the module.");
-			}
-			
-			Assert.IsTrue(File.Exists(uncompiled99bottlesScriptPath));
-			try {
-				service.AddCompiledScript(uncompiled99bottlesScriptPath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"an uncompiled script with AddCompiledScript.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"an uncompiled script with AddCompiledScript.");
-			}
-			
-			string wrongFileTypePath = Path.GetTempFileName();
-			Assert.IsTrue(File.Exists(wrongFileTypePath));
-			try {
-				service.AddCompiledScript(wrongFileTypePath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a file of inappropriate type to the module.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a file of inappropriate type to the module.");
-			}
-				
-			service.CloseModule();
-			Delete(path);
-		}
-		
-		
-		[Test]
-		public void AddsPreCompiledScriptToDirectoryModule()
-		{
-			string name = "adds precompiled script to directory";
-			string parent = NWN2ToolsetMainForm.ModulesDirectory;
-			string path = Path.Combine(parent,name);
-			
-			path = pathChecker.GetUnusedDirectoryPath(path);
-			
-			service.CreateModule(path,ModuleLocationType.Directory);
-			service.OpenModule(path,ModuleLocationType.Directory);
-			
-			IList<Bean> scripts = service.GetUncompiledScripts();
-			Assert.AreEqual(0,scripts.Count);			
-			
-			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
-			
-			string scriptName = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
-			
-			Assert.IsFalse(service.HasCompiled(scriptName));
-			Assert.IsFalse(service.HasUncompiled(scriptName));
-			
-			service.AddCompiledScript(precompiled99bottlesScriptPath);
-			service.SaveModule();
-			
-			Assert.IsTrue(service.HasCompiled(scriptName));
-			Assert.IsFalse(service.HasUncompiled(scriptName));
-			
-			scripts = service.GetUncompiledScripts();
-			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
-			
-			// Try to add missing files, nonsense files and uncompiled scripts:
-			string nonsensePath = Path.Combine(Path.GetTempPath(),"idonotexist.NCS");
-			Assert.IsFalse(File.Exists(nonsensePath));
-			try {
-				service.AddCompiledScript(nonsensePath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a non-existent script to the module.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a non-existent script to the module.");
-			}
-			
-			Assert.IsTrue(File.Exists(uncompiled99bottlesScriptPath));
-			try {
-				service.AddCompiledScript(uncompiled99bottlesScriptPath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"an uncompiled script with AddCompiledScript.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"an uncompiled script with AddCompiledScript.");
-			}
-			
-			string wrongFileTypePath = Path.GetTempFileName();
-			Assert.IsTrue(File.Exists(wrongFileTypePath));
-			try {
-				service.AddCompiledScript(wrongFileTypePath);
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a file of inappropriate type to the module.");
-			}
-			catch (FaultException<IOException>) {
-				// expected result
-			}
-			catch (FaultException) {
-				CreateService();
-				Assert.Fail("Didn't raise a FaultException<IOException> when asked to add " +
-			            	"a file of inappropriate type to the module.");
-			}
-				
-			service.CloseModule();
-			Delete(path);
-		}		
-		
-		
-		[Test]
 		public void ScriptsPersistInFileModule()
 		{
 			string name = "script persists in file module.mod";
@@ -1643,7 +1429,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();			
 			service.CompileScript(scriptName);
 			service.SaveModule();			
@@ -1722,7 +1508,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
 			
-			service.AddUncompiledScript(scriptName,scriptData);
+			service.AddScript(scriptName,scriptData);
 			service.SaveModule();			
 			service.CompileScript(scriptName);
 			service.SaveModule();			
@@ -1772,36 +1558,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void EmbeddedResourceScriptsCanBeAddedToModule()
-		{
-			string name = "embedded resource test";
-			string parent = NWN2ToolsetMainForm.ModulesDirectory;
-			string path = Path.Combine(parent,name);
-			
-			path = pathChecker.GetUnusedDirectoryPath(path);
-			
-			service.CreateModule(path,ModuleLocationType.Directory);
-			service.OpenModule(path,ModuleLocationType.Directory);
-			
-			DirectoryInfo dir = new DirectoryInfo(service.GetCurrentModuleTempPath());
-			
-			string filename = Path.GetFileName(precompiled99bottlesScriptPath);
-			string script = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
-			
-			Assert.AreEqual(0,dir.GetFiles(filename).Length);
-			Assert.IsFalse(service.HasCompiled(script));
-			
-			service.AddCompiledScript(precompiled99bottlesScriptPath);
-			
-			Assert.AreEqual(1,dir.GetFiles(filename).Length);
-			Assert.IsTrue(service.HasCompiled(script));
-			
-			service.CloseModule();
-			Delete(path);
-		}
-		
-		
-		[Test]
 		public void ReturnsDataAboutScripts()
 		{
 			string name = "returns data about scripts";
@@ -1820,14 +1576,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string _99bottles = Path.GetFileNameWithoutExtension(precompiled99bottlesScriptPath);
 			
 			// End up with 2 uncompiled scripts (givegold, changename) and 2 compiled scripts (givegold, 99bottles):
-			service.AddUncompiledScript(givegold,givegoldData);
+			service.AddScript(givegold,givegoldData);
 			service.SaveModule();			
 			service.CompileScript(givegold);
 			service.SaveModule();
-			service.AddUncompiledScript(changename,changenameData);
+			service.AddScript(changename,changenameData);
 			service.SaveModule();
 			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
-			service.AddCompiledScript(precompiled99bottlesScriptPath);
+			// Place pre-compiled script directly into module:
+			File.Copy(precompiled99bottlesScriptPath,Path.Combine(service.GetModuleTempPath(),Path.GetFileName(precompiled99bottlesScriptPath)));
 			service.SaveModule();	
 			
 			Bean givegoldBean, changenameBean, _99bottlesBean;
@@ -2049,7 +1806,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 									
 			service.OpenModule(path,ModuleLocationType.Directory);	
 			
-			Assert.AreEqual(name,service.GetCurrentModuleName());	
+			Assert.AreEqual(name,service.GetModuleName());	
 			
 			service.CloseModule();			
 			Delete(path);
@@ -2070,7 +1827,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.OpenModule(path,ModuleLocationType.File);	
 			
-			Assert.AreEqual(name,service.GetCurrentModuleName());
+			Assert.AreEqual(name,service.GetModuleName());
 			
 			service.CloseModule();			
 			Delete(path);
@@ -2091,7 +1848,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.OpenModule(path,ModuleLocationType.File);	
 			
-			Assert.AreEqual(name,service.GetCurrentModuleName());
+			Assert.AreEqual(name,service.GetModuleName());
 			
 			service.CloseModule();			
 			Delete(path);
@@ -2113,8 +1870,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			string moduleName, modulePath;
-			moduleName = service.GetCurrentModuleName();
-			modulePath = service.GetCurrentModulePath();		
+			moduleName = service.GetModuleName();
+			modulePath = service.GetModulePath();		
 			Assert.IsNotNull(moduleName);
 			Assert.IsNotNull(modulePath);
 			Assert.AreEqual(name,moduleName);
@@ -2122,8 +1879,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.CloseModule();
 			
-			moduleName = service.GetCurrentModuleName();
-			modulePath = service.GetCurrentModulePath();				
+			moduleName = service.GetModuleName();
+			modulePath = service.GetModulePath();				
 			if (moduleName != null) {
 				Assert.AreNotEqual(name,moduleName);
 			}
@@ -2145,12 +1902,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			path = pathChecker.GetUnusedFilePath(path);
 			name = Path.GetFileNameWithoutExtension(path);
 			
-			service.GetCurrentModuleName();
+			service.GetModuleName();
 					
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path, ModuleLocationType.File);
 			
-			Assert.AreEqual(path,service.GetCurrentModulePath());
+			Assert.AreEqual(path,service.GetModulePath());
 							
 			service.CloseModule();
 			
@@ -2165,7 +1922,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.Directory);
 			service.OpenModule(path, ModuleLocationType.Directory);
 			
-			Assert.AreEqual(path,service.GetCurrentModulePath());
+			Assert.AreEqual(path,service.GetModulePath());
 			
 			service.CloseModule();			
 			Delete(path);
@@ -2411,7 +2168,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.OpenModule(path,ModuleLocationType.Directory);
 						
-			Assert.AreEqual(service.GetCurrentModuleName(),Path.GetFileNameWithoutExtension(path));
+			Assert.AreEqual(service.GetModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreas().Count);
 			Assert.IsNotNull(service.GetArea(area));
 			Assert.AreEqual(3,service.GetObjectCount(area,NWN2ObjectType.Creature,null));
@@ -2455,7 +2212,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.OpenModule(path,ModuleLocationType.File);
 						
-			Assert.AreEqual(service.GetCurrentModuleName(),Path.GetFileNameWithoutExtension(path));
+			Assert.AreEqual(service.GetModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreas().Count);
 			Assert.IsNotNull(service.GetArea(area));
 			Assert.AreEqual(3,service.GetObjectCount(area,NWN2ObjectType.Creature,null));

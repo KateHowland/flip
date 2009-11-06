@@ -98,7 +98,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			lock (padlock) {							
 				NWN2ToolsetMainForm.App.DoNewModule(true);
-				module = GetCurrentModule();
+				module = GetModule();
 				
 				module.Name = name;
 				module.LocationType = location;
@@ -156,7 +156,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				        progress.WorkerThread = new ThreadedProgressDialog.WorkerThreadDelegate(opener.Go);
 				        progress.ShowDialog();
 				        
-				        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetCurrentModule());
+				        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetModule());
 				        
 				        /*
 				         * Calling Demand() on each area when opening the module means we don't have to worry
@@ -271,7 +271,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The current module, or null if no module is open.</returns>
-		public NWN2Toolset.NWN2.Data.NWN2GameModule GetCurrentModule()
+		public NWN2Toolset.NWN2.Data.NWN2GameModule GetModule()
 		{
 			return NWN2ToolsetMainForm.App.Module;
 		}	
@@ -281,9 +281,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the absolute path of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
-		public string GetCurrentModulePath()
+		public string GetModulePath()
 		{
-			NWN2GameModule module = GetCurrentModule();
+			NWN2GameModule module = GetModule();
 			if (module == null) 
 				return null;
 			else {
@@ -296,9 +296,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the path to the working ('temp') copy of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The temp path of the current module, or null if no module is open.</returns>
-		public string GetCurrentModuleTempPath()
+		public string GetModuleTempPath()
 		{
-			NWN2GameModule module = GetCurrentModule();
+			NWN2GameModule module = GetModule();
 			if (module == null) {
 				return null;
 			}
@@ -348,7 +348,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// will be saved automatically.</remarks>
 		public AreaBase AddArea(string name, bool exterior, Size size)
 		{					    
-			NWN2GameModule module = GetCurrentModule();
+			NWN2GameModule module = GetModule();
 				
 			if (module == null) {
 				throw new InvalidOperationException("No module is currently open.");
@@ -415,7 +415,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new ArgumentException("name","No name was provided (was empty).");
 			}		
 			
-			NWN2GameModule module = GetCurrentModule();
+			NWN2GameModule module = GetModule();
 			
 			if (module == null) {
 				throw new InvalidOperationException("No module is currently open.");

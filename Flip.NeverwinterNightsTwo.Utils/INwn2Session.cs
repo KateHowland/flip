@@ -79,21 +79,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The current module, or null if no module is open.</returns>
-		NWN2Toolset.NWN2.Data.NWN2GameModule GetCurrentModule();
+		NWN2Toolset.NWN2.Data.NWN2GameModule GetModule();
 		
 		
 		/// <summary>
 		/// Gets the absolute path of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The absolute path of the current module, or null if no module is open.</returns>
-		string GetCurrentModulePath();
+		string GetModulePath();
 		
 		
 		/// <summary>
 		/// Gets the path to the working ('temp') copy of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The temp path of the current module, or null if no module is open.</returns>
-		string GetCurrentModuleTempPath();
+		string GetModuleTempPath();
 		
 		
 		/// <summary>
