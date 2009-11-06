@@ -1451,6 +1451,125 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 		}
 		
+		
+		/// <summary>
+		/// Gets a list containing the names of all areas
+		/// which are open in area viewers in the current module.
+		/// </summary>
+		/// <returns>A list of names of open areas.</returns>
+		public IList<string> GetOpenAreas()
+		{
+			try {				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				
+				List<NWN2Toolset.NWN2.Views.NWN2AreaViewer> viewers = NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers();
+				List<string> areas = new List<string>(viewers.Count);
+				
+				foreach (NWN2Toolset.NWN2.Views.NWN2AreaViewer av in viewers) {
+					areas.Add(av.Area.Name);
+				}
+				
+				return areas;
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Opens an area in an area viewer.
+		/// </summary>
+		/// <param name="name">The name of the area to open.</param>
+		public void OpenArea(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Areas.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + name + "'.","areaName");
+				}
+				
+				NWN2GameArea area = module.Areas[name];	
+				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
+				                                              name + "') could not be found.");	
+				
+				NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(area);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}			
+		}
+		
+		
+		/// <summary>
+		/// Closes the area viewer for an area, if one is
+		/// currently open.
+		/// </summary>
+		/// <param name="name">The name of the area to close.</param>
+		public void CloseArea(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Areas.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + name + "'.","areaName");
+				}
+				
+				NWN2GameArea area = module.Areas[name];	
+				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
+				                                              name + "') could not be found.");	
+				
+				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(area);
+				NWN2Toolset.NWN2ToolsetMainForm.App.CloseViewer(viewer,true);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
 		#endregion
 	}
 }

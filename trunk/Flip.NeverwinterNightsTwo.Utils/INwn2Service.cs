@@ -447,5 +447,38 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		void ClearScriptSlotOnModule(string scriptSlot);
+		
+		
+		/// <summary>
+		/// Gets a list containing the names of all areas
+		/// which are open in area viewers in the current module.
+		/// </summary>
+		/// <returns>A list of names of open areas.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		IList<string> GetOpenAreas();
+		
+		
+		/// <summary>
+		/// Opens an area in an area viewer.
+		/// </summary>
+		/// <param name="name">The name of the area to open.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void OpenArea(string name);
+		
+		
+		/// <summary>
+		/// Closes the area viewer for an area, if one is
+		/// currently open.
+		/// </summary>
+		/// <param name="name">The name of the area to close.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void CloseArea(string name);
 	}
 }
