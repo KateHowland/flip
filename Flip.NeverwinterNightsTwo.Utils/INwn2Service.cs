@@ -306,18 +306,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 
 		/// <summary>
-		/// Adds a compiled script to the current module.
-		/// </summary>
-		/// <param name="path">The path to the compiled
-		/// script, which will be an .NCS file.</param>
-		[OperationContract]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		[FaultContract(typeof(System.IO.IOException))]
-		void AddCompiledScript(string path);	
-				
-
-		/// <summary>
 		/// Adds an uncompiled script to the current module.
 		/// </summary>
 		/// <param name="name">The name to save the script under.</param>
@@ -327,6 +315,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		void AddUncompiledScript(string name, string code);	
+				
+
+		/// <summary>
+		/// Adds a compiled script to the current module.
+		/// </summary>
+		/// <param name="path">The path to the compiled
+		/// script, which will be an .NCS file.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		void AddCompiledScript(string path);	
+		
+		
+		/// <summary>
+		/// Deletes a script from the current module.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <remarks>Both compiled and uncompiled copies
+		/// of the script are deleted.</remarks>
+		[OperationContract]
+		[FaultContract(typeof(ArgumentException))]
+		[FaultContract(typeof(ArgumentNullException))]
+		[FaultContract(typeof(InvalidOperationException))]
+		[FaultContract(typeof(System.IO.IOException))]
+		void DeleteScript(string name);
 				
 
 		/// <summary>

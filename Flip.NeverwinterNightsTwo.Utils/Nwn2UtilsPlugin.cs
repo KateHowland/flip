@@ -158,26 +158,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Startup(INWN2PluginHost cHost)
 		{
-			pluginMenuItem = cHost.GetMenuForPlugin(this);
-			
-			// Reflect over the INwn2Session object to get all parameterless
-			// public methods and allow the user to call them via the menu:
-			foreach (MethodInfo method in session.GetType().GetMethods()) {
-				MenuButtonItem item = new MenuButtonItem(method.Name);
-				if (method.GetParameters().Length > 0) {
-					item.Enabled = false;
-				}
-				else {
-					item.Activate += delegate 
-					{  
-						object returned = method.Invoke(session,null);
-					};
-				}
-				
-				pluginMenuItem.Items.Add(item);
-			}
-			
-			EnableDebuggingMethods();
+			pluginMenuItem = cHost.GetMenuForPlugin(this);			
+			EnablepluginMenuItem();
 		}
 		
 		
@@ -218,13 +200,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Makes a set of methods available through the plugin menu
 		/// which are for debugging purposes.
 		/// </summary>
-		private void EnableDebuggingMethods()
+		private void EnablepluginMenuItem()
 		{			
-			MenuButtonItem debuggingMethods = new MenuButtonItem("Debugging methods");
-			pluginMenuItem.Items.Add(debuggingMethods);
-			
 			MenuButtonItem checkAreaTerrainProperties = new MenuButtonItem("Check area terrain properties");
-			debuggingMethods.Items.Add(checkAreaTerrainProperties);
+			pluginMenuItem.Items.Add(checkAreaTerrainProperties);
 			checkAreaTerrainProperties.Activate += delegate 
 			{
 				string message;
@@ -249,7 +228,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			};
 			
 			MenuButtonItem createInteriorAndExteriorArea = new MenuButtonItem("Create interior and exterior area");
-			debuggingMethods.Items.Add(createInteriorAndExteriorArea);
+			pluginMenuItem.Items.Add(createInteriorAndExteriorArea);
 			createInteriorAndExteriorArea.Activate += delegate 
 			{
 				System.Drawing.Size size = new System.Drawing.Size(8,16);
@@ -258,7 +237,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			};
 			
 			MenuButtonItem reportOnAllScripts = new MenuButtonItem("reportOnAllScripts");
-			debuggingMethods.Items.Add(reportOnAllScripts);
+			pluginMenuItem.Items.Add(reportOnAllScripts);
 			reportOnAllScripts.Activate += delegate 
 			{
 				NWN2GameModule module = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
