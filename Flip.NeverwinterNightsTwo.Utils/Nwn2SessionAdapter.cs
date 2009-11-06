@@ -1558,6 +1558,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				                                              name + "') could not be found.");	
 				
 				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(area);
+				if (viewer == null) return;
 				NWN2Toolset.NWN2ToolsetMainForm.App.CloseViewer(viewer,true);
 			}
 			catch (ArgumentNullException e) {
@@ -1606,6 +1607,182 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				                                              name + "') could not be found.");	
 				
 				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(area);
+				return viewer != null;
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
+		
+		/// <summary>
+		/// Gets a list containing the names of all scripts
+		/// which are open in script viewers in the current module.
+		/// </summary>
+		/// <returns>A list of names of open scripts.</returns>
+		public IList<string> GetOpenScripts()
+		{
+			try {				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				
+				List<NWN2Toolset.NWN2.Views.NWN2ScriptViewer> viewers = new List<NWN2Toolset.NWN2.Views.NWN2ScriptViewer>();
+				foreach (NWN2Toolset.NWN2.Views.INWN2Viewer v in NWN2Toolset.NWN2ToolsetMainForm.App.GetAllViewers()) {
+					NWN2Toolset.NWN2.Views.NWN2ScriptViewer s = v as NWN2Toolset.NWN2.Views.NWN2ScriptViewer;
+					if (s != null) viewers.Add(s);
+				}
+				
+				List<string> scripts = new List<string>(viewers.Count);
+				
+				foreach (NWN2Toolset.NWN2.Views.NWN2ScriptViewer sv in viewers) {
+					scripts.Add(sv.Script.Name);
+				}
+				
+				return scripts;
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Opens a script in a script viewer.
+		/// </summary>
+		/// <param name="name">The name of the script to open.</param>
+		public void OpenScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Scripts.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + name + "'.","name");
+				}
+				
+				NWN2GameScript script = module.Scripts[name];
+				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" + 
+				                                                name + "') could not be found.");				
+				
+				NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(script);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
+		
+		/// <summary>
+		/// Closes the script viewer for a script, if one is
+		/// currently open.
+		/// </summary>
+		/// <param name="name">The name of the script to close.</param>
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		public void CloseScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Scripts.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + name + "'.","name");
+				}
+				
+				NWN2GameScript script = module.Scripts[name];
+				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" + 
+				                                                name + "') could not be found.");
+				
+				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(script);
+				if (viewer == null) return;				
+				NWN2Toolset.NWN2ToolsetMainForm.App.CloseViewer(viewer,true);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
+		
+		/// <summary>
+		/// Checks whether a script viewer is currently open
+		/// for a particular script.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if a script viewer for the named
+		/// script is currently open in the toolset; false
+		/// otherwise.</returns>
+		public bool ScriptIsOpen(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Scripts.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + name + "'.","name");
+				}
+				
+				NWN2GameScript script = module.Scripts[name];	
+				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
+				                                              	name + "') could not be found.");	
+				
+				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(script);
 				return viewer != null;
 			}
 			catch (ArgumentNullException e) {

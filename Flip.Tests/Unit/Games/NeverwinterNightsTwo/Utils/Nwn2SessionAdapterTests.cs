@@ -2308,6 +2308,43 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void OpensAndClosesScripts()
+		{
+			string name = "OpensAndClosesScripts.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string script1 = "givegold";
+			string script2 = "99bottles";
+			service.AddScript(script1,sampleScripts.GiveGold);
+			service.AddScript(script2,sampleScripts.Sing);		
+			service.SaveModule();
+			
+			Assert.AreEqual(0,service.GetOpenScripts().Count);
+			
+			service.OpenScript(script1);			
+			Assert.AreEqual(1,service.GetOpenScripts().Count);
+			
+			service.OpenScript(script2);			
+			Assert.AreEqual(2,service.GetOpenScripts().Count);
+			
+			service.CloseScript(script2);			
+			Assert.AreEqual(1,service.GetOpenScripts().Count);
+			
+			service.CloseScript(script1);			
+			Assert.AreEqual(0,service.GetOpenScripts().Count);
+						
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void RefusesToOpenMoreThanThreeAreas()
 		{
 			string name = "RefusesToOpenMoreThanThreeAreas.mod";
@@ -2395,6 +2432,144 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.IsFalse(service.AreaIsOpen(area1));
 			Assert.IsFalse(service.AreaIsOpen(area2));
+						
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ReportsWhetherScriptIsOpen()
+		{
+			string name = "ReportsWhetherScriptIsOpen.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string script1 = "givegold";
+			string script2 = "99bottles";
+			service.AddScript(script1,sampleScripts.GiveGold);
+			service.AddScript(script2,sampleScripts.Sing);		
+			service.SaveModule();
+			
+			Assert.IsFalse(service.ScriptIsOpen(script1));
+			Assert.IsFalse(service.ScriptIsOpen(script2));
+			
+			service.OpenScript(script1);
+			
+			Assert.IsTrue(service.ScriptIsOpen(script1));
+			Assert.IsFalse(service.ScriptIsOpen(script2));
+			
+			service.OpenScript(script2);
+			
+			Assert.IsTrue(service.ScriptIsOpen(script1));
+			Assert.IsTrue(service.ScriptIsOpen(script2));
+			
+			service.CloseScript(script1);
+			
+			Assert.IsFalse(service.ScriptIsOpen(script1));
+			Assert.IsTrue(service.ScriptIsOpen(script2));
+			
+			service.CloseScript(script2);
+			
+			Assert.IsFalse(service.ScriptIsOpen(script1));
+			Assert.IsFalse(service.ScriptIsOpen(script2));
+						
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ReportsWhetherAreaResourceIsLoaded()
+		{
+			string name = "ReportsWhetherAreaResourceIsLoaded.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string area1 = "desert";
+			string area2 = "castle";
+			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
+			service.AddArea(area2,false,AreaBase.SmallestAreaSize);			
+			service.SaveModule();
+			
+			Assert.AreEqual("False",service.GetArea(area1)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area2)["Loaded"]);
+			
+			service.OpenArea(area1);
+						
+			Assert.AreEqual("True",service.GetArea(area1)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area2)["Loaded"]);
+			
+			service.OpenArea(area2);
+			
+			Assert.AreEqual("True",service.GetArea(area1)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area2)["Loaded"]);
+			
+			service.CloseArea(area1);
+			
+			Assert.AreEqual("False",service.GetArea(area1)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area2)["Loaded"]);
+			
+			service.CloseArea(area2);
+			
+			Assert.AreEqual("False",service.GetArea(area1)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area2)["Loaded"]);
+						
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ReportsWhetherScriptResourceIsLoaded()
+		{
+			string name = "ReportsWhetherScriptResourceIsLoaded.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string script1 = "givegold";
+			string script2 = "99bottles";
+			service.AddScript(script1,sampleScripts.GiveGold);
+			service.AddScript(script2,sampleScripts.Sing);		
+			service.SaveModule();
+			
+			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetUncompiledScript(script2)["Loaded"]);
+			
+			service.OpenScript(script1);
+			
+			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetUncompiledScript(script2)["Loaded"]);
+			
+			service.OpenScript(script2);
+			
+			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetUncompiledScript(script2)["Loaded"]);
+			
+			service.CloseScript(script1);
+			
+			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetUncompiledScript(script2)["Loaded"]);
+			
+			service.CloseScript(script2);
+			
+			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetUncompiledScript(script2)["Loaded"]);
 						
 			service.CloseModule();			
 			Delete(path);

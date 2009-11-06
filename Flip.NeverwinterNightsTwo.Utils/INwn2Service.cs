@@ -495,5 +495,53 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		bool AreaIsOpen(string name);
+		
+		
+		/// <summary>
+		/// Gets a list containing the names of all scripts
+		/// which are open in script viewers in the current module.
+		/// </summary>
+		/// <returns>A list of names of open scripts.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		IList<string> GetOpenScripts();
+		
+		
+		/// <summary>
+		/// Opens a script in a script viewer.
+		/// </summary>
+		/// <param name="name">The name of the script to open.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void OpenScript(string name);
+		
+		
+		/// <summary>
+		/// Closes the script viewer for a script, if one is
+		/// currently open.
+		/// </summary>
+		/// <param name="name">The name of the script to close.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void CloseScript(string name);
+		
+		
+		/// <summary>
+		/// Checks whether a script viewer is currently open
+		/// for a particular script.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <returns>True if a script viewer for the named
+		/// script is currently open in the toolset; false
+		/// otherwise.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		bool ScriptIsOpen(string name);
 	}
 }
