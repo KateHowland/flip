@@ -1574,6 +1574,54 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}	
 		}
 		
+		
+		/// <summary>
+		/// Checks whether an area viewer is currently open
+		/// for a particular area.
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		/// <returns>True if an area viewer for the named
+		/// area is currently open in the toolset; false
+		/// otherwise.</returns>
+		public bool AreaIsOpen(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Areas.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + name + "'.","areaName");
+				}
+				
+				NWN2GameArea area = module.Areas[name];	
+				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
+				                                              name + "') could not be found.");	
+				
+				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(area);
+				return viewer != null;
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
 		#endregion
 	}
 }
