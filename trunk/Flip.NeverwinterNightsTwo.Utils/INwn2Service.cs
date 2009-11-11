@@ -543,5 +543,53 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		bool ScriptIsOpen(string name);
+		
+		
+		/// <summary>
+		/// Loads a script resource from disk, ensuring that
+		/// the script object is fully loaded (but overwriting
+		/// any unsaved changes that were made).
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void DemandScript(string name);
+		
+		
+		/// <summary>
+		/// Releases a script resource.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void ReleaseScript(string name);
+		
+		
+		/// <summary>
+		/// Loads an area from disk, ensuring that
+		/// the area object is fully loaded (but overwriting
+		/// any unsaved changes that were made).
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void DemandArea(string name);
+		
+		
+		/// <summary>
+		/// Releases an area resource.
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		void ReleaseArea(string name);
 	}
 }

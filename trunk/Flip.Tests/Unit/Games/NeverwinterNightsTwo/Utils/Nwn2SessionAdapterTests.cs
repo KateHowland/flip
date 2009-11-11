@@ -2575,6 +2575,116 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Delete(path);
 		}
 		
+		
+		[Test]
+		public void DemandsAndReleasesScript()
+		{
+			string name = "DemandsAndReleasesScript.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string script1 = "givegold";
+			service.AddScript(script1,sampleScripts.GiveGold);
+			service.SaveModule();
+			
+			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
+			
+			service.DemandScript(script1);
+			
+			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			
+			service.ReleaseScript(script1);
+			
+			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
+						
+			try {
+				service.DemandScript("nonexistentscript");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to demand a non-existent script.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to demand a non-existent script.");
+			}
+						
+			try {
+				service.ReleaseScript("nonexistentscript");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to release a non-existent script.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to release a non-existent script.");
+			}
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void DemandsAndReleasesArea()
+		{
+			string name = "DemandsAndReleasesArea.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string area = "forest";
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);
+			service.SaveModule();
+			
+			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
+			
+			service.DemandArea(area);
+			
+			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			
+			service.ReleaseArea(area);
+			
+			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
+						
+			try {
+				service.DemandArea("nonexistent");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to demand a non-existent area.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to demand a non-existent area.");
+			}
+						
+			try {
+				service.ReleaseArea("nonexistent");
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to release a non-existent area.");
+			}
+			catch (FaultException<ArgumentException>) {
+				// expected result
+			}
+			catch (FaultException) {
+				CreateService();
+				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to release a non-existent area.");
+			}
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
 		#endregion
 		
 		#region Methods

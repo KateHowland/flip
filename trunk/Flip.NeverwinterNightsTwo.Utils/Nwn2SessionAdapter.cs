@@ -1799,6 +1799,182 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}	
 		}
 		
+		
+		/// <summary>
+		/// Loads a script resource from disk, ensuring that
+		/// the script object is fully loaded (but overwriting
+		/// any unsaved changes that were made).
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		public void DemandScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Scripts.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + name + "'.","name");
+				}
+				
+				NWN2GameScript script = module.Scripts[name];	
+				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
+				                                              	name + "') could not be found.");	
+				
+				script.Demand();
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
+		
+		/// <summary>
+		/// Releases a script resource.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		public void ReleaseScript(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Scripts.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + name + "'.","name");
+				}
+				
+				NWN2GameScript script = module.Scripts[name];	
+				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
+				                                              	name + "') could not be found.");	
+				
+				script.Release();
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+				
+		
+		/// <summary>
+		/// Loads an area from disk, ensuring that
+		/// the area object is fully loaded (but overwriting
+		/// any unsaved changes that were made).
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		public void DemandArea(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Areas.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + name + "'.","name");
+				}
+				
+				NWN2GameArea area = module.Areas[name];	
+				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
+				                                               name + "') could not be found.");	
+				
+				area.Demand();
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
+		
+		/// <summary>
+		/// Releases an area resource.
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		public void ReleaseArea(string name)
+		{
+			try {
+				if (name == null) {
+					throw new ArgumentNullException("name");
+				}
+				if (name == String.Empty) {
+					throw new ArgumentException("name cannot be empty.","name");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}
+				if (!module.Areas.ContainsCaseInsensitive(name)) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + name + "'.","name");
+				}
+				
+				NWN2GameArea area = module.Areas[name];	
+				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
+				                                               name + "') could not be found.");	
+				
+				area.Release();
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}	
+		}
+		
 		#endregion
 	}
 }
