@@ -105,10 +105,6 @@
       <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
       <Name>Flip.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Flip.DragonAge\Flip.DragonAge.csproj">
-      <Project>{8B437733-AB29-40FD-BC03-49C545C7FFF4}</Project>
-      <Name>Flip.DragonAge</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Plugin\Flip.NeverwinterNightsTwo.Plugin.csproj">
       <Project>{7FBBABEB-7227-4B42-8EBD-309EDFC82687}</Project>
       <Name>Flip.NeverwinterNightsTwo.Plugin</Name>
