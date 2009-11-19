@@ -945,7 +945,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 					
 			string areaName = "area";
-			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);	
+			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);
 						
 			string scriptName = "givegold";
 			string scriptData = sampleScripts.GiveGold;
@@ -1025,7 +1025,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 					
 			string area = "desert";
-			service.AddArea(area,true,AreaBase.SmallestAreaSize);	
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);
 			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
 			
 			Bean cat = service.GetObjects(area,NWN2ObjectType.Creature,"cat")[0];						
@@ -1909,6 +1909,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.AddArea(area1,true,size);
 			service.AddArea(area2,false,size);
+			service.SaveModule(); // save after adding an area to a file module if the area must persist
 			
 			service.CloseModule();			
 			service.OpenModule(path,ModuleLocationType.File);

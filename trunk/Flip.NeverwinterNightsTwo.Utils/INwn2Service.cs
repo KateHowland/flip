@@ -120,6 +120,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="exterior">True to create an exterior area
 		/// with terrain; false to create an interior area with tiles.</param>
 		/// <param name="size">The size of area to create.</param>
+		/// <remarks>As is the case when working directly with the toolset,
+		/// file modules must be saved after adding an area or the area will
+		/// not persist - directory modules do not have this requirement.</remarks>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
 		[FaultContract(typeof(System.IO.IOException))]
