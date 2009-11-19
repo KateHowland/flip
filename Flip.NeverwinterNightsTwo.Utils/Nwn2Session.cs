@@ -374,6 +374,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				oObject.OEISerialize();
 			}
+			
+			/*
+			 * Adding an area in the toolset ALWAYS opens it, so the issue that occurs where you
+			 * 'blank' a newly created area because you Demand() it from a non-existent serialised
+			 * version never occurs - the area is always Demand()ed and Loaded immediately. We can
+			 * therefore safely replicate this by automatically opening the area in an area viewer.
+			 */ 
+			
+			NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(oObject);
 				
 			return CreateAreaBase(oObject);
 		}

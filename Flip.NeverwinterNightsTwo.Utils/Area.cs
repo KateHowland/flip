@@ -220,6 +220,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The objects matching the given description.</returns>
 		public override List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag)
 		{			
+			bool loaded = nwn2Area.Loaded;
+			if (!loaded) nwn2Area.Demand();
+			
 			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
 			List<INWN2Instance> instances = new List<INWN2Instance>();
 						
@@ -236,6 +239,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 			}
 			
+			if (!loaded) nwn2Area.Release();
+			
 			return instances;
 		}
 						
@@ -249,6 +254,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// or null if none was found.</returns>
 		public override INWN2Instance GetObject(NWN2ObjectType type, Guid guid)
 		{
+			bool loaded = nwn2Area.Loaded;
+			if (!loaded) nwn2Area.Demand();
+			
 			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
 			INWN2Instance unique = null;
 								
@@ -258,6 +266,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					break;
 				}
 			}
+			
+			if (!loaded) nwn2Area.Release();
 			
 			return unique;
 		}

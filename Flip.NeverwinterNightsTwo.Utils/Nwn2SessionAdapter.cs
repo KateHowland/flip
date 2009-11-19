@@ -503,7 +503,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				
 				NWN2GameArea nwn2area = module.Areas[name];
-				return new Bean(nwn2area);
+				
+				bool loaded = nwn2area.Loaded;
+				if (!loaded) nwn2area.Demand();	
+				Bean bean = new Bean(nwn2area);
+				
+				// Store the value of 'Loaded' that will apply by the time the bean is returned,
+				// rather than now (when the area MUST be loaded to populate the bean):
+				bean["Loaded"] = loaded.ToString();
+				
+				if (!loaded) nwn2area.Release();
+				
+				return bean;
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -537,7 +548,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				IList<Bean> beans = new List<Bean>();
 				
 				foreach (NWN2GameArea area in module.Areas.Values) {
-					beans.Add(new Bean(area));
+					bool loaded = area.Loaded;
+					if (!loaded) area.Demand();	
+					Bean bean = new Bean(area);
+					
+					// Store the value of 'Loaded' that will apply by the time the bean is returned,
+					// rather than now (when the area MUST be loaded to populate the bean):
+					bean["Loaded"] = loaded.ToString();
+					
+					if (!loaded) area.Release();					
+					
+					beans.Add(bean);
 				}
 				
 				return beans;
@@ -592,7 +613,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				IList<Bean> beans = new List<Bean>();
 				
 				foreach (NWN2GameScript script in module.Scripts.Values) {
+					bool loaded = script.Loaded;
+					if (!loaded) script.Demand();	
 					Bean bean = new Bean(script);
+					
+					// Store the value of 'Loaded' that will apply by the time the bean is returned,
+					// rather than now (when the script MUST be loaded to populate the bean):
+					bean["Loaded"] = loaded.ToString();
+					
+					if (!loaded) script.Release();					
+					
 					beans.Add(bean);
 				}
 				
@@ -635,7 +665,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				else {
 					NWN2GameScript script = module.Scripts[name];
+					
+					bool loaded = script.Loaded;
+					if (!loaded) script.Demand();	
 					Bean bean = new Bean(script);
+					
+					// Store the value of 'Loaded' that will apply by the time the bean is returned,
+					// rather than now (when the script MUST be loaded to populate the bean):
+					bean["Loaded"] = loaded.ToString();
+					
+					if (!loaded) script.Release();
+					
 					return bean;
 				}
 			}
@@ -678,9 +718,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				foreach (IResourceEntry r in resources) {
 					NWN2GameScript script = new NWN2GameScript(r);
-					//script.Demand();
-					beans.Add(new Bean(script));
-					//script.Release();
+
+					bool loaded = script.Loaded;
+					if (!loaded) script.Demand();	
+					Bean bean = new Bean(script);
+					
+					// Store the value of 'Loaded' that will apply by the time the bean is returned,
+					// rather than now (when the script MUST be loaded to populate the bean):
+					bean["Loaded"] = loaded.ToString();
+					
+					if (!loaded) script.Release();					
+					
+					beans.Add(bean);
 				}
 				
 				return beans;
@@ -729,9 +778,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (r == null) return null;
 				else {
 					NWN2GameScript script = new NWN2GameScript(r);
-					//script.Demand();
+					
+					bool loaded = script.Loaded;
+					if (!loaded) script.Demand();	
 					Bean bean = new Bean(script);
-					//script.Release();
+					
+					// Store the value of 'Loaded' that will apply by the time the bean is returned,
+					// rather than now (when the script MUST be loaded to populate the bean):
+					bean["Loaded"] = loaded.ToString();
+					
+					if (!loaded) script.Release();
+					
 					return bean;
 				}
 			}
@@ -830,10 +887,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2GameScript script = new NWN2GameScript(name,
 				                                           module.Repository.DirectoryName,
 				                                           module.Repository);				
-				script.Module = module;
-				script.Data = code;
+				script.Module = module;	
+				script.Data = code;				
+				module.Scripts.Add(script);	/* or module.AddResource(script) */	
+								
+				// FIXME:
 				
-				module.Scripts.Add(script);	/* or module.AddResource(script) */
+				// I thought this would work in the same way as the areas, but actually it breaks
+				// everything! Don't have time to look into this immediately, so I'll commenting it
+				// out so I can commit what I've already done.
+				
+				/*
+				 * Adding a script in the toolset ALWAYS opens it, so the issue that occurs where you
+				 * 'blank' a newly created script because you Demand() it from a non-existent serialised
+				 * version never occurs - the script is always Demand()ed and Loaded immediately. We can
+				 * therefore safely replicate this by automatically opening the script in an script viewer.
+				 */ 
+				
+				//NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(script);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1101,10 +1172,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 								if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
 								                                                scriptName + "') could not be found.");
 				
-//								bool loaded = script.Loaded;
-//								if (!loaded) script.Demand();
+								bool loaded = script.Loaded;
+								if (!loaded) script.Demand();
 								pi.SetValue(instance,script.Resource,null);
-//								if (!loaded) script.Release();
+								if (!loaded) script.Release();
 								return;
 							}
 						}
@@ -1196,10 +1267,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
 				                                                scriptName + "') could not be found.");
 				
-//				bool loaded = script.Loaded;
-//				if (!loaded) script.Demand();
+				bool loaded = script.Loaded;
+				if (!loaded) script.Demand();
 				p.SetValue(area,script.Resource,null);
-//				if (!loaded) script.Release();
+				if (!loaded) script.Release();
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1273,10 +1344,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
 				                                                scriptName + "') could not be found.");
 				
-//				bool loaded = script.Loaded;
-//				if (!loaded) script.Demand();
+				bool loaded = script.Loaded;
+				if (!loaded) script.Demand();
 				p.SetValue(module.ModuleInfo,script.Resource,null);
-//				if (!loaded) script.Release();
+				if (!loaded) script.Release();
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
