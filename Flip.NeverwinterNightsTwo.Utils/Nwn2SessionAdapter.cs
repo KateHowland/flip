@@ -675,9 +675,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				foreach (IResourceEntry r in resources) {
 					NWN2GameScript script = new NWN2GameScript(r);
-					script.Demand();
+					//script.Demand();
 					beans.Add(new Bean(script));
-					script.Release();
+					//script.Release();
 				}
 				
 				return beans;
@@ -726,9 +726,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (r == null) return null;
 				else {
 					NWN2GameScript script = new NWN2GameScript(r);
-					script.Demand();
+					//script.Demand();
 					Bean bean = new Bean(script);
-					script.Release();
+					//script.Release();
 					return bean;
 				}
 			}
@@ -917,6 +917,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Compiles a script in the current module.
 		/// </summary>
 		/// <param name="name">The name of the script to compile.</param>
+		/// <remarks>The script will be automatically saved before compiling.</remarks>
 		public void CompileScript(string name)
 		{
 			try {
@@ -942,12 +943,56 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				catch (ArgumentOutOfRangeException) {
 					throw new ArgumentException("Scripts collection for this module did not feature a script named '" + name + "'.");
 				}
-								
+				
 				NWN2Toolset.NWN2ToolsetMainForm.Compiler.GenerateDebugInfo = true;
-				string debug = NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetModuleTempPath());
+					
+				string resourcePath = Path.Combine(GetModuleTempPath(),script.VersionControlName);
+				bool scriptHasNeverBeenSerialised = !File.Exists(resourcePath) || File.ReadAllText(resourcePath).Length == 0;
+									
+				// Don't serialise if the script was never Demand()ed, as this will
+				// overwrite the 'real' script with the blank copy in memory...
+				// but otherwise, you need to serialise as the copy on disk is the
+				// one which will actually be compiled:
+				if (script.Loaded || scriptHasNeverBeenSerialised) {			
+					script.OEISerialize();
+				}
+					
+				string compiled = Path.Combine(GetModuleTempPath(),Path.GetFileNameWithoutExtension(script.VersionControlName) + ".ncs");
+					
+				/* The compiler will automatically overwrite the compiled script file,
+				 * but by deleting it beforehand we can wait for the new version to appear
+				 * before returning, so we know the compile operation has finished: */															
+				if (File.Exists(compiled)) {
+					File.Delete(compiled);
+				}
+														
+				string debug = NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetModuleTempPath());	
+				
 				if (debug.Length > 0) {
 					throw new InvalidDataException("'" + name + "' could not be compiled: " + debug);
 				}
+					
+				/*
+				 * CompileScript() should wait until the output file appears on the filesystem before returning
+				 * (otherwise there are intermittent bugs where other methods don't find the file they expect)
+				 * but neither of the commented-out methods that follow work when called from within this service.
+				 * That is, the file is NEVER found from here, even though it certainly exists, and even though
+				 * it is immediately found when these methods are called from outside this service method (e.g.
+				 * when called from the test suite).
+				 * 
+				 * This problem is 'fixed' if you call MessageBox.Show() before checking for the file (or was 
+				 * it before calling CompileFile? I forget) - the file is then found as normal. From this I'm
+				 * assuming it's some kind of a threading issue to do with MessageBox.Show() blocking the UI 
+				 * thread...? But I don't really know, and I've spent too much time trying to fix it, so I'm
+				 * just going to put the responsibility onto the clients to wait until a script has been compiled
+				 * before attempting to use it.
+				 */						
+				
+				//while (!session.HasCompiled(name));
+				//while (!File.Exists(compiled) || new FileInfo(compiled).Length == 0);
+			}
+			catch (ApplicationException e) {
+				throw new FaultException<ApplicationException>(e,e.Message);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1053,10 +1098,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 								if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
 								                                                scriptName + "') could not be found.");
 				
-								bool loaded = script.Loaded;
-								if (!loaded) script.Demand();
+//								bool loaded = script.Loaded;
+//								if (!loaded) script.Demand();
 								pi.SetValue(instance,script.Resource,null);
-								if (!loaded) script.Release();
+//								if (!loaded) script.Release();
 								return;
 							}
 						}
@@ -1148,10 +1193,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
 				                                                scriptName + "') could not be found.");
 				
-				bool loaded = script.Loaded;
-				if (!loaded) script.Demand();
+//				bool loaded = script.Loaded;
+//				if (!loaded) script.Demand();
 				p.SetValue(area,script.Resource,null);
-				if (!loaded) script.Release();
+//				if (!loaded) script.Release();
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1225,10 +1270,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
 				                                                scriptName + "') could not be found.");
 				
-				bool loaded = script.Loaded;
-				if (!loaded) script.Demand();
+//				bool loaded = script.Loaded;
+//				if (!loaded) script.Demand();
 				p.SetValue(module.ModuleInfo,script.Resource,null);
-				if (!loaded) script.Release();
+//				if (!loaded) script.Release();
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);

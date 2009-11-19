@@ -244,10 +244,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (module != null) {
 					System.Windows.Forms.MessageBox.Show("uncompiled scripts:");
 					foreach (NWN2GameScript script in module.Scripts.Values) {
-						bool loaded = script.Loaded;
-						if (!loaded) script.Demand();
+//						bool loaded = script.Loaded;
+//						if (!loaded) script.Demand();
 						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString());
-						if (!loaded) script.Release();
+//						if (!loaded) script.Release();
 					}
 					
 					System.Windows.Forms.MessageBox.Show("compiled scripts:");
@@ -257,9 +257,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 					foreach (OEIShared.IO.IResourceEntry r in resources) {
 						NWN2GameScript script = new NWN2GameScript(r);
-						script.Demand();
+//						script.Demand();
 						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString());
-						script.Release();
+//						script.Release();
 					}
 				}
 				else {
