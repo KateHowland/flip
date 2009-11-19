@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Data;
@@ -53,6 +54,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		protected object padlock;
 		
+		protected static ushort nss;		
+		public static ushort NSS {
+			get { return nss; }
+		}
+		
+		protected static ushort ncs;		
+		public static ushort NCS {
+			get { return ncs; }
+		}
+		
 		#endregion
 		
 		#region Constructors
@@ -63,6 +74,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Nwn2Session()
 		{
 			padlock = new object();
+			nss = OEIShared.Utils.BWResourceTypes.GetResourceType("NSS");	
+			ncs = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
 		}
 		
 		#endregion
@@ -157,23 +170,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				        progress.ShowDialog();
 				        
 				        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetModule());
-				        
-				        /*
-				         * Calling Demand() on each area when opening the module means we don't have to worry
-				         * about whether the area object is 'fully loaded' (for example, if Demand() has not
-				         * been called, the area object will appear to contain no instances.) However, it isn't
-				         * very efficient, and it is important to note that if working with a module that HASN'T
-				         * been opened using this method the areas won't be fully loaded. (In the unaugmented
-				         * version of the toolset, any area you can operate on will already have been Demand()ed
-				         * when it was opened in a 3D window, and will be Release()d when that window is closed.)
-				         * Rather than forcing the user to pointlessly open areas via a service, it seems simpler
-				         * for the moment to Demand() each area from the start.
-				         * 
-				         * (Note that we can't just Demand() at the start of an area method and Release() at the
-				         * end - both Demand() and Release() overwrite the copy of the area that is in memory,
-				         * so any unsaved changes would immediately be lost.)
-				         */
-				        foreach (NWN2GameArea area in NWN2ToolsetMainForm.App.Module.Areas.Values) area.Demand();
 			        }
 				}
 			    catch (Exception) {
@@ -424,8 +420,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new ApplicationException("The module's repository was missing.");
 			}
 			
-			OEIResRef cResRef = new OEIResRef(name);
-			return module.Repository.FindResource(cResRef,resourceType) != null;
+			OEIResRef cResRef = new OEIResRef(name);	
+			
+			IResourceEntry entry = module.Repository.FindResource(cResRef,resourceType);
+			
+			return entry != null;
 		}
 		
 		
@@ -438,7 +437,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script file of the given name, and false otherwise.</returns>
 		public bool HasCompiled(string name)
 		{
-			ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");			
 			return HasResource(name,NCS);
 		}
 		
@@ -452,7 +450,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script file of the given name, and false otherwise.</returns>
 		public bool HasUncompiled(string name)
 		{
-			ushort NSS = OEIShared.Utils.BWResourceTypes.GetResourceType("NSS");	
 			return HasResource(name,NSS);
 		}
 		

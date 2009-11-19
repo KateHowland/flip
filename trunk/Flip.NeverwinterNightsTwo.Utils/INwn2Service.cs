@@ -337,6 +337,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="name">The name of the script to compile.</param>
 		[OperationContract]
+		[FaultContract(typeof(System.ApplicationException))]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
