@@ -235,37 +235,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				session.AddArea("interior",false,size);
 				session.AddArea("exterior",true,size);
 			};
-			
-			MenuButtonItem reportOnAllScripts = new MenuButtonItem("reportOnAllScripts");
-			pluginMenuItem.Items.Add(reportOnAllScripts);
-			reportOnAllScripts.Activate += delegate 
-			{
-				NWN2GameModule module = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
-				if (module != null) {
-					System.Windows.Forms.MessageBox.Show("uncompiled scripts:");
-					foreach (NWN2GameScript script in module.Scripts.Values) {
-//						bool loaded = script.Loaded;
-//						if (!loaded) script.Demand();
-						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString());
-//						if (!loaded) script.Release();
-					}
-					
-					System.Windows.Forms.MessageBox.Show("compiled scripts:");
-										
-					ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
-					OEIShared.Utils.OEIGenericCollectionWithEvents<OEIShared.IO.IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
-					
-					foreach (OEIShared.IO.IResourceEntry r in resources) {
-						NWN2GameScript script = new NWN2GameScript(r);
-//						script.Demand();
-						System.Windows.Forms.MessageBox.Show(new Bean(script).ToString());
-//						script.Release();
-					}
-				}
-				else {
-					System.Windows.Forms.MessageBox.Show("Module was null.");
-				}
-			};
 		}
 		
 		#endregion

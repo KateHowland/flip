@@ -957,17 +957,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptSlot = "OnHeartbeat";			
 			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
 			
-			Bean areaBean = service.GetArea(areaName);
-			Assert.IsTrue(areaBean.HasValue(scriptSlot));
-			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+			Bean before = service.GetArea(areaName);
+			Assert.IsTrue(before.HasValue(scriptSlot));
+			
+			Assert.AreEqual(scriptName,before.GetValue(scriptSlot));
 			
 			service.SaveModule();
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.File);
-			
-			areaBean = service.GetArea(areaName);
-			Assert.IsTrue(areaBean.HasValue(scriptSlot));
-			Assert.AreEqual(scriptName,areaBean.GetValue(scriptSlot));
+				
+			Bean after = service.GetArea(areaName);
+			Assert.IsTrue(after.HasValue(scriptSlot));
+			Assert.AreEqual(scriptName,after.GetValue(scriptSlot));
 		
 			service.CloseModule();			
 			Delete(path);
@@ -1430,7 +1431,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
-						
+			
 			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
 			Assert.IsNotNull(cat);
 			
@@ -2241,12 +2242,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
 			service.AddArea(area2,false,AreaBase.SmallestAreaSize);
 			
-			Assert.AreEqual(0,service.GetOpenAreas().Count);
-			
-			service.OpenArea(area1);			
-			Assert.AreEqual(1,service.GetOpenAreas().Count);
-			
-			service.OpenArea(area2);			
 			Assert.AreEqual(2,service.GetOpenAreas().Count);
 			
 			service.CloseArea(area2);			
@@ -2254,6 +2249,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.CloseArea(area1);			
 			Assert.AreEqual(0,service.GetOpenAreas().Count);
+			
+			service.OpenArea(area1);			
+			Assert.AreEqual(1,service.GetOpenAreas().Count);
+			
+			service.OpenArea(area2);			
+			Assert.AreEqual(2,service.GetOpenAreas().Count);
 						
 			service.CloseModule();			
 			Delete(path);
@@ -2313,9 +2314,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string area3 = "forest";
 			string area4 = "island";
 			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
-			service.AddArea(area2,false,AreaBase.SmallestAreaSize);		
+			service.CloseArea(area1);
+			service.AddArea(area2,false,AreaBase.SmallestAreaSize);	
+			service.CloseArea(area2);	
 			service.AddArea(area3,true,AreaBase.SmallestAreaSize);	
+			service.CloseArea(area3);
 			service.AddArea(area4,true,AreaBase.SmallestAreaSize);	
+			service.CloseArea(area4);
 			
 			service.OpenArea(area1);			
 			service.OpenArea(area2);
@@ -2360,6 +2365,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
 			service.AddArea(area2,false,AreaBase.SmallestAreaSize);	
 			
+			Assert.IsTrue(service.AreaIsOpen(area1));
+			Assert.IsTrue(service.AreaIsOpen(area2));
+			
+			service.CloseArea(area1);
+			service.CloseArea(area2);
+			
 			Assert.IsFalse(service.AreaIsOpen(area1));
 			Assert.IsFalse(service.AreaIsOpen(area2));
 			
@@ -2402,8 +2413,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			string script1 = "givegold";
 			string script2 = "99bottles";
-			service.AddScript(script1,sampleScripts.GiveGold);
-			service.AddScript(script2,sampleScripts.Sing);		
+			service.AddScript(script1,sampleScripts.GiveGold);			
+			service.AddScript(script2,sampleScripts.Sing);	
 			
 			Assert.IsFalse(service.ScriptIsOpen(script1));
 			Assert.IsFalse(service.ScriptIsOpen(script2));
@@ -2449,6 +2460,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string area2 = "castle";
 			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
 			service.AddArea(area2,false,AreaBase.SmallestAreaSize);		
+			
+			Assert.AreEqual("True",service.GetArea(area1)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area2)["Loaded"]);	
+			
+			service.CloseArea(area1);
+			service.CloseArea(area2);
 			
 			Assert.AreEqual("False",service.GetArea(area1)["Loaded"]);
 			Assert.AreEqual("False",service.GetArea(area2)["Loaded"]);
@@ -2590,16 +2607,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 						
 			string area = "forest";
-			service.AddArea(area,true,AreaBase.SmallestAreaSize);
-			
-			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
-			
-			service.DemandArea(area);
-			
+			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
 			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
 			
-			service.ReleaseArea(area);
+			service.ReleaseArea(area);			
+			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
 			
+			service.DemandArea(area);			
+			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			
+			service.ReleaseArea(area);			
+			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
+			
+			// Demand()s and Release()s 'stack up':
+			service.DemandArea(area);			
+			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			service.DemandArea(area);			
+			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			service.ReleaseArea(area);	
+			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);	
+			service.ReleaseArea(area);		
 			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
 						
 			try {
@@ -2712,9 +2739,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <returns>True if the compiled script file was found, false otherwise.</returns>
 		private bool WaitForCompiledScriptToAppear(string scriptName, int timeout)
 		{			
+			int original = timeout;
+			int interval = 1;
 			while (!service.HasCompiled(scriptName) && timeout >= 0) {
-				Thread.Sleep(25);
-				timeout -= 25;
+				Console.WriteLine("Script hadn't appeared at " + (original-timeout) + " ms.");
+				Thread.Sleep(interval);
+				timeout -= interval;
 			}
 			return service.HasCompiled(scriptName);
 		}
