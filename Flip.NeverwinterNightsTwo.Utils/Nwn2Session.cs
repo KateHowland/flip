@@ -217,10 +217,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 					lock (padlock) {
 						foreach (NWN2GameArea area in module.Areas.Values) {
-							area.OEISerialize();
+							if (area.Loaded) area.OEISerialize();
 						}					
 						foreach (NWN2GameScript script in module.Scripts.Values) {
-							script.OEISerialize();
+							if (script.Loaded) script.OEISerialize();
 						}			
 						string name = Path.GetFileName(path);			
 						module.OEISerialize(name);
@@ -235,10 +235,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 					lock (padlock) {
 						foreach (NWN2GameArea area in module.Areas.Values) {
-							area.OEISerialize();
+							if (area.Loaded) area.OEISerialize();
 						}									
 						foreach (NWN2GameScript script in module.Scripts.Values) {
-							script.OEISerialize();
+							if (script.Loaded) script.OEISerialize();
 						}							
 						module.OEISerialize(path);
 					}

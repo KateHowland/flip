@@ -1421,6 +1421,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
 			Bean script = service.GetUncompiledScript(scriptName);
 			Assert.IsNotNull(script);
+			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
 						
 			service.SaveModule();
 			service.CloseModule();
@@ -1442,6 +1443,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
 			script = service.GetUncompiledScript(scriptName);
 			Assert.IsNotNull(script);
+			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
 			
 			service.CloseModule();			
 			Delete(path);
@@ -1494,6 +1496,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
 			Bean script = service.GetUncompiledScript(scriptName);
 			Assert.IsNotNull(script);
+			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
 						
 			service.SaveModule();
 			service.CloseModule();
@@ -1515,6 +1518,154 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
 			script = service.GetUncompiledScript(scriptName);
 			Assert.IsNotNull(script);
+			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void UncompiledScriptDoesNotPersistInFileModuleWithoutSave()
+		{
+			string name = "UncompiledScriptDoesNotPersistInFileModuleWithoutSave.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string scriptData = sampleScripts.Sing;
+			string scriptName = "attachingscript";
+			
+			service.AddScript(scriptName,scriptData);
+			
+			// Before...
+			Bean before = service.GetUncompiledScript(scriptName);
+			Assert.IsNotNull(before);
+			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
+			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+						
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			// And after...
+			Bean after = service.GetUncompiledScript(scriptName);
+			Assert.IsNull(after);
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void UncompiledScriptPersistsInFileModuleWithSave()
+		{
+			string name = "UncompiledScriptPersistsInFileModuleWithoutSave.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string scriptData = sampleScripts.Sing;
+			string scriptName = "attachingscript";
+			
+			service.AddScript(scriptName,scriptData);
+			
+			// Before...
+			Bean before = service.GetUncompiledScript(scriptName);
+			Assert.IsNotNull(before);
+			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
+			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+						
+			service.SaveModule();
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			// And after...
+			Bean after = service.GetUncompiledScript(scriptName);
+			Assert.IsNotNull(after);
+			Assert.AreEqual(sampleScripts.Sing,after["Data"]);
+			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void UncompiledScriptDoesNotPersistInDirectoryModuleWithoutSave()
+		{
+			string name = "UncompiledScriptDoesNotPersistInDirectoryModuleWithoutSave";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+						
+			string scriptData = sampleScripts.Sing;
+			string scriptName = "attachingscript";
+			
+			service.AddScript(scriptName,scriptData);
+			
+			// Before...
+			Bean before = service.GetUncompiledScript(scriptName);
+			Assert.IsNotNull(before);
+			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
+			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+						
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			// And after...
+			Bean after = service.GetUncompiledScript(scriptName);			
+			// Assert.IsNotNull(after); // unfortunately, the file will persist, but check it's at least empty:
+			Assert.AreEqual(String.Empty,after["Data"]);
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void UncompiledScriptPersistsInDirectoryModuleWithSave()
+		{
+			string name = "UncompiledScriptPersistsInDirectoryModuleWithSave";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+						
+			string scriptData = sampleScripts.Sing;
+			string scriptName = "attachingscript";
+			
+			service.AddScript(scriptName,scriptData);
+			
+			// Before...
+			Bean before = service.GetUncompiledScript(scriptName);
+			Assert.IsNotNull(before);
+			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
+			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			
+			service.SaveModule();
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			// And after...
+			Bean after = service.GetUncompiledScript(scriptName);
+			Assert.IsNotNull(after);
+			Assert.AreEqual(sampleScripts.Sing,after["Data"]);
+			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
 			
 			service.CloseModule();			
 			Delete(path);
@@ -2512,6 +2663,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(script1,sampleScripts.GiveGold);
 			service.AddScript(script2,sampleScripts.Sing);	
 			
+			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetUncompiledScript(script2)["Loaded"]);
+			
+			service.ReleaseScript(script1);
+			service.ReleaseScript(script2);
+			
 			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
 			Assert.AreEqual("False",service.GetUncompiledScript(script2)["Loaded"]);
 			
@@ -2553,16 +2710,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 						
 			string script1 = "givegold";
-			service.AddScript(script1,sampleScripts.GiveGold);
-			
-			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
-			
-			service.DemandScript(script1);
-			
+			service.AddScript(script1,sampleScripts.GiveGold);		
 			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
 			
-			service.ReleaseScript(script1);
+			service.ReleaseScript(script1);			
+			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
 			
+			service.DemandScript(script1);			
+			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			
+			service.DemandScript(script1);			
+			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			
+			service.ReleaseScript(script1);			
+			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			
+			service.ReleaseScript(script1);			
 			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
 						
 			try {
