@@ -1758,6 +1758,42 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#region Tests - I/O
 		
 		[Test]
+		public void GetsCurrentArea()
+		{
+			string name = "GetsCurrentArea.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			name = Path.GetFileNameWithoutExtension(path);
+		
+			service.CreateModule(path,ModuleLocationType.File);
+					
+			Assert.AreEqual(null,service.GetCurrentArea());
+			
+			service.OpenModule(path,ModuleLocationType.File);	
+			
+			string area1 = "forest";
+			string area2 = "castle";
+			
+			service.AddArea(area1,true,Area.SmallestAreaSize);			
+			Assert.AreEqual(area1,service.GetCurrentArea());
+			
+			service.AddArea(area2,false,Area.SmallestAreaSize);
+			Assert.AreEqual(area2,service.GetCurrentArea());
+			
+			service.CloseArea(area2);
+			Assert.AreEqual(area1,service.GetCurrentArea());
+			
+			service.CloseArea(area1);
+			Assert.AreEqual(null,service.GetCurrentArea());
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void CreatesDirectoryModule()
 		{			
 			string name = "CreatesDirectoryModule";
