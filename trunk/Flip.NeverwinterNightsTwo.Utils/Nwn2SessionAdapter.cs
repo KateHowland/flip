@@ -246,6 +246,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets the name of the currently viewed area, if one exists.
+		/// </summary>
+		/// <returns>The name of the currently viewed area, or null if no area is being viewed (or
+		/// if no module is open).</returns>		
+		public string GetCurrentArea()
+		{
+			try {
+				NWN2GameModule module = session.GetModule();
+				if (module == null) return null;
+				else if (NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area == null) return null;
+				else return NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area.Name;
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
 		/// Creates a Neverwinter Nights 2 area
 		/// in the current module.
 		/// <param name="name">The name to give the area.</param>

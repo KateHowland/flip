@@ -106,6 +106,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets the name of the currently viewed area, if one exists.
+		/// </summary>
+		/// <returns>The name of the currently viewed area, or null if no area is being viewed (or
+		/// if no module is open).</returns>		
+		[OperationContract]
+		string GetCurrentArea();
+		
+		
+		/// <summary>
 		/// Gets the location type of the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The location type of the current module, or null if no module is open.</returns>
