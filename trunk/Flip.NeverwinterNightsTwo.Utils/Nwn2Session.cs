@@ -32,6 +32,7 @@ using NWN2Toolset;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
+using NWN2Toolset.NWN2.Data.Campaign;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
@@ -202,9 +203,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{	
 			string extension = Path.GetExtension(path);
 			string parent = Path.GetDirectoryName(path);
-			
-			switch (module.LocationType) {
-					
+						
+			switch (module.LocationType) {					
 				case ModuleLocationType.Directory:
 					if (extension != String.Empty) {
 						throw new ArgumentException("Path must be a folder, not a file.","path");
@@ -214,41 +214,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						                            "modules directory specified at NWN2Toolset." + 
 						                            "NWN2ToolsetMainForm.ModulesDirectory.","path");
 					}
-					
-					lock (padlock) {
-						foreach (NWN2GameArea area in module.Areas.Values) {
-							if (area.Loaded) area.OEISerialize();
-						}					
-						foreach (NWN2GameScript script in module.Scripts.Values) {
-							if (script.Loaded) script.OEISerialize();
-						}			
-						string name = Path.GetFileName(path);			
-						module.OEISerialize(name);
-					}
-					
 					break;
 					
 				case ModuleLocationType.File:
 					if (extension.ToLower() != ".mod") {
 						throw new ArgumentException("Path must be a .mod file.","path");
-					}
-					
-					lock (padlock) {
-						foreach (NWN2GameArea area in module.Areas.Values) {
-							if (area.Loaded) area.OEISerialize();
-						}									
-						foreach (NWN2GameScript script in module.Scripts.Values) {
-							if (script.Loaded) script.OEISerialize();
-						}							
-						module.OEISerialize(path);
-					}
-					
+					}					
 					break;
 					
 				default:
 					throw new ArgumentException("Saving " + module.LocationType + 
 					                            " modules is not supported.","location");
 			}
+			
+			foreach (NWN2GameArea area in module.Areas.Values) {
+				if (area.Loaded) area.OEISerialize();
+			}					
+			foreach (NWN2GameScript script in module.Scripts.Values) {
+				if (script.Loaded) script.OEISerialize();
+			}			
+			
+			if (NWN2CampaignManager.Instance.ActiveCampaign != null) {
+				NWN2CampaignManager.Instance.ActiveCampaign.SaveBlueprints();
+				NWN2ToolsetMainForm.App.ContentManager.SaveCampaignList(NWN2CampaignManager.Instance.ActiveCampaign.Repository,true);
+			}
+			NWN2ToolsetMainForm.App.RunVerification(NWN2Toolset.Plugins.NWN2ModuleVerificationType.Fast);
+			
+			module.OEISerialize(path);
+			module.Name = Path.GetFileNameWithoutExtension(path);
+			NWN2ToolsetMainForm.App.ContentManager.InitializeModule(module.Repository);
 		}
 		
 		
