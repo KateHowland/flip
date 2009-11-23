@@ -145,7 +145,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CompileScript(scriptName);
 			
 			while (!service.HasCompiled(scriptName) && timeout >= 0) {
-				Console.WriteLine("Compiled script had not appeared after " + (1000-timeout) + " ms.");
 				Thread.Sleep(25);
 				timeout -= 25;
 			}
@@ -1526,7 +1525,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void UncompiledScriptDoesNotPersistInFileModuleWithoutSave()
+		public void UnsavedScriptDoesNotPersistInFileModule()
 		{
 			string name = "UncompiledScriptDoesNotPersistInFileModuleWithoutSave.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -1561,7 +1560,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void UncompiledScriptPersistsInFileModuleWithSave()
+		public void SavedScriptPersistsInFileModule()
 		{
 			string name = "UncompiledScriptPersistsInFileModuleWithoutSave.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -1599,7 +1598,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void UncompiledScriptDoesNotPersistInDirectoryModuleWithoutSave()
+		public void UnsavedScriptDoesNotPersistInDirectoryModule()
 		{
 			string name = "UncompiledScriptDoesNotPersistInDirectoryModuleWithoutSave";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -1626,7 +1625,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			// And after...
 			Bean after = service.GetUncompiledScript(scriptName);			
-			// Assert.IsNotNull(after); // unfortunately, the file will persist, but check it's at least empty:
+			// Assert.IsNotNull(after); // unfortunately, the FILE will persist, but it should be empty:
 			Assert.AreEqual(String.Empty,after["Data"]);
 			
 			service.CloseModule();			
@@ -1635,7 +1634,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void UncompiledScriptPersistsInDirectoryModuleWithSave()
+		public void SavedScriptPersistsInDirectoryModule()
 		{
 			string name = "UncompiledScriptPersistsInDirectoryModuleWithSave";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -2905,7 +2904,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			int original = timeout;
 			int interval = 1;
 			while (!service.HasCompiled(scriptName) && timeout >= 0) {
-				Console.WriteLine("Script hadn't appeared at " + (original-timeout) + " ms.");
 				Thread.Sleep(interval);
 				timeout -= interval;
 			}

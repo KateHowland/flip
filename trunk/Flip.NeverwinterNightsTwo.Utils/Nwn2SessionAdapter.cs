@@ -887,11 +887,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2GameScript script = new NWN2GameScript(name,
 				                                           module.Repository.DirectoryName,
 				                                           module.Repository);				
-				script.Module = module;			
-//				script.Data = code;	
-				module.Scripts.Add(script);	/* or module.AddResource(script) */	
-				
-				// FIXME: Still a big mess, as this section is a work in progress...
+				script.Module = module;		
+				module.Scripts.Add(script);		
 				
 				/*
 				 * Adding a script in the toolset ALWAYS opens it, so the issue that occurs where you
@@ -901,24 +898,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				 * to keep these hidden! Instead, we'll just Demand() the script when we create it.
 				 */ 
 				
-				// Only UncompiledScriptPersistsInFileModuleWithoutSave and ReportsWhetherScriptResourceIsLoaded fail:
-//				script.Demand();
-//				script.Data = code;	
-//				script.OEISerialize();
-				
-				// Data does not persist except in directory module WITHOUT save... have hand-checked the serialised
-				// scripts and they are NOT empty, so why does this not work?
-//				script.Demand();
-//				script.Data = code;	
-//				script.OEISerialize();				
-//				script.Release();
-				
-				// fail?:
 				script.Demand();
-				script.Data = code;	
-				
-				// fail?:
-//				script.OEISerialize();				
+				script.Data = code;		
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
