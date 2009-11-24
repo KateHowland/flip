@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -56,6 +57,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		protected INwn2Session session;
 		
+		/// <summary>
+		/// A collection of lists of fields to serialise for a particular
+		/// type of object, indexed by the name of the type of object. 
+		/// </summary>
+		protected Dictionary<string,IList<string>> allSerialisingFields;
+		
 		#endregion
 		
 		#region Constructors
@@ -67,6 +74,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Nwn2SessionAdapter()
 		{
 			session = new Nwn2Session();
+			InitialiseListsOfFieldsToSerialise();
 		}
 		
 		
@@ -78,6 +86,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			if (session == null) throw new ArgumentNullException("session");			
 			this.session = session;
+			InitialiseListsOfFieldsToSerialise();
 		}
 		
 		#endregion
@@ -510,8 +519,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2BlueprintCollection blueprints = NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true);
 				
 				IList<Bean> beans = new List<Bean>(blueprints.Count);
-				foreach (INWN2Blueprint blueprint in blueprints) {					
-					beans.Add(new Bean(blueprint));
+				foreach (INWN2Blueprint blueprint in blueprints) {	
+					IList<string> fields = GetFieldsToSerialise(type.ToString());
+					beans.Add(new Bean(blueprint,fields));
 				}	
 				
 				return beans;				
@@ -2187,6 +2197,38 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}	
+		}
+		
+		#endregion
+	
+		#region Non-service methods
+				
+		/// <summary>
+		/// Initialises the lists of fields to serialise.
+		/// </summary>
+		protected virtual void InitialiseListsOfFieldsToSerialise()
+		{
+			allSerialisingFields = new Dictionary<string,IList<string>>(2);
+			
+			List<string> Creature = new List<string>{"ObjectType","LocalizedName","BlueprintLocation","Name","LocalizedDescription"};
+			List<string> Placeable = new List<string>{"Name","LocalizedName","LocalizedDescription"};
+			
+			allSerialisingFields.Add("Creature",Creature);
+			allSerialisingFields.Add("Placeable",Placeable);
+		}
+		
+		
+		/// <summary>
+		/// Returns a list of names of fields which will be serialised
+		/// on objects of the given type.
+		/// </summary>
+		/// <param name="type">A string representing a particular type of object.</param>
+		/// <returns>A list of field names, or null if no list is stored
+		/// for the given type.</returns>
+		public IList<string> GetFieldsToSerialise(string type)
+		{
+			if (allSerialisingFields.ContainsKey(type)) return allSerialisingFields[type];
+			else return null;
 		}
 		
 		#endregion

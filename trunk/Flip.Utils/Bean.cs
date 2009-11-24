@@ -43,6 +43,8 @@ namespace Sussex.Flip.Utils
 		
 		private Dictionary<string,string> body;
 		
+		private static BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+		
 		#endregion
 		
 		#region Properties
@@ -85,13 +87,33 @@ namespace Sussex.Flip.Utils
 			Capture(capturing,false);
 		}
 		
+		
+		/// <summary>
+		/// Constructs a new <see cref="Bean"/> instance.
+		/// </summary>
+		/// <param name="capturing">An object which will have
+		/// its properties and fields serialised as string values
+		/// and stored on the bean.</param>
+		/// <param name="captureFields">A list of fields on the
+		/// object which should be captured - if this list is not
+		/// null, only fields which appear on the list will be
+		/// captured.</param>
+		public Bean(object capturing, IList<string> captureFields)
+		{
+			if (capturing == null) throw new ArgumentNullException("capturing");
+			
+			body = new Dictionary<string,string>();
+			
+			Capture(capturing,false,captureFields);
+		}
+		
 		#endregion
 		
 		#region Methods
 		
 		/// <summary>
 		/// Captures the fields and properties of the given object
-		/// in seralised form.
+		/// in serialised form.
 		/// </summary>
 		/// <param name="capturing">An object which will have
 		/// its properties and fields serialised as string values
@@ -100,41 +122,86 @@ namespace Sussex.Flip.Utils
 		/// values with the same key; false otherwise.</param>
 		public void Capture(object capturing, bool overwrite)
 		{			
-			foreach (MemberInfo mi in capturing.GetType().GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) 
-			{				
-				object o;
-				switch (mi.MemberType) {
-					case MemberTypes.Property:
-						o = ((PropertyInfo)mi).GetValue(capturing,null);
-						break;
-					case MemberTypes.Field:
-						o = ((FieldInfo)mi).GetValue(capturing);
-						break;
-					default:
-						continue;
+			foreach (MemberInfo mi in capturing.GetType().GetMembers(flags))	{				
+				CaptureMember(capturing,mi,overwrite);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Captures a subset of the fields and properties 
+		/// of the given object
+		/// in serialised form.
+		/// </summary>
+		/// <param name="capturing">An object which will have
+		/// its properties and fields serialised as string values
+		/// and stored on the bean.</param>
+		/// <param name="overwrite">True to overwrite any existing
+		/// values with the same key; false otherwise.</param>
+		/// <param name="captureFields">A list of fields on the
+		/// object which should be captured - if this list is not
+		/// null, only fields which appear on the list will be
+		/// captured.</param>
+		public void Capture(object capturing, bool overwrite, IList<string> fields)
+		{
+			if (fields == null) {
+				Capture(capturing,overwrite);
+				return;
+			}
+			
+			foreach (string field in fields) {
+				MemberInfo[] members = capturing.GetType().GetMember(field,flags);
+				if (members.Length == 0) {
+					throw new ArgumentException("Field '" + field + "' was not found on this object.");
 				}
 				
-				string val;
-				
-				if (o == null) val = String.Empty;
-				else val = o.ToString();
-				
-				int count = 1;
-				string key = mi.Name;
-				
-				if (!body.ContainsKey(key)) {
-					body.Add(key,val);
+				foreach (MemberInfo member in members) {
+					CaptureMember(capturing,member,overwrite);
+				}
+			}
+		}
+		
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="capturing"></param>
+		/// <param name="member"></param>
+		/// <param name="overwrite"></param>
+		private void CaptureMember(object capturing, MemberInfo member, bool overwrite)
+		{	
+			object o;
+			switch (member.MemberType) {
+				case MemberTypes.Property:
+					o = ((PropertyInfo)member).GetValue(capturing,null);
+					break;
+				case MemberTypes.Field:
+					o = ((FieldInfo)member).GetValue(capturing);
+					break;
+				default:
+					return;
+			}
+			
+			string val;
+			
+			if (o == null) val = String.Empty;
+			else val = o.ToString();
+			
+			int count = 1;
+			string key = member.Name;
+			
+			if (!body.ContainsKey(key)) {
+				body.Add(key,val);
+			}
+			else {
+				if (overwrite) {
+					body[key] = val;
 				}
 				else {
-					if (overwrite) {
-						body[key] = val;
+					while (body.ContainsKey(key)) {
+						key = member.Name + ++count;
 					}
-					else {
-						while (body.ContainsKey(key)) {
-							key = mi.Name + ++count;
-						}
-						body.Add(key,val);
-					}
+					body.Add(key,val);
 				}
 			}
 		}
@@ -165,7 +232,7 @@ namespace Sussex.Flip.Utils
 			if (key == null) throw new ArgumentNullException("key");
 			if (key == String.Empty) throw new ArgumentException("key");
 			
-			if (!body.ContainsKey(key)) throw new ArgumentException("Key not known.","key");
+			if (!body.ContainsKey(key)) throw new ArgumentException("This bean has not captured the field '" + key + "'.","key");
 			else return body[key];
 		}
 		
