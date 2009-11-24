@@ -127,6 +127,89 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#region Tests - Scripts
 				
 		[Test]
+		public void _GetsBlueprint()
+		{
+			string name = "GetsBlueprint.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string blueprintResRef = "c_cat";
+			NWN2ObjectType blueprintType = NWN2ObjectType.Creature;
+			
+			Bean cat = service.GetBlueprint(blueprintResRef,blueprintType);
+			Assert.IsNotNull(cat);
+			Assert.AreEqual("Creature",cat["ObjectType"]);
+			Assert.AreEqual("Cats are typically kept for their abilities to dispose of vermin " +
+			                "like rats and mice. They are also a common familiar of wizards and sorcerers.",
+			                cat["LocalizedDescription"]);
+			
+			blueprintType = NWN2ObjectType.Door;
+			Assert.IsNull(service.GetBlueprint(blueprintResRef,blueprintType));			
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void _GetsBlueprints()
+		{
+			string name = "GetsBlueprints.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			IList<Bean> creatures = service.GetBlueprints(NWN2ObjectType.Creature);
+			Assert.IsNotNull(creatures);
+			Assert.AreEqual(322,creatures.Count);
+			
+			bool found = false;
+			foreach (Bean bean in creatures) {
+				if (bean["Name"] == "Black Dragon") {
+					found = true;
+					break;
+				}
+			}
+			Assert.IsTrue(found,"Failed to find an expected blueprint.");
+						
+			IList<Bean> placeables = service.GetBlueprints(NWN2ObjectType.Placeable);
+			Assert.IsNotNull(placeables);
+			Assert.AreEqual(270,placeables.Count);
+			
+			found = false;
+			foreach (Bean bean in placeables) {
+				if (bean["Name"] == "Sunken Flagon") {
+					found = true;
+					break;
+				}
+			}
+			Assert.IsTrue(found,"Failed to find an expected blueprint.");
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void _GetsGlobalModuleAndCampaignBlueprints()
+		{
+			NWN2Toolset.NWN2.Data.Blueprints.INWN2Blueprint b;
+			NWN2Toolset.NWN2.Data.Blueprints.NWN2CreatureBlueprint c;
+			//b.BlueprintLocation;
+			Assert.Fail();
+		}
+		
+		
+		[Test]
 		public void CompiledScriptAppearsWithinOneSecond()
 		{
 			string name = "CompiledScriptAppearsWithinOneSecond.mod";

@@ -160,7 +160,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="type">The type of objects to count.</param>
 		/// <param name="tag">Only objects with this tag will be counted.
 		/// Pass null to ignore this criterion.</param>
-		/// <returns>The number of objects matching the given description
+		/// <returns>The number of objects matching the given criteria
 		/// in the given area.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
@@ -178,7 +178,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="tag">The tag that objects must have to be collected.
 		/// Pass null to ignore this requirement.</param>
 		/// <returns>A list of beans containing information about
-		/// objects matching the description.</returns>
+		/// objects matching the given criteria.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
@@ -186,6 +186,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		IList<Flip.Utils.Bean> GetObjects(string areaName, 
 					                      NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type,
 					                      string tag);
+		
+		
+		/// <summary>
+		/// Gets a bean containing information about
+		/// the blueprint with the given resref and type,
+		/// if one exists.
+		/// </summary>
+		/// <param name="resRef">The resref value of the
+		/// blueprint to return.</param>
+		/// <param name="type">The object type of the
+		/// blueprint to return.</param>
+		/// <returns>A bean containing information
+		/// about the blueprint, or null if no such blueprint exists.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		Flip.Utils.Bean GetBlueprint(string resRef, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);
+		
+		
+		/// <summary>
+		/// Gets a list of beans containing information about
+		/// all blueprints of a given type.
+		/// </summary>
+		/// <param name="type">The object type of the
+		/// blueprints to return.</param>
+		/// <returns>A list of beans containing information
+		/// about blueprints of the given type.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		IList<Flip.Utils.Bean> GetBlueprints(NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);
 		
 		
 		/// <summary>
