@@ -92,7 +92,7 @@ namespace Sussex.Flip.Utils.Tests
 			Assert.AreEqual(a.ToString(),bean.GetValue("A"));
 			Assert.AreEqual(b.ToString(),bean.GetValue("B"));
 			Assert.AreEqual(c,bean.GetValue("C"));
-		}
+		}		
 		
 		
 		[Test]

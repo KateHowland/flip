@@ -125,7 +125,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#endregion
 		
 		#region Tests - Scripts
-				
+		
 		[Test]
 		public void _GetsBlueprint()
 		{
