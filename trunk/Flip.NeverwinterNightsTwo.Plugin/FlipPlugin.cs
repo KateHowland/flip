@@ -210,7 +210,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 				                        "NamedPipeEndpoint");				
 				
 				host.Open();
-			} catch (Exception e) {
+			} 
+			catch (Exception e) {
 				System.Windows.MessageBox.Show("Error starting services.\n\n" + e);
 			}
 		}

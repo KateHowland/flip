@@ -434,7 +434,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				List<Bean> beans = new List<Bean>(instances.Count);
 				
 				foreach (INWN2Instance instance in instances) {
-					beans.Add(new Bean(instance));
+					Bean bean = new Bean(instance,GetFieldsToSerialise(type.ToString()));
+					beans.Add(bean);
 				}
 				
 				return beans;
@@ -483,7 +484,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				INWN2Blueprint blueprint = NWN2GlobalBlueprintManager.FindBlueprint(type,new OEIResRef(resRef),true,true,true);
 				
 				if (blueprint == null) return null;
-				else return new Bean(blueprint);
+				else {
+					Bean bean = new Bean(blueprint,GetFieldsToSerialise(type.ToString()));
+					return bean;
+				}
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -521,7 +525,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				IList<Bean> beans = new List<Bean>(blueprints.Count);
 				foreach (INWN2Blueprint blueprint in blueprints) {	
 					IList<string> fields = GetFieldsToSerialise(type.ToString());
-					beans.Add(new Bean(blueprint,fields));
+					Bean bean = new Bean(blueprint,fields);
+					beans.Add(bean);
 				}	
 				
 				return beans;				
@@ -571,7 +576,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				INWN2Instance unique = area.GetObject(type,guid);
 				
 				if (unique == null) return null;
-				else return new Bean(unique);
+				else return new Bean(unique,GetFieldsToSerialise(type.ToString()));
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -616,7 +621,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				bool loaded = nwn2area.Loaded;
 				if (!loaded) nwn2area.Demand();	
-				Bean bean = new Bean(nwn2area);
+				Bean bean = new Bean(nwn2area,GetFieldsToSerialise("Area"));
 				
 				// Store the value of 'Loaded' that will apply by the time the bean is returned,
 				// rather than now (when the area MUST be loaded to populate the bean):
@@ -660,7 +665,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				foreach (NWN2GameArea area in module.Areas.Values) {
 					bool loaded = area.Loaded;
 					if (!loaded) area.Demand();	
-					Bean bean = new Bean(area);
+					Bean bean = new Bean(area,GetFieldsToSerialise("Area"));
 					
 					// Store the value of 'Loaded' that will apply by the time the bean is returned,
 					// rather than now (when the area MUST be loaded to populate the bean):
@@ -693,8 +698,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}			
-				Bean bean = new Bean(module);
-				bean.Capture(module.ModuleInfo,false);
+				Bean bean = new Bean(module,GetFieldsToSerialise("Module"));
+				bean.Capture(module.ModuleInfo,false,GetFieldsToSerialise("ModuleInformation")); // add ModuleInformation fields
 				return bean;
 			}
 			catch (InvalidOperationException e) {
@@ -725,7 +730,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				foreach (NWN2GameScript script in module.Scripts.Values) {
 					bool loaded = script.Loaded;
 					if (!loaded) script.Demand();	
-					Bean bean = new Bean(script);
+					Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
 					
 					// Store the value of 'Loaded' that will apply by the time the bean is returned,
 					// rather than now (when the script MUST be loaded to populate the bean):
@@ -778,7 +783,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 					bool loaded = script.Loaded;
 					if (!loaded) script.Demand();	
-					Bean bean = new Bean(script);
+					Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
 					
 					// Store the value of 'Loaded' that will apply by the time the bean is returned,
 					// rather than now (when the script MUST be loaded to populate the bean):
@@ -831,7 +836,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 					bool loaded = script.Loaded;
 					if (!loaded) script.Demand();	
-					Bean bean = new Bean(script);
+					Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
 					
 					// Store the value of 'Loaded' that will apply by the time the bean is returned,
 					// rather than now (when the script MUST be loaded to populate the bean):
@@ -891,7 +896,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					
 					bool loaded = script.Loaded;
 					if (!loaded) script.Demand();	
-					Bean bean = new Bean(script);
+					Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
 					
 					// Store the value of 'Loaded' that will apply by the time the bean is returned,
 					// rather than now (when the script MUST be loaded to populate the bean):
@@ -2208,33 +2213,62 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		protected virtual void InitialiseListsOfFieldsToSerialise()
 		{
-			allSerialisingFields = new Dictionary<string,List<string>>(15);
+			allSerialisingFields = new Dictionary<string,List<string>>(17);
 			
-			// Serialise these fields for every blueprint (if they appear):
-			List<string> blueprint = new List<string>{"BlueprintLocation",
+			// Serialise these fields for every object (if they appear):
+			List<string> universal = new List<string>{"BlueprintLocation",
 													  "LocalizedDescription",
 													  "LocalizedName",
 													  "Name",
+													  "ObjectID",
 													  "ObjectType",
 													  "ResourceName",
+													  "Tag",
 													  "TemplateResRef"};	
 							
 			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
 				string key = type.ToString();
-				allSerialisingFields.Add(key,new List<string>(blueprint));
+				allSerialisingFields.Add(key,new List<string>(universal));
 				allSerialisingFields[key].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(type));
 			}			
 						
-			// Serialise these fields for specific types of blueprint:
+			// Serialise these fields for specific types of object:
 			allSerialisingFields["Creature"].AddRange(new List<string>{"Conversation",
 																	   "CustomPortrait",
 																	   "FactionID",
 																	   "FirstName",
 																	   "Gender",
-																	   "GoodEvil",
+																	   "GoodEvil",																	   
 																	   "LastName",
 																	   "LawfulChaotic",
 																	   "Tag"});	
+			allSerialisingFields["Item"].AddRange(new List<string>{"LocalizedDescriptionIdentified"});	
+			
+			// Serialise these fields for areas and modules:
+			allSerialisingFields.Add("Area",new List<string>{"DisplayName",
+			                         						 "HasTerrain",
+			                         						 "Interior",
+			                         						 "Loaded",
+			                         						 "Module",
+			                         						 "Name",
+			                         						 "Natural",
+			                         						 "Size",
+			                         						 "Tag"});	
+			allSerialisingFields["Area"].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area));
+			
+			allSerialisingFields.Add("Module",new List<string>{"FileName",
+			                         						   "LocationType",
+			                         						   "Name"});	
+			
+			allSerialisingFields.Add("ModuleInformation",new List<string>{"CampaignID",
+						                         						  "Description",
+						                         						  "EntryArea",
+						                         						  "MinimumGameVersion",
+						                         						  "ModuleID",
+						                         						  "NX1Required",
+						                         						  "NX2Required",
+						                         						  "Tag"});			
+			allSerialisingFields["ModuleInformation"].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module));
 		}
 		
 		

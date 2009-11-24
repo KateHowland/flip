@@ -158,7 +158,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		[Test]
 		public void _GetsBlueprints()
-		{
+		{			
+			Assert.Fail("GetObjects(), GetBlueprints(), GetAreas() need to be replaced.");
+			
+			
 			string name = "GetsBlueprints.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -258,7 +261,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.AttachScriptToModule(scriptName,"OnCutsceneAbort");
 			
-			Bean module = service.GetModule();			
+			Bean module = service.GetModule();	
+			
 			string attachedScriptName = module.GetValue("OnCutsceneAbort");
 			Assert.AreEqual(scriptName,attachedScriptName);
 			
@@ -365,7 +369,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CompileScript(scriptName);
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			
-			Bean door = service.GetObjects(areaName,NWN2ObjectType.Door,"door")[0];
+			Bean door = service.GetObjects(areaName,NWN2ObjectType.Door,"door")[0];	
 			Guid objectId = new Guid(door.GetValue("ObjectID"));
 			
 			service.AttachScriptToObject(scriptName,areaName,Nwn2EventRaiser.Door,objectId,"OnFailToOpen");
@@ -517,14 +521,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(cat);
 			Assert.IsNotNull(giant);
 		
-			Assert.IsTrue(cat.HasValue("Strength"));
-			Assert.AreEqual(3,int.Parse(cat.GetValue("Strength")));
-		
 			Assert.IsTrue(cat.HasValue("FactionID"));
 			Assert.AreEqual(2,int.Parse(cat.GetValue("FactionID")));
-		
-			Assert.IsTrue(giant.HasValue("Strength"));
-			Assert.AreEqual(31,int.Parse(giant.GetValue("Strength")));
 		
 			Assert.IsTrue(giant.HasValue("FactionID"));
 			Assert.AreEqual(1,int.Parse(giant.GetValue("FactionID")));			
@@ -548,19 +546,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				}
 			}
 						
-			Assert.IsTrue(sword.HasValue("LocalizedName"));
 			Assert.AreEqual("Darksteel Greatsword",sword.GetValue("LocalizedName"));
 			
-			Assert.IsTrue(sword.HasValue("LocalizedDescriptionIdentified"));
 			Assert.AreEqual("Darksteel is silvery in hue when polished or cut, but " +
 			                "its exposed surfaces have a deep, gleaming purple luster. " +
 			                "This alloy of meteoric iron and steel is tempered with rare, " +
 			                "magical oils to give the metal its uncanny abilities. Darksteel " +
 			                "is commonly used in the crafting of magic items related to storms " +
 			                "or lightning.",sword.GetValue("LocalizedDescriptionIdentified"));
-			
-			Assert.IsTrue(sword.HasValue("Stolen"));
-			Assert.AreEqual("False",sword.GetValue("Stolen"));
 						
 			beans = service.GetObjects(area,NWN2ObjectType.Creature,"giant");
 			Assert.IsNotNull(beans);
@@ -1079,7 +1072,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptSlot = "OnPlayerLevelUp";			
 			service.AttachScriptToModule(scriptName,scriptSlot);
 			
-			Bean moduleBean = service.GetModule();			
+			Bean moduleBean = service.GetModule();	
+			
 			Assert.IsTrue(moduleBean.HasValue(scriptSlot));
 			Assert.AreEqual(scriptName,moduleBean.GetValue(scriptSlot));
 			
@@ -1297,7 +1291,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void ReturnsDataAboutModule()
+		public void _ReturnsDataAboutModule()
 		{
 			string name = "ReturnsDataAboutModule.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -1309,6 +1303,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			Bean module = service.GetModule();
+			
 			Assert.IsNotNull(module);
 			Assert.IsTrue(module.HasValue("LocationType"));
 			Assert.AreEqual("File",module.GetValue("LocationType"));
@@ -2348,9 +2343,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			catch (FaultException<ArgumentException>) {
 				// expected result
 			}
-			catch (FaultException e) {
+			catch (FaultException) {
 				CreateService();
-				System.Windows.MessageBox.Show(e.ToString() + e.Message + e.Reason);
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to add an object with unknown resref.");
 			}
 			
