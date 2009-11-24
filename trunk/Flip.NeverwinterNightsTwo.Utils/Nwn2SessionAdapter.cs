@@ -61,7 +61,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// A collection of lists of fields to serialise for a particular
 		/// type of object, indexed by the name of the type of object. 
 		/// </summary>
-		protected Dictionary<string,IList<string>> allSerialisingFields;
+		protected Dictionary<string,List<string>> allSerialisingFields;
 		
 		#endregion
 		
@@ -2208,13 +2208,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		protected virtual void InitialiseListsOfFieldsToSerialise()
 		{
-			allSerialisingFields = new Dictionary<string,IList<string>>(2);
+			allSerialisingFields = new Dictionary<string,List<string>>(15);
 			
-			List<string> Creature = new List<string>{"ObjectType","LocalizedName","BlueprintLocation","Name","LocalizedDescription"};
-			List<string> Placeable = new List<string>{"Name","LocalizedName","LocalizedDescription"};
-			
-			allSerialisingFields.Add("Creature",Creature);
-			allSerialisingFields.Add("Placeable",Placeable);
+			// Serialise these fields for every blueprint (if they appear):
+			List<string> blueprint = new List<string>{"BlueprintLocation",
+													  "LocalizedDescription",
+													  "LocalizedName",
+													  "Name",
+													  "ObjectType",
+													  "ResourceName",
+													  "TemplateResRef"};	
+							
+			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+				string key = type.ToString();
+				allSerialisingFields.Add(key,new List<string>(blueprint));
+				allSerialisingFields[key].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(type));
+			}			
+						
+			// Serialise these fields for specific types of blueprint:
+			allSerialisingFields["Creature"].AddRange(new List<string>{"Conversation",
+																	   "CustomPortrait",
+																	   "FactionID",
+																	   "FirstName",
+																	   "Gender",
+																	   "GoodEvil",
+																	   "LastName",
+																	   "LawfulChaotic",
+																	   "Tag"});	
 		}
 		
 		

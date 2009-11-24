@@ -152,7 +152,7 @@ namespace Sussex.Flip.Utils
 			foreach (string field in fields) {
 				MemberInfo[] members = capturing.GetType().GetMember(field,flags);
 				if (members.Length == 0) {
-					throw new ArgumentException("Field '" + field + "' was not found on this object.");
+					return; //throw new ArgumentException("Field '" + field + "' was not found on this object.");
 				}
 				
 				foreach (MemberInfo member in members) {
