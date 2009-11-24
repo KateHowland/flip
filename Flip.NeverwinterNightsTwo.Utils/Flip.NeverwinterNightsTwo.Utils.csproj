@@ -82,7 +82,6 @@
     <Compile Include="Nwn2ScriptSlot.cs" />
     <Compile Include="Nwn2Session.cs" />
     <Compile Include="Nwn2SessionAdapter.cs" />
-    <Compile Include="Nwn2UtilsPlugin.cs" />
     <Compile Include="Nwn2ToolsetFunctions.cs" />
     <Compile Include="Nwn2EventRaiser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

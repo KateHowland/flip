@@ -150,12 +150,7 @@ namespace Sussex.Flip.Utils
 			}
 			
 			foreach (string field in fields) {
-				MemberInfo[] members = capturing.GetType().GetMember(field,flags);
-				if (members.Length == 0) {
-					return; //throw new ArgumentException("Field '" + field + "' was not found on this object.");
-				}
-				
-				foreach (MemberInfo member in members) {
+				foreach (MemberInfo member in capturing.GetType().GetMember(field,flags)) {
 					CaptureMember(capturing,member,overwrite);
 				}
 			}
@@ -163,11 +158,14 @@ namespace Sussex.Flip.Utils
 		
 		
 		/// <summary>
-		/// TODO
+		/// Captures a given field or property of the object in serialised form.
 		/// </summary>
-		/// <param name="capturing"></param>
-		/// <param name="member"></param>
-		/// <param name="overwrite"></param>
+		/// <param name="capturing">An object which will have
+		/// its properties and fields serialised as string values
+		/// and stored on the bean.</param>
+		/// <param name="member">The field or property to capture.</param>
+		/// <param name="overwrite">True to overwrite any existing
+		/// values with the same key; false otherwise.</param>
 		private void CaptureMember(object capturing, MemberInfo member, bool overwrite)
 		{	
 			object o;
