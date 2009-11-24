@@ -31,6 +31,7 @@ using System.IO;
 using System.Reflection;
 using System.ServiceModel;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
@@ -442,6 +443,86 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
 		}
+		
+				
+		/// <summary>
+		/// Gets a bean containing information about
+		/// the blueprint with the given resref and type,
+		/// if one exists.
+		/// </summary>
+		/// <param name="resRef">The resref value of the
+		/// blueprint to return.</param>
+		/// <param name="type">The object type of the
+		/// blueprint to return.</param>
+		/// <returns>A bean containing information
+		/// about the blueprint, or null if no such blueprint exists.</returns>
+		public Bean GetBlueprint(string resRef, NWN2ObjectType type)
+		{
+			try {		
+				if (resRef == null) {
+					throw new ArgumentNullException("resRef","No resref was provided (was null).");
+				}			
+				if (resRef == String.Empty) {
+					throw new ArgumentException("No resref was provided (was empty).","resRef");
+				}
+				
+				NWN2GameModule module = session.GetModule();				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}	
+				
+				INWN2Blueprint blueprint = NWN2GlobalBlueprintManager.FindBlueprint(type,new OEIResRef(resRef),true,true,true);
+				
+				if (blueprint == null) return null;
+				else return new Bean(blueprint);
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Gets a list of beans containing information about
+		/// all blueprints of a given type.
+		/// </summary>
+		/// <param name="type">The object type of the
+		/// blueprints to return.</param>
+		/// <returns>A list of beans containing information
+		/// about blueprints of the given type.</returns>
+		public IList<Bean> GetBlueprints(NWN2ObjectType type)
+		{
+			try {				
+				NWN2GameModule module = session.GetModule();				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}	
+				
+				NWN2BlueprintCollection blueprints = NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true);
+				
+				IList<Bean> beans = new List<Bean>(blueprints.Count);
+				foreach (INWN2Blueprint blueprint in blueprints) {					
+					beans.Add(new Bean(blueprint));
+				}	
+				
+				return beans;				
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}		
 		
 		
 		/// <summary>
