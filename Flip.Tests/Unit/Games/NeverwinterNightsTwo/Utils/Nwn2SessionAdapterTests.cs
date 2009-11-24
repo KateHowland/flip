@@ -174,7 +174,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			bool found = false;
 			foreach (Bean bean in creatures) {
-				if (bean["Name"] == "Black Dragon") {
+				if (bean["LocalizedName"] == "Black Dragon") {
 					found = true;
 					break;
 				}
@@ -183,11 +183,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			IList<Bean> placeables = service.GetBlueprints(NWN2ObjectType.Placeable);
 			Assert.IsNotNull(placeables);
-			Assert.AreEqual(270,placeables.Count);
+			Assert.AreEqual(1090,placeables.Count);
 			
 			found = false;
 			foreach (Bean bean in placeables) {
-				if (bean["Name"] == "Sunken Flagon") {
+				if (bean["LocalizedName"] == "Sunken Flagon") {
 					found = true;
 					break;
 				}
@@ -202,8 +202,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void _GetsGlobalModuleAndCampaignBlueprints()
 		{
-			NWN2Toolset.NWN2.Data.Blueprints.INWN2Blueprint b;
-			NWN2Toolset.NWN2.Data.Blueprints.NWN2CreatureBlueprint c;
+//			NWN2Toolset.NWN2.Data.Blueprints.INWN2Blueprint b;
+//			NWN2Toolset.NWN2.Data.Blueprints.NWN2CreatureBlueprint c;
+			
 			//b.BlueprintLocation;
 			Assert.Fail();
 		}

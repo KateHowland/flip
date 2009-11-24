@@ -25,6 +25,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Sussex.Flip.Utils;
@@ -91,6 +92,33 @@ namespace Sussex.Flip.Utils.Tests
 			Assert.AreEqual(a.ToString(),bean.GetValue("A"));
 			Assert.AreEqual(b.ToString(),bean.GetValue("B"));
 			Assert.AreEqual(c,bean.GetValue("C"));
+		}
+		
+		
+		[Test]
+		public void CapturesSpecificFieldsOnly()
+		{
+			int a = 330;
+			float b = 12.784f;
+			string c = "paradigm";
+			
+			TestClass captive = new TestClass(a,b,c);
+			
+			List<string> captureFields = new List<string>{"A","C"};
+			
+			Bean bean = new Bean(captive,captureFields);
+			
+			Assert.IsTrue(bean.HasValue("A"));
+			Assert.IsFalse(bean.HasValue("B"));
+			Assert.IsTrue(bean.HasValue("C"));
+			
+			bean = new Bean();			
+			captureFields = new List<string>{"B","C"};
+			bean.Capture(captive,false,captureFields);
+			
+			Assert.IsFalse(bean.HasValue("A"));
+			Assert.IsTrue(bean.HasValue("B"));
+			Assert.IsTrue(bean.HasValue("C"));
 		}
 		
 		
