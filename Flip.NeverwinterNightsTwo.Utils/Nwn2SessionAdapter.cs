@@ -348,112 +348,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 		}
 		
-		
-		/// <summary>
-		/// Gets the number of objects matching a given description
-		/// in a given area.
-		/// </summary>
-		/// <param name="areaName">The area which has the objects.</param>
-		/// <param name="type">The type of objects to count.</param>
-		/// <param name="tag">Only objects with this tag will be counted.
-		/// Pass null to ignore this criterion.</param>
-		/// <returns>The number of objects matching the given description
-		/// in the given area.</returns>
-		public int GetObjectCount(string areaName, NWN2ObjectType type, string tag)
-		{	
-			try {
-				if (areaName == null) {
-					throw new ArgumentNullException("areaName","No area name was provided (was null).");
-				}			
-				if (areaName == String.Empty) {
-					throw new ArgumentException("No area name was provided (was empty).","areaName");
-				}
-				
-				NWN2GameModule module = session.GetModule();
-				
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}						
-				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.","areaName");
-				}
-				
-				NWN2GameArea nwn2area = module.Areas[areaName];
-				AreaBase area = session.CreateAreaBase(nwn2area);
-							
-				return area.GetObjects(type,tag).Count;
-			}
-			catch (ArgumentNullException e) {
-				throw new FaultException<ArgumentNullException>(e,e.Message);
-			}
-			catch (ArgumentException e) {
-				throw new FaultException<ArgumentException>(e,e.Message);
-			}
-			catch (InvalidOperationException e) {
-				throw new FaultException<InvalidOperationException>(e,e.Message);
-			}
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}	
-		
-		
-		/// <summary>
-		/// Gets a collection of beans containing information about objects
-		/// matching a given description in a given area.
-		/// </summary>
-		/// <param name="areaName">The area which has the objects.</param>
-		/// <param name="type">The type of objects to collect.</param>
-		/// <param name="tag">The tag that objects must have to be collected.
-		/// Pass null to ignore this requirement.</param>
-		/// <returns>A collection of beans containing information about
-		/// objects matching the description.</returns>
-		public IList<Bean> GetObjects(string areaName, NWN2ObjectType type, string tag)
-		{
-			try {
-				if (areaName == null) {
-					throw new ArgumentNullException("areaName","No area name was provided (was null).");
-				}			
-				if (areaName == String.Empty) {
-					throw new ArgumentException("No area name was provided (was empty).","areaName");
-				}
-				
-				NWN2GameModule module = session.GetModule();
-				
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}						
-				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.","areaName");
-				}
-				
-				NWN2GameArea nwn2area = module.Areas[areaName];
-				AreaBase area = session.CreateAreaBase(nwn2area);
-							
-				List<INWN2Instance> instances = area.GetObjects(type,tag);				
-				List<Bean> beans = new List<Bean>(instances.Count);
-				
-				foreach (INWN2Instance instance in instances) {
-					Bean bean = new Bean(instance,GetFieldsToSerialise(type.ToString()));
-					beans.Add(bean);
-				}
-				
-				return beans;
-			}
-			catch (ArgumentNullException e) {
-				throw new FaultException<ArgumentNullException>(e,e.Message);
-			}
-			catch (ArgumentException e) {
-				throw new FaultException<ArgumentException>(e,e.Message);
-			}
-			catch (InvalidOperationException e) {
-				throw new FaultException<InvalidOperationException>(e,e.Message);
-			}
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}
-		
 				
 		/// <summary>
 		/// Gets a bean containing information about
@@ -538,13 +432,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="areaName">The area which has the object.</param>
 		/// <param name="type">The type of the object.</param>
-		/// <param name="guid">The unique Guid of the object.</param>
+		/// <param name="id">The unique ID of the object.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
-		public Bean GetObject(string areaName, NWN2ObjectType type, Guid guid)
+		public Bean GetObject(string areaName, NWN2ObjectType type, Guid id)
 		{
 			try {
-				if (guid == null) {
+				if (id == null) {
 					throw new ArgumentNullException("guid","No guid was provided (was null).");
 				}	
 				if (areaName == null) {
@@ -566,10 +460,118 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2GameArea nwn2area = module.Areas[areaName];
 				AreaBase area = session.CreateAreaBase(nwn2area);
 				
-				INWN2Instance unique = area.GetObject(type,guid);
+				INWN2Instance unique = area.GetObject(type,id);
 				
 				if (unique == null) return null;
 				else return new Bean(unique,GetFieldsToSerialise(type.ToString()));
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Gets a list of the unique IDs of each object of the given type
+		/// in the given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <returns>A list of Guid values.</returns>
+		public IList<Guid> GetObjectIDs(string areaName, NWN2ObjectType type)
+		{
+			try {
+				if (areaName == null) {
+					throw new ArgumentNullException("areaName","No area name was provided (was null).");
+				}			
+				if (areaName == String.Empty) {
+					throw new ArgumentException("No area name was provided (was empty).","areaName");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}						
+				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.","areaName");
+				}
+				
+				NWN2GameArea nwn2area = module.Areas[areaName];
+				AreaBase area = session.CreateAreaBase(nwn2area);
+													
+				List<INWN2Instance> instances = area.GetObjects(type);				
+				List<Guid> ids = new List<Guid>(instances.Count);
+				
+				foreach (INWN2Instance instance in instances) {
+					ids.Add(instance.ObjectID);
+				}
+				
+				return ids;
+			}
+			catch (ArgumentNullException e) {
+				throw new FaultException<ArgumentNullException>(e,e.Message);
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
+			}
+			catch (InvalidOperationException e) {
+				throw new FaultException<InvalidOperationException>(e,e.Message);
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Gets a list of the unique IDs of each object of the given type
+		/// and tag in the given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <param name="tag">The tag that objects must have to be collected.
+		/// Pass null to ignore this requirement.</param>
+		/// <returns>A list of Guid values.</returns>
+		public IList<Guid> GetObjectIDsByTag(string areaName, NWN2ObjectType type, string tag)
+		{
+			try {
+				if (areaName == null) {
+					throw new ArgumentNullException("areaName","No area name was provided (was null).");
+				}			
+				if (areaName == String.Empty) {
+					throw new ArgumentException("No area name was provided (was empty).","areaName");
+				}
+				
+				NWN2GameModule module = session.GetModule();
+				
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
+				}						
+				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+					throw new ArgumentException("The current module does not contain an area named '" + areaName + "'.","areaName");
+				}
+				
+				NWN2GameArea nwn2area = module.Areas[areaName];
+				AreaBase area = session.CreateAreaBase(nwn2area);
+							
+				List<INWN2Instance> instances = area.GetObjects(type,tag);				
+				List<Guid> ids = new List<Guid>(instances.Count);
+				
+				foreach (INWN2Instance instance in instances) {
+					ids.Add(instance.ObjectID);
+				}
+				
+				return ids;
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -640,12 +642,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a list of beans representing 
-		/// the areas in the current module.
+		/// Gets the names of the
+		/// areas in the current module.
 		/// </summary>
-		/// <returns>A list of beans representing all of the
-		/// areas owned by the current module.</returns>
-		public IList<Bean> GetAreas()
+		/// <returns>A list of area names.</returns>
+		public IList<string> GetAreaNames()
 		{
 			try {
 				NWN2GameModule module = session.GetModule();
@@ -653,23 +654,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new InvalidOperationException("No module is currently open.");
 				}			
 				
-				IList<Bean> beans = new List<Bean>();
+				IList<string> areas = new List<string>(module.Areas.Count);
 				
-				foreach (NWN2GameArea area in module.Areas.Values) {
-					bool loaded = area.Loaded;
-					if (!loaded) area.Demand();	
-					Bean bean = new Bean(area,GetFieldsToSerialise("Area"));
-					
-					// Store the value of 'Loaded' that will apply by the time the bean is returned,
-					// rather than now (when the area MUST be loaded to populate the bean):
-					bean["Loaded"] = loaded.ToString();
-					
-					if (!loaded) area.Release();					
-					
-					beans.Add(bean);
+				foreach (string name in module.Areas.Keys) {
+					areas.Add(name);
 				}
 				
-				return beans;
+				return areas;
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
@@ -677,7 +668,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
-		}
+		}	
 		
 				
 		/// <summary>

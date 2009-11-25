@@ -153,42 +153,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets the number of objects matching a given description
-		/// in a given area.
-		/// </summary>
-		/// <param name="areaName">The area which has the objects.</param>
-		/// <param name="type">The type of objects to count.</param>
-		/// <param name="tag">Only objects with this tag will be counted.
-		/// Pass null to ignore this criterion.</param>
-		/// <returns>The number of objects matching the given criteria
-		/// in the given area.</returns>
-		[OperationContract]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		int GetObjectCount(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string tag);	
-		
-		
-		/// <summary>
-		/// Gets a list of beans containing information about objects
-		/// matching a given description in a given area.
-		/// </summary>
-		/// <param name="areaName">The area which has the objects.</param>
-		/// <param name="type">The type of objects to collect.</param>
-		/// <param name="tag">The tag that objects must have to be collected.
-		/// Pass null to ignore this requirement.</param>
-		/// <returns>A list of beans containing information about
-		/// objects matching the given criteria.</returns>
-		[OperationContract]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Utils.Bean> GetObjects(string areaName, 
-					                      NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type,
-					                      string tag);
-		
-		
-		/// <summary>
 		/// Gets a bean containing information about
 		/// the blueprint with the given resref and type,
 		/// if one exists.
@@ -223,7 +187,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="areaName">The area which has the object.</param>
 		/// <param name="type">The type of the object.</param>
-		/// <param name="guid">The unique Guid of the object.</param>
+		/// <param name="id">The unique ID of the object.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
 		[OperationContract]
@@ -232,7 +196,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.InvalidOperationException))]
 		Flip.Utils.Bean GetObject(string areaName, 
 		                          NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, 
-		                          Guid guid);		
+		                          Guid id);		
+		
+		
+		/// <summary>
+		/// Gets a list of the unique IDs of each object of the given type
+		/// in the given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <returns>A list of Guid values.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		IList<Guid> GetObjectIDs(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);		
+		
+		
+		/// <summary>
+		/// Gets a list of the unique IDs of each object of the given type
+		/// and tag in the given area.
+		/// </summary>
+		/// <param name="areaName">The area which has the objects.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <param name="tag">The tag that objects must have to be collected.
+		/// Pass null to ignore this requirement.</param>
+		/// <returns>A list of Guid values.</returns>
+		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
+		IList<Guid> GetObjectIDsByTag(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string tag);
 		
 		
 		/// <summary>
@@ -249,14 +243,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a list of beans representing 
-		/// the areas in the current module.
+		/// Gets the names of the
+		/// areas in the current module.
 		/// </summary>
-		/// <returns>A list of beans representing all of the
-		/// areas owned by the current module.</returns>
+		/// <returns>A list of area names.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Utils.Bean> GetAreas();	
+		IList<string> GetAreaNames();	
 		
 		
 		/// <summary>
