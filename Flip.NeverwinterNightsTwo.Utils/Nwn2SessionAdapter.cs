@@ -505,31 +505,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a list of beans containing information about
-		/// all blueprints of a given type.
+		/// Gets a list of the resrefs of all blueprints of a given type.
 		/// </summary>
 		/// <param name="type">The object type of the
 		/// blueprints to return.</param>
-		/// <returns>A list of beans containing information
-		/// about blueprints of the given type.</returns>
-		public IList<Bean> GetBlueprints(NWN2ObjectType type)
+		/// <returns>A list of resrefs.</returns>
+		public IList<string> GetBlueprintResRefs(NWN2ObjectType type)
 		{
-			try {				
-				NWN2GameModule module = session.GetModule();				
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}	
-				
+			try {
 				NWN2BlueprintCollection blueprints = NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true);
-				
-				IList<Bean> beans = new List<Bean>(blueprints.Count);
-				foreach (INWN2Blueprint blueprint in blueprints) {	
-					IList<string> fields = GetFieldsToSerialise(type.ToString());
-					Bean bean = new Bean(blueprint,fields);
-					beans.Add(bean);
-				}	
-				
-				return beans;				
+				if (blueprints == null) throw new ArgumentException("No blueprint collection found for type " + type + ".");
+				IList<string> list = new List<string>(blueprints.Count);
+				foreach (INWN2Blueprint blueprint in blueprints) {
+					list.Add(blueprint.ResourceName.Value);
+				}
+				return list;
+			}
+			catch (ArgumentException e) {
+				throw new FaultException<ArgumentException>(e,e.Message);
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
@@ -537,7 +530,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
 			}
-		}		
+		}
 		
 		
 		/// <summary>

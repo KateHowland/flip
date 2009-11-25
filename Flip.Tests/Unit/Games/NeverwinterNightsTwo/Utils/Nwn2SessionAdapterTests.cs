@@ -155,13 +155,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Delete(path);
 		}
 		
-		
+			
 		[Test]
 		public void _GetsBlueprints()
-		{			
-			Assert.Fail("GetObjects(), GetBlueprints(), GetAreas() need to be replaced.");
-			
-			
+		{	
 			string name = "GetsBlueprints.mod";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
@@ -171,31 +168,85 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);
 						
-			IList<Bean> creatures = service.GetBlueprints(NWN2ObjectType.Creature);
-			Assert.IsNotNull(creatures);
-			Assert.AreEqual(322,creatures.Count);
+			bool foundBlackDragon = false;
+			bool foundSunkenFlagon = false;
 			
-			bool found = false;
-			foreach (Bean bean in creatures) {
-				if (bean["LocalizedName"] == "Black Dragon") {
-					found = true;
-					break;
+			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+				IList<string> resRefs = service.GetBlueprintResRefs(type);
+				Assert.IsNotNull(resRefs);				
+				IList<Bean> beans = new List<Bean>(resRefs.Count);
+				foreach (string resRef in resRefs) {
+					Bean bean = service.GetBlueprint(resRef,type);
+					Assert.IsNotNull(bean);
+					beans.Add(bean);
+					if (!foundBlackDragon && type == NWN2ObjectType.Creature 
+					    && bean.HasValue("LocalizedName") && bean["LocalizedName"] == "Black Dragon") 
+					{
+						foundBlackDragon = true;
+					}
+					if (!foundSunkenFlagon && type == NWN2ObjectType.Placeable 
+					    && bean.HasValue("LocalizedName") && bean["LocalizedName"] == "Sunken Flagon") 
+					{
+						foundSunkenFlagon = true;
+					}
 				}
+				
+				int expected;
+				switch (type) {
+					case NWN2ObjectType.Creature:
+						expected = 322;
+						break;
+					case NWN2ObjectType.Door:
+						expected = 62;
+						break;
+					case NWN2ObjectType.Encounter:
+						expected = 17;
+						break;
+					case NWN2ObjectType.Environment:
+						expected = 0;
+						break;
+					case NWN2ObjectType.Item:
+						expected = 2396;
+						break;
+					case NWN2ObjectType.Light:
+						expected = 1;
+						break;
+					case NWN2ObjectType.Placeable:
+						expected = 1090;
+						break;
+					case NWN2ObjectType.PlacedEffect:
+						expected = 31;
+						break;
+					case NWN2ObjectType.Prefab:
+						expected = 43;
+						break;
+					case NWN2ObjectType.Sound:
+						expected = 374;
+						break;
+					case NWN2ObjectType.StaticCamera:
+						expected = 1;
+						break;
+					case NWN2ObjectType.Store:
+						expected = 15;
+						break;
+					case NWN2ObjectType.Tree:
+						expected = 69;
+						break;
+					case NWN2ObjectType.Trigger:
+						expected = 181;
+						break;
+					case NWN2ObjectType.Waypoint:
+						expected = 27;
+						break;
+					default:
+						throw new InvalidOperationException("Unrecognised value of NWN2ObjectType (" + type + ") in test.");
+				}
+				Assert.AreEqual(expected,resRefs.Count);
+				Assert.AreEqual(expected,beans.Count);
 			}
-			Assert.IsTrue(found,"Failed to find an expected blueprint.");
-						
-			IList<Bean> placeables = service.GetBlueprints(NWN2ObjectType.Placeable);
-			Assert.IsNotNull(placeables);
-			Assert.AreEqual(1090,placeables.Count);
 			
-			found = false;
-			foreach (Bean bean in placeables) {
-				if (bean["LocalizedName"] == "Sunken Flagon") {
-					found = true;
-					break;
-				}
-			}
-			Assert.IsTrue(found,"Failed to find an expected blueprint.");
+			Assert.IsTrue(foundBlackDragon,"Failed to find an expected blueprint (black dragon).");
+			Assert.IsTrue(foundSunkenFlagon,"Failed to find an expected blueprint (sunken flagon).");
 			
 			service.CloseModule();
 			Delete(path);

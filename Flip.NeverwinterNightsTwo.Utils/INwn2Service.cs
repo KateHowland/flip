@@ -207,16 +207,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a list of beans containing information about
-		/// all blueprints of a given type.
+		/// Gets a list of the resrefs of all blueprints of a given type.
 		/// </summary>
 		/// <param name="type">The object type of the
 		/// blueprints to return.</param>
-		/// <returns>A list of beans containing information
-		/// about blueprints of the given type.</returns>
+		/// <returns>A list of resrefs.</returns>
 		[OperationContract]
+		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Utils.Bean> GetBlueprints(NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);
+		IList<string> GetBlueprintResRefs(NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);
 		
 		
 		/// <summary>
