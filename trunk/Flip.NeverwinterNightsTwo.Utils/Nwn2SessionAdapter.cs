@@ -308,7 +308,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="type">The type of object to add.</param>
 		/// <param name="resref">The resref of the blueprint to create the object from.</param>
 		/// <param name="tag">The tag of the object.</param>
-		public void AddObject(string areaName, NWN2ObjectType type, string resref, string tag)
+		/// <returns>Returns the unique ID the object is assigned upon creation.</returns>
+		public Guid AddObject(string areaName, NWN2ObjectType type, string resref, string tag)
 		{			
 			try {
 				if (areaName == null) {
@@ -332,7 +333,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				Microsoft.DirectX.Vector3 position = area.GetRandomPosition(true);
 				
-				area.AddGameObject(type,resref,tag,position);
+				INWN2Instance instance = area.AddGameObject(type,resref,tag,position);
+				return instance.ObjectID;
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -358,9 +360,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// blueprint to return.</param>
 		/// <param name="type">The object type of the
 		/// blueprint to return.</param>
+		/// <param name="full">True to serialise every field on this
+		/// blueprint; false to only serialise a predetermined selection 
+		/// of fields.</param>
 		/// <returns>A bean containing information
 		/// about the blueprint, or null if no such blueprint exists.</returns>
-		public Bean GetBlueprint(string resRef, NWN2ObjectType type)
+		public Bean GetBlueprint(string resRef, NWN2ObjectType type, bool full)
 		{
 			try {		
 				if (resRef == null) {
@@ -379,7 +384,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				if (blueprint == null) return null;
 				else {
-					Bean bean = new Bean(blueprint,GetFieldsToSerialise(type.ToString()));
+					Bean bean;
+					if (!full) bean = new Bean(blueprint,GetFieldsToSerialise(type.ToString()));
+					else bean = new Bean(blueprint);
 					return bean;
 				}
 			}
@@ -433,9 +440,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="areaName">The area which has the object.</param>
 		/// <param name="type">The type of the object.</param>
 		/// <param name="id">The unique ID of the object.</param>
+		/// <param name="full">True to serialise every field on this
+		/// object; false to only serialise a predetermined selection 
+		/// of fields.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
-		public Bean GetObject(string areaName, NWN2ObjectType type, Guid id)
+		public Bean GetObject(string areaName, NWN2ObjectType type, Guid id, bool full)
 		{
 			try {
 				if (id == null) {
@@ -463,7 +473,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				INWN2Instance unique = area.GetObject(type,id);
 				
 				if (unique == null) return null;
-				else return new Bean(unique,GetFieldsToSerialise(type.ToString()));
+				else {
+					Bean bean;
+					if (!full) bean = new Bean(unique,GetFieldsToSerialise(type.ToString()));
+					else bean = new Bean(unique);
+					return bean;
+				}
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -592,8 +607,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets an area in the current module.
 		/// </summary>
 		/// <param name="name">The name of the area.</param>
+		/// <param name="full">True to serialise every field on this
+		/// area; false to only serialise a predetermined selection 
+		/// of fields.</param>
 		/// <returns>The named area, or null if one could not be found.</returns>
-		public Bean GetArea(string name)
+		public Bean GetArea(string name, bool full)
 		{
 			try {
 				if (name == null) {
@@ -616,7 +634,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 				bool loaded = nwn2area.Loaded;
 				if (!loaded) nwn2area.Demand();	
-				Bean bean = new Bean(nwn2area,GetFieldsToSerialise("Area"));
+				
+				Bean bean;
+				if (!full) bean = new Bean(nwn2area,GetFieldsToSerialise("Area"));
+				else bean = new Bean(nwn2area);
 				
 				// Store the value of 'Loaded' that will apply by the time the bean is returned,
 				// rather than now (when the area MUST be loaded to populate the bean):
@@ -1670,7 +1691,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// which are open in area viewers in the current module.
 		/// </summary>
 		/// <returns>A list of names of open areas.</returns>
-		public IList<string> GetOpenAreas()
+		public IList<string> GetOpenAreaNames()
 		{
 			try {				
 				NWN2GameModule module = session.GetModule();
@@ -1842,7 +1863,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// which are open in script viewers in the current module.
 		/// </summary>
 		/// <returns>A list of names of open scripts.</returns>
-		public IList<string> GetOpenScripts()
+		public IList<string> GetOpenScriptNames()
 		{
 			try {				
 				NWN2GameModule module = session.GetModule();
