@@ -145,11 +145,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="type">The type of object to add.</param>
 		/// <param name="resref">The resref of the blueprint to create the object from.</param>
 		/// <param name="tag">The tag of the object.</param>
+		/// <returns>Returns the unique ID the object is assigned upon creation.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		void AddObject(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string resref, string tag);
+		Guid AddObject(string areaName, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string resref, string tag);
 		
 		
 		/// <summary>
@@ -161,13 +162,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// blueprint to return.</param>
 		/// <param name="type">The object type of the
 		/// blueprint to return.</param>
+		/// <param name="full">True to serialise every field on this
+		/// blueprint; false to only serialise a predetermined selection 
+		/// of fields.</param>
 		/// <returns>A bean containing information
 		/// about the blueprint, or null if no such blueprint exists.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Utils.Bean GetBlueprint(string resRef, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type);
+		Flip.Utils.Bean GetBlueprint(string resRef, NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, bool full);
 		
 		
 		/// <summary>
@@ -188,6 +192,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="areaName">The area which has the object.</param>
 		/// <param name="type">The type of the object.</param>
 		/// <param name="id">The unique ID of the object.</param>
+		/// <param name="full">True to serialise every field on this
+		/// object; false to only serialise a predetermined selection 
+		/// of fields.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
 		[OperationContract]
@@ -196,7 +203,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.InvalidOperationException))]
 		Flip.Utils.Bean GetObject(string areaName, 
 		                          NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, 
-		                          Guid id);		
+		                          Guid id,
+		                          bool full);
 		
 		
 		/// <summary>
@@ -233,13 +241,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets a bean representing an area in the current module.
 		/// </summary>
 		/// <param name="name">The name of the area.</param>
+		/// <param name="full">True to serialise every field on this
+		/// area; false to only serialise a predetermined selection 
+		/// of fields.</param>
 		/// <returns>A bean representing the named area, or null 
 		/// if the area could not be found.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Utils.Bean GetArea(string name);
+		Flip.Utils.Bean GetArea(string name, bool full);
 		
 		
 		/// <summary>
@@ -255,6 +266,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Gets a bean representing the current module.
 		/// </summary>
+		/// <param name="full">True to serialise every field on this
+		/// module; false to only serialise a predetermined selection 
+		/// of fields.</param>
 		/// <returns>A bean representing the current module.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
@@ -492,7 +506,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A list of names of open areas.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<string> GetOpenAreas();
+		IList<string> GetOpenAreaNames();
 		
 		
 		/// <summary>
@@ -540,7 +554,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A list of names of open scripts.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<string> GetOpenScripts();
+		IList<string> GetOpenScriptNames();
 		
 		
 		/// <summary>

@@ -141,7 +141,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string blueprintResRef = "c_cat";
 			NWN2ObjectType blueprintType = NWN2ObjectType.Creature;
 			
-			Bean cat = service.GetBlueprint(blueprintResRef,blueprintType);
+			Bean cat = service.GetBlueprint(blueprintResRef,blueprintType,false);
 			Assert.IsNotNull(cat);
 			Assert.AreEqual("Creature",cat["ObjectType"]);
 			Assert.AreEqual("Cats are typically kept for their abilities to dispose of vermin " +
@@ -149,7 +149,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			                cat["LocalizedDescription"]);
 			
 			blueprintType = NWN2ObjectType.Door;
-			Assert.IsNull(service.GetBlueprint(blueprintResRef,blueprintType));			
+			Assert.IsNull(service.GetBlueprint(blueprintResRef,blueprintType,false));			
 			
 			service.CloseModule();
 			Delete(path);
@@ -176,7 +176,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				Assert.IsNotNull(resRefs);				
 				IList<Bean> beans = new List<Bean>(resRefs.Count);
 				foreach (string resRef in resRefs) {
-					Bean bean = service.GetBlueprint(resRef,type);
+					Bean bean = service.GetBlueprint(resRef,type,false);
 					Assert.IsNotNull(bean);
 					beans.Add(bean);
 					if (!foundBlackDragon && type == NWN2ObjectType.Creature 
@@ -355,7 +355,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			service.AttachScriptToArea(scriptName,areaName,"OnExitScript");
 			
-			Bean area = service.GetArea(areaName);
+			Bean area = service.GetArea(areaName,false);
 			Assert.IsNotNull(area);			
 			
 			string attachedScriptName = area.GetValue("OnExitScript");
@@ -363,7 +363,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.ClearScriptSlotOnArea(areaName,"OnExitScript");
 			
-			area = service.GetArea(areaName);
+			area = service.GetArea(areaName,false);
 			attachedScriptName = area.GetValue("OnExitScript");
 			Assert.IsNotNull(attachedScriptName);
 			Assert.IsEmpty(attachedScriptName);
@@ -413,13 +413,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.AttachScriptToObject(scriptName,areaName,Nwn2EventRaiser.Door,doorID,"OnFailToOpen");
 			
-			Bean door = service.GetObject(areaName,NWN2ObjectType.Door,doorID);			
+			Bean door = service.GetObject(areaName,NWN2ObjectType.Door,doorID,false);			
 			string attachedScriptName = door.GetValue("OnFailToOpen");
 			Assert.AreEqual(scriptName,attachedScriptName);
 			
 			service.ClearScriptSlotOnObject(areaName,doorID,Nwn2EventRaiser.Door,"OnFailToOpen");
 			
-			door = service.GetObject(areaName,NWN2ObjectType.Door,doorID);			
+			door = service.GetObject(areaName,NWN2ObjectType.Door,doorID,false);			
 			attachedScriptName = door.GetValue("OnFailToOpen");
 			Assert.IsNotNull(attachedScriptName);
 			Assert.IsEmpty(attachedScriptName);
@@ -539,7 +539,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(2,ids.Count);
 			IList<Bean> beans = new List<Bean>(ids.Count);
 			foreach (Guid id in ids) {
-				Bean bean = service.GetObject(area,NWN2ObjectType.Creature,id);
+				Bean bean = service.GetObject(area,NWN2ObjectType.Creature,id,false);
 				Assert.IsNotNull(bean);
 				beans.Add(bean);
 			}
@@ -577,7 +577,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(1,ids.Count);
 			beans = new List<Bean>(ids.Count);
 			foreach (Guid id in ids) {
-				Bean bean = service.GetObject(area,NWN2ObjectType.Item,id);
+				Bean bean = service.GetObject(area,NWN2ObjectType.Item,id,false);
 				Assert.IsNotNull(bean);
 				beans.Add(bean);
 			}
@@ -636,11 +636,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat7");
 			Assert.AreEqual(1,ids.Count);
-			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,ids[0]);
+			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,ids[0],false);
 			
 			ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Item,"sword4");
 			Assert.AreEqual(1,ids.Count);
-			Bean sword = service.GetObject(area,NWN2ObjectType.Item,ids[0]);
+			Bean sword = service.GetObject(area,NWN2ObjectType.Item,ids[0],false);
 			
 			Assert.IsTrue(cat.HasValue("ObjectID"));
 			Assert.IsTrue(sword.HasValue("ObjectID"));			
@@ -650,12 +650,52 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotEmpty(swordID);
 			Assert.AreNotEqual(catID,swordID);
 			
-			Bean retrievedCat = service.GetObject(area,NWN2ObjectType.Creature,new Guid(catID));
-			Bean retrievedSword = service.GetObject(area,NWN2ObjectType.Item,new Guid(swordID));
+			Bean retrievedCat = service.GetObject(area,NWN2ObjectType.Creature,new Guid(catID),false);
+			Bean retrievedSword = service.GetObject(area,NWN2ObjectType.Item,new Guid(swordID),false);
 			
 			Assert.AreEqual(cat,retrievedCat);
 			Assert.AreEqual(sword,retrievedSword);
 			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void ProvidesFullSerialisationIfRequested()
+		{
+			string name = "ProvidesBothFullAndLimitedBeans.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string areaName = "area";		
+			service.AddArea(areaName,false,Area.SmallestAreaSize);
+			service.AddObject(areaName,NWN2ObjectType.Creature,"c_cat","cat");
+			
+			Guid catID = service.GetObjectIDsByTag(areaName,NWN2ObjectType.Creature,"cat")[0];
+			Bean cat = service.GetObject(areaName,NWN2ObjectType.Creature,catID,false);	
+			Assert.IsFalse(cat.HasValue("Strength"));
+			cat = service.GetObject(areaName,NWN2ObjectType.Creature,catID,true);
+			Assert.IsTrue(cat.HasValue("Strength"));
+			Assert.AreEqual("3",cat["Strength"]);			
+			
+			Bean area = service.GetArea(areaName,false);
+			Assert.IsFalse(area.HasValue("AmbientSoundDaytime"));
+			area = service.GetArea(areaName,true);
+			Assert.IsTrue(area.HasValue("AmbientSoundDaytime"));
+			Assert.AreEqual("(No Ambient Sound)",area["AmbientSoundDaytime"]);
+			
+			Bean blueprint = service.GetBlueprint("angelicaf",NWN2ObjectType.Tree,false);
+			Assert.IsFalse(blueprint.HasValue("CastsShadow"));
+			blueprint = service.GetBlueprint("angelicaf",NWN2ObjectType.Tree,true);
+			Assert.IsTrue(blueprint.HasValue("CastsShadow"));
+			Assert.AreEqual("CAST_ALL",blueprint["CastsShadow"]);	
+									
 			service.CloseModule();
 			Delete(path);
 		}
@@ -1017,7 +1057,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat9");
 			Assert.AreEqual(1,ids.Count);
-			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,ids[0]);
+			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,ids[0],false);
 			
 			Assert.IsTrue(cat.HasValue("OnSpawnIn"));
 			string catSpawnScript = cat.GetValue("OnSpawnIn");
@@ -1040,7 +1080,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");	
 						
-			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
 			
 			Assert.IsTrue(cat.HasValue("OnSpawnIn"));
@@ -1078,7 +1118,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptSlot = "OnHeartbeat";			
 			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
 			
-			Bean before = service.GetArea(areaName);
+			Bean before = service.GetArea(areaName,false);
 			Assert.IsTrue(before.HasValue(scriptSlot));
 			
 			Assert.AreEqual(scriptName,before.GetValue(scriptSlot));
@@ -1087,7 +1127,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.File);
 				
-			Bean after = service.GetArea(areaName);
+			Bean after = service.GetArea(areaName,false);
 			Assert.IsTrue(after.HasValue(scriptSlot));
 			Assert.AreEqual(scriptName,after.GetValue(scriptSlot));
 		
@@ -1154,7 +1194,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
 			Assert.AreEqual(1,ids.Count);
 			Guid catID = ids[0];
-			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
@@ -1262,7 +1302,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			string scriptSlot = "OnHeartbeat";	
 			string wrongAreaName = "non existent area";
-			Assert.IsNull(service.GetArea(wrongAreaName));
+			Assert.IsNull(service.GetArea(wrongAreaName,false));
 			
 			try {
 				service.AttachScriptToArea(wrongAreaName,areaName,scriptSlot);
@@ -1301,12 +1341,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string area2 = "inside";
 			service.AddArea(area2,false,AreaBase.SmallestAreaSize);	
 			
-			Bean area1Bean = service.GetArea(area1);
+			Bean area1Bean = service.GetArea(area1,false);
 			Assert.IsNotNull(area1Bean);
 			Assert.IsTrue(area1Bean.HasValue("HasTerrain"));
 			Assert.AreEqual("True",area1Bean.GetValue("HasTerrain"));
 			
-			Bean area2Bean = service.GetArea(area2);
+			Bean area2Bean = service.GetArea(area2,false);
 			Assert.IsNotNull(area2Bean);
 			Assert.IsTrue(area2Bean.HasValue("HasTerrain"));
 			Assert.AreEqual("False",area2Bean.GetValue("HasTerrain"));
@@ -1315,8 +1355,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(areas);
 			Assert.AreEqual(2,areas.Count);
 			
-			area1Bean = service.GetArea(area1);
-			area2Bean = service.GetArea(area2);
+			area1Bean = service.GetArea(area1,false);
+			area2Bean = service.GetArea(area2,false);
 			  	
 			Assert.IsNotNull(area1Bean);
 			Assert.IsTrue(area1Bean.HasValue("HasTerrain"));
@@ -1395,7 +1435,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
 			Assert.AreEqual(1,ids.Count);
 			Guid catID = ids[0];
-			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "uncompiled script";
@@ -1519,7 +1559,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
 			Assert.AreEqual(1,ids.Count);
 			Guid catID = ids[0];
-			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 						
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
@@ -1535,7 +1575,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 						
-			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
 			
 			string catSpawnScript = cat.GetValue("OnSpawnIn");
@@ -1557,7 +1597,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 			
-			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
 			
 			catSpawnScript = cat.GetValue("OnSpawnIn");
@@ -1593,7 +1633,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
 			Assert.AreEqual(1,ids.Count);
 			Guid catID = ids[0];
-			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 						
 			string scriptData = sampleScripts.Sing;
 			string scriptName = "attachingscript";
@@ -1609,7 +1649,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 						
-			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
 			
 			string catSpawnScript = cat.GetValue("OnSpawnIn");
@@ -1631,7 +1671,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 						
-			cat = service.GetObject(area,NWN2ObjectType.Creature,catID);
+			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
 			
 			catSpawnScript = cat.GetValue("OnSpawnIn");
@@ -2229,7 +2269,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(areas);
 			Assert.AreEqual(2,areas.Count);
 			foreach (string a in areas) {
-				Assert.IsNotNull(service.GetArea(a));
+				Assert.IsNotNull(service.GetArea(a,false));
 			}
 			
 			service.CloseModule();			
@@ -2264,7 +2304,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(areas);
 			Assert.AreEqual(2,areas.Count);
 			foreach (string a in areas) {
-				Assert.IsNotNull(service.GetArea(a));
+				Assert.IsNotNull(service.GetArea(a,false));
 			}
 			
 			service.CloseModule();			
@@ -2420,7 +2460,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			Assert.AreEqual(service.GetModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreaNames().Count);
-			Assert.IsNotNull(service.GetArea(area));
+			Assert.IsNotNull(service.GetArea(area,false));
 			Assert.AreEqual(3,service.GetObjectIDs(area,NWN2ObjectType.Creature).Count);
 			
 			service.CloseModule();			
@@ -2464,7 +2504,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			Assert.AreEqual(service.GetModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreaNames().Count);
-			Assert.IsNotNull(service.GetArea(area));
+			Assert.IsNotNull(service.GetArea(area,false));
 			Assert.AreEqual(3,service.GetObjectIDs(area,NWN2ObjectType.Creature).Count);
 			
 			service.CloseModule();			
@@ -2537,19 +2577,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
 			service.AddArea(area2,false,AreaBase.SmallestAreaSize);
 			
-			Assert.AreEqual(2,service.GetOpenAreas().Count);
+			Assert.AreEqual(2,service.GetOpenAreaNames().Count);
 			
 			service.CloseArea(area2);			
-			Assert.AreEqual(1,service.GetOpenAreas().Count);
+			Assert.AreEqual(1,service.GetOpenAreaNames().Count);
 			
 			service.CloseArea(area1);			
-			Assert.AreEqual(0,service.GetOpenAreas().Count);
+			Assert.AreEqual(0,service.GetOpenAreaNames().Count);
 			
 			service.OpenArea(area1);			
-			Assert.AreEqual(1,service.GetOpenAreas().Count);
+			Assert.AreEqual(1,service.GetOpenAreaNames().Count);
 			
 			service.OpenArea(area2);			
-			Assert.AreEqual(2,service.GetOpenAreas().Count);
+			Assert.AreEqual(2,service.GetOpenAreaNames().Count);
 						
 			service.CloseModule();			
 			Delete(path);
@@ -2573,19 +2613,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(script1,sampleScripts.GiveGold);
 			service.AddScript(script2,sampleScripts.Sing);		
 			
-			Assert.AreEqual(0,service.GetOpenScripts().Count);
+			Assert.AreEqual(0,service.GetOpenScriptNames().Count);
 			
 			service.OpenScript(script1);			
-			Assert.AreEqual(1,service.GetOpenScripts().Count);
+			Assert.AreEqual(1,service.GetOpenScriptNames().Count);
 			
 			service.OpenScript(script2);			
-			Assert.AreEqual(2,service.GetOpenScripts().Count);
+			Assert.AreEqual(2,service.GetOpenScriptNames().Count);
 			
 			service.CloseScript(script2);			
-			Assert.AreEqual(1,service.GetOpenScripts().Count);
+			Assert.AreEqual(1,service.GetOpenScriptNames().Count);
 			
 			service.CloseScript(script1);			
-			Assert.AreEqual(0,service.GetOpenScripts().Count);
+			Assert.AreEqual(0,service.GetOpenScriptNames().Count);
 						
 			service.CloseModule();			
 			Delete(path);
@@ -2620,7 +2660,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenArea(area1);			
 			service.OpenArea(area2);
 			service.OpenArea(area3);
-			Assert.AreEqual(3,service.GetOpenAreas().Count);
+			Assert.AreEqual(3,service.GetOpenAreaNames().Count);
 			
 			try {
 				service.OpenArea(area4);
@@ -2636,7 +2676,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				            "to open a fourth area (where 3 is the maximum).");
 			}
 			
-			Assert.AreEqual(3,service.GetOpenAreas().Count);
+			Assert.AreEqual(3,service.GetOpenAreaNames().Count);
 						
 			service.CloseModule();			
 			Delete(path);
@@ -2756,34 +2796,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddArea(area1,true,AreaBase.SmallestAreaSize);	
 			service.AddArea(area2,false,AreaBase.SmallestAreaSize);		
 			
-			Assert.AreEqual("True",service.GetArea(area1)["Loaded"]);
-			Assert.AreEqual("True",service.GetArea(area2)["Loaded"]);	
+			Assert.AreEqual("True",service.GetArea(area1,false)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area2,false)["Loaded"]);	
 			
 			service.CloseArea(area1);
 			service.CloseArea(area2);
 			
-			Assert.AreEqual("False",service.GetArea(area1)["Loaded"]);
-			Assert.AreEqual("False",service.GetArea(area2)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area1,false)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area2,false)["Loaded"]);
 			
 			service.OpenArea(area1);
 						
-			Assert.AreEqual("True",service.GetArea(area1)["Loaded"]);
-			Assert.AreEqual("False",service.GetArea(area2)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area1,false)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area2,false)["Loaded"]);
 			
 			service.OpenArea(area2);
 			
-			Assert.AreEqual("True",service.GetArea(area1)["Loaded"]);
-			Assert.AreEqual("True",service.GetArea(area2)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area1,false)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area2,false)["Loaded"]);
 			
 			service.CloseArea(area1);
 			
-			Assert.AreEqual("False",service.GetArea(area1)["Loaded"]);
-			Assert.AreEqual("True",service.GetArea(area2)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area1,false)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area2,false)["Loaded"]);
 			
 			service.CloseArea(area2);
 			
-			Assert.AreEqual("False",service.GetArea(area1)["Loaded"]);
-			Assert.AreEqual("False",service.GetArea(area2)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area1,false)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area2,false)["Loaded"]);
 						
 			service.CloseModule();			
 			Delete(path);
@@ -2915,26 +2955,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			string area = "forest";
 			service.AddArea(area,true,AreaBase.SmallestAreaSize);			
-			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area,false)["Loaded"]);
 			
 			service.ReleaseArea(area);			
-			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area,false)["Loaded"]);
 			
 			service.DemandArea(area);			
-			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area,false)["Loaded"]);
 			
 			service.ReleaseArea(area);			
-			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area,false)["Loaded"]);
 			
 			// Demand()s and Release()s 'stack up':
 			service.DemandArea(area);			
-			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area,false)["Loaded"]);
 			service.DemandArea(area);			
-			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);
+			Assert.AreEqual("True",service.GetArea(area,false)["Loaded"]);
 			service.ReleaseArea(area);	
-			Assert.AreEqual("True",service.GetArea(area)["Loaded"]);	
+			Assert.AreEqual("True",service.GetArea(area,false)["Loaded"]);	
 			service.ReleaseArea(area);		
-			Assert.AreEqual("False",service.GetArea(area)["Loaded"]);
+			Assert.AreEqual("False",service.GetArea(area,false)["Loaded"]);
 						
 			try {
 				service.DemandArea("nonexistent");
