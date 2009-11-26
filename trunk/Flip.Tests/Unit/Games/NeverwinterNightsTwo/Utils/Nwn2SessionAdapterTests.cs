@@ -713,7 +713,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);
 			
-			IList<Bean> scripts = service.GetUncompiledScripts();
+			IList<string> scripts = service.GetScriptNames();
 			Assert.AreEqual(0,scripts.Count);
 			
 			// This script compiles in the toolset as entered here (hand-tested):
@@ -722,9 +722,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.AddScript(scriptName,scriptData);
 			
-			scripts = service.GetUncompiledScripts();
+			scripts = service.GetScriptNames();
 			Assert.AreEqual(1,scripts.Count);
-			Bean script = scripts[0];
+			Bean script = service.GetScript(scriptName);
+			Assert.IsNotNull(script);
 			
 			Assert.AreEqual(scriptName,script.GetValue("Name"));
 			Assert.AreEqual(scriptName + ".nss",script.GetValue("VersionControlName").ToLower());
@@ -761,7 +762,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.Directory);
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
-			IList<Bean> scripts = service.GetUncompiledScripts();
+			IList<string> scripts = service.GetScriptNames();
 			Assert.AreEqual(0,scripts.Count);
 			
 			// This script compiles in the toolset as entered here (hand-tested):
@@ -770,9 +771,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.AddScript(scriptName,scriptData);
 			
-			scripts = service.GetUncompiledScripts();
+			scripts = service.GetScriptNames();
 			Assert.AreEqual(1,scripts.Count);
-			Bean script = scripts[0];
+			Bean script = service.GetScript(scriptName);
+			Assert.IsNotNull(script);
 			
 			Assert.AreEqual(scriptName,script.GetValue("Name"));
 			Assert.AreEqual(scriptName + ".nss",script.GetValue("VersionControlName").ToLower());
@@ -923,19 +925,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsFalse(service.HasUncompiled(scriptName));
-			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(0,service.GetScriptNames().Count);
 			
 			service.AddScript(scriptName,scriptData);
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
 			service.CompileScript(scriptName);					
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			
 			Assert.IsTrue(service.HasUncompiled(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
 			try {
 				scriptName = "imaginary script";
@@ -972,19 +974,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsFalse(service.HasUncompiled(scriptName));
-			Assert.AreEqual(0,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(0,service.GetScriptNames().Count);
 			
 			service.AddScript(scriptName,scriptData);
 			
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
 			service.CompileScript(scriptName);			
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			
 			Assert.IsTrue(service.HasUncompiled(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
 			try {
 				scriptName = "imaginary script";
@@ -1570,8 +1572,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");	
 			
 			// Before...
-			Assert.IsNotNull(service.GetUncompiledScript(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.IsNotNull(service.GetScript(scriptName));
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 						
@@ -1582,8 +1584,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(catSpawnScript);
 			Assert.AreEqual(scriptName,catSpawnScript);
 			
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
-			Bean script = service.GetUncompiledScript(scriptName);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
+			Bean script = service.GetScript(scriptName);
 			Assert.IsNotNull(script);
 			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
 						
@@ -1592,8 +1594,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			// And after...
-			Assert.IsNotNull(service.GetUncompiledScript(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.IsNotNull(service.GetScript(scriptName));
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 			
@@ -1604,8 +1606,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(catSpawnScript);
 			Assert.AreEqual(scriptName,catSpawnScript);
 			
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
-			script = service.GetUncompiledScript(scriptName);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
+			script = service.GetScript(scriptName);
 			Assert.IsNotNull(script);
 			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
 			
@@ -1644,8 +1646,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");	
 			
 			// Before...
-			Assert.IsNotNull(service.GetUncompiledScript(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.IsNotNull(service.GetScript(scriptName));
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 						
@@ -1656,8 +1658,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(catSpawnScript);
 			Assert.AreEqual(scriptName,catSpawnScript);
 			
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
-			Bean script = service.GetUncompiledScript(scriptName);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
+			Bean script = service.GetScript(scriptName);
 			Assert.IsNotNull(script);
 			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
 						
@@ -1666,8 +1668,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
 			// And after...
-			Assert.IsNotNull(service.GetUncompiledScript(scriptName));
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.IsNotNull(service.GetScript(scriptName));
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 						
@@ -1678,8 +1680,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(catSpawnScript);
 			Assert.AreEqual(scriptName,catSpawnScript);
 			
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
-			script = service.GetUncompiledScript(scriptName);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
+			script = service.GetScript(scriptName);
 			Assert.IsNotNull(script);
 			Assert.AreEqual(sampleScripts.Sing,script["Data"]);
 			
@@ -1706,16 +1708,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(scriptName,scriptData);
 			
 			// Before...
-			Bean before = service.GetUncompiledScript(scriptName);
+			Bean before = service.GetScript(scriptName);
 			Assert.IsNotNull(before);
 			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 						
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			// And after...
-			Bean after = service.GetUncompiledScript(scriptName);
+			Bean after = service.GetScript(scriptName);
 			Assert.IsNull(after);
 			
 			service.CloseModule();			
@@ -1741,20 +1743,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(scriptName,scriptData);
 			
 			// Before...
-			Bean before = service.GetUncompiledScript(scriptName);
+			Bean before = service.GetScript(scriptName);
 			Assert.IsNotNull(before);
 			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 						
 			service.SaveModule();
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			// And after...
-			Bean after = service.GetUncompiledScript(scriptName);
+			Bean after = service.GetScript(scriptName);
 			Assert.IsNotNull(after);
 			Assert.AreEqual(sampleScripts.Sing,after["Data"]);
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
 			service.CloseModule();			
 			Delete(path);
@@ -1779,16 +1781,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(scriptName,scriptData);
 			
 			// Before...
-			Bean before = service.GetUncompiledScript(scriptName);
+			Bean before = service.GetScript(scriptName);
 			Assert.IsNotNull(before);
 			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 						
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
 			// And after...
-			Bean after = service.GetUncompiledScript(scriptName);			
+			Bean after = service.GetScript(scriptName);			
 			// Assert.IsNotNull(after); // unfortunately, the FILE will persist, but it should be empty:
 			Assert.AreEqual(String.Empty,after["Data"]);
 			
@@ -1815,21 +1817,56 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(scriptName,scriptData);
 			
 			// Before...
-			Bean before = service.GetUncompiledScript(scriptName);
+			Bean before = service.GetScript(scriptName);
 			Assert.IsNotNull(before);
 			Assert.AreEqual(sampleScripts.Sing,before["Data"]);
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
 			service.SaveModule();
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
 			// And after...
-			Bean after = service.GetUncompiledScript(scriptName);
+			Bean after = service.GetScript(scriptName);
 			Assert.IsNotNull(after);
 			Assert.AreEqual(sampleScripts.Sing,after["Data"]);
-			Assert.AreEqual(1,service.GetUncompiledScripts().Count);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void GetsScriptNames()
+		{
+			string name = "GetsCompiledScriptNames";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			service.AddScript("givegold",sampleScripts.GiveGold);
+			service.AddScript("sing",sampleScripts.Sing);
+			
+			IList<string> scriptNames = service.GetScriptNames();
+			Assert.IsTrue(scriptNames.Contains("givegold"));
+			Assert.IsTrue(scriptNames.Contains("sing"));
+			Assert.AreEqual(2,scriptNames.Count);
+			
+			IList<string> compiledScriptNames = service.GetCompiledScriptNames();			
+			Assert.AreEqual(0,compiledScriptNames.Count);
+			
+			service.CompileScript("givegold");
+			Assert.IsTrue(WaitForCompiledScriptToAppear("givegold"),"The compiled script file was never found.");
+			
+			compiledScriptNames = service.GetCompiledScriptNames();
+			Assert.AreEqual("givegold",compiledScriptNames[0]);
+			Assert.AreEqual(1,compiledScriptNames.Count);			
+						
 			service.CloseModule();			
 			Delete(path);
 		}
@@ -1859,33 +1896,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(WaitForCompiledScriptToAppear(givegold),"The compiled script file was never found.");
 			service.AddScript(changename,changenameData);
 			Assert.IsTrue(File.Exists(precompiled99bottlesScriptPath),"A file necessary for running the unit test was missing.");
+			
 			// Place pre-compiled script directly into module:
 			File.Copy(precompiled99bottlesScriptPath,Path.Combine(service.GetModuleTempPath(),Path.GetFileName(precompiled99bottlesScriptPath)));
 			
 			Bean givegoldBean, changenameBean, _99bottlesBean;
 			
-			// GetUncompiledScript
-			Assert.IsNotNull(givegoldBean = service.GetUncompiledScript(givegold));
-			Assert.IsNotNull(changenameBean = service.GetUncompiledScript(changename));
-			Assert.IsNull(_99bottlesBean = service.GetUncompiledScript(_99bottles));
-			Assert.AreEqual(givegoldData,givegoldBean.GetValue("Data"));
-			Assert.AreEqual(changenameData,changenameBean.GetValue("Data"));
-						
-			// GetUncompiledScripts
-			givegoldBean = null;
-			changenameBean = null;
-			_99bottlesBean = null;
-			IList<Bean> beans = service.GetUncompiledScripts();
-			foreach (Bean bean in beans) {
-				string n = bean.GetValue("Name");
-				if (n == givegold) givegoldBean = bean;
-				else if (n == changename) changenameBean = bean;
-				else if (n == _99bottles) _99bottlesBean = bean;
-			}			
-			
-			Assert.IsNotNull(givegoldBean);
-			Assert.IsNotNull(changenameBean);
-			Assert.IsNull(_99bottlesBean);
+			// GetScript
+			Assert.IsNotNull(givegoldBean = service.GetScript(givegold));
+			Assert.IsNotNull(changenameBean = service.GetScript(changename));
+			Assert.IsNull(_99bottlesBean = service.GetScript(_99bottles));
 			Assert.AreEqual(givegoldData,givegoldBean.GetValue("Data"));
 			Assert.AreEqual(changenameData,changenameBean.GetValue("Data"));
 			
@@ -1896,22 +1916,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsNotNull(givegoldBean = service.GetCompiledScript(givegold));
 			Assert.IsNull(changenameBean = service.GetCompiledScript(changename));
 			Assert.IsNotNull(_99bottlesBean = service.GetCompiledScript(_99bottles));
-			
-			// GetCompiledScripts
-			givegoldBean = null;
-			changenameBean = null;
-			_99bottlesBean = null;
-			beans = service.GetCompiledScripts();
-			foreach (Bean bean in beans) {
-				string n = bean.GetValue("Name");
-				if (n == givegold) givegoldBean = bean;
-				else if (n == changename) changenameBean = bean;
-				else if (n == _99bottles) _99bottlesBean = bean;
-			}			
-			
-			Assert.IsNotNull(givegoldBean);
-			Assert.IsNull(changenameBean);
-			Assert.IsNotNull(_99bottlesBean);
 						
 			service.CloseModule();			
 			Delete(path);
@@ -2847,34 +2851,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(script1,sampleScripts.GiveGold);
 			service.AddScript(script2,sampleScripts.Sing);	
 			
-			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
-			Assert.AreEqual("True",service.GetUncompiledScript(script2)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script2)["Loaded"]);
 			
 			service.ReleaseScript(script1);
 			service.ReleaseScript(script2);
 			
-			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
-			Assert.AreEqual("False",service.GetUncompiledScript(script2)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script2)["Loaded"]);
 			
 			service.OpenScript(script1);
 			
-			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
-			Assert.AreEqual("False",service.GetUncompiledScript(script2)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script2)["Loaded"]);
 			
 			service.OpenScript(script2);
 			
-			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
-			Assert.AreEqual("True",service.GetUncompiledScript(script2)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script2)["Loaded"]);
 			
 			service.CloseScript(script1);
 			
-			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
-			Assert.AreEqual("True",service.GetUncompiledScript(script2)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script2)["Loaded"]);
 			
 			service.CloseScript(script2);
 			
-			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
-			Assert.AreEqual("False",service.GetUncompiledScript(script2)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script2)["Loaded"]);
 						
 			service.CloseModule();			
 			Delete(path);
@@ -2895,22 +2899,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			string script1 = "givegold";
 			service.AddScript(script1,sampleScripts.GiveGold);		
-			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
 			
 			service.ReleaseScript(script1);			
-			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script1)["Loaded"]);
 			
 			service.DemandScript(script1);			
-			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
 			
 			service.DemandScript(script1);			
-			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
 			
 			service.ReleaseScript(script1);			
-			Assert.AreEqual("True",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
 			
 			service.ReleaseScript(script1);			
-			Assert.AreEqual("False",service.GetUncompiledScript(script1)["Loaded"]);
+			Assert.AreEqual("False",service.GetScript(script1)["Loaded"]);
 						
 			try {
 				service.DemandScript("nonexistentscript");
