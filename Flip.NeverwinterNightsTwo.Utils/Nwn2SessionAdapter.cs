@@ -717,12 +717,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						
 		
 		/// <summary>
-		/// Gets a list of beans representing all of the
-		/// uncompiled scripts owned by the current module.
+		/// Gets a list of names of all of the
+		/// scripts owned by the current module
+		/// in uncompiled form.
 		/// </summary>
-		/// <returns>A list of beans representing all of the
-		/// uncompiled scripts owned by the current module.</returns>
-		public IList<Bean> GetUncompiledScripts()
+		/// <returns>A list of script names.</returns>
+		public IList<string> GetScriptNames()
 		{
 			try {
 				NWN2GameModule module = session.GetModule();
@@ -730,23 +730,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new InvalidOperationException("No module is currently open.");
 				}			
 				
-				IList<Bean> beans = new List<Bean>();
+				IList<string> scripts = new List<string>();
 				
 				foreach (NWN2GameScript script in module.Scripts.Values) {
-					bool loaded = script.Loaded;
-					if (!loaded) script.Demand();	
-					Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
-					
-					// Store the value of 'Loaded' that will apply by the time the bean is returned,
-					// rather than now (when the script MUST be loaded to populate the bean):
-					bean["Loaded"] = loaded.ToString();
-					
-					if (!loaded) script.Release();					
-					
-					beans.Add(bean);
+					scripts.Add(script.Name);
 				}
 				
-				return beans;
+				return scripts;
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
@@ -758,13 +748,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a bean representing an uncompiled
+		/// Gets a bean representing a
 		/// script in the current module.
 		/// </summary>
-		/// <returns>A bean representing an uncompiled
+		/// <returns>A bean representing a 
 		/// script in the current module, or null if no
 		/// such script exists.</returns>
-		public Bean GetUncompiledScript(string name)
+		public Bean GetScript(string name)
 		{
 			try {
 				if (name == null) {
@@ -815,12 +805,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a list of beans representing all of the
-		/// compiled scripts owned by the current module.
+		/// Gets a list of names of all of the
+		/// scripts owned by the current module
+		/// in compiled form.
 		/// </summary>
-		/// <returns>A list of beans representing all of the
-		/// compiled scripts owned by the current module.</returns>
-		public IList<Bean> GetCompiledScripts()
+		/// <returns>A list of script names.</returns>
+		public IList<string> GetCompiledScriptNames()
 		{
 			try {
 				NWN2GameModule module = session.GetModule();
@@ -831,28 +821,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ApplicationException("The module's repository was missing.");
 				}	
 								
-				IList<Bean> beans = new List<Bean>();
+				IList<string> scripts = new List<string>();
 				
 				ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");					
 				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
 				
 				foreach (IResourceEntry r in resources) {
-					NWN2GameScript script = new NWN2GameScript(r);
-
-					bool loaded = script.Loaded;
-					if (!loaded) script.Demand();	
-					Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
-					
-					// Store the value of 'Loaded' that will apply by the time the bean is returned,
-					// rather than now (when the script MUST be loaded to populate the bean):
-					bean["Loaded"] = loaded.ToString();
-					
-					if (!loaded) script.Release();					
-					
-					beans.Add(bean);
+					scripts.Add(r.ResRef.Value);
 				}
 				
-				return beans;
+				return scripts;
 			}
 			catch (ApplicationException e) {
 				throw new FaultException<ApplicationException>(e,e.Message);
@@ -867,8 +845,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 							
 		/// <summary>
-		/// Gets a bean representing an compiled
-		/// script in the current module.
+		/// Gets a bean representing the compiled
+		/// version of a script owned by the current module.
 		/// </summary>
 		/// <returns>A bean representing an compiled
 		/// script in the current module, or null if no

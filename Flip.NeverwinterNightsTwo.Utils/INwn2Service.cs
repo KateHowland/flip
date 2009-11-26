@@ -276,45 +276,45 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Gets a list of beans representing all of the
-		/// uncompiled scripts owned by the current module.
+		/// Gets a list of names of all of the
+		/// scripts owned by the current module
+		/// in uncompiled form.
 		/// </summary>
-		/// <returns>A list of beans representing all of the
-		/// uncompiled scripts owned by the current module.</returns>
+		/// <returns>A list of script names.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Utils.Bean> GetUncompiledScripts();	
+		IList<string> GetScriptNames();	
 		
 		
 		/// <summary>
-		/// Gets a bean representing an uncompiled
+		/// Gets a bean representing a
 		/// script in the current module.
 		/// </summary>
-		/// <returns>A bean representing an uncompiled
+		/// <returns>A bean representing a 
 		/// script in the current module, or null if no
 		/// such script exists.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		Flip.Utils.Bean GetUncompiledScript(string name);	
+		Flip.Utils.Bean GetScript(string name);	
 		
 		
 		/// <summary>
-		/// Gets a list of beans representing all of the
-		/// compiled scripts owned by the current module.
+		/// Gets a list of names of all of the
+		/// scripts owned by the current module
+		/// in compiled form.
 		/// </summary>
-		/// <returns>A list of beans representing all of the
-		/// compiled scripts owned by the current module.</returns>
+		/// <returns>A list of script names.</returns>
 		[OperationContract]
 		[FaultContract(typeof(System.ApplicationException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		IList<Flip.Utils.Bean> GetCompiledScripts();	
+		IList<string> GetCompiledScriptNames();	
 		
 		
 		/// <summary>
-		/// Gets a bean representing an compiled
-		/// script in the current module.
+		/// Gets a bean representing the compiled
+		/// version of a script owned by the current module.
 		/// </summary>
 		/// <returns>A bean representing an compiled
 		/// script in the current module, or null if no
