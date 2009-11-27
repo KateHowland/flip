@@ -66,6 +66,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		private string uncompiled99bottlesScriptPath;
 		
+		private bool LaunchAndExitToolset = true;
+		
 		#endregion
 		
 		#region Setup
@@ -91,10 +93,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 				resourceWriter.Write("99bottles_Compiled",assembly,precompiled99bottlesScriptPath);
 				resourceWriter.Write("99bottles_Uncompiled",assembly,uncompiled99bottlesScriptPath);
-							
-				Console.WriteLine("Waiting for toolset to load...");	
-				
-				WaitForToolsetToLoad(true);					
+												
+				if (LaunchAndExitToolset) {
+					Console.WriteLine("Waiting for toolset to load...");
+					WaitForToolsetToLoad(true);
+				}
 				
 				NetNamedPipeBinding binding = new NetNamedPipeBinding();
 				binding.MaxReceivedMessageSize = Int32.MaxValue;
@@ -113,8 +116,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			Console.WriteLine("Test suite completed. Closing toolset.");
-			Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
+			if (LaunchAndExitToolset) {
+				Console.WriteLine("Test suite completed. Closing toolset.");
+				Nwn2ToolsetFunctions.KillNeverwinterNightsTwoToolset();
+			}
 			
 			if (File.Exists(precompiled99bottlesScriptPath)) File.Delete(precompiled99bottlesScriptPath);
 			if (File.Exists(uncompiled99bottlesScriptPath)) File.Delete(uncompiled99bottlesScriptPath);
@@ -125,6 +130,142 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#endregion
 		
 		#region Tests - Scripts
+		
+		[Test]
+		public void AreaMethodsWorkRegardlessOfLoadedState()
+		{
+			string name = "AreaMethodsWorkRegardlessOfLoadedState.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string areaName = "area";
+			service.AddArea(areaName,false,Area.SmallestAreaSize);
+			
+			// Area is open, and hence Loaded:
+			service.AddObject(areaName,NWN2ObjectType.Creature,"c_cat","cat");
+			service.AddObject(areaName,NWN2ObjectType.Creature,"c_gith","gith");
+			service.AddObject(areaName,NWN2ObjectType.Creature,"c_werewolf","werewolf");
+			
+			Assert.AreEqual("True",service.GetArea(areaName,false)["Loaded"]);
+			
+			IList<Guid> ids = service.GetObjectIDs(areaName,NWN2ObjectType.Creature);
+			Assert.AreEqual(3,ids.Count);
+			foreach (Guid id in ids) {
+				Bean creature = service.GetObject(areaName,NWN2ObjectType.Creature,id,false);
+				string tag = creature["Tag"];
+				Assert.IsTrue(tag == "cat" || tag == "gith" || tag == "werewolf");
+			}
+			
+			service.SaveModule();
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			// Area is closed, and hence !Loaded:
+			Assert.AreEqual("False",service.GetArea(areaName,false)["Loaded"]);	
+			
+			ids = service.GetObjectIDs(areaName,NWN2ObjectType.Creature);
+			Assert.AreEqual(3,ids.Count);
+			foreach (Guid id in ids) {
+				Bean creature = service.GetObject(areaName,NWN2ObjectType.Creature,id,false);
+				string tag = creature["Tag"];
+				Assert.IsTrue(tag == "cat" || tag == "gith" || tag == "werewolf");
+			}	
+			
+			// Area is explicitly Demand()ed, and hence Loaded once again:
+			Assert.AreEqual("False",service.GetArea(areaName,false)["Loaded"]);	
+			service.DemandArea(areaName);			
+			Assert.AreEqual("True",service.GetArea(areaName,false)["Loaded"]);	
+			
+			ids = service.GetObjectIDs(areaName,NWN2ObjectType.Creature);
+			Assert.AreEqual(3,ids.Count);
+			foreach (Guid id in ids) {
+				Bean creature = service.GetObject(areaName,NWN2ObjectType.Creature,id,false);
+				string tag = creature["Tag"];
+				Assert.IsTrue(tag == "cat" || tag == "gith" || tag == "werewolf");
+			}	
+			
+			service.CloseModule();
+			Delete(path);		
+		}
+		
+		
+		[Test]
+		public void ScriptMethodsWorkRegardlessOfLoadedState()
+		{
+			string name = "ScriptMethodsWorkRegardlessOfLoadedState.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+						
+			string areaName = "area";
+			service.AddArea(areaName,false,Area.SmallestAreaSize);			
+			service.AddObject(areaName,NWN2ObjectType.Creature,"c_werewolf","werewolf");
+			
+			string scriptName = "givegold";
+			string scriptName2 = "changename";
+			string scriptName3 = "sing";
+			
+			// Scripts are automatically Loaded upon creation:
+			service.AddScript(scriptName,sampleScripts.GiveGold);
+			Assert.AreEqual("True",service.GetScript(scriptName)["Loaded"]);
+			service.CompileScript(scriptName);
+			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName));
+			service.AddScript(scriptName2,sampleScripts.ChangeName);
+			service.AddScript(scriptName3,sampleScripts.Sing);
+				
+			service.SaveModule();
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			// Scripts are not Loaded when the module is opened:
+			Assert.AreEqual("False",service.GetScript(scriptName)["Loaded"]);
+			
+			
+			
+			
+			
+			service.AttachScriptToArea(scriptName,areaName,"OnEnterScript");		
+			
+			
+			
+			// FIXME:
+			LaunchAndExitToolset = false;
+			
+			return;
+			
+			
+			Bean area = service.GetArea(areaName,false);
+			Assert.AreEqual(scriptName,area["OnEnterScript"]);
+			
+			Assert.AreEqual("False",service.GetScript(scriptName2)["Loaded"]);
+			service.CompileScript(scriptName2);
+			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName2));
+			service.AttachScriptToModule(scriptName2,"OnCutsceneAbort");
+			Bean module = service.GetModule();
+			Assert.AreEqual(scriptName2,module["OnCutsceneAbort"]);
+			
+			// Finally, explicitly Demand() the script and hence make it Loaded:
+			Assert.AreEqual("False",service.GetScript(scriptName3)["Loaded"]);
+			service.DemandScript(scriptName3);
+			Assert.AreEqual("True",service.GetScript(scriptName3)["Loaded"]);
+			service.CompileScript(scriptName3);
+			service.AttachScriptToArea(scriptName3,areaName,"OnHeartbeat");
+			area = service.GetArea(areaName,false);
+			Assert.AreEqual(scriptName3,area["OnHeartbeat"]);
+			
+			service.CloseModule();
+			Delete(path);	
+		}
+		
 		
 		[Test]
 		public void GetsBlueprint()
