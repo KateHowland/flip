@@ -455,14 +455,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			string areaName = "forest";
 			service.AddArea(areaName,true,AreaBase.SmallestAreaSize);			
-			service.AddObject(areaName,NWN2ObjectType.Door,"plc_dc_basic01","door");
+			Guid doorID = service.AddObject(areaName,NWN2ObjectType.Door,"plc_dc_basic01","door");
 			
 			string scriptName = "givegold";
 			service.AddScript(scriptName,sampleScripts.GiveGold);
 			service.CompileScript(scriptName);
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
-			
-			Guid doorID = service.GetObjectIDsByTag(areaName,NWN2ObjectType.Door,"door")[0];	
 			
 			service.AttachScriptToObject(scriptName,areaName,Nwn2EventRaiser.Door,doorID,"OnFailToOpen");
 			
@@ -728,9 +726,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			string areaName = "area";		
 			service.AddArea(areaName,false,Area.SmallestAreaSize);
-			service.AddObject(areaName,NWN2ObjectType.Creature,"c_cat","cat");
-			
-			Guid catID = service.GetObjectIDsByTag(areaName,NWN2ObjectType.Creature,"cat")[0];
+			Guid catID = service.AddObject(areaName,NWN2ObjectType.Creature,"c_cat","cat");
 			Bean cat = service.GetObject(areaName,NWN2ObjectType.Creature,catID,false);	
 			Assert.IsFalse(cat.HasValue("Strength"));
 			cat = service.GetObject(areaName,NWN2ObjectType.Creature,catID,true);
@@ -1244,11 +1240,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					
 			string area = "desert";
 			service.AddArea(area,true,AreaBase.SmallestAreaSize);
-			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
-			
-			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
-			Assert.AreEqual(1,ids.Count);
-			Guid catID = ids[0];
+			Guid catID = service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
 			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			
 			string scriptData = sampleScripts.Sing;
@@ -1485,11 +1477,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					
 			string area = "area";
 			service.AddArea(area,true,AreaBase.SmallestAreaSize);							
-			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
-						
-			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
-			Assert.AreEqual(1,ids.Count);
-			Guid catID = ids[0];
+			Guid catID = service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
 			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			
 			string scriptData = sampleScripts.Sing;
@@ -1609,11 +1597,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					
 			string area = "area";
 			service.AddArea(area,true,AreaBase.SmallestAreaSize);
-			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
-						
-			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
-			Assert.AreEqual(1,ids.Count);
-			Guid catID = ids[0];
+			Guid catID = service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
 			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 						
 			string scriptData = sampleScripts.Sing;
@@ -1684,11 +1668,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					
 			string area = "area";
 			service.AddArea(area,true,AreaBase.SmallestAreaSize);
-			service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
-						
-			IList<Guid> ids = service.GetObjectIDsByTag(area,NWN2ObjectType.Creature,"cat");
-			Assert.AreEqual(1,ids.Count);
-			Guid catID = ids[0];
+			Guid catID = service.AddObject(area,NWN2ObjectType.Creature,"c_cat","cat");
 			Bean cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 						
 			string scriptData = sampleScripts.Sing;
