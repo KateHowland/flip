@@ -68,7 +68,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Games\SourceCompiler.cs" />
     <Compile Include="Games\FlipCompiler.cs" />
     <Compile Include="Language\FlipScript.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
