@@ -4,8 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # SharpDevelop 3.0.0.3800
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.Core", "Flip.Core\Flip.Core.csproj", "{6CB759C0-8A82-4C83-8379-597CC2D3491A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.NeverwinterNights", "Flip.NeverwinterNights\Flip.NeverwinterNights.csproj", "{5D07B1F0-DD03-4AFE-AD96-989173BD1B77}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.NeverwinterNightsTwo", "Flip.NeverwinterNightsTwo\Flip.NeverwinterNightsTwo.csproj", "{EED1516E-049A-42AF-82A4-C9CE084EFAF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.Tests", "Flip.Tests\Flip.Tests.csproj", "{FAA2CB8C-8150-41DE-A4C6-86FDC1269FB4}"
@@ -28,10 +26,6 @@ Global
 		{6CB759C0-8A82-4C83-8379-597CC2D3491A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6CB759C0-8A82-4C83-8379-597CC2D3491A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6CB759C0-8A82-4C83-8379-597CC2D3491A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D07B1F0-DD03-4AFE-AD96-989173BD1B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D07B1F0-DD03-4AFE-AD96-989173BD1B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D07B1F0-DD03-4AFE-AD96-989173BD1B77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D07B1F0-DD03-4AFE-AD96-989173BD1B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EED1516E-049A-42AF-82A4-C9CE084EFAF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EED1516E-049A-42AF-82A4-C9CE084EFAF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EED1516E-049A-42AF-82A4-C9CE084EFAF5}.Release|Any CPU.Build.0 = Release|Any CPU
