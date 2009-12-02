@@ -997,7 +997,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				 */ 
 				
 				script.Demand();
-				script.Data = code;		
+				script.Data = code;
+				script.OEISerialize();
+				script.Release();
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1132,7 +1134,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (File.Exists(compiled)) {
 					File.Delete(compiled);
 				}
-														
+											
 				string debug = NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetModuleTempPath());	
 				
 				if (debug.Length > 0) {
@@ -1268,7 +1270,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 								bool loaded = script.Loaded;
 								if (!loaded) script.Demand();
 								pi.SetValue(instance,script.Resource,null);
-								if (!loaded) script.Release();
+//								if (!loaded) script.Release();
 								return;
 							}
 						}
@@ -1363,7 +1365,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				bool loaded = script.Loaded;
 				if (!loaded) script.Demand();
 				p.SetValue(area,script.Resource,null);
-				if (!loaded) script.Release();
+//				if (!loaded) script.Release();
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1440,7 +1442,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				bool loaded = script.Loaded;
 				if (!loaded) script.Demand();
 				p.SetValue(module.ModuleInfo,script.Resource,null);
-				if (!loaded) script.Release();
+//				if (!loaded) script.Release();
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
