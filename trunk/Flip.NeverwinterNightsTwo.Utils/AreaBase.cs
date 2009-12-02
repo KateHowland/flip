@@ -231,6 +231,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Saves the area.
 		/// </summary>
 		public abstract void Save();
+		
+		
+		public override string ToString()
+		{
+			if (nwn2Area == null) return "AreaBase (area: null)";
+			else return "AreaBase (area: " + nwn2Area.Name + ")";
+		}
 
 		#endregion
 	}

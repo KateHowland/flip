@@ -88,7 +88,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Gets a random position in the area.
 		/// </summary>
-		/// <param name="">True to return a position within the
+		/// <param name="accessible">True to return a position within the
 		/// accessible region only; false to ignore this distinction.</param>
 		/// <returns>A random position within the area.</returns>
 		/// <remarks>Assumes the area to be a flat plane - the 
