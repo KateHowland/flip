@@ -33,10 +33,10 @@ namespace Sussex.Flip.Games
 	/// into the scripting language of a target game, and attach the results 
 	/// to a user-created module or level of that game. 
 	/// </summary>
-	public abstract class FlipCompiler : SourceCompiler
+	public abstract class FlipCompiler
 	{
 		#region Fields
-		
+				
 		/// <summary>
 		/// The name of the language which will be compiled to the target language.
 		/// </summary>
@@ -49,11 +49,19 @@ namespace Sussex.Flip.Games
 		/// <summary>
 		/// The name of the language which will be compiled to the target language.
 		/// </summary>
-		public override string InputLanguage { 
-			get {
-				return inputLanguage;
-			}
+		public string InputLanguage { 
+			get { return inputLanguage; }
 		}
+		
+		/// <summary>
+		/// The name of the game software which compiled scripts will be used with.
+		/// </summary>
+		public abstract string Game { get; }
+		
+		/// <summary>
+		/// The name of the scripting language used by the targeted game.
+		/// </summary>
+		public abstract string TargetLanguage { get; }
 		
 		#endregion
 		
@@ -70,26 +78,6 @@ namespace Sussex.Flip.Games
 		#endregion
 		
 		#region Methods
-				
-		/// <summary>
-		/// Compiles code written in the input language of the
-		/// compiler to the scripted language of the target game, and
-		/// attaches the results to the appropriate point in a user-created 
-		/// module or level of that game.
-		/// </summary>
-		/// <param name="script">An object representing a script written in the 
-		/// input language.</param>
-		/// <param name="target">An object representing the game level, area or 
-		/// module it is to be attached to.</param>
-		public override void CompileAndAttach(object script, object target)
-		{
-			FlipScript fs = script as FlipScript;
-			
-			if (fs == null) throw new ArgumentException("Script must be an instance of class FlipScript.","script");
-			
-			CompileAndAttach(fs,target);
-		}
-		
 				
 		/// <summary>
 		/// Compiles Flip code to the scripted language of the target game, and
