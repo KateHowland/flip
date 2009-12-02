@@ -197,6 +197,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// of fields.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
@@ -214,6 +216,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="areaName">The area which has the objects.</param>
 		/// <param name="type">The type of objects to collect.</param>
 		/// <returns>A list of Guid values.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]
@@ -230,6 +234,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="tag">The tag that objects must have to be collected.
 		/// Pass null to ignore this requirement.</param>
 		/// <returns>A list of Guid values.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		[OperationContract]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.ArgumentNullException))]

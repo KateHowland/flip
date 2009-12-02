@@ -445,6 +445,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// of fields.</param>
 		/// <returns>The object within this area with the given properties,
 		/// or null if one could not be found.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public Bean GetObject(string areaName, NWN2ObjectType type, Guid id, bool full)
 		{
 			try {
@@ -502,6 +504,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="areaName">The area which has the objects.</param>
 		/// <param name="type">The type of objects to collect.</param>
 		/// <returns>A list of Guid values.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public IList<Guid> GetObjectIDs(string areaName, NWN2ObjectType type)
 		{
 			try {
@@ -557,6 +561,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="tag">The tag that objects must have to be collected.
 		/// Pass null to ignore this requirement.</param>
 		/// <returns>A list of Guid values.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public IList<Guid> GetObjectIDsByTag(string areaName, NWN2ObjectType type, string tag)
 		{
 			try {
@@ -993,7 +999,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				 * 'blank' a newly created script because you Demand() it from a non-existent serialised
 				 * version never occurs - the script is always Demand()ed and Loaded immediately. However,
 				 * our AddScript() CANNOT just start opening script viewers all over the place - we want
-				 * to keep these hidden! Instead, we'll just Demand() the script when we create it.
+				 * to keep these hidden! Instead, we'll just serialise the script when we create it, and
+				 * subsequent methods can Demand() it.
 				 */ 
 				
 				script.Demand();
