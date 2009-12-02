@@ -1955,6 +1955,88 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
+		public void AllScriptChangesAreDiscardedInFileModule()
+		{
+			string name = "AllScriptChangesAreDiscardedInFileModule.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			string areaName = "area";
+			service.AddArea(areaName,false,Area.SmallestAreaSize);
+			service.SaveModule();
+			
+			string scriptName = "myscript";
+			string scriptData = sampleScripts.Sing;		
+			string scriptSlot = "OnEnterScript";
+			service.AddScript(scriptName,scriptData);
+			service.CompileScript(scriptName);
+			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
+			
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			// When discarding changes to a file module, newly added scripts do not persist...
+			Assert.IsNull(service.GetScript(scriptName));
+			
+			// ...changes to existing scripts do not persist (not tested here)...
+			
+			// ...and changes to script slots do not persist.
+			Bean area = service.GetArea(areaName,false);
+			Assert.IsEmpty(area[scriptSlot]);
+			
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void SomeScriptChangesAreDiscardedInDirectoryModule()
+		{
+			string name = "SomeScriptChangesAreDiscardedInDirectoryModule";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedDirectoryPath(path);
+			
+			service.CreateModule(path,ModuleLocationType.Directory);
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			string areaName = "area";
+			service.AddArea(areaName,false,Area.SmallestAreaSize);
+			service.SaveModule();
+			
+			string scriptName = "myscript";
+			string scriptData = sampleScripts.Sing;		
+			string scriptSlot = "OnEnterScript";
+			service.AddScript(scriptName,scriptData);
+			service.CompileScript(scriptName);
+			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
+			
+			service.CloseModule();
+			service.OpenModule(path,ModuleLocationType.Directory);
+			
+			// When discarding changes to a directory module, newly added scripts persist...
+			Bean script = service.GetScript(scriptName);
+			Assert.IsNotNull(script);
+			Assert.AreEqual(script["Data"],scriptData);
+			
+			// ...changes to existing scripts persist (not tested here)...
+			
+			// ...but changes to script slots do not persist.
+			Bean area = service.GetArea(areaName,false);
+			Assert.IsEmpty(area[scriptSlot]);
+						
+			service.CloseModule();			
+			Delete(path);
+		}
+		
+		
+		[Test]
 		public void GetsScriptNames()
 		{
 			string name = "GetsCompiledScriptNames";
