@@ -130,70 +130,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#endregion
 		
 		#region Tests - Scripts
-		
-		[Test]
-		public void AreaMethodsWorkRegardlessOfLoadedState()
-		{
-			string name = "AreaMethodsWorkRegardlessOfLoadedState.mod";
-			string parent = NWN2ToolsetMainForm.ModulesDirectory;
-			string path = Path.Combine(parent,name);
 			
-			path = pathChecker.GetUnusedFilePath(path);
-			
-			service.CreateModule(path,ModuleLocationType.File);
-			service.OpenModule(path,ModuleLocationType.File);
-						
-			string areaName = "area";
-			service.AddArea(areaName,false,Area.SmallestAreaSize);
-			
-			// Area is open, and hence Loaded:
-			service.AddObject(areaName,NWN2ObjectType.Creature,"c_cat","cat");
-			service.AddObject(areaName,NWN2ObjectType.Creature,"c_gith","gith");
-			service.AddObject(areaName,NWN2ObjectType.Creature,"c_werewolf","werewolf");
-			
-			Assert.AreEqual("True",service.GetArea(areaName,false)["Loaded"]);
-			
-			IList<Guid> ids = service.GetObjectIDs(areaName,NWN2ObjectType.Creature);
-			Assert.AreEqual(3,ids.Count);
-			foreach (Guid id in ids) {
-				Bean creature = service.GetObject(areaName,NWN2ObjectType.Creature,id,false);
-				string tag = creature["Tag"];
-				Assert.IsTrue(tag == "cat" || tag == "gith" || tag == "werewolf");
-			}
-			
-			service.SaveModule();
-			service.CloseModule();
-			service.OpenModule(path,ModuleLocationType.File);
-			
-			// Area is closed, and hence !Loaded:
-			Assert.AreEqual("False",service.GetArea(areaName,false)["Loaded"]);	
-			
-			ids = service.GetObjectIDs(areaName,NWN2ObjectType.Creature);
-			Assert.AreEqual(3,ids.Count);
-			foreach (Guid id in ids) {
-				Bean creature = service.GetObject(areaName,NWN2ObjectType.Creature,id,false);
-				string tag = creature["Tag"];
-				Assert.IsTrue(tag == "cat" || tag == "gith" || tag == "werewolf");
-			}	
-			
-			// Area is explicitly Demand()ed, and hence Loaded once again:
-			Assert.AreEqual("False",service.GetArea(areaName,false)["Loaded"]);	
-			service.DemandArea(areaName);			
-			Assert.AreEqual("True",service.GetArea(areaName,false)["Loaded"]);	
-			
-			ids = service.GetObjectIDs(areaName,NWN2ObjectType.Creature);
-			Assert.AreEqual(3,ids.Count);
-			foreach (Guid id in ids) {
-				Bean creature = service.GetObject(areaName,NWN2ObjectType.Creature,id,false);
-				string tag = creature["Tag"];
-				Assert.IsTrue(tag == "cat" || tag == "gith" || tag == "werewolf");
-			}	
-			
-			service.CloseModule();
-			Delete(path);		
-		}
-		
-		
 		[Test]
 		public void ScriptMethodsWorkRegardlessOfLoadedState()
 		{
@@ -1715,6 +1652,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 			
+			service.OpenArea(area);
 			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
 			
@@ -1789,6 +1727,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(service.HasCompiled(scriptName));
 			Assert.IsTrue(service.HasUncompiled(scriptName));
 						
+			service.OpenArea(area);
 			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
 			
@@ -1975,6 +1914,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptSlot = "OnEnterScript";
 			service.AddScript(scriptName,scriptData);
 			service.CompileScript(scriptName);
+			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
 			
 			service.CloseModule();
@@ -2015,6 +1955,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string scriptSlot = "OnEnterScript";
 			service.AddScript(scriptName,scriptData);
 			service.CompileScript(scriptName);
+			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			service.AttachScriptToArea(scriptName,areaName,scriptSlot);
 			
 			service.CloseModule();
@@ -2028,6 +1969,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			// ...changes to existing scripts persist (not tested here)...
 			
 			// ...but changes to script slots do not persist.
+			service.OpenArea(areaName);
 			Bean area = service.GetArea(areaName,false);
 			Assert.IsEmpty(area[scriptSlot]);
 						
@@ -2663,7 +2605,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			Assert.AreEqual(service.GetModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreaNames().Count);
-			Assert.IsNotNull(service.GetArea(area,false));
+			Assert.IsNotNull(service.GetArea(area,false));			
+			service.OpenArea(area);
 			Assert.AreEqual(3,service.GetObjectIDs(area,NWN2ObjectType.Creature).Count);
 			
 			service.CloseModule();			
@@ -2708,6 +2651,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.AreEqual(service.GetModuleName(),Path.GetFileNameWithoutExtension(path));
 			Assert.AreEqual(1,service.GetAreaNames().Count);
 			Assert.IsNotNull(service.GetArea(area,false));
+			service.OpenArea(area);
 			Assert.AreEqual(3,service.GetObjectIDs(area,NWN2ObjectType.Creature).Count);
 			
 			service.CloseModule();			

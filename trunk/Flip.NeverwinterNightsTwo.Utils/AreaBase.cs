@@ -210,6 +210,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="tag">Only objects with this tag will be counted.
 		/// Pass null to ignore this criterion.</param>
 		/// <returns>The objects matching the given description.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public abstract List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag);
 				
 		
@@ -220,6 +222,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="guid">The unique ID of the object.</param>
 		/// <returns>The object matching the given description,
 		/// or null if none was found.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public abstract INWN2Instance GetObject(NWN2ObjectType type, Guid guid);
 		
 		

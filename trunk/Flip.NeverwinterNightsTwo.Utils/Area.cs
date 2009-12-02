@@ -205,6 +205,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="type">The type of objects to count.</param>
 		/// <returns>The objects matching the given description.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public override List<INWN2Instance> GetObjects(NWN2ObjectType type)
 		{
 			return GetObjects(type,null);
@@ -218,10 +220,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="tag">Only objects with this tag will be counted.
 		/// Pass null to ignore this criterion.</param>
 		/// <returns>The objects matching the given description.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public override List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag)
 		{			
 			bool loaded = nwn2Area.Loaded;
-			if (!loaded) nwn2Area.Demand();
+			if (!loaded) throw new InvalidOperationException("Area must be open in the toolset " +
+			                                                 "before the method can run.");
 			
 			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
 			List<INWN2Instance> instances = new List<INWN2Instance>();
@@ -239,8 +244,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 			}
 			
-			if (!loaded) nwn2Area.Release();
-			
 			return instances;
 		}
 						
@@ -252,10 +255,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="guid">The unique ID of the object.</param>
 		/// <returns>The object matching the given description,
 		/// or null if none was found.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
 		public override INWN2Instance GetObject(NWN2ObjectType type, Guid guid)
 		{
 			bool loaded = nwn2Area.Loaded;
-			if (!loaded) nwn2Area.Demand();
+			if (!loaded) throw new InvalidOperationException("Area must be open in the toolset " +
+			                                                 "before the method can run.");
 			
 			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
 			INWN2Instance unique = null;
@@ -266,8 +272,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					break;
 				}
 			}
-			
-			if (!loaded) nwn2Area.Release();
 			
 			return unique;
 		}

@@ -132,9 +132,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="name">The path of the module, including file extension
 		/// if appropriate.</param>
 		/// <param name="location">The serialisation form of the module.</param>
-		/// <remarks>Also calls Demand() on all areas, simulating the effect
-		/// of having each area open in the toolset. (The same is NOT true for
-		/// any other type of resource, e.g. scripts, conversations.)</remarks>
 		public void OpenModule(string path, ModuleLocationType location)
 		{
 			if (path == null) throw new ArgumentNullException("path");
