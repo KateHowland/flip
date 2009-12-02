@@ -211,56 +211,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddObject(areaName,NWN2ObjectType.Creature,"c_werewolf","werewolf");
 			
 			string scriptName = "givegold";
-			string scriptName2 = "changename";
-			string scriptName3 = "sing";
 			
-			// Scripts are automatically Loaded upon creation:
+			// Scripts are not loaded upon creation:
 			service.AddScript(scriptName,sampleScripts.GiveGold);
-			Assert.AreEqual("True",service.GetScript(scriptName)["Loaded"]);
-			service.CompileScript(scriptName);
-			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName));
-			service.AddScript(scriptName2,sampleScripts.ChangeName);
-			service.AddScript(scriptName3,sampleScripts.Sing);
-				
-			service.SaveModule();
-			service.CloseModule();
-			service.OpenModule(path,ModuleLocationType.File);
-			
-			// Scripts are not Loaded when the module is opened:
 			Assert.AreEqual("False",service.GetScript(scriptName)["Loaded"]);
+			service.CompileScript(scriptName);
+			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName));	
 			
-			
-			
-			
-			
-			service.AttachScriptToArea(scriptName,areaName,"OnEnterScript");		
-			
-			
-			
-			// FIXME:
-			LaunchAndExitToolset = false;
-			
-			return;
-			
-			
+			Assert.AreEqual("False",service.GetScript(scriptName)["Loaded"]); // CompileScript() doesn't Demand() the script		
+			service.AttachScriptToArea(scriptName,areaName,"OnEnterScript");
 			Bean area = service.GetArea(areaName,false);
 			Assert.AreEqual(scriptName,area["OnEnterScript"]);
 			
-			Assert.AreEqual("False",service.GetScript(scriptName2)["Loaded"]);
-			service.CompileScript(scriptName2);
-			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName2));
-			service.AttachScriptToModule(scriptName2,"OnCutsceneAbort");
-			Bean module = service.GetModule();
-			Assert.AreEqual(scriptName2,module["OnCutsceneAbort"]);
+			service.DeleteScript(scriptName);
 			
-			// Finally, explicitly Demand() the script and hence make it Loaded:
-			Assert.AreEqual("False",service.GetScript(scriptName3)["Loaded"]);
-			service.DemandScript(scriptName3);
-			Assert.AreEqual("True",service.GetScript(scriptName3)["Loaded"]);
-			service.CompileScript(scriptName3);
-			service.AttachScriptToArea(scriptName3,areaName,"OnHeartbeat");
+			// Try again with a loaded script:
+			service.AddScript(scriptName,sampleScripts.GiveGold);
+			service.DemandScript(scriptName);
+			Assert.AreEqual("True",service.GetScript(scriptName)["Loaded"]);
+			service.CompileScript(scriptName);
+			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName));	
+			
+			Assert.AreEqual("True",service.GetScript(scriptName)["Loaded"]);
+			service.AttachScriptToArea(scriptName,areaName,"OnExitScript");
 			area = service.GetArea(areaName,false);
-			Assert.AreEqual(scriptName3,area["OnHeartbeat"]);
+			Assert.AreEqual(scriptName,area["OnExitScript"]);
 			
 			service.CloseModule();
 			Delete(path);	
@@ -1905,7 +1880,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		
 		[Test]
-		public void UnsavedScriptDoesNotPersistInDirectoryModule()
+		public void UnsavedScriptPersistsInDirectoryModule()
 		{
 			string name = "UncompiledScriptDoesNotPersistInDirectoryModuleWithoutSave";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
@@ -1931,9 +1906,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
 			// And after...
-			Bean after = service.GetScript(scriptName);			
-			// Assert.IsNotNull(after); // unfortunately, the FILE will persist, but it should be empty:
-			Assert.AreEqual(String.Empty,after["Data"]);
+			Bean after = service.GetScript(scriptName);
+			Assert.IsNotNull(after);
+			Assert.AreEqual(sampleScripts.Sing,after["Data"]);
+			Assert.AreEqual(1,service.GetScriptNames().Count);
 			
 			service.CloseModule();			
 			Delete(path);
@@ -2992,12 +2968,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(script1,sampleScripts.GiveGold);
 			service.AddScript(script2,sampleScripts.Sing);	
 			
-			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
-			Assert.AreEqual("True",service.GetScript(script2)["Loaded"]);
-			
-			service.ReleaseScript(script1);
-			service.ReleaseScript(script2);
-			
 			Assert.AreEqual("False",service.GetScript(script1)["Loaded"]);
 			Assert.AreEqual("False",service.GetScript(script2)["Loaded"]);
 			
@@ -3040,9 +3010,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 						
 			string script1 = "givegold";
 			service.AddScript(script1,sampleScripts.GiveGold);		
-			Assert.AreEqual("True",service.GetScript(script1)["Loaded"]);
-			
-			service.ReleaseScript(script1);			
 			Assert.AreEqual("False",service.GetScript(script1)["Loaded"]);
 			
 			service.DemandScript(script1);			
