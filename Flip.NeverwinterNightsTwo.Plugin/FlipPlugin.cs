@@ -228,5 +228,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		}
 		
 		#endregion
+		
+		public override string ToString()
+		{
+			return "Flip plugin";
+		}
 	}
 }

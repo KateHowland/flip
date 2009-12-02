@@ -55,12 +55,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		protected object padlock;
 		
-		protected static ushort nss;		
+		protected static ushort nss = OEIShared.Utils.BWResourceTypes.GetResourceType("NSS");
 		public static ushort NSS {
 			get { return nss; }
 		}
 		
-		protected static ushort ncs;		
+		protected static ushort ncs = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
 		public static ushort NCS {
 			get { return ncs; }
 		}
@@ -75,8 +75,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Nwn2Session()
 		{
 			padlock = new object();
-			nss = OEIShared.Utils.BWResourceTypes.GetResourceType("NSS");	
-			ncs = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
 		}
 		
 		#endregion
