@@ -43,7 +43,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
 		/// <param name="location">The serialisation form of the module.</param>
 		void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
-							
+									
+		
+		/// <summary>
+		/// Creates and opens a Neverwinter Nights 2 game module of location type Temporary.
+		/// </summary>
+		/// <returns>The path the module was created at.</returns>
+		string CreateAndOpenTemporaryModule();
+			
 				
 		/// <summary>
 		/// Opens a Neverwinter Nights 2 game module.

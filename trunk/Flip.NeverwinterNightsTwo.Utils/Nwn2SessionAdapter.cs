@@ -124,6 +124,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Creates and opens a Neverwinter Nights 2 game module of location type Temporary.
+		/// </summary>
+		/// <returns>The path the module was created at.</returns>
+		public string CreateAndOpenTemporaryModule()
+		{
+			try {
+				return session.CreateAndOpenTemporaryModule();
+			}
+			catch (Exception e) {
+				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+			}
+		}
+		
+		
+		/// <summary>
 		/// Opens a Neverwinter Nights 2 game module.
 		/// </summary>
 		/// <param name="name">The path of the module to open.</param>

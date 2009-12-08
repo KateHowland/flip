@@ -91,7 +91,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void CreateModule(string path, ModuleLocationType location)
 		{			
 			if (location == ModuleLocationType.Temporary) {	
-				throw new NotSupportedException("Creating temporary modules is not supported.");
+				throw new NotSupportedException("Creating temporary modules is not supported - use " +
+				                                "CreateAndOpenTemporaryModule instead.");
 			}			
 			if (path == null) {
 				throw new ArgumentNullException("path");
@@ -121,6 +122,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			SaveModule(module,path);
 			
 			CloseModule();
+		}
+				
+		
+		/// <summary>
+		/// Creates and opens a Neverwinter Nights 2 game module of location type Temporary.
+		/// </summary>
+		/// <returns>The path the module was created at.</returns>
+		public string CreateAndOpenTemporaryModule()
+		{
+			lock (padlock) {				
+				// This is all the toolset does when the user creates a new module:	
+				NWN2ToolsetMainForm.App.DoNewModule(true);
+				return GetModulePath();
+			}
 		}
 				
 		

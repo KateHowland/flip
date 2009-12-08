@@ -114,9 +114,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// module or level of that game.
 		/// </summary>
 		/// <param name="script">The Flip script to be attached.</param>
-		/// <param name="target">An area in a Neverwinter Nights 2 module
+		/// <param name="area">An area in a Neverwinter Nights 2 module
 		/// to which a compiled version of this script is to be attached.</param>
-		public void CompileAndAttach(FlipScript script, NWN2GameArea target)
+		public void CompileAndAttach(FlipScript script, string area)
 		{	
 			Nwn2EventRaiser type;
 			string tag;
