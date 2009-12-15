@@ -234,42 +234,43 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		
 		
 		/// <summary>
-		/// Hide script slot fields on property grids, and TODO: prevent scripts from being opened.
+		/// Hide script slot fields on property grids, and prevent scripts from being created or opened.
 		/// </summary>
 		protected void BlockAccessToScripts()
 		{
 			FieldInfo[] fields = typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
 			
-			PropertyGrid innerGrid = null;
-			DockingManager dm = null;	
-			
+			// Locate all the necessary UI elements via reflection:
 			foreach (FieldInfo field in fields) {
+				
+				// Hide script slots on the main property grid whenever it changes:
 				if (field.FieldType == typeof(NWN2PropertyGrid)) {
-					NWN2PropertyGrid grid = (NWN2PropertyGrid)field.GetValue(NWN2ToolsetMainForm.App);														
-					
+					NWN2PropertyGrid grid = (NWN2PropertyGrid)field.GetValue(NWN2ToolsetMainForm.App);	
 					foreach (FieldInfo fi in grid.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
 						if (fi.FieldType == typeof(PropertyGrid)) {
-							innerGrid = (PropertyGrid)fi.GetValue(grid);
-							if (innerGrid != null && dm != null) break;
+							PropertyGrid innerGrid = (PropertyGrid)fi.GetValue(grid);
+							innerGrid.SelectedObjectChanged += delegate	{ HideScriptSlots(innerGrid); };
 						}
 					}
 				}
-				else if (field.FieldType == typeof(DockingManager)) {
-					dm = (DockingManager)field.GetValue(NWN2ToolsetMainForm.App);	
-					if (innerGrid != null && dm != null) break;
-				}
-			}
-					
-			if (innerGrid != null && dm != null) {
-				innerGrid.SelectedObjectChanged += delegate 
-				{ 
-					HideScriptSlots(innerGrid); 
-				};
 				
-				dm.ContentShown += new DockingManager.ContentHandler(HideScriptSlots);
-			}
-			else {
-				throw new ApplicationException("Couldn't find key UI elements on toolset.");
+				// Hide script slots on floating property grids when they first appear:
+				else if (field.FieldType == typeof(DockingManager)) {
+					DockingManager dm = (DockingManager)field.GetValue(NWN2ToolsetMainForm.App);	
+					dm.ContentShown += new DockingManager.ContentHandler(HideScriptSlots);
+				}
+				
+				// Disable the scripts window:
+				else if (field.FieldType == typeof(NWN2ModuleScriptList)) {
+					NWN2ModuleScriptList sl = (NWN2ModuleScriptList)field.GetValue(NWN2ToolsetMainForm.App);
+					sl.Enabled = false;
+				}
+				
+				// Disable the ability to create or open scripts from the file menu:
+				else if (field.FieldType == typeof(TD.SandBar.MenuButtonItem)) {
+					TD.SandBar.MenuButtonItem mbi = (TD.SandBar.MenuButtonItem)field.GetValue(NWN2ToolsetMainForm.App);
+					if (mbi.Text == "&Script" || mbi.Text == "Open Conversation/Script") mbi.Enabled = false;
+				}
 			}
 		}
 						
