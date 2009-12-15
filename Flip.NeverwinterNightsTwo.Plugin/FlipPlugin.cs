@@ -24,9 +24,14 @@
  */
 
 using System;
+using System.Reflection;
 using System.ServiceModel;
-using NWN2Toolset.Plugins;
+using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Views;
+using NWN2Toolset.Plugins;
+using Crownwood.DotNetMagic.Docking;
+using VisualHint.SmartPropertyGrid;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
@@ -144,8 +149,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Startup(INWN2PluginHost cHost)
 		{
-			StartServices();
-			
+			StartServices();	
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
 		}
@@ -158,7 +162,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// <param name="cHost">A plugin host component which
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
-		{
+		{			
+			BlockAccessToScripts();
 		}
 		
 		
@@ -227,11 +232,93 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			}
 		}
 		
-		#endregion
+		
+		/// <summary>
+		/// Hide script slot fields on property grids, and TODO: prevent scripts from being opened.
+		/// </summary>
+		protected void BlockAccessToScripts()
+		{
+			FieldInfo[] fields = typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+			
+			PropertyGrid innerGrid = null;
+			DockingManager dm = null;	
+			
+			foreach (FieldInfo field in fields) {
+				if (field.FieldType == typeof(NWN2PropertyGrid)) {
+					NWN2PropertyGrid grid = (NWN2PropertyGrid)field.GetValue(NWN2ToolsetMainForm.App);														
+					
+					foreach (FieldInfo fi in grid.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
+						if (fi.FieldType == typeof(PropertyGrid)) {
+							innerGrid = (PropertyGrid)fi.GetValue(grid);
+							if (innerGrid != null && dm != null) break;
+						}
+					}
+				}
+				else if (field.FieldType == typeof(DockingManager)) {
+					dm = (DockingManager)field.GetValue(NWN2ToolsetMainForm.App);	
+					if (innerGrid != null && dm != null) break;
+				}
+			}
+					
+			if (innerGrid != null && dm != null) {
+				innerGrid.SelectedObjectChanged += delegate 
+				{ 
+					HideScriptSlots(innerGrid); 
+				};
+				
+				dm.ContentShown += new DockingManager.ContentHandler(HideScriptSlots);
+			}
+			else {
+				throw new ApplicationException("Couldn't find key UI elements on toolset.");
+			}
+		}
+						
+
+		/// <summary>
+		/// Check whether the newly opened content is a property grid, and if so,
+		/// hide its script slot fields.
+		/// </summary>
+		/// <param name="c">The content which was just opened.</param>
+		/// <param name="cea">Arguments relating to this event.</param>
+		protected void HideScriptSlots(Content c, EventArgs cea)
+		{
+			if (c.Control is NWN2PropertyGrid) {
+				NWN2PropertyGrid grid = (NWN2PropertyGrid)c.Control;
+				foreach (FieldInfo fi in grid.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
+					if (fi.FieldType == typeof(PropertyGrid)) {
+						PropertyGrid innerGrid = (PropertyGrid)fi.GetValue(grid);
+						HideScriptSlots(innerGrid);
+						break;
+					}
+				}
+			}
+		}
+		
+		
+		/// <summary>
+		/// Hide script slot fields on a property grid.
+		/// </summary>
+		/// <param name="innerGrid"></param>
+		protected void HideScriptSlots(PropertyGrid innerGrid)
+		{
+			PropertyEnumerator enumerator = innerGrid.FirstProperty;
+			do {
+				if (enumerator.Property != null && enumerator.Property.Name.StartsWith("On")) {
+					innerGrid.DeleteProperty(enumerator);
+				}
+				else {
+					enumerator.MoveNext();
+				}
+			}
+			while (enumerator != enumerator.RightBound);
+		}
+		
 		
 		public override string ToString()
 		{
 			return "Flip plugin";
 		}
+		
+		#endregion
 	}
 }

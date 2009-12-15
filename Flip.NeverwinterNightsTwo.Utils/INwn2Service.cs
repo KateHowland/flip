@@ -34,7 +34,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// <summary>
 	/// A service providing access to a Neverwinter Nights 2 toolset session.
 	/// </summary>
-	[ServiceContract]
+	[ServiceContract(SessionMode=SessionMode.Required,
+	                 CallbackContract=typeof(ICallbacks))]
 	public interface INwn2Service
 	{
 		/// <summary>

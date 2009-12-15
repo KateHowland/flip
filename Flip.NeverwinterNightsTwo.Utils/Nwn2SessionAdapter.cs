@@ -31,16 +31,22 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.ServiceModel;
+using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
+using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.NWN2.IO;
 using OEIShared.IO;
 using OEIShared.IO.GFF;
 using OEIShared.Utils;
 using Sussex.Flip.Utils;
+using Crownwood.DotNetMagic.Controls;
+using Crownwood.DotNetMagic.Common;
+using Crownwood.DotNetMagic.Docking;
+using VisualHint.SmartPropertyGrid;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -63,6 +69,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		protected Dictionary<string,List<string>> allSerialisingFields;
 		
+		/// <summary>
+		/// The client(s) subscribing to this service, who the service
+		/// will call callback methods on.
+		/// </summary>
+		protected Notifier notify;
+		
+		protected object padlock;
+		
 		#endregion
 		
 		#region Constructors
@@ -74,7 +88,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Nwn2SessionAdapter()
 		{
 			session = new Nwn2Session();
-			InitialiseListsOfFieldsToSerialise();
+			notify = new Notifier();
+			ReportToolsetEvents();
+			InitialiseListsOfFieldsToSerialise();			
 		}
 		
 		
@@ -86,7 +102,239 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			if (session == null) throw new ArgumentNullException("session");			
 			this.session = session;
+			notify = new Notifier();
+			ReportToolsetEvents();
 			InitialiseListsOfFieldsToSerialise();
+		}
+		
+		#endregion
+		
+		#region Tracking toolset events
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		protected void ReportToolsetEvents()
+		{
+			/*
+			 * Track when a module is opened, when resources are added to or removed from
+			 * the module, when blueprints are added to or removed from the module, and 
+			 * when objects are added to or removed from an area.
+			 */
+			NWN2ToolsetMainForm.ModuleChanged += delegate(object oSender, ModuleChangedEventArgs e) 
+			{  
+				NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
+				
+				/*
+				 * TODO:
+				 * There seems to be a bug where these events fire at a later stage... they do fire
+				 * when they should, but when the paused test is allowed to complete, they fire again.
+				 * This shouldn't be a problem for Flip as long as it checks what it's doing before
+				 * it proceeds.
+				 */
+				foreach (NWN2BlueprintCollection bc in mod.BlueprintCollections) {
+					NWN2BlueprintSetInfoTuple t = (NWN2BlueprintSetInfoTuple)bc.Tag;
+							
+					bc.Inserted += delegate(OEICollectionWithEvents cList, int index, object value) 
+					{
+						notify.NotifyBlueprintAdded(t.ObjectType,((INWN2Blueprint)value).TemplateResRef.Value);
+					};
+					
+					bc.Removed += delegate(OEICollectionWithEvents cList, int index, object value)
+					{
+						notify.NotifyBlueprintRemoved(t.ObjectType,((INWN2Blueprint)value).TemplateResRef.Value);
+					};
+				}
+				
+				string message;
+				if (e.OldModule == null) {
+					message = "New module: " + GetModuleName() + ", Old module: {null}";
+				}
+				else {
+					message = "New module: " + GetModuleName() + ", Old module: " + e.OldModule.Name;
+				}
+				notify.NotifyModuleChanged(message);
+				
+				if (mod != null) {					
+					try {						
+						List<OEIDictionaryWithEvents> dictionaries = new List<OEIDictionaryWithEvents>
+						{
+							mod.Areas, mod.Conversations, mod.Scripts
+						};
+						
+						OEIDictionaryWithEvents.ChangeHandler dAdded = new OEIDictionaryWithEvents.ChangeHandler(AddedToDictionary);
+						OEIDictionaryWithEvents.ChangeHandler dRemoved = new OEIDictionaryWithEvents.ChangeHandler(RemovedFromDictionary);
+						foreach (OEIDictionaryWithEvents dictionary in dictionaries) {
+							dictionary.Inserted += dAdded;
+							dictionary.Removed += dRemoved;
+						}
+					}
+					catch (Exception ex) {
+						System.Windows.Forms.MessageBox.Show(ex.ToString());
+					}
+				}
+			};
+			
+			FieldInfo[] fields = typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+			foreach (FieldInfo field in fields) {	
+				/*
+				 * Track when resource viewers are opening or closing.
+				 */
+				if (field.FieldType == typeof(TabbedGroups)) {
+					TabbedGroups tg = (TabbedGroups)field.GetValue(NWN2ToolsetMainForm.App);
+					
+					CollectionChange opened = new CollectionChange(ViewerOpened);
+					CollectionChange closed = new CollectionChange(ViewerClosed);
+					
+					tg.ActiveLeaf.TabPages.Inserted += opened;
+					tg.ActiveLeaf.TabPages.Removed += closed;
+					
+					// ActiveLeaf is disposed whenever all viewers are closed, so attach handlers again:
+					tg.ActiveLeafChanged += delegate
+					{  
+						tg.ActiveLeaf.TabPages.Inserted += opened;
+						tg.ActiveLeaf.TabPages.Removed += closed;
+					};
+				}
+			}
+		}
+
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="value"></param>
+		protected void ViewerOpened(int index, object value)
+		{
+			TabPage page = (TabPage)value;
+			INWN2Viewer viewer = page.Control as INWN2Viewer;
+			if (viewer == null) return;
+			
+			string type;
+			
+			if (viewer.ViewedResource is NWN2GameScript) {
+				type = "script";
+			}
+			else if (viewer.ViewedResource is NWN2GameConversation) {
+				type = "conversation";
+			}
+			else if (viewer.ViewedResource is NWN2GameArea) {
+				type = "area";
+			}
+			else {
+				type = viewer.ViewedResource.GetType().ToString();
+			}
+			
+			notify.NotifyResourceViewerOpened(type,page.Title);
+		}
+
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="value"></param>
+		protected void ViewerClosed(int index, object value)
+		{					
+			TabPage page = (TabPage)value;
+			/* Even when handling Removing rather than Removed, the viewer object
+			 * has already been disposed, so we can't tell what type of resource
+			 * was closed. The responsibility for checking falls to the client. */
+			notify.NotifyResourceViewerClosed(page.Title);
+		}
+		
+
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="cList"></param>
+		/// <param name="index"></param>
+		/// <param name="value"></param>
+		protected void AddedToCollection(OEICollectionWithEvents cList, int index, object value)
+		{
+			INWN2Object obj = (INWN2Object)value;
+			INWN2Instance ins = (INWN2Instance)value;
+			NWN2GameArea area = (NWN2GameArea)cList.Tag;
+			
+			notify.NotifyObjectAdded(ins.ObjectType,obj.Tag,ins.ObjectID,area.Name);
+		}
+		
+
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="cList"></param>
+		/// <param name="index"></param>
+		/// <param name="value"></param>
+		protected void RemovedFromCollection(OEICollectionWithEvents cList, int index, object value)
+		{
+			INWN2Object obj = (INWN2Object)value;
+			INWN2Instance ins = (INWN2Instance)value;
+			NWN2GameArea area = (NWN2GameArea)cList.Tag;
+			
+			notify.NotifyObjectRemoved(ins.ObjectType,obj.Tag,ins.ObjectID,area.Name);
+		}
+
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="cDictionary"></param>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		protected void AddedToDictionary(OEIDictionaryWithEvents cDictionary, object key, object value)
+		{
+			NWN2GameArea area = null;			
+			string type, name;
+			
+			if (value is NWN2GameScript) {
+				type = "script";
+				name = ((NWN2GameScript)value).Name;
+			}
+			else if (value is NWN2GameConversation) {
+				type = "conversation";
+				name = ((NWN2GameConversation)value).Name;
+			}
+			else if (value is NWN2GameArea) {
+				area = (NWN2GameArea)value;
+				type = "area";
+				name = area.Name;
+			}
+			else {
+				type = value.GetType().ToString();
+				name = String.Empty;
+			}
+			
+			notify.NotifyResourceAdded(type,name);
+			
+			if (area != null) {
+				OEICollectionWithEvents.ChangeHandler cAdded = new OEICollectionWithEvents.ChangeHandler(AddedToCollection);
+				OEICollectionWithEvents.ChangeHandler cRemoved = new OEICollectionWithEvents.ChangeHandler(RemovedFromCollection);
+				
+				foreach (NWN2InstanceCollection instances in area.AllInstances) {
+					instances.Inserted += cAdded;
+					instances.Removed += cRemoved;
+				}
+			}
+		}
+
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="cDictionary"></param>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		protected void RemovedFromDictionary(OEIDictionaryWithEvents cDictionary, object key, object value)
+		{
+			string name;
+			if (value is NWN2GameArea) name = ((NWN2GameArea)value).Name;
+			else if (value is NWN2GameConversation) name = ((NWN2GameConversation)value).Name;
+			else if (value is NWN2GameScript) name = ((NWN2GameScript)value).Name;
+			else name = String.Empty;
+			
+			notify.NotifyResourceRemoved(value.GetType().ToString(),name);
 		}
 		
 		#endregion
@@ -2213,7 +2461,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		#endregion
 	
-		#region Non-service methods
+		#region Other methods
 				
 		/// <summary>
 		/// Initialises the lists of fields to serialise.
