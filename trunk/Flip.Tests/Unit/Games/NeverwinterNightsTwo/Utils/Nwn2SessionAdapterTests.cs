@@ -99,9 +99,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					WaitForToolsetToLoad(true);
 				}
 				
+				InstanceContext instanceContext = new InstanceContext(new Callbacks());
+								
 				NetNamedPipeBinding binding = new NetNamedPipeBinding();
 				binding.MaxReceivedMessageSize = Int32.MaxValue;
-				pipeChannelFactory = new ChannelFactory<INwn2Service>(binding,"net.pipe://localhost/NamedPipeEndpoint");									
+				pipeChannelFactory = new DuplexChannelFactory<INwn2Service>(instanceContext,binding,"net.pipe://localhost/NamedPipeEndpoint");									
 				CreateService();
 				
 				Console.WriteLine("Toolset loaded. Running test suite.");
@@ -2103,7 +2105,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		#endregion
 		
 		#region Tests - I/O
-		
+				
 		[Test]
 		public void GetsCurrentArea()
 		{
