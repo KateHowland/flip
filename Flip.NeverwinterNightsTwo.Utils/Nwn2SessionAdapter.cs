@@ -73,7 +73,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// The client(s) subscribing to this service, who the service
 		/// will call callback methods on.
 		/// </summary>
-		protected Notifier notify;
+		protected ClientNotifier notify;
 		
 		#endregion
 		
@@ -86,7 +86,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Nwn2SessionAdapter()
 		{
 			session = new Nwn2Session();
-			notify = new Notifier();
+			notify = new ClientNotifier();
 			ReportToolsetEvents();
 			InitialiseListsOfFieldsToSerialise();			
 		}
@@ -100,7 +100,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			if (session == null) throw new ArgumentNullException("session");			
 			this.session = session;
-			notify = new Notifier();
+			notify = new ClientNotifier();
 			ReportToolsetEvents();
 			InitialiseListsOfFieldsToSerialise();
 		}
@@ -135,40 +135,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 							
 					bc.Inserted += delegate(OEICollectionWithEvents cList, int index, object value) 
 					{
-						notify.NotifyBlueprintAdded(t.ObjectType,((INWN2Blueprint)value).TemplateResRef.Value);
+						notify.NotifyBlueprintAdded(t.ObjectType,((INWN2Blueprint)value).ResourceName.Value);
 					};
 					
 					bc.Removed += delegate(OEICollectionWithEvents cList, int index, object value)
 					{
-						notify.NotifyBlueprintRemoved(t.ObjectType,((INWN2Blueprint)value).TemplateResRef.Value);
+						notify.NotifyBlueprintRemoved(t.ObjectType,((INWN2Blueprint)value).ResourceName.Value);
 					};
 				}
 				
-				string message;
-				if (e.OldModule == null) {
-					message = "New module: " + GetModuleName() + ", Old module: {null}";
-				}
-				else {
-					message = "New module: " + GetModuleName() + ", Old module: " + e.OldModule.Name;
-				}
-				notify.NotifyModuleChanged(message);
+				string oldModule = e.OldModule == null ? String.Empty : e.OldModule.Name;
+				notify.NotifyModuleChanged(GetModuleName(),e.OldModule.Name);
 				
-				if (mod != null) {					
-					try {						
-						List<OEIDictionaryWithEvents> dictionaries = new List<OEIDictionaryWithEvents>
-						{
-							mod.Areas, mod.Conversations, mod.Scripts
-						};
+				if (mod != null) {				
+					List<OEIDictionaryWithEvents> dictionaries;
+					dictionaries = new List<OEIDictionaryWithEvents> { mod.Areas, mod.Conversations, mod.Scripts };
 						
-						OEIDictionaryWithEvents.ChangeHandler dAdded = new OEIDictionaryWithEvents.ChangeHandler(ResourceAdded);
-						OEIDictionaryWithEvents.ChangeHandler dRemoved = new OEIDictionaryWithEvents.ChangeHandler(ResourceRemoved);
-						foreach (OEIDictionaryWithEvents dictionary in dictionaries) {
-							dictionary.Inserted += dAdded;
-							dictionary.Removed += dRemoved;
-						}
-					}
-					catch (Exception ex) {
-						System.Windows.Forms.MessageBox.Show(ex.ToString());
+					OEIDictionaryWithEvents.ChangeHandler dAdded = new OEIDictionaryWithEvents.ChangeHandler(ResourceAdded);
+					OEIDictionaryWithEvents.ChangeHandler dRemoved = new OEIDictionaryWithEvents.ChangeHandler(ResourceRemoved);
+					foreach (OEIDictionaryWithEvents dictionary in dictionaries) {
+						dictionary.Inserted += dAdded;
+						dictionary.Removed += dRemoved;
 					}
 				}
 			};

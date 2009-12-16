@@ -318,7 +318,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 				host.Open();
 			} 
 			catch (Exception e) {
-				System.Windows.MessageBox.Show("Error starting services.\n\n" + e);
+				System.Windows.MessageBox.Show("The plugin failed to set up the WCF service that allows " +
+				                               "Flip to interact with the Neverwinter Nights 2 toolset - " +
+				                               "the application will not function correctly." +
+				                               Environment.NewLine + Environment.NewLine +
+				                               "Exception detail:" + Environment.NewLine +
+				                               e,
+				                               "Failed to setup service",
+				                               System.Windows.MessageBoxButton.OK,
+				                               System.Windows.MessageBoxImage.Error);
 			}
 		}
 		
