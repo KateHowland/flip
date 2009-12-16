@@ -75,8 +75,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		protected Notifier notify;
 		
-		protected object padlock;
-		
 		#endregion
 		
 		#region Constructors
@@ -112,7 +110,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		#region Tracking toolset events
 		
 		/// <summary>
-		/// TODO
+		/// Notifies the client when one of a selection of toolset events occurs,
+		/// including objects/resources/blueprints being added or removed, resource
+		/// viewers being opened or closed, a script slot on an object or resource
+		/// changing, and the module changing.
 		/// </summary>
 		protected void ReportToolsetEvents()
 		{
@@ -126,11 +127,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
 				
 				/*
-				 * TODO:
 				 * There seems to be a bug where these events fire at a later stage... they do fire
 				 * when they should, but when the paused test is allowed to complete, they fire again.
-				 * This shouldn't be a problem for Flip as long as it checks what it's doing before
-				 * it proceeds.
 				 */
 				foreach (NWN2BlueprintCollection bc in mod.BlueprintCollections) {
 					NWN2BlueprintSetInfoTuple t = (NWN2BlueprintSetInfoTuple)bc.Tag;
@@ -162,8 +160,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 							mod.Areas, mod.Conversations, mod.Scripts
 						};
 						
-						OEIDictionaryWithEvents.ChangeHandler dAdded = new OEIDictionaryWithEvents.ChangeHandler(AddedToDictionary);
-						OEIDictionaryWithEvents.ChangeHandler dRemoved = new OEIDictionaryWithEvents.ChangeHandler(RemovedFromDictionary);
+						OEIDictionaryWithEvents.ChangeHandler dAdded = new OEIDictionaryWithEvents.ChangeHandler(ResourceAdded);
+						OEIDictionaryWithEvents.ChangeHandler dRemoved = new OEIDictionaryWithEvents.ChangeHandler(ResourceRemoved);
 						foreach (OEIDictionaryWithEvents dictionary in dictionaries) {
 							dictionary.Inserted += dAdded;
 							dictionary.Removed += dRemoved;
@@ -201,10 +199,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 		
 		/// <summary>
-		/// TODO
+		/// Notifies the client that a resource viewer has been opened.
 		/// </summary>
-		/// <param name="index"></param>
-		/// <param name="value"></param>
 		protected void ViewerOpened(int index, object value)
 		{
 			TabPage page = (TabPage)value;
@@ -231,10 +227,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 		
 		/// <summary>
-		/// TODO
+		/// Notifies the client that a resource viewer has been closed.
 		/// </summary>
-		/// <param name="index"></param>
-		/// <param name="value"></param>
+		/// <remarks>Due to the viewer already being disposed, the client
+		/// is only informed of the name of the resource, not the type.</remarks>
 		protected void ViewerClosed(int index, object value)
 		{					
 			TabPage page = (TabPage)value;
@@ -246,12 +242,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 
 		/// <summary>
-		/// TODO
+		/// Notifies the client that a game object has been added to an area.
 		/// </summary>
-		/// <param name="cList"></param>
-		/// <param name="index"></param>
-		/// <param name="value"></param>
-		protected void AddedToCollection(OEICollectionWithEvents cList, int index, object value)
+		protected void ObjectAdded(OEICollectionWithEvents cList, int index, object value)
 		{
 			INWN2Object obj = (INWN2Object)value;
 			INWN2Instance ins = (INWN2Instance)value;
@@ -262,12 +255,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 
 		/// <summary>
-		/// TODO
+		/// Notifies the client that a game object has been removed from an area.
 		/// </summary>
-		/// <param name="cList"></param>
-		/// <param name="index"></param>
-		/// <param name="value"></param>
-		protected void RemovedFromCollection(OEICollectionWithEvents cList, int index, object value)
+		protected void ObjectRemoved(OEICollectionWithEvents cList, int index, object value)
 		{
 			INWN2Object obj = (INWN2Object)value;
 			INWN2Instance ins = (INWN2Instance)value;
@@ -278,12 +268,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 		
 		/// <summary>
-		/// TODO
+		/// Notifies the client that a script, area, or conversation has been added to the module.
 		/// </summary>
-		/// <param name="cDictionary"></param>
-		/// <param name="key"></param>
-		/// <param name="value"></param>
-		protected void AddedToDictionary(OEIDictionaryWithEvents cDictionary, object key, object value)
+		protected void ResourceAdded(OEIDictionaryWithEvents cDictionary, object key, object value)
 		{
 			NWN2GameArea area = null;			
 			string type, name;
@@ -309,8 +296,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			notify.NotifyResourceAdded(type,name);
 			
 			if (area != null) {
-				OEICollectionWithEvents.ChangeHandler cAdded = new OEICollectionWithEvents.ChangeHandler(AddedToCollection);
-				OEICollectionWithEvents.ChangeHandler cRemoved = new OEICollectionWithEvents.ChangeHandler(RemovedFromCollection);
+				OEICollectionWithEvents.ChangeHandler cAdded = new OEICollectionWithEvents.ChangeHandler(ObjectAdded);
+				OEICollectionWithEvents.ChangeHandler cRemoved = new OEICollectionWithEvents.ChangeHandler(ObjectRemoved);
 				
 				foreach (NWN2InstanceCollection instances in area.AllInstances) {
 					instances.Inserted += cAdded;
@@ -321,12 +308,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 
 		
 		/// <summary>
-		/// TODO
+		/// Notifies the client that a script, area, or conversation has been removed from the module.
 		/// </summary>
-		/// <param name="cDictionary"></param>
-		/// <param name="key"></param>
-		/// <param name="value"></param>
-		protected void RemovedFromDictionary(OEIDictionaryWithEvents cDictionary, object key, object value)
+		protected void ResourceRemoved(OEIDictionaryWithEvents cDictionary, object key, object value)
 		{
 			string name;
 			if (value is NWN2GameArea) name = ((NWN2GameArea)value).Name;
