@@ -76,7 +76,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// TODO
 		/// </summary>
 		/// <param name="message"></param>
-		public void NotifyObjectAdded(NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string tag, Guid id, string area)
+		public void NotifyObjectAdded(NWN2ObjectType type, string tag, Guid id, string area)
 		{
 			context.NotifyObjectAdded(type,tag,id,area);
 		}
@@ -86,7 +86,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// TODO
 		/// </summary>
 		/// <param name="message"></param>
-		public void NotifyObjectRemoved(NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType type, string tag, Guid id, string area)
+		public void NotifyObjectRemoved(NWN2ObjectType type, string tag, Guid id, string area)
 		{
 			context.NotifyObjectRemoved(type,tag,id,area);
 		}
@@ -95,17 +95,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// TODO
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="type"></param>
+		/// <param name="resref"></param>
+		/// <remarks>There appears to be a bug in the toolset or plugin which causes this event
+		/// to fire again at a later point.</remarks>
 		public void NotifyBlueprintAdded(NWN2ObjectType type, string resref)
 		{
 			context.NotifyBlueprintAdded(type,resref);
 		}
-		
-		
+				
+
 		/// <summary>
 		/// TODO
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="type"></param>
+		/// <param name="resref"></param>
+		/// <remarks>There appears to be a bug in the toolset or plugin which causes this event
+		/// to fire again at a later point.</remarks>
 		public void NotifyBlueprintRemoved(NWN2ObjectType type, string resref)
 		{
 			context.NotifyBlueprintRemoved(type,resref);
