@@ -59,6 +59,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		protected TD.SandBar.MenuButtonItem pluginMenuItem;
 		
 		/// <summary>
+		/// The menu button which allows the user to enable or disable
+		/// access to scripts.
+		/// </summary>
+		protected TD.SandBar.MenuButtonItem scriptAccessMenuItem;
+		
+		/// <summary>
 		/// User preferences relating to the operation of this plugin.
 		/// </summary>
 		protected object preferences;
@@ -133,9 +139,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// </summary>
 		public FlipPlugin()
 		{
-			pluginMenuItem = null;
+			floatingGridHandler = new DockingManager.ContentHandler(HideScriptSlotsOnFloatingGrid);
+			mainGridHandler = new PropertyGrid.SelectedObjectChangedEventHandler(HideScriptSlotsOnMainGrid);
+			
 			preferences = new object();
 		}
+		
+		// TODO:
+		DockingManager.ContentHandler floatingGridHandler;
+		PropertyGrid.SelectedObjectChangedEventHandler mainGridHandler;
+		bool canAccessScripts = false;
 		
 		#endregion
 		
@@ -152,6 +165,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			StartServices();	
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
+			
+			scriptAccessMenuItem = new TD.SandBar.MenuButtonItem("Enable script access");
+			scriptAccessMenuItem.Activate += delegate 
+			{  
+				if (canAccessScripts) DisableScriptAccess();
+				else EnableScriptAccess();
+			};
+			
+			pluginMenuItem.Items.Add(scriptAccessMenuItem);
 		}
 		
 		
@@ -163,7 +185,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
 		{			
-			BlockAccessToScripts();
+			DisableScriptAccess();
 		}
 		
 		
@@ -195,7 +217,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// </summary>
 		protected void PluginActivated(object sender, EventArgs e)
 		{	
-			
 		}
 		
 		
@@ -234,11 +255,58 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		
 		
 		/// <summary>
-		/// Hide script slot fields on property grids, and prevent scripts from being created or opened.
+		/// TODO
 		/// </summary>
-		protected void BlockAccessToScripts()
+		public void EnableScriptAccess()
+		{			
+			canAccessScripts = true;
+			ControlAccessToScripts(canAccessScripts);
+			scriptAccessMenuItem.Checked = canAccessScripts;
+		}
+		
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		public void DisableScriptAccess()
 		{
+			foreach (INWN2Viewer viewer in NWN2ToolsetMainForm.App.GetAllViewers()) {
+				if (viewer is NWN2ScriptViewer) {
+					System.Windows.MessageBox.Show("All scripts must be closed before script access can be disabled.",
+					                               "Close all scripts",
+					                			   System.Windows.MessageBoxButton.OK,
+					                			   System.Windows.MessageBoxImage.Exclamation);
+					return;						                               
+				}
+			}
+			
+			canAccessScripts = false;
+			ControlAccessToScripts(canAccessScripts);
+			scriptAccessMenuItem.Checked = canAccessScripts;
+		}
+		
+		
+		/// <summary>
+		/// TODO script slot fields on property grids, and prevent scripts from being created or opened.
+		/// </summary>
+		/// <param name="">TODO</param>
+		protected void ControlAccessToScripts(bool allow)
+		{			
+			if (!allow) {
+				foreach (INWN2Viewer viewer in NWN2ToolsetMainForm.App.GetAllViewers()) {
+					if (viewer is NWN2ScriptViewer) {
+						System.Windows.MessageBox.Show("All scripts must be closed before script access can be disabled.",
+						                               "Close all scripts",
+						                			   System.Windows.MessageBoxButton.OK,
+						                			   System.Windows.MessageBoxImage.Exclamation);
+						return;						                               
+					}
+				}
+			}
+			
 			FieldInfo[] fields = typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+			
+			DockingManager dm = null;
 			
 			// Locate all the necessary UI elements via reflection:
 			foreach (FieldInfo field in fields) {
@@ -248,30 +316,60 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 					NWN2PropertyGrid grid = (NWN2PropertyGrid)field.GetValue(NWN2ToolsetMainForm.App);	
 					foreach (FieldInfo fi in grid.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
 						if (fi.FieldType == typeof(PropertyGrid)) {
-							PropertyGrid innerGrid = (PropertyGrid)fi.GetValue(grid);
-							innerGrid.SelectedObjectChanged += delegate	{ HideScriptSlots(innerGrid); };
+							PropertyGrid innerGrid = (PropertyGrid)fi.GetValue(grid);							
+							innerGrid.SelectedObjectChanged -= mainGridHandler;
+							if (!allow) innerGrid.SelectedObjectChanged += mainGridHandler;							
 						}
 					}
 				}
 				
 				// Hide script slots on floating property grids when they first appear:
 				else if (field.FieldType == typeof(DockingManager)) {
-					DockingManager dm = (DockingManager)field.GetValue(NWN2ToolsetMainForm.App);	
-					dm.ContentShown += new DockingManager.ContentHandler(HideScriptSlots);
+					dm = (DockingManager)field.GetValue(NWN2ToolsetMainForm.App);						
+					dm.ContentShown -= floatingGridHandler;
+					if (!allow) dm.ContentShown += floatingGridHandler;
 				}
 				
 				// Disable the scripts window:
 				else if (field.FieldType == typeof(NWN2ModuleScriptList)) {
 					NWN2ModuleScriptList sl = (NWN2ModuleScriptList)field.GetValue(NWN2ToolsetMainForm.App);
-					sl.Enabled = false;
+					sl.Enabled = allow;
 				}
 				
 				// Disable the ability to create or open scripts from the file menu:
 				else if (field.FieldType == typeof(TD.SandBar.MenuButtonItem)) {
 					TD.SandBar.MenuButtonItem mbi = (TD.SandBar.MenuButtonItem)field.GetValue(NWN2ToolsetMainForm.App);
-					if (mbi.Text == "&Script" || mbi.Text == "Open Conversation/Script") mbi.Enabled = false;
+					if (mbi.Text == "&Script" || mbi.Text == "Open Conversation/Script") mbi.Enabled = allow;
 				}
 			}
+									
+			// FIXME:
+			if (dm == null) throw new Exception("Didn't find field.");
+						
+			// FIXME:
+			foreach (Content content in dm.Contents) {
+				if (content.Control is NWN2PropertyGrid) {
+					foreach (FieldInfo fi in typeof(NWN2PropertyGrid).GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
+						if (fi.FieldType == typeof(PropertyGrid)) {
+							PropertyGrid ig = (PropertyGrid)fi.GetValue(content.Control);
+							// Refresh properties, then block script slots if appropriate:
+							ig.SelectedObjects = ig.SelectedObjects;
+							if (!allow) HideScriptSlots(ig);
+						}
+					}					
+				}
+			}
+		}
+
+		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		protected void HideScriptSlotsOnMainGrid(object sender, SelectedObjectChangedEventArgs e)
+		{
+			HideScriptSlots((PropertyGrid)sender);
 		}
 						
 
@@ -281,7 +379,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// </summary>
 		/// <param name="c">The content which was just opened.</param>
 		/// <param name="cea">Arguments relating to this event.</param>
-		protected void HideScriptSlots(Content c, EventArgs cea)
+		protected void HideScriptSlotsOnFloatingGrid(Content c, EventArgs cea)
 		{
 			if (c.Control is NWN2PropertyGrid) {
 				NWN2PropertyGrid grid = (NWN2PropertyGrid)c.Control;

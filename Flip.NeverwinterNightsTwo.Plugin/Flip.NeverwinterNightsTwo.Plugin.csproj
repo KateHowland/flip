@@ -62,6 +62,10 @@
     <Reference Include="PresentationFramework">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="QWhale.Syntax">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\QWhale.Syntax.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SandBar">
       <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\SandBar.dll</HintPath>
       <Private>False</Private>
@@ -80,6 +84,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
