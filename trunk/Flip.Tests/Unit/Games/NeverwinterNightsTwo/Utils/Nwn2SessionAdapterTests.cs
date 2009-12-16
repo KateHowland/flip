@@ -2602,6 +2602,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void AddsAreaToDirectoryModule()
 		{
+			System.Windows.Forms.MessageBox.Show("wait");
+			
 			string name = "AddsAreaToDirectoryModule";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
