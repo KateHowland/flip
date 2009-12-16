@@ -84,12 +84,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaBase.cs" />
-    <Compile Include="Callbacks.cs" />
-    <Compile Include="ICallbacks.cs" />
+    <Compile Include="INwn2Callbacks.cs" />
     <Compile Include="INwn2Service.cs" />
     <Compile Include="INwn2Session.cs" />
     <Compile Include="Area.cs" />
-    <Compile Include="Notifier.cs" />
+    <Compile Include="ClientNotifier.cs" />
     <Compile Include="Nwn2ScriptSlot.cs" />
     <Compile Include="Nwn2Session.cs" />
     <Compile Include="Nwn2SessionAdapter.cs" />

@@ -99,7 +99,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					WaitForToolsetToLoad(true);
 				}
 				
-				InstanceContext instanceContext = new InstanceContext(new Callbacks());
+				InstanceContext instanceContext = new InstanceContext(new Nwn2CallbacksForTesting());
 								
 				NetNamedPipeBinding binding = new NetNamedPipeBinding();
 				binding.MaxReceivedMessageSize = Int32.MaxValue;
@@ -1719,6 +1719,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
+			System.Windows.MessageBox.Show("wait");
+			
 			// And after...
 			Assert.IsNotNull(service.GetScript(scriptName));
 			Assert.AreEqual(1,service.GetScriptNames().Count);
@@ -2602,8 +2604,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		[Test]
 		public void AddsAreaToDirectoryModule()
 		{
-			System.Windows.Forms.MessageBox.Show("wait");
-			
 			string name = "AddsAreaToDirectoryModule";
 			string parent = NWN2ToolsetMainForm.ModulesDirectory;
 			string path = Path.Combine(parent,name);
