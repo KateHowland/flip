@@ -48,9 +48,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 	/// Tests the <see cref="Nwn2SessionAdapter"/> class.
 	/// </summary>
 	/// <remarks>Not tested: whether callbacks fire when areas are removed,
-	/// objects are removed, blueprints are added or removed. (If something
-	/// hasn't been tested, it probably means that there was no service method
-	/// available to allow automated testing, and it wasn't worth implementing
+	/// objects are removed, blueprints are added or removed, or script slots
+	/// change.
+	/// (If something hasn't been tested, it probably means that there was no service method
+	/// available to allow automated testing, and it didn't seem worth implementing
 	/// one for the test alone.)</remarks>
 	[TestFixture]
 	public sealed partial class Nwn2SessionAdapterTests
