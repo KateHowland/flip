@@ -1,6 +1,6 @@
 /*
  * Flip - a visual programming language for scripting video games
- * Copyright (C) 2009 University of Sussex
+ * Copyright (C) 2009, 2010 University of Sussex
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1718,8 +1718,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.SaveModule();
 			service.CloseModule();
 			service.OpenModule(path,ModuleLocationType.Directory);
-			
-			System.Windows.MessageBox.Show("wait");
 			
 			// And after...
 			Assert.IsNotNull(service.GetScript(scriptName));

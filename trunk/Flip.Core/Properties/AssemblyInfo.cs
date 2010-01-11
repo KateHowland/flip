@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("University of Sussex")]
 [assembly: AssemblyProduct("Flip")]
-[assembly: AssemblyCopyright("Copyright 2009")]
+[assembly: AssemblyCopyright("Copyright 2009, 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleToAttribute( "Flip.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001000978b373a74467df0d90370ee26dfd1b1fc68f47f05e5468a32872a5b01514d071df46e6fd1e21012a0d486a8bee7b952c832900965460dfade47576d835b76af7fcc2462f82d699088c62746564104c3d8dc023bc1f6abd04038d2ca2ff22c95cde234b8e0436a6363a6718aa1227328f5d9c2cbc905796190fe4f0cda8d3b8" )]
