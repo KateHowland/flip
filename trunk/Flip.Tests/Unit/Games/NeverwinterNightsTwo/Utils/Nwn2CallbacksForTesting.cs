@@ -37,6 +37,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 	/// </summary>
 	public class Nwn2CallbacksForTesting : INwn2Callbacks
 	{	
+		private string latest = String.Empty;
+		
+		/// <summary>
+		/// Records a message about the last callback method which ran.
+		/// </summary>
+		public string Latest {
+			get { return latest; }
+			set { 
+				latest = value; 
+				Console.WriteLine(latest);
+			}
+		}
+				
+		
 		/// <summary>
 		/// Notifies the client when the current module changes.
 		/// </summary>
@@ -44,7 +58,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="oldModule">The name of the old module.</param>
 		public void NotifyModuleChanged(string newModule, string oldModule)
 		{
-			Console.WriteLine("module changed... Now: " + newModule + ", Before: " + oldModule);
+			Latest = "module changed... Now: " + newModule + ", Before: " + oldModule;
 		}
 		
 		
@@ -57,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="name">The name of the resource.</param>
 		public void NotifyResourceAdded(string type, string name)
 		{
-			Console.WriteLine("added resource... Type: " + type + ", Name: " + name);
+			Latest = "added resource... Type: " + type + ", Name: " + name;
 		}
 		
 		
@@ -70,7 +84,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="name">The name of the resource.</param>
 		public void NotifyResourceRemoved(string type, string name)
 		{
-			Console.WriteLine("removed resource... Type: " + type + ", Name: " + name);
+			Latest = "removed resource... Type: " + type + ", Name: " + name;
 		}
 		
 		
@@ -83,7 +97,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="area">The name of the area the object was added to.</param>
 		public void NotifyObjectAdded(NWN2ObjectType type, string tag, Guid id, string area)
 		{
-			Console.WriteLine("added object... Type: " + type + ", Tag: " + tag + ", ID: " + id + ", Area: " + area);
+			Latest = "added object... Type: " + type + ", Tag: " + tag + ", ID: " + id + ", Area: " + area;
 		}
 		
 		
@@ -96,7 +110,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="area">The name of the area the object was removed from.</param>
 		public void NotifyObjectRemoved(NWN2ObjectType type, string tag, Guid id, string area)
 		{
-			Console.WriteLine("removed object... Type: " + type + ", Tag: " + tag + ", ID: " + id + ", Area: " + area);
+			Latest = "removed object... Type: " + type + ", Tag: " + tag + ", ID: " + id + ", Area: " + area;
 		}
 		
 		
@@ -109,7 +123,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// to fire again at a later point.</remarks>
 		public void NotifyBlueprintAdded(NWN2ObjectType type, string resourceName)
 		{
-			Console.WriteLine("added " + type + " blueprint with resource name " + resourceName);
+			Latest = "added " + type + " blueprint with resource name " + resourceName;
 		}
 				
 
@@ -122,7 +136,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// to fire again at a later point.</remarks>
 		public void NotifyBlueprintRemoved(NWN2ObjectType type, string resourceName)
 		{
-			Console.WriteLine("removed " + type + " blueprint with resource name " + resourceName);
+			Latest = "removed " + type + " blueprint with resource name " + resourceName;
 		}
 		
 		
@@ -134,7 +148,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="name">The name of the resource being viewed.</param>
 		public void NotifyResourceViewerOpened(string type, string name)
 		{
-			Console.WriteLine("opened " + type + " '" + name + "'");
+			Latest = "opened " + type + " '" + name + "'";
 		}
 		
 		
@@ -146,7 +160,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="name">The name of the resource which was being viewed.</param>
 		public void NotifyResourceViewerClosed(string name)
 		{
-			Console.WriteLine("closed resource '" + name + "'");
+			Latest = "closed resource '" + name + "'";
 		}
 		
 		
@@ -160,7 +174,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="newValue">The name of the newly attached script.</param>
 		public void NotifyScriptSlotChangedOnArea(string area, string slot, string oldValue, string newValue)
 		{
-			Console.WriteLine(slot + " script on area " + area + " changed to '" + newValue + "' (was '" + oldValue + "')");
+			Latest = slot + " script on area " + area + " changed to '" + newValue + "' (was '" + oldValue + "')";
 		}
 		
 		
@@ -174,7 +188,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="newValue">The name of the newly attached script.</param>
 		public void NotifyScriptSlotChangedOnModule(string module, string slot, string oldValue, string newValue)
 		{
-			Console.WriteLine(slot + " script on module " + module + " changed to '" + newValue + "' (was '" + oldValue + "')");
+			Latest = slot + " script on module " + module + " changed to '" + newValue + "' (was '" + oldValue + "')";
 		}
 		
 		
@@ -190,7 +204,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		/// <param name="newValue">The name of the newly attached script.</param>
 		public void NotifyScriptSlotChangedOnObject(NWN2ObjectType type, Guid id, string area, string slot, string oldValue, string newValue)
 		{
-			Console.WriteLine(slot + " script on " + type + " with ID " + id + " changed to '" + newValue + "' (was '" + oldValue + "')");
+			Latest = slot + " script on " + type + " with ID " + id + " changed to '" + newValue + "' (was '" + oldValue + "')";
 		}
 	}
 }

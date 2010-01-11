@@ -68,6 +68,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		private bool LaunchAndExitToolset = true;
 		
+		private Nwn2CallbacksForTesting testCallbacks;
+		
 		#endregion
 		
 		#region Setup
@@ -99,7 +101,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 					WaitForToolsetToLoad(true);
 				}
 				
-				InstanceContext instanceContext = new InstanceContext(new Nwn2CallbacksForTesting());
+				testCallbacks = new Nwn2CallbacksForTesting();
+				InstanceContext instanceContext = new InstanceContext(testCallbacks);
 								
 				NetNamedPipeBinding binding = new NetNamedPipeBinding();
 				binding.MaxReceivedMessageSize = Int32.MaxValue;
@@ -133,6 +136,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		
 		#region Tests - Scripts
 			
+		[Test]
+		public void NotifiesWhenModuleChanges()
+		{
+			testCallbacks.Latest = String.Empty;
+			
+			string name = "NotifiesWhenModuleChanges.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			string moduleName = Path.GetFileNameWithoutExtension(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			// When module changes, module name doesn't seem to be available yet, unless
+			// it's a temp module... this isn't much of a problem, so just ignore it:
+			string expected = "module changed";
+			Assert.IsTrue(testCallbacks.Latest.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: " + testCallbacks.Latest + "'");
+			
+			service.CloseModule();
+			Delete(path);
+			
+			expected = "module changed... Now: temp";
+			Assert.IsTrue(testCallbacks.Latest.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: " + testCallbacks.Latest + "'");
+			expected = "Before: " + moduleName;
+			Assert.IsTrue(testCallbacks.Latest.EndsWith(expected),"Expected to end with: '" + expected + "', Actual: " + testCallbacks.Latest + "'");
+		}
+		
+		
 		[Test]
 		public void ScriptMethodsWorkRegardlessOfLoadedState()
 		{
