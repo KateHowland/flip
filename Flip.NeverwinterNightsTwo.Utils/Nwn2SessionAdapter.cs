@@ -298,14 +298,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Notifies the client that a script, area, or conversation has been removed from the module.
 		/// </summary>
 		protected void ResourceRemoved(OEIDictionaryWithEvents cDictionary, object key, object value)
-		{
-			string name;
-			if (value is NWN2GameArea) name = ((NWN2GameArea)value).Name;
-			else if (value is NWN2GameConversation) name = ((NWN2GameConversation)value).Name;
-			else if (value is NWN2GameScript) name = ((NWN2GameScript)value).Name;
-			else name = String.Empty;
+		{			
+			string type, name;
 			
-			notify.NotifyResourceRemoved(value.GetType().ToString(),name);
+			if (value is NWN2GameScript) {
+				type = "script";
+				name = ((NWN2GameScript)value).Name;
+			}
+			else if (value is NWN2GameConversation) {
+				type = "conversation";
+				name = ((NWN2GameConversation)value).Name;
+			}
+			else if (value is NWN2GameArea) {
+				type = "area";
+				name = ((NWN2GameArea)value).Name;
+			}
+			else {
+				type = value.GetType().ToString();
+				name = String.Empty;
+			}
+			
+			notify.NotifyResourceRemoved(type,name);
 		}
 		
 		#endregion
