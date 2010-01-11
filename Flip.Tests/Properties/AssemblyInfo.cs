@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("University of Sussex")]
 [assembly: AssemblyProduct("Flip")]
-[assembly: AssemblyCopyright("Copyright 2009")]
+[assembly: AssemblyCopyright("Copyright 2009, 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
