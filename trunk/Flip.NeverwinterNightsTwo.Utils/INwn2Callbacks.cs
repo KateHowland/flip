@@ -49,8 +49,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Notifies the client when a resource 
 		/// is added to the module.
 		/// </summary>
-		/// <param name="type">The type of resource ('script', 'area' or
-		/// 'conversation').</param>
+		/// <param name="type">The type of resource ('Script', 'Area' or
+		/// 'Conversation').</param>
 		/// <param name="name">The name of the resource.</param>
 		[OperationContract(IsOneWay = true)]
 		void NotifyResourceAdded(string type, string name);
@@ -60,8 +60,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Notifies the client when a resource 
 		/// is removed from the module.
 		/// </summary>
-		/// <param name="type">The type of resource ('script', 'area' or
-		/// 'conversation').</param>
+		/// <param name="type">The type of resource ('Script', 'Area' or
+		/// 'Conversation').</param>
 		/// <param name="name">The name of the resource.</param>
 		[OperationContract(IsOneWay = true)]
 		void NotifyResourceRemoved(string type, string name);
@@ -114,8 +114,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Notifies the client when a resource viewer is opened in the toolset.
 		/// </summary>
-		/// <param name="type">The type of resource ('script', 'area' or
-		/// 'conversation') being viewed.</param>
+		/// <param name="type">The type of resource ('Script', 'Area' or
+		/// 'Conversation') being viewed.</param>
 		/// <param name="name">The name of the resource being viewed.</param>
 		[OperationContract(IsOneWay = true)]
 		void NotifyResourceViewerOpened(string type, string name);
@@ -124,8 +124,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <summary>
 		/// Notifies the client when a resource viewer is closed in the toolset.
 		/// </summary>
-		/// <param name="type">The type of resource ('script', 'area' or
-		/// 'conversation') which was being viewed.</param>
+		/// <param name="type">The type of resource ('Script', 'Area' or
+		/// 'Conversation') which was being viewed.</param>
 		/// <param name="name">The name of the resource which was being viewed.</param>
 		[OperationContract(IsOneWay = true)]
 		void NotifyResourceViewerClosed(string name);
