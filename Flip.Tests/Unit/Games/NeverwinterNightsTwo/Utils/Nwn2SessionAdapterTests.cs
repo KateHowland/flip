@@ -47,6 +47,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 	/// <summary>
 	/// Tests the <see cref="Nwn2SessionAdapter"/> class.
 	/// </summary>
+	/// <remarks>Not tested: whether callbacks fire when areas are removed,
+	/// objects are removed, blueprints are added or removed. (If something
+	/// hasn't been tested, it probably means that there was no service method
+	/// available to allow automated testing, and it wasn't worth implementing
+	/// one for the test alone.)</remarks>
 	[TestFixture]
 	public sealed partial class Nwn2SessionAdapterTests
 	{
@@ -156,15 +161,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			// it's a temp module... this isn't much of a problem, so just ignore it:
 			string expected = "module changed";
 			string actual = testCallbacks.Callbacks.Peek();
-			Assert.IsTrue(actual.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: " + actual + "'");
+			Assert.IsTrue(actual.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: '" + actual + "'");
 			
 			service.CloseModule();
 			
 			expected = "module changed... Now: temp";
 			actual = testCallbacks.Callbacks.Peek();
-			Assert.IsTrue(actual.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: " + actual + "'");
+			Assert.IsTrue(actual.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: '" + actual + "'");
 			expected = "Before: " + moduleName;
-			Assert.IsTrue(actual.EndsWith(expected),"Expected to end with: '" + expected + "', Actual: " + actual + "'");
+			Assert.IsTrue(actual.EndsWith(expected),"Expected to end with: '" + expected + "', Actual: '" + actual + "'");
 			
 			Delete(path);
 		}
@@ -188,11 +193,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.AddArea("area1",true,Area.SmallestAreaSize);
 			testCallbacks.Callbacks.Pop(); // get rid of the 'area viewer opened' message
-			Assert.AreEqual("added resource... Type: area, Name: area1",testCallbacks.Callbacks.Peek());
+			Assert.AreEqual("added resource... Type: Area, Name: area1",testCallbacks.Callbacks.Peek());
 			
 			service.AddArea("area2",true,Area.SmallestAreaSize);		
 			testCallbacks.Callbacks.Pop(); // get rid of the 'area viewer opened' message	
-			Assert.AreEqual("added resource... Type: area, Name: area2",testCallbacks.Callbacks.Peek());
+			Assert.AreEqual("added resource... Type: Area, Name: area2",testCallbacks.Callbacks.Peek());
 			
 			// Removing areas has not been tested as there is no service method for this.
 			
@@ -218,16 +223,119 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			service.AddScript("givegold",sampleScripts.GiveGold);
-			Assert.AreEqual("added resource... Type: script, Name: givegold",testCallbacks.Callbacks.Peek());
+			Assert.AreEqual("added resource... Type: Script, Name: givegold",testCallbacks.Callbacks.Peek());
 			
 			service.AddScript("sing",sampleScripts.Sing);
-			Assert.AreEqual("added resource... Type: script, Name: sing",testCallbacks.Callbacks.Peek());
+			Assert.AreEqual("added resource... Type: Script, Name: sing",testCallbacks.Callbacks.Peek());
 			
 			service.DeleteScript("givegold");
-			Assert.AreEqual("removed resource... Type: script, Name: givegold",testCallbacks.Callbacks.Peek());
+			Assert.AreEqual("removed resource... Type: Script, Name: givegold",testCallbacks.Callbacks.Peek());
 			
 			service.DeleteScript("sing");
-			Assert.AreEqual("removed resource... Type: script, Name: sing",testCallbacks.Callbacks.Peek());
+			Assert.AreEqual("removed resource... Type: Script, Name: sing",testCallbacks.Callbacks.Peek());
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void NotifiesWhenObjectListChanges()
+		{
+			testCallbacks.Callbacks.Clear();
+			
+			string name = "NotifiesWhenObjectListChanges.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			string moduleName = Path.GetFileNameWithoutExtension(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			service.AddArea("area1",true,Area.SmallestAreaSize);
+					
+			string expected, actual;
+			
+			service.AddObject("area1",NWN2ObjectType.Creature,"c_cat","cat1");
+			expected = "added object... Type: Creature, Tag: cat1";
+			actual = testCallbacks.Callbacks.Peek();
+			Assert.IsTrue(actual.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: '" + actual + "'");
+			
+			service.AddObject("area1",NWN2ObjectType.Item,"mst_swgs_drk_3","sword");			
+			expected = "added object... Type: Item, Tag: sword";
+			actual = testCallbacks.Callbacks.Peek();
+			Assert.IsTrue(actual.StartsWith(expected),"Expected to start with: '" + expected + "', Actual: '" + actual + "'");			
+			
+			// Removing objects has not been tested as there is no service method for this.
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void NotifiesWhenAreasOpenOrClose()
+		{
+			testCallbacks.Callbacks.Clear();
+			
+			string name = "NotifiesWhenAreasOpenOrClose.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			string moduleName = Path.GetFileNameWithoutExtension(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			service.AddArea("area1",true,Area.SmallestAreaSize);
+			Assert.AreEqual("opened Area 'area1'",testCallbacks.Callbacks.Peek());
+			
+			service.AddArea("area2",true,Area.SmallestAreaSize);		
+			Assert.AreEqual("opened Area 'area2'",testCallbacks.Callbacks.Peek());
+			
+			service.CloseArea("area2");		
+			Assert.AreEqual("closed resource 'area2'",testCallbacks.Callbacks.Peek());
+			
+			service.OpenArea("area2");		
+			Assert.AreEqual("opened Area 'area2'",testCallbacks.Callbacks.Peek());
+			
+			service.CloseModule();
+			Delete(path);
+		}
+		
+		
+		[Test]
+		public void NotifiesWhenScriptsOpenOrClose()
+		{
+			testCallbacks.Callbacks.Clear();
+			
+			string name = "NotifiesWhenScriptsOpenOrClose.mod";
+			string parent = NWN2ToolsetMainForm.ModulesDirectory;
+			string path = Path.Combine(parent,name);
+			
+			path = pathChecker.GetUnusedFilePath(path);
+			
+			string moduleName = Path.GetFileNameWithoutExtension(path);
+			
+			service.CreateModule(path,ModuleLocationType.File);
+			service.OpenModule(path,ModuleLocationType.File);
+			
+			service.AddScript("script1",sampleScripts.GiveGold);
+			service.AddScript("scriptx",sampleScripts.Sing);
+			
+			service.OpenScript("script1");
+			Assert.AreEqual("opened Script 'script1'",testCallbacks.Callbacks.Peek());
+			
+			service.OpenScript("scriptx");
+			Assert.AreEqual("opened Script 'scriptx'",testCallbacks.Callbacks.Peek());
+			
+			service.CloseScript("scriptx");		
+			Assert.AreEqual("closed resource 'scriptx'",testCallbacks.Callbacks.Peek());
 			
 			service.CloseModule();
 			Delete(path);

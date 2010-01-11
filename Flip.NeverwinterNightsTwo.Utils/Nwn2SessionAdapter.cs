@@ -197,13 +197,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			string type;
 			
 			if (viewer.ViewedResource is NWN2GameScript) {
-				type = "script";
+				type = "Script";
 			}
 			else if (viewer.ViewedResource is NWN2GameConversation) {
-				type = "conversation";
+				type = "Conversation";
 			}
 			else if (viewer.ViewedResource is NWN2GameArea) {
-				type = "area";
+				type = "Area";
 			}
 			else {
 				type = viewer.ViewedResource.GetType().ToString();
@@ -263,16 +263,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			string type, name;
 			
 			if (value is NWN2GameScript) {
-				type = "script";
+				type = "Script";
 				name = ((NWN2GameScript)value).Name;
 			}
 			else if (value is NWN2GameConversation) {
-				type = "conversation";
+				type = "Conversation";
 				name = ((NWN2GameConversation)value).Name;
 			}
 			else if (value is NWN2GameArea) {
 				area = (NWN2GameArea)value;
-				type = "area";
+				type = "Area";
 				name = area.Name;
 			}
 			else {
@@ -302,15 +302,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			string type, name;
 			
 			if (value is NWN2GameScript) {
-				type = "script";
+				type = "Script";
 				name = ((NWN2GameScript)value).Name;
 			}
 			else if (value is NWN2GameConversation) {
-				type = "conversation";
+				type = "Conversation";
 				name = ((NWN2GameConversation)value).Name;
 			}
 			else if (value is NWN2GameArea) {
-				type = "area";
+				type = "Area";
 				name = ((NWN2GameArea)value).Name;
 			}
 			else {
