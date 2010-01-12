@@ -83,6 +83,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// <summary>
 		/// The private inner grid of the main property grid on the toolset interface.
 		/// </summary>
+		/// <remarks>Narrative Threads disposes of the main property grid, so always
+		/// check that this control is not
+		/// null or disposed before using it.</remarks>
 		protected PropertyGrid mainPropertyInnerGrid = null;
 		
 		/// <summary>
@@ -274,7 +277,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			foreach (FieldInfo field in typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
 				if (field.FieldType == typeof(NWN2PropertyGrid)) {
 					NWN2PropertyGrid mainPropertyGrid = (NWN2PropertyGrid)field.GetValue(NWN2ToolsetMainForm.App);
-					mainPropertyInnerGrid = (PropertyGrid)innerPropertyGridFieldInfo.GetValue(mainPropertyGrid);
+					/*
+					 * If Narrative Threads is running the main property grid may already have been disposed,
+					 * so check that it (and its inner grid) are not null or disposed whenever using them.
+					 */
+					if (mainPropertyGrid != null) {
+						mainPropertyInnerGrid = (PropertyGrid)innerPropertyGridFieldInfo.GetValue(mainPropertyGrid);
+					}
 				}
 				else if (field.FieldType == typeof(DockingManager)) {
 					dockingManager = (DockingManager)field.GetValue(NWN2ToolsetMainForm.App);
@@ -289,8 +298,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 					}
 				}
 					
+				// No longer required to find mainPropertyInnerGrid as a result of Narrative Threads integration:
 				if (dockingManager != null && 
-				    mainPropertyInnerGrid != null && 
+				    //mainPropertyInnerGrid != null &&
 				    innerPropertyGridFieldInfo != null && 
 				    scriptPanels.Count == 2 &&
 				    scriptMenuItems.Count == 2) return;
@@ -384,9 +394,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// <param name="allow">True to enable script-related functionality, false to disable.</param>
 		protected void ControlAccessToScripts(bool allow)
 		{	
-			// If blocking scripts, hide script slots on the main property grid whenever it changes:				
-			mainPropertyInnerGrid.SelectedObjectChanged -= mainGridHandler;
-			if (!allow) mainPropertyInnerGrid.SelectedObjectChanged += mainGridHandler;			
+			// Narrative Threads may have disposed the main property grid, so check that it exists:
+			if (mainPropertyInnerGrid != null && !mainPropertyInnerGrid.IsDisposed) {
+				// If blocking scripts, hide script slots on the main property grid whenever it changes:
+				mainPropertyInnerGrid.SelectedObjectChanged -= mainGridHandler;
+				if (!allow) mainPropertyInnerGrid.SelectedObjectChanged += mainGridHandler;		
+			}
 			
 			// If blocking scripts, hide script slots on floating property grids when they first appear:
 			dockingManager.ContentShown -= floatingGridHandler;
