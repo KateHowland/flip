@@ -120,9 +120,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// </summary>
 		protected bool canAccessScripts = false;
 		
+		/// <summary>
+		/// True if the plugin has successfully connected to the main Flip
+		/// application via a service; false otherwise.
+		/// </summary>
+		/// <remarks>Only one instance of the toolset can connect to Flip -
+		/// additional instances will be unable to talk to the service, and
+		/// as a result this value will be false.
+		/// </remarks>
+		protected bool connected = false;
+		
 		#endregion
 		
 		#region Properties
+		
+		/// <summary>
+		/// True if the plugin has successfully connected to the main Flip
+		/// application via a service; false otherwise.
+		/// </summary>
+		/// <remarks>Only one instance of the toolset can connect to Flip -
+		/// additional instances will be unable to talk to the service, and
+		/// as a result this value will be false.
+		/// </remarks>
+		public bool Connected {
+			get { return connected; }
+		}
+		
 		
 		/// <summary>
 		/// The menu button which activates the plugin.
@@ -326,11 +349,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 				                        "NamedPipeEndpoint");				
 				
 				host.Open();
+				connected = true;
 			} 
+			catch (System.ServiceModel.AddressAlreadyInUseException) {
+				connected = false;
+				System.Windows.MessageBox.Show("The Neverwinter Nights 2 " +
+				                               "toolset is already running.",
+				                               "Already running",
+				                               System.Windows.MessageBoxButton.OK,
+				                               System.Windows.MessageBoxImage.Error);
+				/*
+				 * This seems to work fine, even if you launch many copies of the toolset...
+				 * the first one connects to the service, subsequent copies warn you and then
+				 * shut down.
+				 * 
+				 * When there's actually a Flip application to connect to, the procedure will be:
+				 * the user launches the toolset; the toolset launches Flip, and Flip immediately
+				 * connects to the service. Launching additional copies of the toolset will fail
+				 * at the setting up the service stage, at which point the new versions of both
+				 * Flip and the toolset should be shut down immediately. (Launching additional
+				 * copies of Flip can simply be forbidden to the user.)
+				 */
+				System.Diagnostics.Process.GetCurrentProcess().Kill();
+			}
 			catch (Exception e) {
-				System.Windows.MessageBox.Show("The plugin failed to set up the WCF service that allows " +
-				                               "Flip to interact with the Neverwinter Nights 2 toolset - " +
-				                               "the application will not function correctly." +
+				connected = false;
+				System.Windows.MessageBox.Show("There was a problem when trying to set up the connection between " +
+				                               "Neverwinter Nights 2 and Flip. This may mean that the software " +
+				                               "does not function correctly." +
 				                               Environment.NewLine + Environment.NewLine +
 				                               "Exception detail:" + Environment.NewLine +
 				                               e,
@@ -346,7 +392,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// </summary>
 		protected void StopServices()
 		{
-			if (host != null && host.State != CommunicationState.Closed && host.State != CommunicationState.Closing) {
+			if (connected && host != null && host.State != CommunicationState.Closed && host.State != CommunicationState.Closing) {
 				host.Close();
 			}
 		}
