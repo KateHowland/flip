@@ -389,9 +389,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <remarks>Both compiled and uncompiled copies
 		/// of the script are deleted.</remarks>
 		[OperationContract]
-		[FaultContract(typeof(ArgumentException))]
-		[FaultContract(typeof(ArgumentNullException))]
-		[FaultContract(typeof(InvalidOperationException))]
+		[FaultContract(typeof(System.ArgumentException))]
+		[FaultContract(typeof(System.ArgumentNullException))]
+		[FaultContract(typeof(System.InvalidOperationException))]
 		[FaultContract(typeof(System.IO.IOException))]
 		void DeleteScript(string name);
 				
