@@ -422,37 +422,5 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script is currently open in the toolset; false
 		/// otherwise.</returns>
 		bool ScriptIsOpen(NWN2GameScript script);
-		
-		
-		/// <summary>
-		/// Loads a script resource from disk, ensuring that
-		/// the script object is fully loaded (but overwriting
-		/// any unsaved changes that were made).
-		/// </summary>
-		/// <param name="script">The script to demand.</param>
-		void DemandScript(NWN2GameScript script);
-		
-		
-		/// <summary>
-		/// Releases a script resource.
-		/// </summary>
-		/// <param name="script">The script to release.</param>
-		void ReleaseScript(NWN2GameScript script);
-		
-		
-		/// <summary>
-		/// Loads an area from disk, ensuring that
-		/// the area object is fully loaded (but overwriting
-		/// any unsaved changes that were made).
-		/// </summary>
-		/// <param name="area">The area to demand.</param>
-		void DemandArea(NWN2GameArea area);
-		
-		
-		/// <summary>
-		/// Releases an area resource.
-		/// </summary>
-		/// <param name="area">The area to release.</param>
-		void ReleaseArea(NWN2GameArea area);
 	}
 }

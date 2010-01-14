@@ -53,6 +53,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// <summary>
 	/// A service providing access to a Neverwinter Nights 2 toolset session.
 	/// </summary>
+	/// <remarks>Deprecated. Use INwn2Session directly.</remarks>
 	[ServiceBehavior(IncludeExceptionDetailInFaults=true)]
 	public class Nwn2SessionAdapter : INwn2Service
 	{
@@ -1719,15 +1720,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + name + "'.","areaName");
 				}
 				
-				if (NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers().Count == 3) {
-					throw new InvalidOperationException("3 is the maximum number of areas which can be open at once.");
-				}
-				
 				NWN2GameArea area = module.Areas[name];	
 				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
 				                                              name + "') could not be found.");	
 								
-				NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(area);
+				session.OpenArea(area);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1771,9 +1768,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
 				                                              name + "') could not be found.");	
 				
-				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(area);
-				if (viewer == null) return;
-				NWN2Toolset.NWN2ToolsetMainForm.App.CloseViewer(viewer,true);
+				session.CloseArea(area);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1819,9 +1814,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2GameArea area = module.Areas[name];	
 				if (area == null) throw new ArgumentException("The NWN2GameArea object for this area ('" +
 				                                              name + "') could not be found.");	
-				
-				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(area);
-				return viewer != null;
+				return session.AreaIsOpen(area);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1845,25 +1838,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A list of names of open scripts.</returns>
 		public IList<string> GetOpenScriptNames()
 		{
-			try {				
-				NWN2GameModule module = session.GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}
-				
-				List<NWN2Toolset.NWN2.Views.NWN2ScriptViewer> viewers = new List<NWN2Toolset.NWN2.Views.NWN2ScriptViewer>();
-				foreach (NWN2Toolset.NWN2.Views.INWN2Viewer v in NWN2Toolset.NWN2ToolsetMainForm.App.GetAllViewers()) {
-					NWN2Toolset.NWN2.Views.NWN2ScriptViewer s = v as NWN2Toolset.NWN2.Views.NWN2ScriptViewer;
-					if (s != null) viewers.Add(s);
-				}
-				
-				List<string> scripts = new List<string>(viewers.Count);
-				
-				foreach (NWN2Toolset.NWN2.Views.NWN2ScriptViewer sv in viewers) {
-					scripts.Add(sv.Script.Name);
-				}
-				
-				return scripts;
+			try {	
+				IList<NWN2GameScript> scripts = session.GetOpenScripts();
+				List<string> names = new List<string>(scripts.Count);				
+				foreach (NWN2GameScript script in scripts) {
+					names.Add(script.Name);
+				}				
+				return names;
 			}
 			catch (InvalidOperationException e) {
 				throw new FaultException<InvalidOperationException>(e,e.Message);
@@ -1900,7 +1881,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" + 
 				                                                name + "') could not be found.");				
 				
-				NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(script);
+				session.OpenScript(script);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1996,8 +1977,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
 				                                              	name + "') could not be found.");	
 				
-				NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(script);
-				return viewer != null;
+				return session.ScriptIsOpen(script);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
