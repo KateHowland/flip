@@ -1244,11 +1244,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="type">The type of the receiving object.</param>
 		/// <param name="objectID">The unique ObjectID of the 
 		/// receiving object.</param>
-		/// <param name="scriptSlot">The script slot to attach
+		/// <param name="slot">The script slot to attach
 		/// the script to.</param>
 		/// <remarks>To attach scripts to areas and modules,
 		/// use AttachScriptToArea() and AttachScriptToModule().</remarks>
-		public void AttachScriptToObject(string scriptName, string areaName, Nwn2EventRaiser type, Guid objectID, string scriptSlot)
+		public void AttachScriptToObject(string scriptName, string areaName, Nwn2EventRaiser type, Guid objectID, string slot)
 		{
 			try {
 				if (scriptName == null) {
@@ -1263,34 +1263,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (areaName == String.Empty) {
 					throw new ArgumentException("areaName");
 				}
-				if (scriptSlot == null) {
+				if (slot == null) {
 					throw new ArgumentNullException("scriptSlot");
 				}
-				if (scriptSlot == String.Empty) {
+				if (slot == String.Empty) {
 					throw new ArgumentException("scriptSlot");
 				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(type).Contains(scriptSlot)) {
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(type).Contains(slot)) {
 					throw new ArgumentException("Objects of type " + type + " do not have a script slot " +
-					                            "named " + scriptSlot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
-					                            "script slot names.)","scriptSlot");
+					                            "script slot names.)","slot");
 				}
-				
-				NWN2GameModule module = session.GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}
-				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
-					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
-				}
-				if (!HasCompiled(scriptName)) {
-					if (HasUncompiled(scriptName)) {
-						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
-					}
-					else {
-						throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
-					}
-				}	
 								
 				switch (type) {
 					case Nwn2EventRaiser.Area:
@@ -1299,34 +1283,42 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					case Nwn2EventRaiser.Module:
 						throw new InvalidOperationException("Correct usage: To add scripts to areas, use AttachScriptToModule().");
 						
-					default:				
+					default:
+						NWN2GameModule module = session.GetModule();
+						if (module == null) {
+							throw new InvalidOperationException("No module is currently open.");
+						}
+						
+						NWN2GameArea nwn2area = session.GetArea(areaName);
+						if (nwn2area == null) {
+							throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
+						}
+						
+						if (!session.HasCompiled(scriptName)) {
+							if (session.HasUncompiled(scriptName)) {
+								throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
+							}
+							else {
+								throw new ArgumentException("Module '" + module.Name + "' has no script named '" + scriptName + "'.");
+							}
+						}	
+						
+						NWN2GameScript script = session.GetScript(scriptName);
+						
 						NWN2ObjectType? nwn2Type = Nwn2ScriptSlot.GetObjectType(type);
 						if (!nwn2Type.HasValue) {
 							throw new ArgumentException("Couldn't understand Nwn2EventRaiserType " + type +
 							                            " - it is not a module, an area, or one of the NWN2ObjectType " +
 							                            "values!","type");
+						}				
+						
+						INWN2Instance instance = session.GetObject(nwn2area,nwn2Type.Value,objectID);
+						if (instance == null) {
+							throw new ArgumentException("No object matching the given criteria could be found.","objectID");
 						}
 						
-						NWN2GameArea nwn2area = module.Areas[areaName];
-						NWN2InstanceCollection instances = nwn2area.GetInstancesForObjectType(nwn2Type.Value);
-						
-						foreach (INWN2Instance instance in instances) {
-							if (instance.ObjectID == objectID) {		
-								PropertyInfo pi = instance.GetType().GetProperty(scriptSlot);
-																			
-								NWN2GameScript script = module.Scripts[scriptName];
-								if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
-								                                                scriptName + "') could not be found.");
-				
-								bool loaded = script.Loaded;
-								if (!loaded) script.Demand();
-								pi.SetValue(instance,script.Resource,null);
-//								if (!loaded) script.Release();
-								return;
-							}
-						}
-						throw new ArgumentException("No " + type + " with ObjectID " + objectID + " could be found in area " + areaName + ".",
-						                            "objectID");
+						session.AttachScriptToObject(script,instance,slot);
+						break;
 				}
 			}
 			catch (ArgumentNullException e) {
