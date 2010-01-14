@@ -1264,10 +1264,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					throw new ArgumentException("areaName");
 				}
 				if (slot == null) {
-					throw new ArgumentNullException("scriptSlot");
+					throw new ArgumentNullException("slot");
 				}
 				if (slot == String.Empty) {
-					throw new ArgumentException("scriptSlot");
+					throw new ArgumentException("slot");
 				}
 				if (!Nwn2ScriptSlot.GetScriptSlotNames(type).Contains(slot)) {
 					throw new ArgumentException("Objects of type " + type + " do not have a script slot " +
@@ -1349,7 +1349,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="areaName">The area to attach the script to.</param>
 		/// <param name="scriptSlot">The script slot to attach
 		/// the script to.</param>
-		public void AttachScriptToArea(string scriptName, string areaName, string scriptSlot)
+		public void AttachScriptToArea(string scriptName, string areaName, string slot)
 		{
 			try {
 				if (scriptName == null) {
@@ -1364,15 +1364,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (areaName == String.Empty) {
 					throw new ArgumentException("areaName cannot be empty.","areaName");
 				}
-				if (scriptSlot == null) {
-					throw new ArgumentNullException("scriptSlot");
+				if (slot == null) {
+					throw new ArgumentNullException("slot");
 				}
-				if (scriptSlot == String.Empty) {
-					throw new ArgumentException("scriptSlot cannot be empty.","scriptSlot");
+				if (slot == String.Empty) {
+					throw new ArgumentException("slot cannot be empty.","slot");
 				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(scriptSlot)) {
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(slot)) {
 					throw new ArgumentException("Areas do not have a script slot " +
-					                            "named " + scriptSlot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
 					                            "script slot names.","scriptSlot");
 				}
@@ -1381,34 +1381,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
-				if (!module.Areas.ContainsCaseInsensitive(areaName)) {
+						
+				NWN2GameArea nwn2area = session.GetArea(areaName);
+				if (nwn2area == null) {
 					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
 				}
-				if (!HasCompiled(scriptName)) {
-					if (HasUncompiled(scriptName)) {
+						
+				if (!session.HasCompiled(scriptName)) {
+					if (session.HasUncompiled(scriptName)) {
 						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
 					}
 					else {
-						throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+						throw new ArgumentException("Module '" + module.Name + "' has no script named '" + scriptName + "'.");
 					}
 				}	
-				
-				NWN2GameArea area = module.Areas[areaName];			
-				
-				PropertyInfo p = area.GetType().GetProperty(scriptSlot);
-				if (p == null) {
-					throw new ArgumentException("No property named " + scriptSlot +
-					                            " could be found on area " + areaName + ".");
-				}				
-				
-				NWN2GameScript script = module.Scripts[scriptName];
-				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
-				                                                scriptName + "') could not be found.");
-				
-				bool loaded = script.Loaded;
-				if (!loaded) script.Demand();
-				p.SetValue(area,script.Resource,null);
-//				if (!loaded) script.Release();
+					
+				NWN2GameScript script = session.GetScript(scriptName);
+						
+				session.AttachScriptToArea(script,nwn2area,slot);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
