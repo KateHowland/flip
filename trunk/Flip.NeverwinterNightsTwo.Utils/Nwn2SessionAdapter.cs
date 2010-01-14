@@ -1133,37 +1133,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void AddScript(string name, string code)
 		{
 			try {
-				if (name == null) {
-					throw new ArgumentNullException("name");
-				}
-				if (code == null) {
-					throw new ArgumentNullException("code");
-				}
-				
-				NWN2GameModule module = session.GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}
-								
-				NWN2GameScript script = new NWN2GameScript(name,
-				                                           module.Repository.DirectoryName,
-				                                           module.Repository);				
-				script.Module = module;		
-				module.Scripts.Add(script);		
-				
-				/*
-				 * Adding a script in the toolset ALWAYS opens it, so the issue that occurs where you
-				 * 'blank' a newly created script because you Demand() it from a non-existent serialised
-				 * version never occurs - the script is always Demand()ed and Loaded immediately. However,
-				 * our AddScript() CANNOT just start opening script viewers all over the place - we want
-				 * to keep these hidden! Instead, we'll just serialise the script when we create it, and
-				 * subsequent methods can Demand() it.
-				 */ 
-				
-				script.Demand();
-				script.Data = code;
-				script.OEISerialize();
-				script.Release();
+				session.AddScript(name,code);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1189,44 +1159,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public void DeleteScript(string name)
 		{
 			try {
-				if (name == null) {
-					throw new ArgumentNullException("name");
-				}
-				if (name == String.Empty) {
-					throw new ArgumentException("name");
-				}
-								
-				NWN2GameModule module = session.GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}
-				if (!session.HasUncompiled(name) && !session.HasCompiled(name)) {
-					throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + name + "'.","name");
-				}
-													
-				try {					
-					// Deleting an uncompiled script also deletes the compiled version, but deleting a compiled
-					// script DOESN'T also delete the uncompiled version, and a subsequent attempt to delete
-					// the uncompiled version explicitly will fail. Always delete uncompiled, then compiled.
-					
-					OEIResRef resRef = new OEIResRef(name);
-										
-					IResourceEntry uncompiled = module.Repository.FindResource(resRef,BWResourceTypes.GetResourceType("NSS"));
-					if (uncompiled != null) {
-						NWN2GameScript u = new NWN2GameScript(uncompiled);
-						if (u != null) {
-							module.RemoveResource(u);
-						}
-					}
-					
-					IResourceEntry compiled = module.Repository.FindResource(resRef,BWResourceTypes.GetResourceType("NCS"));
-					if (compiled != null) {
-						module.Repository.Resources.Remove(compiled);
-					}
-				}
-				catch (ArgumentOutOfRangeException) {
-					throw new ArgumentException("Scripts collection for this module did not feature a script named '" + name + "'.");
-				}
+				session.DeleteScript(name);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1276,53 +1209,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				catch (ArgumentOutOfRangeException) {
 					throw new ArgumentException("Scripts collection for this module did not feature a script named '" + name + "'.");
 				}
-				
-				NWN2Toolset.NWN2ToolsetMainForm.Compiler.GenerateDebugInfo = true;
-					
-				string resourcePath = Path.Combine(GetModuleTempPath(),script.VersionControlName);
-				bool scriptHasNeverBeenSerialised = !File.Exists(resourcePath) || File.ReadAllText(resourcePath).Length == 0;
-									
-				// Don't serialise if the script was never Demand()ed, as this will
-				// overwrite the 'real' script with the blank copy in memory...
-				// but otherwise, you need to serialise as the copy on disk is the
-				// one which will actually be compiled:
-				if (script.Loaded || scriptHasNeverBeenSerialised) {			
-					script.OEISerialize();
-				}
-					
-				string compiled = Path.Combine(GetModuleTempPath(),Path.GetFileNameWithoutExtension(script.VersionControlName) + ".ncs");
-					
-				/* The compiler will automatically overwrite the compiled script file,
-				 * but by deleting it beforehand we can wait for the new version to appear
-				 * before returning, so we know the compile operation has finished: */															
-				if (File.Exists(compiled)) {
-					File.Delete(compiled);
-				}
-											
-				string debug = NWN2Toolset.NWN2ToolsetMainForm.Compiler.CompileFile(script.Name,GetModuleTempPath());	
-				
-				if (debug.Length > 0) {
-					throw new InvalidDataException("'" + name + "' could not be compiled: " + debug);
-				}
-					
-				/*
-				 * CompileScript() should wait until the output file appears on the filesystem before returning
-				 * (otherwise there are intermittent bugs where other methods don't find the file they expect)
-				 * but neither of the commented-out methods that follow work when called from within this service.
-				 * That is, the file is NEVER found from here, even though it certainly exists, and even though
-				 * it is immediately found when these methods are called from outside this service method (e.g.
-				 * when called from the test suite).
-				 * 
-				 * This problem is 'fixed' if you call MessageBox.Show() before checking for the file (or was 
-				 * it before calling CompileFile? I forget) - the file is then found as normal. From this I'm
-				 * assuming it's some kind of a threading issue to do with MessageBox.Show() blocking the UI 
-				 * thread...? But I don't really know, and I've spent too much time trying to fix it, so I'm
-				 * just going to put the responsibility onto the clients to wait until a script has been compiled
-				 * before attempting to use it.
-				 */						
-				
-				//while (!session.HasCompiled(name));
-				//while (!File.Exists(compiled) || new FileInfo(compiled).Length == 0);
+				session.CompileScript(script);
 			}
 			catch (ApplicationException e) {
 				throw new FaultException<ApplicationException>(e,e.Message);
