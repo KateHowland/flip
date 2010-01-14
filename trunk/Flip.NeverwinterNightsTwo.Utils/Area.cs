@@ -207,7 +207,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The objects matching the given description.</returns>
 		/// <remarks>This method will throw an InvalidOperationException if
 		/// the area is not open.</remarks>
-		public override List<INWN2Instance> GetObjects(NWN2ObjectType type)
+		public override NWN2InstanceCollection GetObjects(NWN2ObjectType type)
 		{
 			return GetObjects(type,null);
 		}
@@ -222,29 +222,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The objects matching the given description.</returns>
 		/// <remarks>This method will throw an InvalidOperationException if
 		/// the area is not open.</remarks>
-		public override List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag)
+		public override NWN2InstanceCollection GetObjects(NWN2ObjectType type, string tag)
 		{			
 			bool loaded = nwn2Area.Loaded;
 			if (!loaded) throw new InvalidOperationException("Area must be open in the toolset " +
 			                                                 "before the method can run.");
 			
-			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];
-			List<INWN2Instance> instances = new List<INWN2Instance>();
-						
-			if (tag == null) {
-				foreach (INWN2Instance instance in all) {
-					instances.Add(instance);
-				}
+			NWN2InstanceCollection all = nwn2Area.AllInstances[(int)type];			
+			
+			if (tag == null || tag == String.Empty) {
+				return all;
 			}
 			else {
-				foreach (INWN2Object obj in all) {
-					if (obj.Tag == tag) {
-						instances.Add((INWN2Instance)obj);
+				NWN2InstanceCollection selected = new NWN2InstanceCollection();
+				foreach (INWN2Instance i in all) {
+					if (((INWN2Object)i).Tag == tag) {
+						selected.Add(i);
 					}
 				}
+				return selected;
 			}
-			
-			return instances;
 		}
 						
 		
