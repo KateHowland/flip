@@ -357,12 +357,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
-		/// Clears the value of a named script slot on a given module.
+		/// Clears the value of a named script slot on the current module.
 		/// </summary>
-		/// <param name="module">The module which owns the script slot to be cleared.</param>
 		/// <param name="slot">The script slot to clear
 		/// any scripts from.</param>
-		void ClearScriptSlotOnModule(NWN2GameModule module, string slot);
+		void ClearScriptSlotOnModule(string slot);
 		
 		
 		/// <summary>
