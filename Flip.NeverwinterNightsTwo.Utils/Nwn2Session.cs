@@ -1004,14 +1004,48 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 		
 		/// <summary>
-		/// Attaches a script to a named script slot on a given module.
+		/// Attaches a script to a named script slot on the current module.
 		/// </summary>
 		/// <param name="script">The script to attach.</param>
-		/// <param name="module">The module to attach the script to.</param>
 		/// <param name="slot">The script slot to attach the script to.</param>
-		public void AttachScriptToModule(NWN2GameScript script, NWN2GameModule module, string slot)
+		public void AttachScriptToModule(NWN2GameScript script, string slot)
 		{
-			throw new NotImplementedException();
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			if (slot == null) {
+				throw new ArgumentNullException("slot");
+			}
+			if (slot == String.Empty) {
+				throw new ArgumentException("slot");
+			}
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(slot)) {
+				throw new ArgumentException("Modules do not have a script slot " +
+				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+				                            "script slot names.)","slot");
+			}
+			
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}
+			if (!module.Scripts.Contains(script)) {
+				throw new ArgumentException("Script does not belong to the current module.","script");
+			}			
+						
+			PropertyInfo pi = typeof(NWN2ModuleInformation).GetProperty(slot);
+			if (pi == null) {
+				throw new ArgumentException("Modules do not have a script slot " +
+				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+				                            "script slot names.)","slot");
+			}
+			
+			bool loaded = script.Loaded;
+			if (!loaded) script.Demand();
+			pi.SetValue(module.ModuleInfo,script.Resource,null);
+//			if (!loaded) script.Release();
 		}		
 		
 		
