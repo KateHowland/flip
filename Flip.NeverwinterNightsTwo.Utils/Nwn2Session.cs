@@ -37,6 +37,7 @@ using NWN2Toolset.NWN2.Data.Campaign;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
+using NWN2Toolset.NWN2.Views;
 using OEIShared.IO;
 using OEIShared.Utils;
 using OEIShared.UI;
@@ -1164,7 +1165,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="area">The area to open.</param>
 		public void OpenArea(NWN2GameArea area)
 		{
-			throw new NotImplementedException();
+			if (area == null) {
+				throw new ArgumentNullException("area");
+			}
+				
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}
+			if (!module.Areas.Contains(area)) {
+				throw new ArgumentException("Area does not belong to the current module.","area");
+			}			
+				
+			if (NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers().Count == 3) {
+				throw new InvalidOperationException("3 is the maximum number of areas which can be open at once.");
+			}
+			
+			NWN2Toolset.NWN2ToolsetMainForm.App.ShowResource(area);
 		}		
 		
 		
@@ -1175,7 +1192,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="area">The area to close.</param>
 		public void CloseArea(NWN2GameArea area)
 		{
-			throw new NotImplementedException();
+			if (area == null) {
+				throw new ArgumentNullException("area");
+			}
+				
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}
+			if (!module.Areas.Contains(area)) {
+				throw new ArgumentException("Area does not belong to the current module.","area");
+			}		
+			
+			NWN2Toolset.NWN2.Views.INWN2Viewer viewer = NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(area);
+			if (viewer != null) NWN2Toolset.NWN2ToolsetMainForm.App.CloseViewer(viewer,true);
 		}		
 		
 		
@@ -1189,7 +1219,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// otherwise.</returns>
 		public bool AreaIsOpen(NWN2GameArea area)
 		{
-			throw new NotImplementedException();
+			if (area == null) {
+				throw new ArgumentNullException("area");
+			}
+			
+			return NWN2ToolsetMainForm.App.GetViewerForResource(area) != null;
 		}		
 		
 		
@@ -1200,7 +1234,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A list of open scripts.</returns>
 		public IList<NWN2GameScript> GetOpenScripts()
 		{
-			throw new NotImplementedException();
+			List<NWN2GameScript> scripts = new List<NWN2GameScript>(3);
+			
+			foreach (INWN2Viewer v in NWN2ToolsetMainForm.App.GetAllViewers()) {
+				NWN2ScriptViewer sv = v as NWN2ScriptViewer;
+				if (sv != null) {
+					scripts.Add(sv.Script);
+				}
+			}
+			
+			return scripts;
 		}		
 		
 		
@@ -1210,7 +1253,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="script">The script to open.</param>
 		public void OpenScript(NWN2GameScript script)
 		{
-			throw new NotImplementedException();
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			NWN2ToolsetMainForm.App.ShowResource(script);
 		}		
 		
 		
@@ -1221,7 +1267,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="script">The script to close.</param>
 		public void CloseScript(NWN2GameScript script)
 		{
-			throw new NotImplementedException();
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			
+			INWN2Viewer viewer = NWN2ToolsetMainForm.App.GetViewerForResource(script);
+			if (viewer != null) NWN2ToolsetMainForm.App.CloseViewer(viewer,true);
 		}		
 		
 		
@@ -1235,51 +1286,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// otherwise.</returns>
 		public bool ScriptIsOpen(NWN2GameScript script)
 		{
-			throw new NotImplementedException();
-		}		
-		
-		
-		/// <summary>
-		/// Loads a script resource from disk, ensuring that
-		/// the script object is fully loaded (but overwriting
-		/// any unsaved changes that were made).
-		/// </summary>
-		/// <param name="script">The script to demand.</param>
-		public void DemandScript(NWN2GameScript script)
-		{
-			throw new NotImplementedException();
-		}		
-		
-		
-		/// <summary>
-		/// Releases a script resource.
-		/// </summary>
-		/// <param name="script">The script to release.</param>
-		public void ReleaseScript(NWN2GameScript script)
-		{
-			throw new NotImplementedException();
-		}		
-		
-		
-		/// <summary>
-		/// Loads an area from disk, ensuring that
-		/// the area object is fully loaded (but overwriting
-		/// any unsaved changes that were made).
-		/// </summary>
-		/// <param name="area">The area to demand.</param>
-		public void DemandArea(NWN2GameArea area)
-		{
-			throw new NotImplementedException();
-		}		
-		
-		
-		/// <summary>
-		/// Releases an area resource.
-		/// </summary>
-		/// <param name="area">The area to release.</param>
-		public void ReleaseArea(NWN2GameArea area)
-		{
-			throw new NotImplementedException();
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			
+			return NWN2ToolsetMainForm.App.GetViewerForResource(script) != null;
 		}		
 		
 		#endregion

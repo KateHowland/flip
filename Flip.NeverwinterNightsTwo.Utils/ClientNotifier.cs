@@ -36,8 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// viewers being opened or closed, a script slot on an object or resource
 	/// changing, and the module changing.
 	/// </summary>
-	/// <remarks>Currently the client is simply fetched by checking for the
-	/// current caller, but this may change to a subscription model in a later update.</remarks>
+	/// <remarks>Deprecated.</remarks>
 	public class ClientNotifier : INwn2Callbacks
 	{
 		#region Fields

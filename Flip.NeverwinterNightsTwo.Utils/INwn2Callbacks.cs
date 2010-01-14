@@ -34,6 +34,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// viewers being opened or closed, a script slot on an object or resource
 	/// changing, and the module changing.
 	/// </summary>
+	/// <remarks>Deprecated.</remarks>
 	public interface INwn2Callbacks
 	{
 		/// <summary>
