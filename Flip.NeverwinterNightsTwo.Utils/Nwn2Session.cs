@@ -916,40 +916,40 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="slot">The script slot to attach the script to.</param>
 		public void AttachScriptToObject(NWN2GameScript script, INWN2Instance instance, string slot)
 		{
-				if (script == null) {
-					throw new ArgumentNullException("script");
-				}
-				if (slot == null) {
-					throw new ArgumentNullException("slot");
-				}
-				if (slot == String.Empty) {
-					throw new ArgumentException("slot");
-				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(instance.ObjectType).Contains(slot)) {
-					throw new ArgumentException("Objects of type " + instance.ObjectType + " do not have a script slot " +
-					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
-					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
-					                            "script slot names.)","slot");
-				}
-				
-				NWN2GameModule module = GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}
-				if (!module.Scripts.Contains(script)) {
-					throw new ArgumentException("Script does not belong to the current module.","script");
-				}
-							
-				PropertyInfo pi = instance.GetType().GetProperty(slot);
-				if (pi == null) {
-					throw new ArgumentException(instance.ObjectType.ToString() + " objects do not " +
-					                            "have a " + slot + " property.");
-				}
-				
-				bool loaded = script.Loaded;
-				if (!loaded) script.Demand();
-				pi.SetValue(instance,script.Resource,null);
-//				if (!loaded) script.Release();
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			if (slot == null) {
+				throw new ArgumentNullException("slot");
+			}
+			if (slot == String.Empty) {
+				throw new ArgumentException("slot");
+			}
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(instance.ObjectType).Contains(slot)) {
+				throw new ArgumentException("Objects of type " + instance.ObjectType + " do not have a script slot " +
+				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+				                            "script slot names.)","slot");
+			}
+			
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}
+			if (!module.Scripts.Contains(script)) {
+				throw new ArgumentException("Script does not belong to the current module.","script");
+			}
+						
+			PropertyInfo pi = instance.GetType().GetProperty(slot);
+			if (pi == null) {
+				throw new ArgumentException(instance.ObjectType.ToString() + " objects do not " +
+				                            "have a " + slot + " property.");
+			}
+			
+			bool loaded = script.Loaded;
+			if (!loaded) script.Demand();
+			pi.SetValue(instance,script.Resource,null);
+//			if (!loaded) script.Release();
 		}	
 				
 		
@@ -961,7 +961,45 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="slot">The script slot to attach the script to.</param>
 		public void AttachScriptToArea(NWN2GameScript script, NWN2GameArea area, string slot)
 		{
-			throw new NotImplementedException();
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			if (area == null) {
+				throw new ArgumentNullException("area");
+			}
+			if (slot == null) {
+				throw new ArgumentNullException("slot");
+			}
+			if (slot == String.Empty) {
+				throw new ArgumentException("slot");
+			}
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(slot)) {
+				throw new ArgumentException("Areas do not have a script slot " +
+				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+				                            "script slot names.)","slot");
+			}
+			
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}
+			if (!module.Scripts.Contains(script)) {
+				throw new ArgumentException("Script does not belong to the current module.","script");
+			}			
+						
+			PropertyInfo pi = typeof(NWN2GameArea).GetProperty(slot);
+			if (pi == null) {
+				throw new ArgumentException("Areas do not have a script slot " +
+				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+				                            "script slot names.)","slot");
+			}
+			
+			bool loaded = script.Loaded;
+			if (!loaded) script.Demand();
+			pi.SetValue(area,script.Resource,null);
+//			if (!loaded) script.Release();
 		}		
 				
 		
