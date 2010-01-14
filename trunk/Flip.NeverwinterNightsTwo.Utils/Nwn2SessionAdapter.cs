@@ -1347,7 +1347,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="scriptName">The name of the compiled script.</param>
 		/// <param name="areaName">The area to attach the script to.</param>
-		/// <param name="scriptSlot">The script slot to attach
+		/// <param name="slot">The script slot to attach
 		/// the script to.</param>
 		public void AttachScriptToArea(string scriptName, string areaName, string slot)
 		{
@@ -1425,9 +1425,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script slot on the module.
 		/// </summary>
 		/// <param name="scriptName">The name of the compiled script.</param>
-		/// <param name="scriptSlot">The script slot to attach
+		/// <param name="slot">The script slot to attach
 		/// the script to.</param>
-		public void AttachScriptToModule(string scriptName, string scriptSlot)
+		public void AttachScriptToModule(string scriptName, string slot)
 		{
 			try {
 				if (scriptName == null) {
@@ -1436,15 +1436,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (scriptName == String.Empty) {
 					throw new ArgumentException("scriptName cannot be empty.","scriptName");
 				}
-				if (scriptSlot == null) {
-					throw new ArgumentNullException("scriptSlot");
+				if (slot == null) {
+					throw new ArgumentNullException("slot");
 				}
-				if (scriptSlot == String.Empty) {
-					throw new ArgumentException("scriptSlot cannot be empty.","scriptSlot");
+				if (slot == String.Empty) {
+					throw new ArgumentException("slot cannot be empty.","slot");
 				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(scriptSlot)) {
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(slot)) {
 					throw new ArgumentException("Modules do not have a script slot " +
-					                            "named " + scriptSlot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
 					                            "script slot names.","scriptSlot");
 				}
@@ -1453,29 +1453,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (module == null) {
 					throw new InvalidOperationException("No module is currently open.");
 				}
-				if (!HasCompiled(scriptName)) {
-					if (HasUncompiled(scriptName)) {
+						
+				if (!session.HasCompiled(scriptName)) {
+					if (session.HasUncompiled(scriptName)) {
 						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
 					}
 					else {
-						throw new ArgumentException("Module '" + GetModuleName() + "' has no script named '" + scriptName + "'.","scriptName");
+						throw new ArgumentException("Module '" + module.Name + "' has no script named '" + scriptName + "'.");
 					}
 				}	
-				
-				PropertyInfo p = module.ModuleInfo.GetType().GetProperty(scriptSlot);
-				if (p == null) {
-					throw new ArgumentException("No property named " + scriptSlot +
-					                            " could be found on the module.");
-				}
-				
-				NWN2GameScript script = module.Scripts[scriptName];
-				if (script == null) throw new ArgumentException("The NWN2GameScript object for this script ('" +
-				                                                scriptName + "') could not be found.");
-				
-				bool loaded = script.Loaded;
-				if (!loaded) script.Demand();
-				p.SetValue(module.ModuleInfo,script.Resource,null);
-//				if (!loaded) script.Release();
+					
+				NWN2GameScript script = session.GetScript(scriptName);
+						
+				session.AttachScriptToModule(script,slot);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);

@@ -334,9 +334,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Attaches a script to a named script slot on a given module.
 		/// </summary>
 		/// <param name="script">The script to attach.</param>
-		/// <param name="module">The module to attach the script to.</param>
 		/// <param name="slot">The script slot to attach the script to.</param>
-		void AttachScriptToModule(NWN2GameScript script, NWN2GameModule module, string slot);
+		void AttachScriptToModule(NWN2GameScript script, string slot);
 		
 		
 		/// <summary>
