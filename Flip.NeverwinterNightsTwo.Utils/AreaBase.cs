@@ -31,6 +31,7 @@ using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
+using NWN2Toolset.NWN2.Data.TypedCollections;
 using OEIShared.OEIMath;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
@@ -200,7 +201,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="type">The type of objects to count.</param>
 		/// <returns>The objects matching the given description.</returns>
-		public abstract List<INWN2Instance> GetObjects(NWN2ObjectType type);
+		public abstract NWN2InstanceCollection GetObjects(NWN2ObjectType type);
 		
 		
 		/// <summary>
@@ -212,7 +213,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>The objects matching the given description.</returns>
 		/// <remarks>This method will throw an InvalidOperationException if
 		/// the area is not open.</remarks>
-		public abstract List<INWN2Instance> GetObjects(NWN2ObjectType type, string tag);
+		public abstract NWN2InstanceCollection GetObjects(NWN2ObjectType type, string tag);
 				
 		
 		/// <summary>

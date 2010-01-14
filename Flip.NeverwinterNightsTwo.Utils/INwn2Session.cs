@@ -27,6 +27,14 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.ServiceModel;
+using NWN2Toolset;
+using NWN2Toolset.NWN2.IO;
+using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
+using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
+using NWN2Toolset.NWN2.Data.TypedCollections;
+using OEIShared.IO;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -42,7 +50,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// is set to ModuleLocationType.Directory, this must be the path for
 		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
 		/// <param name="location">The serialisation form of the module.</param>
-		void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
+		void CreateModule(string path, ModuleLocationType location);
 									
 		
 		/// <summary>
@@ -57,7 +65,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="name">The path of the module to open.</param>
 		/// <param name="location">The serialisation form of the module.</param>
-		void OpenModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
+		void OpenModule(string path, ModuleLocationType location);
 		
 		
 		/// <summary>
@@ -65,7 +73,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// current location.
 		/// </summary>
 		/// <param name="module">The module to save.</param>.
-		void SaveModule(NWN2Toolset.NWN2.Data.NWN2GameModule module);
+		void SaveModule(NWN2GameModule module);
 		
 		
 		/// <summary>
@@ -73,7 +81,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="module">The module to save.</param>
 		/// <param name="path">The path to save the module to.</param>
-		void SaveModule(NWN2Toolset.NWN2.Data.NWN2GameModule module, string path);
+		void SaveModule(NWN2GameModule module, string path);
 		
 				
 		/// <summary>
@@ -86,7 +94,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the module that is currently open in the toolset.
 		/// </summary>
 		/// <returns>The current module, or null if no module is open.</returns>
-		NWN2Toolset.NWN2.Data.NWN2GameModule GetModule();
+		NWN2GameModule GetModule();
 		
 		
 		/// <summary>
@@ -108,7 +116,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="module">The module to return the path of.</param>
 		/// <returns>The absolute path of the given module.</returns>
-		string GetModulePath(NWN2Toolset.NWN2.Data.NWN2GameModule module);
+		string GetModulePath(NWN2GameModule module);
 		
 		
 		/// <summary>
@@ -132,7 +140,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// the <see cref="AreaBase"/> facade will wrap.</param>
 		/// <returns>A new <see cref="AreaBase"/> instance.</returns>
 		/// <remarks>This is a Factory Method.</remarks>
-		AreaBase CreateAreaBase(NWN2Toolset.NWN2.Data.NWN2GameArea nwn2area);
+		AreaBase CreateAreaBase(NWN2GameArea nwn2area);
 		
 		
 		/// <summary>
@@ -153,5 +161,299 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>True if the current module has a .NSS uncompiled
 		/// script file of the given name, and false otherwise.</returns>
 		bool HasUncompiled(string name);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// TODO:
+		// 1. The following methods need to be implemented in Nwn2Session.
+		// 2. The methods in Nwn2SessionAdapter should then be told to CALL these methods, and make the results
+		//    suitable for a service by themselves (e.g. Nwn2Session provides an object to 
+		//    Nwn2SessionAdapter, which serialises it as a bean and provides it to service clients.)
+		
+		
+		
+		
+		/// <summary>
+		/// Adds an object to the given area.
+		/// </summary>
+		/// <param name="area">The area in the current module to add the object to.</param>
+		/// <param name="type">The type of object to add.</param>
+		/// <param name="resref">The resref of the blueprint to create the object from.</param>
+		/// <param name="tag">The tag of the object.</param>
+		/// <returns>Returns the newly created object.</returns>
+		INWN2Instance AddObject(NWN2GameArea area, NWN2ObjectType type, string resref, string tag);
+		
+		
+		/// <summary>
+		/// Gets a blueprint with the given resref and type,
+		/// if one exists.
+		/// </summary>
+		/// <param name="resRef">The resref value of the blueprint.</param>
+		/// <param name="type">The object type of the blueprint.</param>
+		/// <returns>A blueprint, or null if no blueprint
+		/// matching the given criteria was found.</returns>
+		INWN2Blueprint GetBlueprint(string resRef, NWN2ObjectType type);
+		
+		
+		/// <summary>
+		/// Gets all blueprints of a given type.
+		/// </summary>
+		/// <param name="type">The object type of the
+		/// blueprints to return.</param>
+		/// <returns>A collection of blueprints.</returns>
+		NWN2BlueprintCollection GetBlueprints(NWN2ObjectType type);
+		
+		
+		/// <summary>
+		/// Gets a unique object in an area from its properties.
+		/// </summary>
+		/// <param name="area">The area which has the object.</param>
+		/// <param name="type">The type of the object.</param>
+		/// <param name="id">The unique ID of the object.</param>
+		/// <returns>The object within this area with the given properties,
+		/// or null if one could not be found.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
+		INWN2Instance GetObject(NWN2GameArea area, NWN2ObjectType type, Guid id);
+		
+		
+		/// <summary>
+		/// Gets all objects of a given type in a given area.
+		/// </summary>
+		/// <param name="area">The area which has the objects.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <returns>A collection of objects.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
+		NWN2InstanceCollection GetObjects(NWN2GameArea area, NWN2ObjectType type);		
+		
+		
+		/// <summary>
+		/// Gets all objects of a given type with a given tag in a given area.
+		/// </summary>
+		/// <param name="area">The area which has the objects.</param>
+		/// <param name="type">The type of objects to collect.</param>
+		/// <param name="tag">The tag that objects must have to be collected.
+		/// Pass null to ignore this requirement.</param>
+		/// <returns>A collection of objects.</returns>
+		/// <remarks>This method will throw an InvalidOperationException if
+		/// the area is not open.</remarks>
+		NWN2InstanceCollection GetObjectsByTag(NWN2GameArea area, NWN2ObjectType type, string tag);
+		
+		
+		/// <summary>
+		/// Gets an area in the current module.
+		/// </summary>
+		/// <param name="name">The name of the area.</param>
+		/// <returns>The named area, or null 
+		/// if the area could not be found.</returns>
+		NWN2GameArea GetArea(string name);
+		
+		
+		/// <summary>
+		/// Gets the scripts in the current module.
+		/// </summary>
+		/// <returns>A list of scripts.</returns>
+		IList<NWN2GameScript> GetScripts();	
+		
+		
+		/// <summary>
+		/// Gets the script with a given name in the current module.
+		/// </summary>
+		/// <returns>The script with the given name,
+		/// or null if no such script exists.</returns>
+		NWN2GameScript GetScript(string name);	
+		
+		
+		/// <summary>
+		/// Gets the compiled scripts in the current module.
+		/// </summary>
+		/// <returns>A list of compiled scripts.</returns>
+		IList<IResourceEntry> GetCompiledScripts();	
+		
+		
+		/// <summary>
+		/// Gets the compiled script with a given name in the current module.
+		/// </summary>
+		/// <returns>The compiled script with the given name,
+		/// or null if no such script exists.</returns>
+		IResourceEntry GetCompiledScript(string name);	
+				
+
+		/// <summary>
+		/// Adds an uncompiled script to the current module.
+		/// </summary>
+		/// <param name="name">The name to save the script under.</param>
+		/// <param name="code">The contents of the script.</param>
+		/// <returns>The newly created script.</returns>
+		NWN2GameScript AddScript(string name, string code);	
+		
+		
+		/// <summary>
+		/// Deletes a script from the current module.
+		/// </summary>
+		/// <param name="name">The name of the script.</param>
+		/// <remarks>Both compiled and uncompiled copies
+		/// of the script are deleted.</remarks>
+		void DeleteScript(string name);
+				
+
+		/// <summary>
+		/// Compiles a script in the current module.
+		/// </summary>
+		/// <param name="script">The script to compile.</param>
+		void CompileScript(NWN2GameScript script);			
+		
+		
+		/// <summary>
+		/// Attaches a script to a named script slot on a given instance.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="instance">The instance to attach the script to.</param>
+		/// <param name="slot">The script slot to attach the script to.</param>
+		void AttachScriptToObject(NWN2GameScript script, INWN2Instance instance, string slot);
+				
+		
+		/// <summary>
+		/// Attaches a script to a named script slot on a given area.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="area">The area to attach the script to.</param>
+		/// <param name="slot">The script slot to attach the script to.</param>
+		void AttachScriptToArea(NWN2GameScript script, NWN2GameArea area, string slot);
+				
+		
+		/// <summary>
+		/// Attaches a script to a named script slot on a given module.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="module">The module to attach the script to.</param>
+		/// <param name="slot">The script slot to attach the script to.</param>
+		void AttachScriptToModule(NWN2GameScript script, NWN2GameModule module, string slot);
+		
+		
+		/// <summary>
+		/// Clears the value of a named script slot on a given instance.
+		/// </summary>
+		/// <param name="instance">The object which owns the script slot to be cleared.</param>
+		/// <param name="slot">The script slot to clear
+		/// any scripts from.</param>
+		void ClearScriptSlotOnObject(INWN2Instance instance, string slot);
+		
+		
+		/// <summary>
+		/// Clears the value of a named script slot on a given area.
+		/// </summary>
+		/// <param name="area">The area which owns the script slot to be cleared.</param>
+		/// <param name="slot">The script slot to clear
+		/// any scripts from.</param>
+		void ClearScriptSlotOnArea(NWN2GameArea area, string slot);
+		
+		
+		/// <summary>
+		/// Clears the value of a named script slot on a given module.
+		/// </summary>
+		/// <param name="module">The module which owns the script slot to be cleared.</param>
+		/// <param name="slot">The script slot to clear
+		/// any scripts from.</param>
+		void ClearScriptSlotOnModule(NWN2GameModule module, string slot);
+		
+		
+		/// <summary>
+		/// Opens an area in an area viewer.
+		/// </summary>
+		/// <param name="area">The area to open.</param>
+		void OpenArea(NWN2GameArea area);
+		
+		
+		/// <summary>
+		/// Closes the area viewer for an area, if one is
+		/// currently open.
+		/// </summary>
+		/// <param name="area">The area to close.</param>
+		void CloseArea(NWN2GameArea area);
+		
+		
+		/// <summary>
+		/// Checks whether an area viewer is currently open
+		/// for a particular area.
+		/// </summary>
+		/// <param name="area">The area which may have a viewer open.</param>
+		/// <returns>True if an area viewer for the given
+		/// area is currently open in the toolset; false
+		/// otherwise.</returns>
+		bool AreaIsOpen(NWN2GameArea area);
+		
+		
+		/// <summary>
+		/// Gets a list of scripts
+		/// which are currently open in script viewers.
+		/// </summary>
+		/// <returns>A list of open scripts.</returns>
+		IList<NWN2GameScript> GetOpenScripts();
+		
+		
+		/// <summary>
+		/// Opens a script in a script viewer.
+		/// </summary>
+		/// <param name="script">The script to open.</param>
+		void OpenScript(NWN2GameScript script);
+		
+		
+		/// <summary>
+		/// Closes the script viewer for a script, if one is
+		/// currently open.
+		/// </summary>
+		/// <param name="script">The script to close.</param>
+		void CloseScript(NWN2GameScript script);
+		
+		
+		/// <summary>
+		/// Checks whether a script viewer is currently open
+		/// for a particular script.
+		/// </summary>
+		/// <param name="script">The script which may have a viewer open.</param>
+		/// <returns>True if a script viewer for the given
+		/// script is currently open in the toolset; false
+		/// otherwise.</returns>
+		bool ScriptIsOpen(NWN2GameScript script);
+		
+		
+		/// <summary>
+		/// Loads a script resource from disk, ensuring that
+		/// the script object is fully loaded (but overwriting
+		/// any unsaved changes that were made).
+		/// </summary>
+		/// <param name="script">The script to demand.</param>
+		void DemandScript(NWN2GameScript script);
+		
+		
+		/// <summary>
+		/// Releases a script resource.
+		/// </summary>
+		/// <param name="script">The script to release.</param>
+		void ReleaseScript(NWN2GameScript script);
+		
+		
+		/// <summary>
+		/// Loads an area from disk, ensuring that
+		/// the area object is fully loaded (but overwriting
+		/// any unsaved changes that were made).
+		/// </summary>
+		/// <param name="area">The area to demand.</param>
+		void DemandArea(NWN2GameArea area);
+		
+		
+		/// <summary>
+		/// Releases an area resource.
+		/// </summary>
+		/// <param name="area">The area to release.</param>
+		void ReleaseArea(NWN2GameArea area);
 	}
 }

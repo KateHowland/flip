@@ -576,11 +576,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				
 				NWN2GameArea nwn2area = module.Areas[areaName];
-				Area area = new Area(nwn2area);
-				
-				Microsoft.DirectX.Vector3 position = area.GetRandomPosition(true);
-				
-				INWN2Instance instance = area.AddGameObject(type,resref,tag,position);
+				INWN2Instance instance = session.AddObject(nwn2area,type,resref,tag);
 				return instance.ObjectID;
 			}
 			catch (ArgumentNullException e) {
@@ -614,22 +610,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// about the blueprint, or null if no such blueprint exists.</returns>
 		public Bean GetBlueprint(string resRef, NWN2ObjectType type, bool full)
 		{
-			try {		
-				if (resRef == null) {
-					throw new ArgumentNullException("resRef","No resref was provided (was null).");
-				}			
-				if (resRef == String.Empty) {
-					throw new ArgumentException("No resref was provided (was empty).","resRef");
+			try {	
+				INWN2Blueprint blueprint = session.GetBlueprint(resRef,type);
+				
+				if (blueprint == null) {
+					return null;
 				}
-				
-				NWN2GameModule module = session.GetModule();				
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}	
-				
-				INWN2Blueprint blueprint = NWN2GlobalBlueprintManager.FindBlueprint(type,new OEIResRef(resRef),true,true,true);
-				
-				if (blueprint == null) return null;
 				else {
 					Bean bean;
 					if (!full) bean = new Bean(blueprint,GetFieldsToSerialise(type.ToString()));
@@ -661,19 +647,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public IList<string> GetBlueprintResRefs(NWN2ObjectType type)
 		{
 			try {
-				NWN2BlueprintCollection blueprints = NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true);
-				if (blueprints == null) throw new ArgumentException("No blueprint collection found for type " + type + ".");
+				NWN2BlueprintCollection blueprints = session.GetBlueprints(type);
 				IList<string> list = new List<string>(blueprints.Count);
 				foreach (INWN2Blueprint blueprint in blueprints) {
 					list.Add(blueprint.ResourceName.Value);
 				}
 				return list;
-			}
-			catch (ArgumentException e) {
-				throw new FaultException<ArgumentException>(e,e.Message);
-			}
-			catch (InvalidOperationException e) {
-				throw new FaultException<InvalidOperationException>(e,e.Message);
 			}
 			catch (Exception e) {
 				throw new FaultException("(" + e.GetType() + ") " + e.Message);
@@ -697,9 +676,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Bean GetObject(string areaName, NWN2ObjectType type, Guid id, bool full)
 		{
 			try {
-				if (id == null) {
-					throw new ArgumentNullException("guid","No guid was provided (was null).");
-				}	
 				if (areaName == null) {
 					throw new ArgumentNullException("areaName","No area name was provided (was null).");
 				}			
@@ -717,9 +693,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				
 				NWN2GameArea nwn2area = module.Areas[areaName];
-				AreaBase area = session.CreateAreaBase(nwn2area);
 				
-				INWN2Instance unique = area.GetObject(type,id);
+				INWN2Instance unique = session.GetObject(nwn2area,type,id);
 				
 				if (unique == null) return null;
 				else {
@@ -773,9 +748,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				}
 				
 				NWN2GameArea nwn2area = module.Areas[areaName];
-				AreaBase area = session.CreateAreaBase(nwn2area);
-													
-				List<INWN2Instance> instances = area.GetObjects(type);				
+				NWN2InstanceCollection instances = session.GetObjects(nwn2area,type);
+								
 				List<Guid> ids = new List<Guid>(instances.Count);
 				
 				foreach (INWN2Instance instance in instances) {
@@ -832,7 +806,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				NWN2GameArea nwn2area = module.Areas[areaName];
 				AreaBase area = session.CreateAreaBase(nwn2area);
 							
-				List<INWN2Instance> instances = area.GetObjects(type,tag);				
+				NWN2InstanceCollection instances = area.GetObjects(type,tag);				
 				List<Guid> ids = new List<Guid>(instances.Count);
 				
 				foreach (INWN2Instance instance in instances) {
