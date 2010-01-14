@@ -35,6 +35,7 @@ using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using OEIShared.IO;
+using OEIShared.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -260,7 +261,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the scripts in the current module.
 		/// </summary>
 		/// <returns>A list of scripts.</returns>
-		IList<NWN2GameScript> GetScripts();	
+		NWN2GameScriptDictionary GetScripts();	
 		
 		
 		/// <summary>
@@ -275,7 +276,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the compiled scripts in the current module.
 		/// </summary>
 		/// <returns>A list of compiled scripts.</returns>
-		IList<IResourceEntry> GetCompiledScripts();	
+		OEIGenericCollectionWithEvents<IResourceEntry> GetCompiledScripts();	
 		
 		
 		/// <summary>

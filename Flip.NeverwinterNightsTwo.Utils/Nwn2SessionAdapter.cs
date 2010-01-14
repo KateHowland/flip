@@ -841,36 +841,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Bean GetArea(string name, bool full)
 		{
 			try {
-				if (name == null) {
-					throw new ArgumentNullException("name","No area name was provided (was null).");
-				}			
-				if (name == String.Empty) {
-					throw new ArgumentException("No area name was provided (was empty).","name");
-				}
+				NWN2GameArea area = session.GetArea(name);
+				if (area == null) return null;
 				
-				NWN2GameModule module = session.GetModule();
-				
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}						
-				if (!module.Areas.ContainsCaseInsensitive(name)) {
-					return null;
-				}
-				
-				NWN2GameArea nwn2area = module.Areas[name];
-				
-				bool loaded = nwn2area.Loaded;
-				if (!loaded) nwn2area.Demand();	
+				bool loaded = area.Loaded;
+				if (!loaded) area.Demand();	
 				
 				Bean bean;
-				if (!full) bean = new Bean(nwn2area,GetFieldsToSerialise("Area"));
-				else bean = new Bean(nwn2area);
+				if (!full) bean = new Bean(area,GetFieldsToSerialise("Area"));
+				else bean = new Bean(area);
 				
 				// Store the value of 'Loaded' that will apply by the time the bean is returned,
 				// rather than now (when the area MUST be loaded to populate the bean):
 				bean["Loaded"] = loaded.ToString();
 				
-				if (!loaded) nwn2area.Release();
+				if (!loaded) area.Release();
 				
 				return bean;
 			}
@@ -952,17 +937,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public IList<string> GetScriptNames()
 		{
 			try {
-				NWN2GameModule module = session.GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}			
-				
-				IList<string> scripts = new List<string>();
-				
-				foreach (NWN2GameScript script in module.Scripts.Values) {
+				IList<string> scripts = new List<string>();				
+				foreach (NWN2GameScript script in session.GetScripts().Values) {
 					scripts.Add(script.Name);
-				}
-				
+				}				
 				return scripts;
 			}
 			catch (InvalidOperationException e) {
@@ -984,37 +962,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Bean GetScript(string name)
 		{
 			try {
-				if (name == null) {
-					throw new ArgumentNullException("name","No script name was provided (was null).");
-				}	
-				if (name == String.Empty) {
-					throw new ArgumentException("name","No script name was provided (was empty).");
-				}		
-				
-				NWN2GameModule module = session.GetModule();
-				
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}	
-				
-				if (!module.Scripts.ContainsCaseInsensitive(name)) {
-					return null;
-				}
-				else {
-					NWN2GameScript script = module.Scripts[name];
+				NWN2GameScript script = session.GetScript(name);
+				if (script == null) return null;
 					
-					bool loaded = script.Loaded;
-					if (!loaded) script.Demand();	
-					Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
+				bool loaded = script.Loaded;
+				if (!loaded) script.Demand();	
+				Bean bean = new Bean(script,GetFieldsToSerialise("Script"));
 					
-					// Store the value of 'Loaded' that will apply by the time the bean is returned,
-					// rather than now (when the script MUST be loaded to populate the bean):
-					bean["Loaded"] = loaded.ToString();
+				// Store the value of 'Loaded' that will apply by the time the bean is returned,
+				// rather than now (when the script MUST be loaded to populate the bean):
+				bean["Loaded"] = loaded.ToString();
 					
-					if (!loaded) script.Release();
+				if (!loaded) script.Release();
 					
-					return bean;
-				}
+				return bean;
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1039,19 +1000,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <returns>A list of script names.</returns>
 		public IList<string> GetCompiledScriptNames()
 		{
-			try {
-				NWN2GameModule module = session.GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}				
-				if (module.Repository == null) {
-					throw new ApplicationException("The module's repository was missing.");
-				}	
-								
-				IList<string> scripts = new List<string>();
-				
-				ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");					
-				OEIGenericCollectionWithEvents<IResourceEntry> resources = module.Repository.FindResourcesByType(NCS);
+			try {	
+				IList<string> scripts = new List<string>();				
+				OEIGenericCollectionWithEvents<IResourceEntry> resources = session.GetCompiledScripts();
 				
 				foreach (IResourceEntry r in resources) {
 					scripts.Add(r.ResRef.Value);
@@ -1080,27 +1031,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// such script exists.</returns>
 		public Bean GetCompiledScript(string name)
 		{
-			try {
-				if (name == null) {
-					throw new ArgumentNullException("name","No script name was provided (was null).");
-				}	
-				if (name == String.Empty) {
-					throw new ArgumentException("name","No script name was provided (was empty).");
-				}		
-				
-				NWN2GameModule module = session.GetModule();
-				if (module == null) {
-					throw new InvalidOperationException("No module is currently open.");
-				}				
-				if (module.Repository == null) {
-					throw new ApplicationException("The module's repository was missing.");
-				}
-				
-				ushort resourceType = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
-				OEIResRef cResRef = new OEIResRef(name);
-				IResourceEntry r = module.Repository.FindResource(cResRef,resourceType);
+			try {				
+				IResourceEntry r = session.GetCompiledScript(name);
 							
-				if (r == null) return null;
+				if (r == null) {
+					return null;
+				}
 				else {
 					NWN2GameScript script = new NWN2GameScript(r);
 					

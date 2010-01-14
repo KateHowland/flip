@@ -638,7 +638,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// if the area could not be found.</returns>
 		public NWN2GameArea GetArea(string name)
 		{
-			throw new NotImplementedException();
+			if (name == null) {
+				throw new ArgumentNullException("name","No area name was provided (was null).");
+			}			
+			if (name == String.Empty) {
+				throw new ArgumentException("No area name was provided (was empty).","name");
+			}
+				
+			NWN2GameModule module = GetModule();
+				
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}						
+			if (!module.Areas.ContainsCaseInsensitive(name)) {
+				return null;
+			}
+				
+			return module.Areas[name];
 		}		
 		
 		
@@ -646,9 +662,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the scripts in the current module.
 		/// </summary>
 		/// <returns>A list of scripts.</returns>
-		public IList<NWN2GameScript> GetScripts()
+		public NWN2GameScriptDictionary GetScripts()
 		{
-			throw new NotImplementedException();
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}		
+			return module.Scripts;
 		}		
 		
 		
@@ -659,7 +679,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// or null if no such script exists.</returns>
 		public NWN2GameScript GetScript(string name)
 		{
-			throw new NotImplementedException();
+			if (name == null) {
+				throw new ArgumentNullException("name","No script name was provided (was null).");
+			}	
+			if (name == String.Empty) {
+				throw new ArgumentException("name","No script name was provided (was empty).");
+			}		
+				
+			NWN2GameModule module = GetModule();
+				
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}				
+			if (!module.Scripts.ContainsCaseInsensitive(name)) {
+				return null;
+			}
+			else {
+				return module.Scripts[name];
+			}
 		}			
 		
 		
@@ -667,9 +704,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// Gets the compiled scripts in the current module.
 		/// </summary>
 		/// <returns>A list of compiled scripts.</returns>
-		public IList<IResourceEntry> GetCompiledScripts()
+		public OEIGenericCollectionWithEvents<IResourceEntry> GetCompiledScripts()
 		{
-			throw new NotImplementedException();
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}				
+			if (module.Repository == null) {
+				throw new ApplicationException("The module's repository was missing.");
+			}	
+			
+			ushort NCS = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");					
+			return module.Repository.FindResourcesByType(NCS);
 		}		
 		
 		
@@ -680,7 +726,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// or null if no such script exists.</returns>
 		public IResourceEntry GetCompiledScript(string name)
 		{
-			throw new NotImplementedException();
+			if (name == null) {
+				throw new ArgumentNullException("name","No script name was provided (was null).");
+			}	
+			if (name == String.Empty) {
+				throw new ArgumentException("name","No script name was provided (was empty).");
+			}		
+			
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}				
+			if (module.Repository == null) {
+				throw new ApplicationException("The module's repository was missing.");
+			}
+			
+			ushort resourceType = OEIShared.Utils.BWResourceTypes.GetResourceType("NCS");	
+			OEIResRef cResRef = new OEIResRef(name);
+			return module.Repository.FindResource(cResRef,resourceType);
 		}			
 				
 
