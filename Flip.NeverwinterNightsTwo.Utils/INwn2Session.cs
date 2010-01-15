@@ -163,23 +163,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// script file of the given name, and false otherwise.</returns>
 		bool HasUncompiled(string name);
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		// TODO:
-		// 1. The following methods need to be implemented in Nwn2Session.
-		// 2. The methods in Nwn2SessionAdapter should then be told to CALL these methods, and make the results
-		//    suitable for a service by themselves (e.g. Nwn2Session provides an object to 
-		//    Nwn2SessionAdapter, which serialises it as a bean and provides it to service clients.)
-		
-		
-		
-		
+				
 		/// <summary>
 		/// Adds an object to the given area.
 		/// </summary>
