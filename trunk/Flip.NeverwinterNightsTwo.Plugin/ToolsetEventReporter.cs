@@ -46,9 +46,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 	/// Raises events when certain things occur in a Neverwinter
 	/// Nights 2 toolset session.
 	/// </summary>
-	/// <remarks>Call Nwn2ToolsetEventReporter.Start() to begin
+	/// <remarks>Call ToolsetEventReporter.Start() to begin
 	/// tracking toolset activities and raising events.</remarks>
-	public class Nwn2ToolsetEventReporter
+	public class ToolsetEventReporter
 	{		
 		#region Events
 		
