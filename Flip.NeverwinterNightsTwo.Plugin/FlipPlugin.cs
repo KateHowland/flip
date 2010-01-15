@@ -63,38 +63,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// User preferences relating to the operation of this plugin.
 		/// </summary>
 		protected object preferences;
-				
-		/// <summary>
-		/// The host for services provided by this plugin.
-		/// </summary>
-		protected ServiceHostBase host;
 		
 		/// <summary>
-		/// True if the plugin has successfully connected to the main Flip
-		/// application via a service; false otherwise.
+		/// Manages the service provided by Nwn2SessionAdapter.
 		/// </summary>
-		/// <remarks>Only one instance of the toolset can connect to Flip -
-		/// additional instances will be unable to talk to the service, and
-		/// as a result this value will be false.
-		/// </remarks>
-		protected bool connected = false;
+		protected ServiceController service;
 		
 		#endregion
 		
 		#region Properties
-		
-		/// <summary>
-		/// True if the plugin has successfully connected to the main Flip
-		/// application via a service; false otherwise.
-		/// </summary>
-		/// <remarks>Only one instance of the toolset can connect to Flip -
-		/// additional instances will be unable to talk to the service, and
-		/// as a result this value will be false.
-		/// </remarks>
-		public bool Connected {
-			get { return connected; }
-		}
-		
 		
 		/// <summary>
 		/// The menu button which activates the plugin.
@@ -158,6 +135,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		public FlipPlugin()
 		{
 			preferences = new object();
+			service = new ServiceController();
 		}
 			
 		#endregion
@@ -172,7 +150,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Startup(INWN2PluginHost cHost)
 		{
-			StartServices();	
+			service.Start();
+			
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
 			
@@ -180,8 +159,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			UI.ModifyUI();
 			
 			TD.SandBar.MenuButtonItem scriptAccessMenuItem = new TD.SandBar.MenuButtonItem("Enable script access");
-			scriptAccessMenuItem.Checked = UI.AllowScriptAccess;			
-			
+			scriptAccessMenuItem.Checked = UI.AllowScriptAccess;
 			scriptAccessMenuItem.Activate += delegate 
 			{  
 				if (UI.AllowScriptAccess) {
@@ -234,7 +212,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Shutdown(INWN2PluginHost cHost)
 		{
-			StopServices();
+			service.Stop();
 		}
 		
 		
@@ -243,71 +221,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// </summary>
 		protected void PluginActivated(object sender, EventArgs e)
 		{	
-		}
-		
-		
-		/// <summary>
-		/// Start hosting services.
-		/// </summary>
-		protected void StartServices()
-		{
-			try {
-				host = new ServiceHost(typeof(Nwn2SessionAdapter),new Uri[]{ new Uri("net.pipe://localhost") });
-				
-				NetNamedPipeBinding binding = new NetNamedPipeBinding();
-				binding.MaxReceivedMessageSize = Int32.MaxValue;
-				
-				host.AddServiceEndpoint(typeof(INwn2Service).ToString(),
-				                        binding,
-				                        "NamedPipeEndpoint");				
-				
-				host.Open();
-				connected = true;
-			} 
-			catch (System.ServiceModel.AddressAlreadyInUseException) {
-				connected = false;
-				System.Windows.MessageBox.Show("The Neverwinter Nights 2 " +
-				                               "toolset is already running.",
-				                               "Already running",
-				                               System.Windows.MessageBoxButton.OK,
-				                               System.Windows.MessageBoxImage.Error);
-				/*
-				 * This seems to work fine, even if you launch many copies of the toolset...
-				 * the first one connects to the service, subsequent copies warn you and then
-				 * shut down.
-				 * 
-				 * When there's actually a Flip application to connect to, the procedure will be:
-				 * the user launches the toolset; the toolset launches Flip, and Flip immediately
-				 * connects to the service. Launching additional copies of the toolset will fail
-				 * at the setting up the service stage, at which point the new versions of both
-				 * Flip and the toolset should be shut down immediately. (Launching additional
-				 * copies of Flip can simply be forbidden to the user.)
-				 */
-				System.Diagnostics.Process.GetCurrentProcess().Kill();
-			}
-			catch (Exception e) {
-				connected = false;
-				System.Windows.MessageBox.Show("There was a problem when trying to set up the connection between " +
-				                               "Neverwinter Nights 2 and Flip. This may mean that the software " +
-				                               "does not function correctly." +
-				                               Environment.NewLine + Environment.NewLine +
-				                               "Exception detail:" + Environment.NewLine +
-				                               e,
-				                               "Failed to setup service",
-				                               System.Windows.MessageBoxButton.OK,
-				                               System.Windows.MessageBoxImage.Error);
-			}
-		}
-		
-		
-		/// <summary>
-		/// Stop hosting services.
-		/// </summary>
-		protected void StopServices()
-		{
-			if (connected && host != null && host.State != CommunicationState.Closed && host.State != CommunicationState.Closing) {
-				host.Close();
-			}
 		}
 		
 		
