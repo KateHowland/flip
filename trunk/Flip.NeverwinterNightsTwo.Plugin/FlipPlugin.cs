@@ -24,16 +24,9 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.ServiceModel;
 using NWN2Toolset;
-using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
-using Crownwood.DotNetMagic.Docking;
-using VisualHint.SmartPropertyGrid;
-using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 {
