@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FlipPlugin.cs" />
+    <Compile Include="Nwn2ToolsetEventReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

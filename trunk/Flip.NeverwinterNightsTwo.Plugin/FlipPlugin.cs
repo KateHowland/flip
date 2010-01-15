@@ -213,7 +213,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			GatherFieldReferences();
 			
 			floatingGridHandler = new DockingManager.ContentHandler(HideScriptSlotsOnFloatingGrid);
-			mainGridHandler = new PropertyGrid.SelectedObjectChangedEventHandler(HideScriptSlotsOnMainGrid);			
+			mainGridHandler = new PropertyGrid.SelectedObjectChangedEventHandler(HideScriptSlotsOnMainGrid);
 		}
 				
 		#endregion
@@ -250,8 +250,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// <param name="cHost">A plugin host component which
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
-		{			
-			DisableScriptAccess();
+		{	
 		}
 		
 		

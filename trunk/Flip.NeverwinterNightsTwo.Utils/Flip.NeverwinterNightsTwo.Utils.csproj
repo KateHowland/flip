@@ -84,6 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaBase.cs" />
+    <Compile Include="AreaEventArgs.cs" />
+    <Compile Include="BlueprintEventArgs.cs" />
+    <Compile Include="ConversationEventArgs.cs" />
     <Compile Include="INwn2Callbacks.cs" />
     <Compile Include="INwn2Service.cs" />
     <Compile Include="INwn2Session.cs" />
@@ -94,7 +97,10 @@
     <Compile Include="Nwn2SessionAdapter.cs" />
     <Compile Include="Nwn2ToolsetFunctions.cs" />
     <Compile Include="Nwn2EventRaiser.cs" />
+    <Compile Include="InstanceEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceViewerClosedEventArgs.cs" />
+    <Compile Include="ScriptEventArgs.cs" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
