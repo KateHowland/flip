@@ -1,9 +1,44 @@
 ﻿<Window x:Class="Sussex.Flip.UI.Window1"
 	xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Title="Flip.UI" Height="300" Width="300"
-	>
+	Title="Building blocks" 
+    Width="800"
+    Height="600" 
+	AllowDrop="False"
+	>	
 	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="150"/>
+		</Grid.ColumnDefinitions>
+			
+		<Canvas	
+		Name="MainCanvas"
+		Grid.Row="0"
+		Grid.Column="0" 
+		Background="LightBlue"
+		AllowDrop="True"/>
 		
+		<StackPanel 
+		Name="SelectionBox"
+		Grid.Row="0"
+		Grid.Column="1"
+		Orientation="Vertical"
+		Background="LightGray"
+		AllowDrop="True">
+			
+			<Button
+			Content="Add SimpleBlock"
+			Click="AddSimpleBlock"/>
+			
+			<Button
+			Content="Add BlockWithSlots"
+			Click="AddBlockWithSlots"/>
+			
+		</StackPanel>
+	
 	</Grid>
 </Window>
