@@ -14,26 +14,26 @@ using System.Windows.Shapes;
 namespace Sussex.Flip.UI
 {
     /// <summary>
-    /// Interaction logic for SimpleBlock.xaml
+    /// Interaction logic for Noun.xaml
     /// </summary>
 
-    public partial class SimpleBlock : Moveable
+    public partial class Noun : Moveable
     {
-        public SimpleBlock(Brush brush)
+        public Noun()
         {
             InitializeComponent();
-            SetFace(brush);
         }
         
         
-    	public SimpleBlock() : this(new LinearGradientBrush(Colors.Gray,Colors.LightGray,45))
+        public Noun(Image image) : this()
         {
+            SetImage(image);
         }
         
         
-        public void SetFace(Brush brush)
+        public void SetImage(Image image)
         {
-        	Face.Background = brush;
+        	Face.Content = image;
         }
     }
 }

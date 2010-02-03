@@ -72,28 +72,30 @@
       <SubType>Code</SubType>
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BlockWithSlots.xaml.cs">
-      <DependentUpon>BlockWithSlots.xaml</DependentUpon>
+    <Compile Include="NounProvider.cs" />
+    <Compile Include="Statement.cs">
+      <DependentUpon>Statement.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Moveable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
-    <Compile Include="SimpleBlock.xaml.cs">
-      <DependentUpon>SimpleBlock.xaml</DependentUpon>
+    <Compile Include="Noun.cs">
+      <DependentUpon>Noun.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SlotPanel.xaml.cs">
-      <DependentUpon>SlotPanel.xaml</DependentUpon>
+    <Compile Include="NounSlot.cs">
+      <DependentUpon>NounSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StatementFactory.cs" />
     <Compile Include="Window1.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
-    <Page Include="BlockWithSlots.xaml" />
-    <Page Include="SimpleBlock.xaml" />
-    <Page Include="SlotPanel.xaml" />
+    <Page Include="Statement.xaml" />
+    <Page Include="Noun.xaml" />
+    <Page Include="NounSlot.xaml" />
     <Page Include="Window1.xaml" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
