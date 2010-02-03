@@ -27,18 +27,8 @@
 		Grid.Row="0"
 		Grid.Column="1"
 		Orientation="Vertical"
-		Background="LightGray"
-		AllowDrop="True">
-			
-			<Button
-			Content="Add SimpleBlock"
-			Click="AddSimpleBlock"/>
-			
-			<Button
-			Content="Add BlockWithSlots"
-			Click="AddBlockWithSlots"/>
-			
-		</StackPanel>
+		Background="DarkGray"
+		AllowDrop="True"/>
 	
 	</Grid>
 </Window>

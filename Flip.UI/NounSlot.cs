@@ -14,14 +14,19 @@ using System.Windows.Shapes;
 namespace Sussex.Flip.UI
 {
     /// <summary>
-    /// Interaction logic for SlotPanel.xaml
+    /// Interaction logic for NounSlot.xaml
     /// </summary>
 
-    public partial class SlotPanel : UserControl
+    public partial class NounSlot : UserControl
     {
-        public SlotPanel()
+        public NounSlot()
         {
-            InitializeComponent();            
+            InitializeComponent();    
+            
+            Noun noun = new Noun(); // used to check size        
+            SlotBorder.Width = noun.Width + SlotBorder.BorderThickness.Left + SlotBorder.BorderThickness.Right;
+            SlotBorder.Height = noun.Height + SlotBorder.BorderThickness.Top + SlotBorder.BorderThickness.Bottom;
+            
             Drop += new DragEventHandler(DroppedOnSlotPanel);
         }
         
@@ -31,22 +36,22 @@ namespace Sussex.Flip.UI
 			IDataObject data = e.Data;
 			if (data.GetDataPresent(typeof(Moveable))) {
 				Moveable moveable = (Moveable)data.GetData(typeof(Moveable));
-				if (moveable is SimpleBlock) {
-					SetSlotContents((SimpleBlock)moveable);
+				if (moveable is Noun) {
+					SetSlotContents((Noun)moveable);
 				}
 			}
         }
 
         
-        public SimpleBlock EmptySlot()
+        public Noun EmptySlot()
         {
-        	SimpleBlock removing = (SimpleBlock)SlotBorder.Child;
+        	Noun block = (Noun)SlotBorder.Child;
         	SlotBorder.Child = null;
-        	return removing;
+        	return block;
         }
         
         
-        public void SetSlotContents(SimpleBlock block)
+        public void SetSlotContents(Noun block)
         {    	
         	if (GetSlotContents() == block) return;
         	
@@ -58,10 +63,10 @@ namespace Sussex.Flip.UI
         }
         
         
-        public SimpleBlock GetSlotContents()
+        public Noun GetSlotContents()
         {
         	if (SlotBorder.Child == null) return null;
-        	else return (SimpleBlock)SlotBorder.Child;
+        	else return (Noun)SlotBorder.Child;
         }
     }
 }

@@ -1,19 +1,15 @@
 <UserControl
-	x:Class="Sussex.Flip.UI.SlotPanel"
+	x:Class="Sussex.Flip.UI.NounSlot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	AllowDrop="True"
-	Background="LightBlue">
+	Background="LightGray">
 	
     	<Border 
 		x:Name="SlotBorder"
-    	BorderThickness="2"
-    	BorderBrush="Blue"
+    	BorderThickness="0.5"
+    	BorderBrush="Black"
     	VerticalAlignment="Center"
-    	HorizontalAlignment="Center"
-		MinWidth="40"
-		MinHeight="40">
-	
-    	</Border>
+    	HorizontalAlignment="Center"/>
     
 </UserControl>

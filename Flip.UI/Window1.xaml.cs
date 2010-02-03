@@ -22,33 +22,22 @@ namespace Sussex.Flip.UI
 			InitializeComponent();			
 			MainCanvas.PreviewDrop += new DragEventHandler(DroppedOnCanvas);
 			SelectionBox.PreviewDrop += new DragEventHandler(DroppedOnSelectionBox);
-		}
-		
-		
-		private int count = 1;
-		private void AddSimpleBlock(object sender, RoutedEventArgs e)
-		{
-			SimpleBlock block = new SimpleBlock(new LinearGradientBrush(Colors.Pink,Colors.Salmon,45));
-			block.Face.Content = "Block " + count++;
-			SelectionBox.Children.Add(block);
-		}
-		
-		
-		private void AddBlockWithSlots(object sender, RoutedEventArgs e)
-		{
-			BlockWithSlots block = new BlockWithSlots();
+						
+			foreach (Statement statement in new StatementFactory().GetStatements()) {
+				SelectionBox.Children.Add(statement);
+			}
 			
-			block.AddSlot("CreatureX");
+			string dir = @"C:\Flip\object pics";
+			try {
+				NounProvider provider = new SampleNounProvider(dir);
 			
-			Label label = new Label();
-			label.Content = "attacks";
-			label.VerticalAlignment = VerticalAlignment.Center;
-			label.HorizontalAlignment = HorizontalAlignment.Center;
-			block.AddLabel(label);
-			
-			block.AddSlot("CreatureY");
-			
-			SelectionBox.Children.Add(block);
+				foreach (Noun noun in provider.GetNouns()) {
+					SelectionBox.Children.Add(noun);
+				}	
+			}
+			catch (System.IO.DirectoryNotFoundException) {
+				//MessageBox.Show("No directory found at " + dir);
+			}
 		}
 				
 
