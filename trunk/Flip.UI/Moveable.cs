@@ -37,8 +37,8 @@ namespace Sussex.Flip.UI
 	{
 		public Moveable()
 		{
-    		MouseMove += StartDrag; //why preview?
-    		MouseDown += RecordDragStartPosition; //why preview?
+    		MouseMove += StartDrag;
+    		MouseDown += RecordDragStartPosition;
 		}
 		
 		
@@ -58,15 +58,14 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-    	bool isDragging = false;
-    	Point dragPos = new Point(0,0);
+    	Point? dragPos = null;
 
     	
     	private void StartDrag(object sender, MouseEventArgs e)
     	{
-    		if (!isDragging && dragPos != null) {
+    		if (dragPos != null) {
     			Point currentPos = e.GetPosition(null);
-    			Vector moved = dragPos - currentPos;
+    			Vector moved = dragPos.Value - currentPos;
     			
     			// If the mouse has been moved more than a certain minimum distance
     			// while still held down, start a drag:
@@ -74,10 +73,9 @@ namespace Sussex.Flip.UI
     			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
     			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
     				
-    				isDragging = true;
     				DataObject dataObject = new DataObject(typeof(Moveable),this);
     				DragDrop.DoDragDrop(this,dataObject,DragDropEffects.Move);
-    				isDragging = false;
+    				dragPos = null;
     			}
     		}
     	}    	

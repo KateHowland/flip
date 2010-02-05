@@ -39,12 +39,6 @@ namespace Sussex.Flip.UI
 	public abstract class AbstractStatementFactory
 	{
 		public abstract List<Statement> GetStatements();
-		
-		public abstract Statement Attacks();	
-		public abstract Statement PicksUp();	
-		public abstract Statement Drops();	
-		public abstract Statement Grows();	
-		public abstract Statement Shrinks();		
 	}	
 	
 	
@@ -69,7 +63,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public override Statement Attacks()
+		public Statement Attacks()
 		{			
 			Statement statement = new Statement();
 			statement.AddNounSlot("creature1");
@@ -79,7 +73,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public override Statement PicksUp()
+		public Statement PicksUp()
 		{			
 			Statement statement = new Statement();
 			statement.AddNounSlot("creature1");
@@ -89,7 +83,7 @@ namespace Sussex.Flip.UI
 		}	
 		
 		
-		public override Statement Drops()
+		public Statement Drops()
 		{			
 			Statement statement = new Statement();
 			statement.AddNounSlot("creature1");
@@ -99,7 +93,7 @@ namespace Sussex.Flip.UI
 		}	
 		
 		
-		public override Statement Grows()
+		public Statement Grows()
 		{			
 			Statement statement = new Statement();
 			statement.AddNounSlot("creature1");
@@ -108,7 +102,7 @@ namespace Sussex.Flip.UI
 		}	
 		
 		
-		public override Statement Shrinks()
+		public Statement Shrinks()
 		{			
 			Statement statement = new Statement();
 			statement.AddNounSlot("creature1");
