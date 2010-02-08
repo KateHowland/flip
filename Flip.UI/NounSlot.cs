@@ -19,13 +19,22 @@ namespace Sussex.Flip.UI
 
     public partial class NounSlot : UserControl
     {
+    	static double nounWidth;
+    	static double nounHeight;
+    	static NounSlot()
+    	{
+    		Noun noun = new Noun();
+    		nounWidth = noun.Width;
+    		nounHeight = noun.Height;
+    	}
+    	
+    	
         public NounSlot()
         {
             InitializeComponent();    
             
-            Noun noun = new Noun(); // used to check size        
-            SlotBorder.Width = noun.Width + SlotBorder.BorderThickness.Left + SlotBorder.BorderThickness.Right;
-            SlotBorder.Height = noun.Height + SlotBorder.BorderThickness.Top + SlotBorder.BorderThickness.Bottom;
+            SlotBorder.Width = nounWidth + SlotBorder.BorderThickness.Left + SlotBorder.BorderThickness.Right;
+            SlotBorder.Height = nounHeight + SlotBorder.BorderThickness.Top + SlotBorder.BorderThickness.Bottom;
             
             Drop += new DragEventHandler(DroppedOnSlotPanel);
         }
