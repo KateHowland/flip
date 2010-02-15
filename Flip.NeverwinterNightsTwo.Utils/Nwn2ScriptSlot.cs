@@ -43,90 +43,59 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// of this type, which may be empty.</returns>
 		public static IList<string> GetScriptSlotNames(NWN2ObjectType type)
 		{
-			Nwn2EventRaiser? eventRaiser = GetObjectType(type);
-			if (!eventRaiser.HasValue) {
-				return new List<string>(0);
-			}
-			else {
-				return GetScriptSlotNames(eventRaiser.Value);
-			}
+			Nwn2Type nwn2Type = GetNwn2Type(type);
+			return GetScriptSlotNames(nwn2Type);
 		}
 				
 		
 		/// <summary>
-		/// Gets the Nwn2EventRaiserType value which corresponds to the 
-		/// given NWN2ObjectType value, or null if there is
-		/// no corresponding type.
+		/// Gets the Nwn2Type value which corresponds to the 
+		/// given NWN2ObjectType value.
 		/// </summary>
 		/// <param name="type">The type to return a corresponding type for.</param>
-		/// <returns>A nullable Nwn2EventRaiser.</returns>
-		public static Nwn2EventRaiser? GetObjectType(NWN2ObjectType type)
+		/// <returns>A Nwn2Type value.</returns>
+		public static Nwn2Type GetNwn2Type(NWN2ObjectType type)
 		{
-			switch (type) {
-				case NWN2ObjectType.Creature:
-					return Nwn2EventRaiser.Creature;
-				case NWN2ObjectType.Door:
-					return Nwn2EventRaiser.Door;
-				case NWN2ObjectType.Encounter:
-					return Nwn2EventRaiser.Encounter;
-				case NWN2ObjectType.Placeable:
-					return Nwn2EventRaiser.Placeable;
-				case NWN2ObjectType.Store:
-					return Nwn2EventRaiser.Store;
-				case NWN2ObjectType.Trigger:
-					return Nwn2EventRaiser.Trigger;
-				default:
-					return null;
-			}
+			return (Nwn2Type)Enum.Parse(typeof(Nwn2Type),Enum.GetName(typeof(NWN2ObjectType),type));
 		}
 				
 		
 		/// <summary>
 		/// Gets the NWN2ObjectType value which corresponds to the 
-		/// given Nwn2EventRaiser value, or null if there is
+		/// given Nwn2Type value, or null if there is
 		/// no corresponding type.
 		/// </summary>
 		/// <param name="type">The type to return a corresponding type for.</param>
 		/// <returns>A nullable NWN2ObjectType.</returns>
-		public static NWN2ObjectType? GetObjectType(Nwn2EventRaiser type)
+		public static NWN2ObjectType? GetObjectType(Nwn2Type type)
 		{
-			switch (type) {
-				case Nwn2EventRaiser.Creature:
-					return NWN2ObjectType.Creature;
-				case Nwn2EventRaiser.Door:
-					return NWN2ObjectType.Door;
-				case Nwn2EventRaiser.Encounter:
-					return NWN2ObjectType.Encounter;
-				case Nwn2EventRaiser.Placeable:
-					return NWN2ObjectType.Placeable;
-				case Nwn2EventRaiser.Store:
-					return NWN2ObjectType.Store;
-				case Nwn2EventRaiser.Trigger:
-					return NWN2ObjectType.Trigger;
-				default:
-					return null;
+			try {
+				return (NWN2ObjectType?)Enum.Parse(typeof(NWN2ObjectType),Enum.GetName(typeof(Nwn2Type),type));
+			}
+			catch (Exception) {
+				return null;
 			}
 		}
 		
 		
 		/// <summary>
-		/// Gets a list of script slot names that are defined on an
-		/// event-raising game object of the given type.
+		/// Gets a list of script slot names that are defined 
+		/// on a particular type of game object.
 		/// </summary>
-		/// <param name="type">The type of event-raising game object.</param>
+		/// <param name="type">The type of game object.</param>
 		/// <returns>A list of names of script slots defined on an object
 		/// of this type.</returns>
-		public static IList<string> GetScriptSlotNames(Nwn2EventRaiser type)
+		public static IList<string> GetScriptSlotNames(Nwn2Type type)
 		{
 			switch (type) {
-				case Nwn2EventRaiser.Area:
+				case Nwn2Type.Area:
 					return new List<string>{ "OnClientEnterScript",
 											 "OnEnterScript",
 											 "OnExitScript",
 											 "OnHeartbeat",
 											 "OnUserDefined" };
 					
-				case Nwn2EventRaiser.Creature:
+				case Nwn2Type.Creature:
 					return new List<string>{ "OnBlocked",
 											 "OnConversation",
 											 "OnDamaged",
@@ -141,7 +110,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 											 "OnSpellCastAt",
 											 "OnUserDefined" };
 					
-				case Nwn2EventRaiser.Door:
+				case Nwn2Type.Door:
 					return new List<string>{ "OnClick",
 											 "OnClosed",
 											 "OnConversation",
@@ -159,14 +128,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 											 "OnUsed",
 											 "OnUserDefined" };
 					
-				case Nwn2EventRaiser.Encounter:
+				case Nwn2Type.Encounter:
 					return new List<string>{ "OnEntered",
 											 "OnExhausted",
 											 "OnExit",
 											 "OnHeartbeat",
 											 "OnUserDefined" };
 					
-				case Nwn2EventRaiser.Module:
+				case Nwn2Type.Module:
 					return new List<string>{ "OnAcquireItem",
 											 "OnActivateItem",
 											 "OnClientEnter",
@@ -187,7 +156,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 											 "OnUnacquireItem",	 
 											 "OnUserDefined" };
 					
-				case Nwn2EventRaiser.Placeable:
+				case Nwn2Type.Placeable:
 					return new List<string>{ "OnClosed",
 											 "OnConversation",
 											 "OnDamaged",
@@ -205,11 +174,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 											 "OnUsed",
 											 "OnUserDefined" };
 					
-				case Nwn2EventRaiser.Store:
+				case Nwn2Type.Store:
 					return new List<string>{ "OnCloseStore",
 											 "OnOpenStore" };
 					
-				case Nwn2EventRaiser.Trigger:
+				case Nwn2Type.Trigger:
 					return new List<string>{ "OnClick",
 											 "OnDisarm",
 											 "OnEnter",
@@ -219,7 +188,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 											 "OnUserDefined" };
 					
 				default:
-					throw new ArgumentException("Nwn2EventRaiser value was not recognised.","type");
+					return new List<string>(0);
 			}
 		}
 	}

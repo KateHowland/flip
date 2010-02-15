@@ -118,10 +118,6 @@
       <Project>{EED1516E-049A-42AF-82A4-C9CE084EFAF5}</Project>
       <Name>Flip.NeverwinterNightsTwo</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Flip.NeverwinterNights\Flip.NeverwinterNights.csproj">
-      <Project>{5D07B1F0-DD03-4AFE-AD96-989173BD1B77}</Project>
-      <Name>Flip.NeverwinterNights</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Flip.UI\Flip.UI.csproj">
       <Project>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</Project>
       <Name>Flip.UI</Name>

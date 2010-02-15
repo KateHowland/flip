@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				if (pi.Name.StartsWith("On")) reflected.Add(pi.Name);
 			}
 				
-			provided = (List<string>)Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module);
+			provided = (List<string>)Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module);
 			
 			provided.Sort();
 			reflected.Sort();
@@ -86,7 +86,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 				if (pi.Name.StartsWith("On")) reflected.Add(pi.Name);
 			}
 				
-			provided = (List<string>)Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area);
+			provided = (List<string>)Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Area);
 				
 			provided.Sort();
 			reflected.Sort();

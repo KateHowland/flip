@@ -52,7 +52,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public AreaBlock(Image image, NWN2GameArea area) : base(image,Nwn2EventRaiser.Area)
+		public AreaBlock(Image image, NWN2GameArea area) : base(image,Nwn2Type.Area)
 		{
 			this.area = area;
 		}

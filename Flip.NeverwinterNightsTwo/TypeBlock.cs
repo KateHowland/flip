@@ -37,7 +37,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class TypeBlock : Nwn2Noun
 	{
-		public TypeBlock(Image image, Nwn2EventRaiser type) : base(image,type)
+		public TypeBlock(Image image, Nwn2Type type) : base(image,type)
 		{
 		}
 	}

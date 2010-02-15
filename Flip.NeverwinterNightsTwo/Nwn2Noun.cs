@@ -36,20 +36,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class Nwn2Noun : Noun
 	{
-		protected Nwn2EventRaiser type;
+		protected Nwn2Type type;
 		
-		public Nwn2EventRaiser Type {
+		public Nwn2Type Type {
 			get { return type; }
 		}
 		
 		
-		public Nwn2Noun(Image image, Nwn2EventRaiser type) : base(image)
+		public Nwn2Noun(Image image, Nwn2Type type) : base(image)
 		{			
 			this.type = type;
 		}
 		
 		
-		public Nwn2Noun(Image image, NWN2ObjectType type) : this(image,Nwn2ScriptSlot.GetObjectType(type).Value)
+		public Nwn2Noun(Image image, NWN2ObjectType type) : this(image,Nwn2ScriptSlot.GetNwn2Type(type))
 		{			
 		}
 	}

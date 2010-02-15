@@ -118,7 +118,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// to which a compiled version of this script is to be attached.</param>
 		public void CompileAndAttach(FlipScript script, string area)
 		{	
-			Nwn2EventRaiser type;
+			Nwn2Type type;
 			string tag;
 			string eventName;
 			
@@ -147,7 +147,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// applies if the script is to be attached to an area.
 		/// </remarks>
 		public static void GetTrigger(FlipScript script, 
-		        		              out Nwn2EventRaiser type, 
+		        		              out Nwn2Type type, 
 		                		      out string tag, 
 		                       		  out string eventName)
 		{

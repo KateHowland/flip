@@ -1249,7 +1249,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// the script to.</param>
 		/// <remarks>To attach scripts to areas and modules,
 		/// use AttachScriptToArea() and AttachScriptToModule().</remarks>
-		public void AttachScriptToObject(string scriptName, string areaName, Nwn2EventRaiser type, Guid objectID, string slot)
+		public void AttachScriptToObject(string scriptName, string areaName, NWN2ObjectType type, Guid objectID, string slot)
 		{
 			try {
 				if (scriptName == null) {
@@ -1276,51 +1276,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
 					                            "script slot names.)","slot");
 				}
-								
-				switch (type) {
-					case Nwn2EventRaiser.Area:
-						throw new InvalidOperationException("Correct usage: To add scripts to areas, use AttachScriptToArea().");
-						
-					case Nwn2EventRaiser.Module:
-						throw new InvalidOperationException("Correct usage: To add scripts to areas, use AttachScriptToModule().");
-						
-					default:
-						NWN2GameModule module = session.GetModule();
-						if (module == null) {
-							throw new InvalidOperationException("No module is currently open.");
-						}
-						
-						NWN2GameArea nwn2area = session.GetArea(areaName);
-						if (nwn2area == null) {
-							throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
-						}
-						
-						if (!session.HasCompiled(scriptName)) {
-							if (session.HasUncompiled(scriptName)) {
-								throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
-							}
-							else {
-								throw new ArgumentException("Module '" + module.Name + "' has no script named '" + scriptName + "'.");
-							}
-						}	
-						
-						NWN2GameScript script = session.GetScript(scriptName);
-						
-						NWN2ObjectType? nwn2Type = Nwn2ScriptSlot.GetObjectType(type);
-						if (!nwn2Type.HasValue) {
-							throw new ArgumentException("Couldn't understand Nwn2EventRaiserType " + type +
-							                            " - it is not a module, an area, or one of the NWN2ObjectType " +
-							                            "values!","type");
-						}				
-						
-						INWN2Instance instance = session.GetObject(nwn2area,nwn2Type.Value,objectID);
-						if (instance == null) {
-							throw new ArgumentException("No object matching the given criteria could be found.","objectID");
-						}
-						
-						session.AttachScriptToObject(script,instance,slot);
-						break;
+				
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
 				}
+						
+				NWN2GameArea nwn2area = session.GetArea(areaName);
+				if (nwn2area == null) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
+				}
+						
+				if (!session.HasCompiled(scriptName)) {
+					if (session.HasUncompiled(scriptName)) {
+						throw new InvalidDataException("Script '" + scriptName + "' must be compiled before it can be attached.");
+					}
+					else {
+						throw new ArgumentException("Module '" + module.Name + "' has no script named '" + scriptName + "'.");
+					}
+				}	
+						
+				NWN2GameScript script = session.GetScript(scriptName);
+						
+				INWN2Instance instance = session.GetObject(nwn2area,type,objectID);
+				if (instance == null) {
+					throw new ArgumentException("No object matching the given criteria could be found.","objectID");
+				}
+					
+				session.AttachScriptToObject(script,instance,slot);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1371,7 +1354,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (slot == String.Empty) {
 					throw new ArgumentException("slot cannot be empty.","slot");
 				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(slot)) {
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Area).Contains(slot)) {
 					throw new ArgumentException("Areas do not have a script slot " +
 					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
@@ -1443,7 +1426,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (slot == String.Empty) {
 					throw new ArgumentException("slot cannot be empty.","slot");
 				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(slot)) {
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module).Contains(slot)) {
 					throw new ArgumentException("Modules do not have a script slot " +
 					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
@@ -1496,7 +1479,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// object with the given script slot.</param>
 		/// <param name="slot">The script slot to remove
 		/// any scripts from.</param>
-		public void ClearScriptSlotOnObject(string areaName, Guid objectID, Nwn2EventRaiser type, string slot)
+		public void ClearScriptSlotOnObject(string areaName, Guid objectID, NWN2ObjectType type, string slot)
 		{
 			try {
 				if (areaName == null) {
@@ -1517,40 +1500,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
 					                            "script slot names.)","slot");
 				}
-								
-				switch (type) {
-					case Nwn2EventRaiser.Area:
-						throw new InvalidOperationException("Correct usage: To clear script slots on areas, use ClearScriptSlotOnArea().");
-						
-					case Nwn2EventRaiser.Module:
-						throw new InvalidOperationException("Correct usage: To clear script slots on modules, use ClearScriptSlotOnModule().");
-						
-					default:
-						NWN2GameModule module = session.GetModule();
-						if (module == null) {
-							throw new InvalidOperationException("No module is currently open.");
-						}
-						
-						NWN2GameArea nwn2area = session.GetArea(areaName);
-						if (nwn2area == null) {
-							throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
-						}
-						
-						NWN2ObjectType? nwn2Type = Nwn2ScriptSlot.GetObjectType(type);
-						if (!nwn2Type.HasValue) {
-							throw new ArgumentException("Couldn't understand Nwn2EventRaiserType " + type +
-							                            " - it is not a module, an area, or one of the NWN2ObjectType " +
-							                            "values!","type");
-						}				
-						
-						INWN2Instance instance = session.GetObject(nwn2area,nwn2Type.Value,objectID);
-						if (instance == null) {
-							throw new ArgumentException("No object matching the given criteria could be found.","objectID");
-						}
-						
-						session.ClearScriptSlotOnObject(instance,slot);
-						break;
+							
+				NWN2GameModule module = session.GetModule();
+				if (module == null) {
+					throw new InvalidOperationException("No module is currently open.");
 				}
+						
+				NWN2GameArea nwn2area = session.GetArea(areaName);
+				if (nwn2area == null) {
+					throw new ArgumentException("Module '" + GetModuleName() + "' has no area named '" + areaName + "'.","areaName");
+				}		
+						
+				INWN2Instance instance = session.GetObject(nwn2area,type,objectID);
+				if (instance == null) {
+					throw new ArgumentException("No object matching the given criteria could be found.","objectID");
+				}
+						
+				session.ClearScriptSlotOnObject(instance,slot);
 			}
 			catch (ArgumentNullException e) {
 				throw new FaultException<ArgumentNullException>(e,e.Message);
@@ -1589,7 +1555,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (slot == String.Empty) {
 					throw new ArgumentException("slot cannot be empty.","slot");
 				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(slot)) {
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Area).Contains(slot)) {
 					throw new ArgumentException("Areas do not have a script slot " +
 					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
@@ -1638,7 +1604,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				if (slot == String.Empty) {
 					throw new ArgumentException("slot cannot be empty.","slot");
 				}
-				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(slot)) {
+				if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module).Contains(slot)) {
 					throw new ArgumentException("Modules do not have a script slot " +
 					                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 					                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
@@ -2219,7 +2185,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			                         						 "Natural",
 			                         						 "Size",
 			                         						 "Tag"});	
-			allSerialisingFields["Area"].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area));
+			allSerialisingFields["Area"].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Area));
 			
 			allSerialisingFields.Add("Module",new List<string>{"FileName",
 			                         						   "LocationType",
@@ -2233,7 +2199,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						                         						  "NX1Required",
 						                         						  "NX2Required",
 						                         						  "Tag"});			
-			allSerialisingFields["ModuleInformation"].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module));
+			allSerialisingFields["ModuleInformation"].AddRange(Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module));
 		}
 		
 		
