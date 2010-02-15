@@ -39,7 +39,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{
 		public abstract Nwn2Noun CreatePlayerBlock();
 		public abstract Nwn2Noun CreateModuleBlock();
-		public abstract Nwn2Noun CreateTypeBlock(Nwn2EventRaiser type);
+		public abstract Nwn2Noun CreateTypeBlock(Nwn2Type type);
 		public abstract Nwn2Noun CreateAreaBlock(NWN2GameArea area);
 		public abstract Nwn2Noun CreateBlueprintBlock(INWN2Blueprint blueprint);
 		public abstract Nwn2Noun CreateInstanceBlock(INWN2Instance instance);

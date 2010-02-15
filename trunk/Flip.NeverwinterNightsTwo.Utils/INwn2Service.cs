@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.ServiceModel;
+using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
@@ -431,7 +432,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.IO.InvalidDataException))]
 		void AttachScriptToObject(string scriptName, 
 				                  string areaName, 
-				                  Nwn2EventRaiser type, 
+				                  NWN2ObjectType type, 
 				                  Guid objectID, 
 				                  string scriptSlot);
 		
@@ -485,7 +486,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		[FaultContract(typeof(System.ArgumentNullException))]
 		[FaultContract(typeof(System.ArgumentException))]
 		[FaultContract(typeof(System.InvalidOperationException))]
-		void ClearScriptSlotOnObject(string areaName, Guid objectID, Nwn2EventRaiser type, string scriptSlot);
+		void ClearScriptSlotOnObject(string areaName, Guid objectID, NWN2ObjectType type, string scriptSlot);
 		
 		
 		/// <summary>

@@ -674,13 +674,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CompileScript(scriptName);
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			
-			service.AttachScriptToObject(scriptName,areaName,Nwn2EventRaiser.Door,doorID,"OnFailToOpen");
+			service.AttachScriptToObject(scriptName,areaName,NWN2ObjectType.Door,doorID,"OnFailToOpen");
 			
 			Bean door = service.GetObject(areaName,NWN2ObjectType.Door,doorID,false);			
 			string attachedScriptName = door.GetValue("OnFailToOpen");
 			Assert.AreEqual(scriptName,attachedScriptName);
 			
-			service.ClearScriptSlotOnObject(areaName,doorID,Nwn2EventRaiser.Door,"OnFailToOpen");
+			service.ClearScriptSlotOnObject(areaName,doorID,NWN2ObjectType.Door,"OnFailToOpen");
 			
 			door = service.GetObject(areaName,NWN2ObjectType.Door,doorID,false);			
 			attachedScriptName = door.GetValue("OnFailToOpen");
@@ -689,7 +689,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			// Refuses to clear unknown script slot:		
 			try {
-				service.ClearScriptSlotOnObject(areaName,doorID,Nwn2EventRaiser.Door,"BishBashBosh");
+				service.ClearScriptSlotOnObject(areaName,doorID,NWN2ObjectType.Door,"BishBashBosh");
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to clear " +
 			            	"a non-existent script slot.");
 			}
@@ -1357,7 +1357,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CompileScript(scriptName);
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			
-			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");	
+			service.AttachScriptToObject(scriptName,area,NWN2ObjectType.Creature,catID,"OnSpawnIn");	
 						
 			cat = service.GetObject(area,NWN2ObjectType.Creature,catID,false);
 			Assert.IsNotNull(cat);
@@ -1480,12 +1480,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
 			
 			string scriptSlot = "fake script slot";
-			foreach (Nwn2EventRaiser eventRaiser in Enum.GetValues(typeof(Nwn2EventRaiser))) {
-				Assert.IsTrue(!(Nwn2ScriptSlot.GetScriptSlotNames(eventRaiser).Contains(scriptSlot)));
+			foreach (Nwn2Type t in Enum.GetValues(typeof(Nwn2Type))) {
+				Assert.IsTrue(!(Nwn2ScriptSlot.GetScriptSlotNames(t).Contains(scriptSlot)));
 			}
 			
 			try {
-				service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,scriptSlot);
+				service.AttachScriptToObject(scriptName,area,NWN2ObjectType.Creature,catID,scriptSlot);
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
 			            	"to a script slot that doesn't exist.");
 			}
@@ -1544,7 +1544,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			Bean moduleBean = service.GetModule();
-			foreach (string scriptSlot in Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module)) {
+			foreach (string scriptSlot in Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module)) {
 				Assert.IsTrue(moduleBean.HasValue(scriptSlot));
 			}
 			Assert.AreEqual("nw_o0_death",moduleBean.GetValue("OnPlayerDeath"));
@@ -1717,7 +1717,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasCompiled(scriptName));	
 			
 			try {
-				service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");
+				service.AttachScriptToObject(scriptName,area,NWN2ObjectType.Creature,catID,"OnSpawnIn");
 				Assert.Fail("Didn't raise a FaultException<InvalidDataException> when asked to attach " +
 			            	"an uncompiled script to an object.");
 			}
@@ -1734,7 +1734,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			Assert.IsFalse(service.HasCompiled(scriptName));
 			Assert.IsFalse(service.HasUncompiled(scriptName));
 			try {
-				service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");
+				service.AttachScriptToObject(scriptName,area,NWN2ObjectType.Creature,catID,"OnSpawnIn");
 				Assert.Fail("Didn't raise a FaultException<ArgumentException> when asked to attach " +
 			            	"a script that doesn't exist.");
 			}
@@ -1834,7 +1834,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(scriptName,scriptData);
 			service.CompileScript(scriptName);
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");
-			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");	
+			service.AttachScriptToObject(scriptName,area,NWN2ObjectType.Creature,catID,"OnSpawnIn");	
 			
 			// Before...
 			Assert.IsNotNull(service.GetScript(scriptName));
@@ -1905,7 +1905,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.AddScript(scriptName,scriptData);
 			service.CompileScript(scriptName);		
 			Assert.IsTrue(WaitForCompiledScriptToAppear(scriptName),"The compiled script file was never found.");	
-			service.AttachScriptToObject(scriptName,area,Nwn2EventRaiser.Creature,catID,"OnSpawnIn");	
+			service.AttachScriptToObject(scriptName,area,NWN2ObjectType.Creature,catID,"OnSpawnIn");	
 			
 			// Before...
 			Assert.IsNotNull(service.GetScript(scriptName));

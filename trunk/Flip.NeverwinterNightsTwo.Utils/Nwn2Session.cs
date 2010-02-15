@@ -974,7 +974,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (slot == String.Empty) {
 				throw new ArgumentException("slot");
 			}
-			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(slot)) {
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Area).Contains(slot)) {
 				throw new ArgumentException("Areas do not have a script slot " +
 				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
@@ -1020,7 +1020,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (slot == String.Empty) {
 				throw new ArgumentException("slot");
 			}
-			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(slot)) {
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module).Contains(slot)) {
 				throw new ArgumentException("Modules do not have a script slot " +
 				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
@@ -1103,7 +1103,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (slot == String.Empty) {
 				throw new ArgumentException("slot");
 			}
-			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Area).Contains(slot)) {
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Area).Contains(slot)) {
 				throw new ArgumentException("Areas do not have a script slot " +
 				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
@@ -1135,7 +1135,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (slot == String.Empty) {
 				throw new ArgumentException("slot");
 			}
-			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2EventRaiser.Module).Contains(slot)) {
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module).Contains(slot)) {
 				throw new ArgumentException("Modules do not have a script slot " +
 				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
 				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +

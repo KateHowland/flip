@@ -54,18 +54,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public override Nwn2Noun CreatePlayerBlock()
 		{
 			Image image = placeholder;
-			return new Nwn2Noun(placeholder,Nwn2EventRaiser.Area);//TODO
+			return new Nwn2Noun(placeholder,Nwn2Type.Player);
 		}
 		
 		
 		public override Nwn2Noun CreateModuleBlock()
 		{
 			Image image = placeholder;
-			return new Nwn2Noun(placeholder,Nwn2EventRaiser.Module);
+			return new Nwn2Noun(placeholder,Nwn2Type.Module);
 		}
 		
 		
-		public override Nwn2Noun CreateTypeBlock(Nwn2EventRaiser type)
+		public override Nwn2Noun CreateTypeBlock(Nwn2Type type)
 		{
 			Image image = placeholder;
 			return new TypeBlock(image,type);
