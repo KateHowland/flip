@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Sussex.Flip.UI
 {
@@ -27,16 +19,20 @@ namespace Sussex.Flip.UI
 				SelectionBox.Children.Add(statement);
 			}
 			
-			string dir = @"C:\Flip\object pics";
-			try {
-				NounProvider provider = new SampleNounProvider(dir);
+			string dir = @"C:\Flip\object pics\";
+			NounProvider provider;
 			
-				foreach (Noun noun in provider.GetNouns()) {
-					SelectionBox.Children.Add(noun);
-				}	
-			}
-			catch (System.IO.DirectoryNotFoundException) {
-				//MessageBox.Show("No directory found at " + dir);
+			foreach (string folder in new string[]{"creature","item","placeable","door","placed effect"}) {
+				try {
+					provider = new SampleNounProvider(Path.Combine(dir,folder));
+				
+					foreach (Noun noun in provider.GetNouns()) {
+						SelectionBox.Children.Add(noun); 
+					}	
+				}
+				catch (System.IO.DirectoryNotFoundException) {
+					//MessageBox.Show("No directory found at " + dir);
+				}
 			}
 		}
 				

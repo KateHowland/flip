@@ -16,24 +16,24 @@ namespace Sussex.Flip.UI
     /// <summary>
     /// Interaction logic for Noun.xaml
     /// </summary>
-
     public partial class Noun : Moveable
     {
-        public Noun()
+		public Image Image {
+			get { 
+    			Image image = Face.Content as Image;
+    			if (image == null) throw new InvalidOperationException("Content is not a valid image.");
+    			else return image;
+    		}
+			set { 
+    			Face.Content = value;
+    		}
+		}
+    	
+    	
+        public Noun(Image image)
         {
             InitializeComponent();
-        }
-        
-        
-        public Noun(Image image) : this()
-        {
-            SetImage(image);
-        }
-        
-        
-        public void SetImage(Image image)
-        {
-        	Face.Content = image;
+            Image = image;
         }
     }
 }

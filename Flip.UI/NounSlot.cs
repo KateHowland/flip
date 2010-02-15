@@ -23,7 +23,7 @@ namespace Sussex.Flip.UI
     	static double nounHeight;
     	static NounSlot()
     	{
-    		Noun noun = new Noun();
+    		Noun noun = new Noun(null);
     		nounWidth = noun.Width;
     		nounHeight = noun.Height;
     	}
@@ -44,19 +44,11 @@ namespace Sussex.Flip.UI
         {
 			IDataObject data = e.Data;
 			if (data.GetDataPresent(typeof(Moveable))) {
-				Moveable moveable = (Moveable)data.GetData(typeof(Moveable));
-				if (moveable is Noun) {
-					SetSlotContents((Noun)moveable);
+				Noun noun = data.GetData(typeof(Moveable)) as Noun;
+				if (noun != null) {
+					SetSlotContents(noun);
 				}
 			}
-        }
-
-        
-        public Noun EmptySlot()
-        {
-        	Noun block = (Noun)SlotBorder.Child;
-        	SlotBorder.Child = null;
-        	return block;
         }
         
         
