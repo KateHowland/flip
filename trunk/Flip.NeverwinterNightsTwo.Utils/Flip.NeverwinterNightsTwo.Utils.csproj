@@ -98,6 +98,7 @@
     <Compile Include="Nwn2ToolsetFunctions.cs" />
     <Compile Include="Nwn2EventRaiser.cs" />
     <Compile Include="InstanceEventArgs.cs" />
+    <Compile Include="Nwn2Type.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceViewerClosedEventArgs.cs" />
     <Compile Include="ScriptEventArgs.cs" />
