@@ -52,6 +52,12 @@
       <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\OEIShared.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -60,10 +66,20 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractNwn2NounFactory.cs" />
+    <Compile Include="AreaBlock.cs" />
+    <Compile Include="BlueprintBlock.cs" />
+    <Compile Include="InstanceBlock.cs" />
     <Compile Include="Nwn2FlipCompiler.cs" />
+    <Compile Include="Nwn2Noun.cs" />
+    <Compile Include="Nwn2NounFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeBlock.cs" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
@@ -83,6 +99,11 @@
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Utils\Flip.NeverwinterNightsTwo.Utils.csproj">
       <Project>{C6ADDA1C-09F3-4149-99C7-56495FC9C1B2}</Project>
       <Name>Flip.NeverwinterNightsTwo.Utils</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Flip.UI\Flip.UI.csproj">
+      <Project>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</Project>
+      <Name>Flip.UI</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
