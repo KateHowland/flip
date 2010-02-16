@@ -3,7 +3,7 @@
     <ProjectGuid>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>Sussex.Flip.UI</RootNamespace>
     <AssemblyName>Flip.UI</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -67,11 +67,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-    <Compile Include="App.xaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
     <Compile Include="NounProvider.cs" />
     <Compile Include="Statement.cs">
       <DependentUpon>Statement.xaml</DependentUpon>
@@ -89,14 +84,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StatementFactory.cs" />
-    <Compile Include="Window1.xaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>Window1.xaml</DependentUpon>
-    </Compile>
     <Page Include="Statement.xaml" />
     <Page Include="Noun.xaml" />
     <Page Include="NounSlot.xaml" />
-    <Page Include="Window1.xaml" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>

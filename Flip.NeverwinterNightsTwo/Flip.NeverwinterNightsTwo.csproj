@@ -3,7 +3,7 @@
     <ProjectGuid>{EED1516E-049A-42AF-82A4-C9CE084EFAF5}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Sussex.Flip.Games.NeverwinterNightsTwo</RootNamespace>
     <AssemblyName>Flip.NeverwinterNightsTwo</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -72,6 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractNwn2NounFactory.cs" />
+    <Compile Include="App.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AreaBlock.cs" />
     <Compile Include="BlueprintBlock.cs" />
     <Compile Include="InstanceBlock.cs" />
@@ -79,7 +83,12 @@
     <Compile Include="Nwn2Noun.cs" />
     <Compile Include="Nwn2NounFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\WPFAssemblyInfo.cs" />
     <Compile Include="TypeBlock.cs" />
+    <Compile Include="Window1.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
@@ -104,12 +113,14 @@
     <ProjectReference Include="..\Flip.UI\Flip.UI.csproj">
       <Project>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</Project>
       <Name>Flip.UI</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
       <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>
       <Name>Flip.Utils</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ApplicationDefinition Include="App.xaml" />
+    <Page Include="Window1.xaml" />
   </ItemGroup>
 </Project>
