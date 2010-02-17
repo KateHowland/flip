@@ -20,37 +20,30 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 15/02/2010 at 14:38.
+ * This file added by Keiron Nicholson on 15/02/2010 at 14:49.
  */
 
 using System;
-using System.Windows.Controls;
-using NWN2Toolset.NWN2.Data.Templates;
-using Sussex.Flip.UI;
+using System.Collections.Generic;
+using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
+using NWN2Toolset.NWN2.Data.Instances;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
+using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of Nwn2Noun.
+	/// Description of AbstractNwn2BlockFactory.
 	/// </summary>
-	public class Nwn2Noun : Noun
+	public abstract class AbstractNwn2BlockFactory
 	{
-		protected Nwn2Type type;
-		
-		public Nwn2Type Type {
-			get { return type; }
-		}
-		
-		
-		public Nwn2Noun(Image image, Nwn2Type type) : base(image)
-		{			
-			this.type = type;
-		}
-		
-		
-		public Nwn2Noun(Image image, NWN2ObjectType type) : this(image,Nwn2ScriptSlot.GetNwn2Type(type))
-		{			
-		}
+		public abstract ObjectBlock CreatePlayerBlock();
+		public abstract ObjectBlock CreateModuleBlock();
+		public abstract ObjectBlock CreateTypeBlock(Nwn2Type type);
+		public abstract ObjectBlock CreateAreaBlock(NWN2GameArea area);
+		public abstract ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint);
+		public abstract ObjectBlock CreateInstanceBlock(INWN2Instance instance);
+		public abstract ObjectBlock CreateInstanceBlock(List<INWN2Instance> instances);
 	}
 }

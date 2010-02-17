@@ -9,7 +9,6 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SourceAnalysisOverrideSettingsFile>\\home-fileserver\kn70\WindowsProfile\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-    <DocumentationFile>bin\Debug\Flip.Core.xml</DocumentationFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
@@ -21,7 +20,7 @@
     <BaseIntermediateOutputPath>..\Compiled\Flip.Core\obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>..\Compiled\Flip.Core\bin\Debug</OutputPath>
+    <OutputPath>C:\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>

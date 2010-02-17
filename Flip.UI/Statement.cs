@@ -50,17 +50,17 @@ namespace Sussex.Flip.UI
         
 
         
-        public void AddNounSlot(string name, int index)
+        public void AddObjectSlot(string name, int index)
         {
-        	NounSlot slot = new NounSlot();
+        	ObjectSlot slot = new ObjectSlot();
         	slot.Name = name;
         	MainPanel.Children.Insert(index,slot);
         }
 
         
-        public void AddNounSlot(string name)
+        public void AddObjectSlot(string name)
         {
-        	NounSlot slot = new NounSlot();
+        	ObjectSlot slot = new ObjectSlot();
         	slot.Name = name;
         	MainPanel.Children.Add(slot);
         }
@@ -80,28 +80,28 @@ namespace Sussex.Flip.UI
         }
         
         
-        public Noun GetSlotContents(string name)
+        public ObjectBlock GetSlotContents(string name)
         {
-        	NounSlot slot = GetSlotPanel(name);        	
+        	ObjectSlot slot = GetSlotPanel(name);        	
         	if (slot == null) throw new ArgumentException("No slot named '" + name + "'.","name");
         	
         	return slot.GetSlotContents();
         }
         
         
-        public void SetSlotContents(string name, Noun block)
+        public void SetSlotContents(string name, ObjectBlock block)
         {
-        	NounSlot slot = GetSlotPanel(name);        	
+        	ObjectSlot slot = GetSlotPanel(name);        	
         	if (slot == null) throw new ArgumentException("No slot named '" + name + "'.","name");
         	
         	slot.SetSlotContents(block);
         }
         
                 
-        private NounSlot GetSlotPanel(string name)
+        private ObjectSlot GetSlotPanel(string name)
         {
         	object o = FindName(name);
-        	if (o is NounSlot) return (NounSlot)o;
+        	if (o is ObjectSlot) return (ObjectSlot)o;
         	else return null;
         }	
 		

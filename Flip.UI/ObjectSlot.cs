@@ -14,27 +14,27 @@ using System.Windows.Shapes;
 namespace Sussex.Flip.UI
 {
     /// <summary>
-    /// Interaction logic for NounSlot.xaml
+    /// Interaction logic for ObjectSlot.xaml
     /// </summary>
 
-    public partial class NounSlot : UserControl
+    public partial class ObjectSlot : UserControl
     {
-    	static double nounWidth;
-    	static double nounHeight;
-    	static NounSlot()
+    	static double width;
+    	static double height;
+    	static ObjectSlot()
     	{
-    		Noun noun = new Noun(null);
-    		nounWidth = noun.Width;
-    		nounHeight = noun.Height;
+    		ObjectBlock block = new ObjectBlock(null);
+    		width = block.Width;
+    		height = block.Height;
     	}
     	
     	
-        public NounSlot()
+        public ObjectSlot()
         {
             InitializeComponent();    
             
-            SlotBorder.Width = nounWidth + SlotBorder.BorderThickness.Left + SlotBorder.BorderThickness.Right;
-            SlotBorder.Height = nounHeight + SlotBorder.BorderThickness.Top + SlotBorder.BorderThickness.Bottom;
+            SlotBorder.Width = width + SlotBorder.BorderThickness.Left + SlotBorder.BorderThickness.Right;
+            SlotBorder.Height = height + SlotBorder.BorderThickness.Top + SlotBorder.BorderThickness.Bottom;
             
             Drop += new DragEventHandler(DroppedOnSlotPanel);
         }
@@ -44,15 +44,15 @@ namespace Sussex.Flip.UI
         {
 			IDataObject data = e.Data;
 			if (data.GetDataPresent(typeof(Moveable))) {
-				Noun noun = data.GetData(typeof(Moveable)) as Noun;
-				if (noun != null) {
-					SetSlotContents(noun);
+				ObjectBlock block = data.GetData(typeof(Moveable)) as ObjectBlock;
+				if (block != null) {
+					SetSlotContents(block);
 				}
 			}
         }
         
         
-        public void SetSlotContents(Noun block)
+        public void SetSlotContents(ObjectBlock block)
         {    	
         	if (GetSlotContents() == block) return;
         	
@@ -64,10 +64,10 @@ namespace Sussex.Flip.UI
         }
         
         
-        public Noun GetSlotContents()
+        public ObjectBlock GetSlotContents()
         {
         	if (SlotBorder.Child == null) return null;
-        	else return (Noun)SlotBorder.Child;
+        	else return (ObjectBlock)SlotBorder.Child;
         }
     }
 }
