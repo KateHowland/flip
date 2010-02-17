@@ -172,6 +172,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			};
 			
 			pluginMenuItem.Items.Add(scriptAccessMenuItem);
+			
+			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Launch Flip");
+			launchFlip.Activate += delegate 
+			{  
+				Nwn2FlipWindow window = new Nwn2FlipWindow();
+				window.Show();
+			};
+			
+			pluginMenuItem.Items.Add(launchFlip);
 		}
 		
 		

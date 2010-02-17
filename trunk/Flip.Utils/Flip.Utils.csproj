@@ -20,7 +20,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>..\Compiled\Flip.Utils\bin\Debug</OutputPath>
+    <OutputPath>C:\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>

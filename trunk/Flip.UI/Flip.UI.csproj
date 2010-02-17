@@ -20,7 +20,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>..\Compiled\Flip.UI\bin\Debug</OutputPath>
+    <OutputPath>C:\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
@@ -67,7 +67,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NounProvider.cs" />
     <Compile Include="Statement.cs">
       <DependentUpon>Statement.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -75,18 +74,21 @@
     <Compile Include="Moveable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
-    <Compile Include="Noun.cs">
-      <DependentUpon>Noun.xaml</DependentUpon>
+    <Compile Include="ObjectBlock.cs">
+      <DependentUpon>ObjectBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="NounSlot.cs">
-      <DependentUpon>NounSlot.xaml</DependentUpon>
+    <Compile Include="ObjectSlot.cs">
+      <DependentUpon>ObjectSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StatementFactory.cs" />
     <Page Include="Statement.xaml" />
-    <Page Include="Noun.xaml" />
-    <Page Include="NounSlot.xaml" />
+    <Page Include="ObjectBlock.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
+    <Page Include="ObjectSlot.xaml" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>

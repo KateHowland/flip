@@ -66,9 +66,9 @@ namespace Sussex.Flip.UI
 		public Statement Attacks()
 		{			
 			Statement statement = new Statement();
-			statement.AddNounSlot("creature1");
+			statement.AddObjectSlot("creature1");
 			statement.AddTextBar("attacks");
-			statement.AddNounSlot("creature2");
+			statement.AddObjectSlot("creature2");
 			return statement;
 		}
 		
@@ -76,9 +76,9 @@ namespace Sussex.Flip.UI
 		public Statement PicksUp()
 		{			
 			Statement statement = new Statement();
-			statement.AddNounSlot("creature1");
+			statement.AddObjectSlot("creature1");
 			statement.AddTextBar("picks up");
-			statement.AddNounSlot("item1");
+			statement.AddObjectSlot("item1");
 			return statement;
 		}	
 		
@@ -86,9 +86,9 @@ namespace Sussex.Flip.UI
 		public Statement Drops()
 		{			
 			Statement statement = new Statement();
-			statement.AddNounSlot("creature1");
+			statement.AddObjectSlot("creature1");
 			statement.AddTextBar("drops");
-			statement.AddNounSlot("item1");
+			statement.AddObjectSlot("item1");
 			return statement;
 		}	
 		
@@ -96,7 +96,7 @@ namespace Sussex.Flip.UI
 		public Statement Grows()
 		{			
 			Statement statement = new Statement();
-			statement.AddNounSlot("creature1");
+			statement.AddObjectSlot("creature1");
 			statement.AddTextBar("grows");
 			return statement;
 		}	
@@ -105,7 +105,7 @@ namespace Sussex.Flip.UI
 		public Statement Shrinks()
 		{			
 			Statement statement = new Statement();
-			statement.AddNounSlot("creature1");
+			statement.AddObjectSlot("creature1");
 			statement.AddTextBar("shrinks");
 			return statement;
 		}	

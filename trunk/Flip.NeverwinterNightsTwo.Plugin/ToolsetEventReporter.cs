@@ -265,39 +265,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			 * the module, when blueprints are added to or removed from the module, and 
 			 * when objects are added to or removed from an area.
 			 */
+			
+			WatchModule(NWN2ToolsetMainForm.App.Module);
+				
 			NWN2ToolsetMainForm.ModuleChanged += delegate(object oSender, ModuleChangedEventArgs e) 
 			{  
-				OnModuleChanged(oSender,e);
-				
-				NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
-				
-				/*
-				 * There seems to be a bug where these events fire at a later stage... they do fire
-				 * when they should, but when the paused test is allowed to complete, they fire again.
-				 */
-				foreach (NWN2BlueprintCollection bc in mod.BlueprintCollections) {
-					bc.Inserted += delegate(OEICollectionWithEvents cList, int index, object value) 
-					{
-						OnBlueprintAdded(bc,new BlueprintEventArgs((INWN2Blueprint)value));
-					};
-					
-					bc.Removed += delegate(OEICollectionWithEvents cList, int index, object value)
-					{
-						OnBlueprintRemoved(bc,new BlueprintEventArgs((INWN2Blueprint)value));
-					};
-				}
-								
-				if (mod != null) {				
-					List<OEIDictionaryWithEvents> dictionaries;
-					dictionaries = new List<OEIDictionaryWithEvents> { mod.Areas, mod.Conversations, mod.Scripts };
-						
-					OEIDictionaryWithEvents.ChangeHandler dAdded = new OEIDictionaryWithEvents.ChangeHandler(ResourceInsertedIntoCollection);
-					OEIDictionaryWithEvents.ChangeHandler dRemoved = new OEIDictionaryWithEvents.ChangeHandler(ResourceRemovedFromCollection);
-					foreach (OEIDictionaryWithEvents dictionary in dictionaries) {
-						dictionary.Inserted += dAdded;
-						dictionary.Removed += dRemoved;
-					}
-				}
+				OnModuleChanged(oSender,e);				
+				WatchModule(NWN2ToolsetMainForm.App.Module);
 			};
 			
 			FieldInfo[] fields = typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
@@ -319,6 +293,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 						tg.ActiveLeaf.TabPages.Inserted += opened;
 						tg.ActiveLeaf.TabPages.Removed += closed;
 					};
+				}
+			}
+		}
+		
+		
+		protected void WatchModule(NWN2GameModule mod)
+		{
+			if (mod != null) {	
+				
+				/* There seems to be a bug where the following events events fire at a later stage... they do
+				 * fire when they should, but when the paused test is allowed to complete, they fire again. */
+				foreach (NWN2BlueprintCollection bc in mod.BlueprintCollections) {
+					bc.Inserted += delegate(OEICollectionWithEvents cList, int index, object value) 
+					{
+						OnBlueprintAdded(bc,new BlueprintEventArgs((INWN2Blueprint)value));
+					};
+					
+					bc.Removed += delegate(OEICollectionWithEvents cList, int index, object value)
+					{
+						OnBlueprintRemoved(bc,new BlueprintEventArgs((INWN2Blueprint)value));
+					};
+				}
+										
+				List<OEIDictionaryWithEvents> dictionaries;
+				dictionaries = new List<OEIDictionaryWithEvents> { mod.Areas, mod.Conversations, mod.Scripts };
+					
+				OEIDictionaryWithEvents.ChangeHandler dAdded = new OEIDictionaryWithEvents.ChangeHandler(ResourceInsertedIntoCollection);
+				OEIDictionaryWithEvents.ChangeHandler dRemoved = new OEIDictionaryWithEvents.ChangeHandler(ResourceRemovedFromCollection);
+				foreach (OEIDictionaryWithEvents dictionary in dictionaries) {
+					dictionary.Inserted += dAdded;
+					dictionary.Removed += dRemoved;
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-﻿<Window x:Class="Sussex.Flip.Games.NeverwinterNightsTwo.Window1"
+﻿<Window x:Class="Sussex.Flip.Games.NeverwinterNightsTwo.Nwn2FlipWindow"
 	xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Building blocks" 
@@ -16,14 +16,14 @@
 		</Grid.ColumnDefinitions>
 			
 		<Canvas	
-		Name="MainCanvas"
+		Name="mainCanvas"
 		Grid.Row="0"
 		Grid.Column="0" 
 		Background="LightBlue"
 		AllowDrop="True"/>
 		
 		<StackPanel 
-		Name="SelectionBox"
+		Name="blockBox"
 		Grid.Row="0"
 		Grid.Column="1"
 		Orientation="Vertical"
