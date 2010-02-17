@@ -20,24 +20,22 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 03/02/2010 at 12:56.
+ * This file added by Keiron Nicholson on 17/02/2010 at 15:08.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 {
 	/// <summary>
-	/// TODO.
-	/// Description of AbstractStatementFactory.
+	/// Description of CreaturePlayerFitter.
 	/// </summary>
-	public abstract class StatementFactory
+	public class CreaturePlayerFitter : Fitter
 	{
-		public abstract List<Statement> GetStatements();
-	}	
+		public override bool Fits(ObjectBlock block)
+		{
+			return block.Type == "Player" || (block.Type == "Instance" && block.Subtype == "Creature");
+		}
+	}
 }

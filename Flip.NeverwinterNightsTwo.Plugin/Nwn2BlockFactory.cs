@@ -30,6 +30,7 @@ using System.Windows.Media.Imaging;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -41,76 +42,111 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	public class Nwn2BlockFactory : AbstractNwn2BlockFactory
 	{		
 		protected string pathFormat;
-		protected string placeholderPath;
+		
+		
+		// TODO:
+		// ObjectBlock should have a generic image to use (as an embedded resource)
+		// if the image it's given is rubbish (or it isn't given one)
+		// (should also have a parameterless constructor?)
 		
 		
 		public Nwn2BlockFactory()
 		{
 			pathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
-			placeholderPath = String.Format(pathFormat,"Other","NWN2LogoSmall"); // TODO handle filenotfound/path error
 		}
 		
 		
 		public override ObjectBlock CreatePlayerBlock()
 		{
-			return new ObjectBlock(GetImage(placeholderPath),null,null,"player",null,"Player");
+			Image image = GetImage("Other","Player");
+			if (image == null) image = GetImage("Placeholder","Default");	
+			return new ObjectBlock(image,null,null,"Player",null,"Player");
 		}
 		
 		
 		public override ObjectBlock CreateModuleBlock()
 		{
-			return new ObjectBlock(GetImage(placeholderPath),null,null,"module",null,"Module");
+			Image image = GetImage("Other","Module");
+			if (image == null) image = GetImage("Placeholder","Default");
+			return new ObjectBlock(image,null,null,"Module",null,"Module");
 		}
 		
 		
 		public override ObjectBlock CreateTypeBlock(Nwn2Type type)
 		{
-			string typeString = type.ToString();
-			return new ObjectBlock(GetImage(placeholderPath),null,null,"type",typeString,typeString);
+			string t = type.ToString();
+			string filename = String.Format("Type_{0}",t);
+			Image image = GetImage("Other","Type");//filename);
+			if (image == null) image = GetImage("Placeholder","Default");
+			return new ObjectBlock(image,null,null,"Type",t,t);
 		}
 		
 		
 		public override ObjectBlock CreateAreaBlock(NWN2GameArea area)
 		{
-			return new ObjectBlock(GetImage(placeholderPath),area,area.Name,"area",(area.HasTerrain ? "exterior" : "interior"),area.Name);
+			string terrain = area.HasTerrain ? "Exterior" : "Interior";
+			string filename = String.Format("Area_{0}",terrain);
+			Image image = GetImage("Other",filename);
+			if (image == null) image = GetImage("Placeholder","Default");
+			return new ObjectBlock(image,area,area.Name,"Area",terrain,area.Name);
 		}
 		
 		
 		public override ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint)
 		{			
-			Image image;
-			string imagePath = String.Format(pathFormat,blueprint.ObjectType.ToString(),blueprint.TemplateResRef.Value);
-			
-			if (System.IO.File.Exists(imagePath)) {
-				image = GetImage(imagePath);
-			}
-			else {
-				image = GetImage(placeholderPath);
-			}
-			
-			return new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"blueprint",blueprint.ObjectType.ToString(),blueprint.Name);
+			// TODO: Check first for a picture of ResourceName.Value (the actual blueprint)
+			// then for TemplateResRef.Value (the blueprint its based on).
+			string objectType = blueprint.ObjectType.ToString();
+			Image image = GetImage(objectType,blueprint.TemplateResRef.Value);		
+			if (image == null) image = GetImage("Placeholder","Blueprint");//String.Format("Blueprint_{0}",objectType));
+			return new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"Blueprint",objectType,blueprint.Name);
 		}
 		
 		
 		public override ObjectBlock CreateInstanceBlock(INWN2Instance instance)
-		{
-			return new ObjectBlock(GetImage(placeholderPath),instance,((NWN2Toolset.NWN2.Data.Templates.INWN2Object)instance).Tag,"instance",instance.ObjectType.ToString(),instance.Name);
+		{			
+			// TODO: No idea if this will work for getting pictures (Using the template resref.):
+			string objectType = instance.ObjectType.ToString();
+			Image image = GetImage(objectType,instance.Template.ResRef.Value);
+			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
+			// TODO safety check:
+			return new ObjectBlock(image,instance,((INWN2Object)instance).Tag,"Instance",objectType,instance.Name);
 		}
 		
 		
 		public override ObjectBlock CreateInstanceBlock(List<INWN2Instance> instances)
 		{
-			return new ObjectBlock(GetImage(placeholderPath),instances,((NWN2Toolset.NWN2.Data.Templates.INWN2Object)instances[0]).Tag,"instance",instances[0].ObjectType.ToString(),instances[0].Name);
+			// TODO safety check:
+			INWN2Instance instance = instances[0];
+			string objectType = instance.ObjectType.ToString();
+			Image image = GetImage(objectType,instance.Template.ResRef.Value);
+			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
+			return new ObjectBlock(image,instances,((INWN2Object)instance).Tag,"Instance",objectType,instances[0].Name);
 		}
 		
 		
 		protected Image GetImage(string path)
 		{			
-			Image image = new Image();
-			Uri uri = new Uri(path);
-			BitmapImage bmp = new BitmapImage(uri);
-			image.Source = bmp;
-			return image;
+			if (path == null) throw new ArgumentNullException("path");
+			if (!System.IO.File.Exists(path)) return null;
+			
+			try {
+				Image image = new Image();
+				Uri uri = new Uri(path);
+				BitmapImage bmp = new BitmapImage(uri);
+				image.Source = bmp;
+				return image;
+			}
+			catch (Exception) {
+				return null;
+			}
+		}
+		
+		
+		protected Image GetImage(string type, string name)
+		{
+			string path = String.Format(pathFormat,type,name);
+			return GetImage(path);
 		}
 	}
 }

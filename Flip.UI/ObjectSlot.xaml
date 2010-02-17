@@ -6,7 +6,7 @@
 	Background="LightGray">
 	
     	<Border 
-		x:Name="SlotBorder"
+		x:Name="slotBorder"
     	BorderThickness="0.5"
     	BorderBrush="Black"
     	VerticalAlignment="Center"

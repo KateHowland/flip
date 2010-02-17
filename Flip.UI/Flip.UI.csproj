@@ -67,6 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SimpleFitter.cs" />
+    <Compile Include="Fitter.cs" />
     <Compile Include="Statement.cs">
       <DependentUpon>Statement.xaml</DependentUpon>
       <SubType>Code</SubType>

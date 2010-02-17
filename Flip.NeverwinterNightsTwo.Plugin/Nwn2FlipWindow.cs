@@ -20,11 +20,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			mainCanvas.PreviewDrop += new DragEventHandler(DroppedOnCanvas);
 			blockBox.PreviewDrop += new DragEventHandler(DroppedOnBlockBox);
 						
-			foreach (Statement statement in new StatementFactory().GetStatements()) {
+			foreach (Statement statement in new Nwn2StatementFactory().GetStatements()) {
 				blockBox.Children.Add(statement);
 			}
 			
 			AbstractNwn2BlockFactory factory = new Nwn2BlockFactory();
+			
+			blockBox.Children.Add(factory.CreateModuleBlock());
+			blockBox.Children.Add(factory.CreatePlayerBlock());
 			
 			ToolsetEventReporter reporter = new ToolsetEventReporter();
 			reporter.Start();

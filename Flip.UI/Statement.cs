@@ -27,49 +27,11 @@ namespace Sussex.Flip.UI
         {
             InitializeComponent();
         }
-        
-        
-        public void AddChild(UIElement element)
-        {
-        	if (element == null) throw new ArgumentNullException("element");
-        	MainPanel.Children.Add(element);
-        }
-        
-        
-        public void InsertChild(UIElement element, int index)
-        {
-        	if (element == null) throw new ArgumentNullException("element");
-        	MainPanel.Children.Insert(index,element);
-        }
-        
-        
-        
-        
-        
-        
-        
 
         
-        public void AddObjectSlot(string name, int index)
+        public void AddSlot(ObjectSlot slot)
         {
-        	ObjectSlot slot = new ObjectSlot();
-        	slot.Name = name;
-        	MainPanel.Children.Insert(index,slot);
-        }
-
-        
-        public void AddObjectSlot(string name)
-        {
-        	ObjectSlot slot = new ObjectSlot();
-        	slot.Name = name;
         	MainPanel.Children.Add(slot);
-        }
-        
-        
-        public void AddTextBar(string text, int index)
-        {
-        	TextBlock tb = CreateTextBlock(text,pink);
-        	MainPanel.Children.Insert(index,tb);
         }
 
         
@@ -82,7 +44,7 @@ namespace Sussex.Flip.UI
         
         public ObjectBlock GetSlotContents(string name)
         {
-        	ObjectSlot slot = GetSlotPanel(name);        	
+        	ObjectSlot slot = GetObjectSlot(name);        	
         	if (slot == null) throw new ArgumentException("No slot named '" + name + "'.","name");
         	
         	return slot.GetSlotContents();
@@ -91,14 +53,14 @@ namespace Sussex.Flip.UI
         
         public void SetSlotContents(string name, ObjectBlock block)
         {
-        	ObjectSlot slot = GetSlotPanel(name);        	
+        	ObjectSlot slot = GetObjectSlot(name);        	
         	if (slot == null) throw new ArgumentException("No slot named '" + name + "'.","name");
         	
         	slot.SetSlotContents(block);
         }
         
                 
-        private ObjectSlot GetSlotPanel(string name)
+        private ObjectSlot GetObjectSlot(string name)
         {
         	object o = FindName(name);
         	if (o is ObjectSlot) return (ObjectSlot)o;
