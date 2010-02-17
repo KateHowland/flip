@@ -20,24 +20,18 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 03/02/2010 at 12:56.
+ * This file added by Keiron Nicholson on 17/02/2010 at 13:11.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
-	/// TODO.
-	/// Description of AbstractStatementFactory.
+	/// Description of Fitter.
 	/// </summary>
-	public abstract class StatementFactory
+	public abstract class Fitter
 	{
-		public abstract List<Statement> GetStatements();
-	}	
+		public abstract bool Fits(ObjectBlock block);
+	}
 }

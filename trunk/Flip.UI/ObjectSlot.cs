@@ -21,20 +21,43 @@ namespace Sussex.Flip.UI
     {
     	static double width;
     	static double height;
+    	static Fitter defaultFitter;
+    	
     	static ObjectSlot()
     	{
     		ObjectBlock block = new ObjectBlock(null);
     		width = block.Width;
     		height = block.Height;
+    		defaultFitter = new SimpleFitter();
     	}
     	
     	
-        public ObjectSlot()
+    	protected string slotName;    	
+		public string SlotName {
+			get { return slotName; }
+		}
+    	
+    	
+    	protected Fitter objectFitter;    	
+		public Fitter ObjectFitter {
+			get { return objectFitter; }
+		}
+        
+        
+        public ObjectSlot(string name) : this(name,defaultFitter)
+        {        	
+        }
+    	
+    	
+        public ObjectSlot(string name, Fitter fitter)
         {
-            InitializeComponent();    
+            InitializeComponent();
             
-            SlotBorder.Width = width + SlotBorder.BorderThickness.Left + SlotBorder.BorderThickness.Right;
-            SlotBorder.Height = height + SlotBorder.BorderThickness.Top + SlotBorder.BorderThickness.Bottom;
+            slotName = name;
+            objectFitter = fitter;
+            
+            slotBorder.Width = width + slotBorder.BorderThickness.Left + slotBorder.BorderThickness.Right;
+            slotBorder.Height = height + slotBorder.BorderThickness.Top + slotBorder.BorderThickness.Bottom;
             
             Drop += new DragEventHandler(DroppedOnSlotPanel);
         }
@@ -45,7 +68,7 @@ namespace Sussex.Flip.UI
 			IDataObject data = e.Data;
 			if (data.GetDataPresent(typeof(Moveable))) {
 				ObjectBlock block = data.GetData(typeof(Moveable)) as ObjectBlock;
-				if (block != null) {
+				if (block != null && Fits(block)) {
 					SetSlotContents(block);
 				}
 			}
@@ -60,14 +83,20 @@ namespace Sussex.Flip.UI
         		block.Detach();
         	}
         	
-        	SlotBorder.Child = block;
+        	slotBorder.Child = block;
         }
         
         
         public ObjectBlock GetSlotContents()
         {
-        	if (SlotBorder.Child == null) return null;
-        	else return (ObjectBlock)SlotBorder.Child;
+        	if (slotBorder.Child == null) return null;
+        	else return (ObjectBlock)slotBorder.Child;
+        }
+        
+        
+        public bool Fits(ObjectBlock block)
+        {
+        	return objectFitter.Fits(block);
         }
     }
 }
