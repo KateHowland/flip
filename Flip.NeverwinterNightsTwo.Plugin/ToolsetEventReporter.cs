@@ -300,6 +300,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		
 		protected void WatchModule(NWN2GameModule mod)
 		{
+			// TODO: Can this be made to work with the NWN2GlobalBlueprintManager instead?
+			// so that it can track ANY added/removed blueprints?
+			
 			if (mod != null) {	
 				
 				/* There seems to be a bug where the following events events fire at a later stage... they do
