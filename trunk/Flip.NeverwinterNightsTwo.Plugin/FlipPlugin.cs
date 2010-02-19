@@ -192,6 +192,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
 		{	
+			Nwn2FlipWindow window = new Nwn2FlipWindow();
+			window.Show();
+			window.Activate();
 		}
 		
 		

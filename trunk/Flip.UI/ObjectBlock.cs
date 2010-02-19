@@ -22,8 +22,9 @@ namespace Sussex.Flip.UI
     	protected string subtype;
     	protected string identifier;
     	protected string displayName;
-    	// protected SourceProvider source;
-    	// protected NaturalLanguageProvider natural;
+    	// protected ObjectBlockBehaviour behaviour;
+    	// behaviour.GetSource();
+    	// behaviour.GetNaturalLanguage();
     	protected object represented;
     	
     	
