@@ -1,6 +1,6 @@
 /*
  * Flip - a visual programming language for scripting video games
- * Copyright (C) 2009 University of Sussex
+ * Copyright (C) 2009, 2010 University of Sussex
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,18 +99,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string objectType = blueprint.ObjectType.ToString();
 			Image image = GetImage(objectType,blueprint.TemplateResRef.Value);		
 			if (image == null) image = GetImage("Placeholder","Blueprint");//String.Format("Blueprint_{0}",objectType));
-			return new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"Blueprint",objectType,blueprint.Name);
+			ObjectBlock block = new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"Blueprint",objectType,blueprint.Name);
+			block.Border.BorderBrush = System.Windows.Media.Brushes.DarkBlue;
+			return block;
 		}
 		
 		
 		public override ObjectBlock CreateInstanceBlock(INWN2Instance instance)
 		{			
-			// TODO: No idea if this will work for getting pictures (Using the template resref.):
 			string objectType = instance.ObjectType.ToString();
 			Image image = GetImage(objectType,instance.Template.ResRef.Value);
 			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
 			// TODO safety check:
-			return new ObjectBlock(image,instance,((INWN2Object)instance).Tag,"Instance",objectType,instance.Name);
+			ObjectBlock block = new ObjectBlock(image,instance,((INWN2Object)instance).Tag,"Instance",objectType,instance.Name);
+			block.Border.BorderBrush = System.Windows.Media.Brushes.DarkCyan;
+			return block;
 		}
 		
 		
@@ -121,7 +124,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string objectType = instance.ObjectType.ToString();
 			Image image = GetImage(objectType,instance.Template.ResRef.Value);
 			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
-			return new ObjectBlock(image,instances,((INWN2Object)instance).Tag,"Instance",objectType,instances[0].Name);
+			ObjectBlock block = new ObjectBlock(image,instances,((INWN2Object)instance).Tag,"Instance",objectType,instances[0].Name);
+			block.Border.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
+			return block;
 		}
 		
 		

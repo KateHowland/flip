@@ -65,6 +65,13 @@ namespace Sussex.Flip.UI
 		}
     	
     	
+    	public Border Border {
+    		get {
+    			return border;
+    		}
+    	}
+    	
+    	
         public ObjectBlock(Image image, object represented, string identifier, string type, string subtype, string displayName)
         {
             InitializeComponent();

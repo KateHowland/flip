@@ -21,52 +21,29 @@ namespace Sussex.Flip.UI
     {
 		private FontFamily font = new FontFamily("Times New Roman");
 		private Brush pink = new LinearGradientBrush(Colors.Pink,Colors.Salmon,45);
+		protected bool tested = false;
 		
 		
         public Statement()
         {
-            InitializeComponent();
+            InitializeComponent();  
         }
 
         
         public void AddSlot(ObjectSlot slot)
         {
-        	MainPanel.Children.Add(slot);
+        	MainPanel.Children.Add(slot);          
+            ToolTip = ToString();
         }
 
         
         public void AddTextBar(string text)
         {
         	TextBlock tb = CreateTextBlock(text,pink);
-        	MainPanel.Children.Add(tb);
+        	MainPanel.Children.Add(tb);          
+            ToolTip = ToString();
         }
         
-        
-        public ObjectBlock GetSlotContents(string name)
-        {
-        	ObjectSlot slot = GetObjectSlot(name);        	
-        	if (slot == null) throw new ArgumentException("No slot named '" + name + "'.","name");
-        	
-        	return slot.GetSlotContents();
-        }
-        
-        
-        public void SetSlotContents(string name, ObjectBlock block)
-        {
-        	ObjectSlot slot = GetObjectSlot(name);        	
-        	if (slot == null) throw new ArgumentException("No slot named '" + name + "'.","name");
-        	
-        	slot.SetSlotContents(block);
-        }
-        
-                
-        private ObjectSlot GetObjectSlot(string name)
-        {
-        	object o = FindName(name);
-        	if (o is ObjectSlot) return (ObjectSlot)o;
-        	else return null;
-        }	
-		
 				
 		public TextBlock CreateTextBlock(string text, Brush background)
 		{
@@ -84,6 +61,22 @@ namespace Sussex.Flip.UI
 			tb.Width = 80;
 			tb.Height = 35;
 			return tb;
+		}
+		
+		
+		public override string ToString()
+		{
+			System.Text.StringBuilder sb = new StringBuilder();
+			int count = MainPanel.Children.Count;
+			for (int i = 0; i < count; i++) {
+				ObjectSlot slot = MainPanel.Children[i] as ObjectSlot;
+				TextBlock text = MainPanel.Children[i] as TextBlock;
+				if (slot != null) sb.Append(slot.SlotName);
+				else if (text != null) sb.Append(text.Text);
+				else sb.Append("?");				
+				if (i < count - 1) sb.Append(" ");
+			}
+			return sb.ToString();
 		}
     }
 }

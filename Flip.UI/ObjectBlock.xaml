@@ -6,6 +6,7 @@
 	Width="55">
 	
     <Border 
+	x:Name="border"
 	BorderThickness="0.5"
 	BorderBrush="SlateGray">
     	

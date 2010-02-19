@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -59,19 +60,44 @@ namespace Sussex.Flip.UI
             slotBorder.Width = width + slotBorder.BorderThickness.Left + slotBorder.BorderThickness.Right;
             slotBorder.Height = height + slotBorder.BorderThickness.Top + slotBorder.BorderThickness.Bottom;
             
-            Drop += new DragEventHandler(DroppedOnSlotPanel);
+            PreviewDrop += new DragEventHandler(DroppedOnSlotPanel);
+            DragEnter += delegate(object sender, DragEventArgs e) 
+            {  
+            	ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
+            	if (block != null && block != GetSlotContents() && Fits(block)) SetToCanDropAppearance();
+            };
+            DragLeave += delegate(object sender, DragEventArgs e) 
+            {  
+            	SetToStandardAppearance();
+            };
+        }
+        
+        Thickness thin = new Thickness(0.5);
+        Thickness thick = new Thickness(1);
+        protected void SetToCanDropAppearance()
+        {
+        	slotBorder.BorderBrush = Brushes.Blue;
+        	slotBorder.BorderThickness = thick;
+        }
+        
+        
+        protected void SetToStandardAppearance()
+        {
+        	slotBorder.BorderBrush = Brushes.Black;
+        	slotBorder.BorderThickness = thin;
         }
         
 
         private void DroppedOnSlotPanel(object sender, DragEventArgs e)
         {
-			IDataObject data = e.Data;
-			if (data.GetDataPresent(typeof(Moveable))) {
-				ObjectBlock block = data.GetData(typeof(Moveable)) as ObjectBlock;
+			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
+				ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
 				if (block != null && Fits(block)) {
 					SetSlotContents(block);
 				}
+				e.Handled = true;
 			}
+			SetToStandardAppearance();
         }
         
         
