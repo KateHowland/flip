@@ -35,8 +35,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			blueprintPanels = new Dictionary<NWN2ObjectType,StackPanel>(15);
 			instancePanels = new Dictionary<NWN2ObjectType,StackPanel>(15);
 			
-			DragEventHandler droppedOnBlockBox = new DragEventHandler(DroppedOnBlockBox);
-			
 			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {				
 				string typestr = type.ToString();
 				
@@ -89,7 +87,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				OtherObjectsPanel.Children.Add(factory.CreateAreaBlock(e.Area));
 			};
 						
-			mainCanvas.PreviewDrop += new DragEventHandler(DroppedOnCanvas);
+			mainCanvas.Drop += new DragEventHandler(DroppedOnCanvas);
 		}
 		
 		
@@ -142,7 +140,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 
 		protected void DroppedOnCanvas(object sender, DragEventArgs e)
 		{
-			if (e.Data.GetDataPresent(typeof(Moveable))) {
+			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
 				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 				
 				Point point = e.GetPosition(mainCanvas);
@@ -151,7 +149,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				if (!(moveable.Parent == mainCanvas)) {
 					moveable.Detach();
-					mainCanvas.Children.Add(moveable);
+					mainCanvas.Children.Add(moveable);					
 				}					
 				
 				moveable.MoveTo(x,y);
@@ -161,7 +159,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 
 		protected void DroppedOnBlockBox(object sender, DragEventArgs e)
 		{
-			if (e.Data.GetDataPresent(typeof(Moveable))) {				
+			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {				
 				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 				if (moveable.Parent == mainCanvas) {
 					moveable.Detach();

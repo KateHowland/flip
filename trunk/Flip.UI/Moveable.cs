@@ -1,6 +1,6 @@
 /*
  * Flip - a visual programming language for scripting video games
- * Copyright (C) 2009 University of Sussex
+ * Copyright (C) 2009, 2010 University of Sussex
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,9 +24,12 @@
  */
 
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Markup;
+using System.Xml;
 
 namespace Sussex.Flip.UI
 {

@@ -30,7 +30,7 @@
 		Name="tabs"
 		Grid.Row="0"
 		Grid.Column="1"
-		PreviewDrop="DroppedOnBlockBox">
+		Drop="DroppedOnBlockBox">
 				
 			<TabItem Header="Actions">	
 		

@@ -1,6 +1,6 @@
 /*
  * Flip - a visual programming language for scripting video games
- * Copyright (C) 2009 University of Sussex
+ * Copyright (C) 2009, 2010 University of Sussex
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 		protected Fitter onlyModules;
 		protected Fitter onlyCreaturesOrPlayers;
 		protected Fitter onlyDoorsOrPlaceables;
+		protected Fitter onlyInstances;
 		
 		
 		public Nwn2StatementFactory()
@@ -64,6 +65,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			onlyModules = new SimpleFitter("Module");
 			onlyCreaturesOrPlayers = new CreaturePlayerFitter();
 			onlyDoorsOrPlaceables = new SimpleFitter("Instance",new List<string>{"Door","Placeable"});
+			onlyInstances = new SimpleFitter("Instance");
 		}
 		
 		
@@ -107,6 +109,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			Statement statement = new Statement();
 			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
 			statement.AddTextBar("drops");
+			statement.AddSlot(new ObjectSlot("item1",onlyItems));
+			return statement;
+		}	
+		
+		
+		public Statement Equips()
+		{			
+			Statement statement = new Statement();
+			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddTextBar("equips");
+			statement.AddSlot(new ObjectSlot("item1",onlyItems));
+			return statement;
+		}	
+		
+		
+		public Statement Unequips()
+		{			
+			Statement statement = new Statement();
+			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddTextBar("unequips");
 			statement.AddSlot(new ObjectSlot("item1",onlyItems));
 			return statement;
 		}	
@@ -173,5 +195,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			statement.AddTextBar("gets XP");
 			return statement;
 		}	
+		
+		
+		public Statement Walks()
+		{			
+			Statement statement = new Statement();
+			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddTextBar("walks");
+			statement.AddSlot(new ObjectSlot("instance1",onlyInstances));
+			return statement;
+		}	
+		
+		
+		public Statement Runs()
+		{			
+			Statement statement = new Statement();
+			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddTextBar("runs");
+			statement.AddSlot(new ObjectSlot("instance1",onlyInstances));
+			return statement;
+		}
+		
+		
+		public Statement Teleports()
+		{
+			Statement statement = new Statement();
+			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddTextBar("teleports");
+			statement.AddSlot(new ObjectSlot("instance1",onlyInstances));
+			return statement;
+		}
 	}
 }
