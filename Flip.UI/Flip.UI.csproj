@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MoveableAdorner.cs" />
     <Compile Include="SimpleFitter.cs" />
     <Compile Include="Fitter.cs" />
     <Compile Include="Statement.cs">

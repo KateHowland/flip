@@ -2,18 +2,53 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
-	Height="55"
-	Width="55">
+	Height="65"
+	Width="55"
+	DataContext="{Binding RelativeSource={RelativeSource Self}}">
 	
-    <Border 
-	x:Name="border"
-	BorderThickness="0.5"
-	BorderBrush="SlateGray">
-    	
-	    <Label    	
-		x:Name="Face"
-    	Padding="0"/>
+	<flipui:Moveable.Resources>
 	
-	</Border>
+		<ControlTemplate 
+		x:Key="objectBlockControlTemplate"	
+		TargetType="{x:Type flipui:ObjectBlock}">
+			
+		    <Border
+			BorderThickness="0.5"
+			BorderBrush="SlateGray">
+		    	
+		    	<Grid>		    		
+		    	<Grid.RowDefinitions>
+		    		<RowDefinition/>
+		    		<RowDefinition Height="10"/>
+		    	</Grid.RowDefinitions>
+		    	<Grid.ColumnDefinitions>
+		    		<ColumnDefinition/>
+		    	</Grid.ColumnDefinitions>
+			    	
+				    <Label    	
+		    		Grid.Row="0"
+				    Grid.Column="0"
+			    	Content="{Binding Path=DisplayImage}"
+			    	Padding="0"
+			    	/>
+		    	
+		    		<TextBlock
+		    		Grid.Row="1"
+				    Grid.Column="0"
+		    		Text="{Binding Path=Identifier}"
+		    		Background="AntiqueWhite"
+		    		Foreground="DarkBlue"
+		    		FontSize="8"
+		    		/>
+		    	
+		    	</Grid>			
+			</Border>		
+		</ControlTemplate>
+	
+	</flipui:Moveable.Resources>
+
+	<flipui:Moveable.Template>
+		<StaticResource ResourceKey="objectBlockControlTemplate"/>
+	</flipui:Moveable.Template>
 
 </flipui:Moveable>
