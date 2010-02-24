@@ -100,7 +100,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Image image = GetImage(objectType,blueprint.TemplateResRef.Value);		
 			if (image == null) image = GetImage("Placeholder","Blueprint");//String.Format("Blueprint_{0}",objectType));
 			ObjectBlock block = new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"Blueprint",objectType,blueprint.Name);
-			block.Border.BorderBrush = System.Windows.Media.Brushes.DarkBlue;
 			return block;
 		}
 		
@@ -112,7 +111,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
 			// TODO safety check:
 			ObjectBlock block = new ObjectBlock(image,instance,((INWN2Object)instance).Tag,"Instance",objectType,instance.Name);
-			block.Border.BorderBrush = System.Windows.Media.Brushes.DarkCyan;
 			return block;
 		}
 		
@@ -125,7 +123,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Image image = GetImage(objectType,instance.Template.ResRef.Value);
 			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
 			ObjectBlock block = new ObjectBlock(image,instances,((INWN2Object)instance).Tag,"Instance",objectType,instances[0].Name);
-			block.Border.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
 			return block;
 		}
 		
