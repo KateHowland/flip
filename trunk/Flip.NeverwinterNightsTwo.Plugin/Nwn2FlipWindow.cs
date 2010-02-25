@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
@@ -69,6 +71,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							
 			Populate();	
 			
+			
+			
+			
+			
+			
+			System.Windows.Documents.AdornerLayer adornerLayer = System.Windows.Documents.AdornerLayer.GetAdornerLayer(mainGrid);
+				
+			this.MouseMove += delegate(object sender, MouseEventArgs mea) 
+			{  
+				Point p = mea.GetPosition(null);
+				Title = "Mouse: " + p.X + ", " + p.Y;
+			};
+				
+				
+				
+				
+				
 			ToolsetEventReporter reporter = new ToolsetEventReporter();
 			reporter.Start();
 			
@@ -77,10 +96,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				instancePanels[e.Instance.ObjectType].Children.Add(factory.CreateInstanceBlock(e.Instance));
 			};
 			
+			
+			
+			
+			
+			
 			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
 			{  
-				blueprintPanels[e.Blueprint.ObjectType].Children.Add(factory.CreateBlueprintBlock(e.Blueprint));
+				ObjectBlock block = factory.CreateBlueprintBlock(e.Blueprint);
+				//blueprintPanels[e.Blueprint.ObjectType].Children.Add(block);
+				mainCanvas.Children.Add(block);
+				
+				MoveableAdorner adorner = new MoveableAdorner(block);
+				AdornerLayer layer = AdornerLayer.GetAdornerLayer(mainGrid);
+				layer.Add(adorner);
+				
+				//adorner.UpdatePosition(block.TranslatePoint(new Point(0,0),mainGrid));
+					
+				MouseMove += delegate(object sender2, MouseEventArgs mea) 
+				{  
+					Point p = mea.GetPosition(null);
+					adorner.UpdatePosition(p);
+				};
 			};
+			
+			
+			
+			
 			
 			reporter.AreaAdded += delegate(object sender, AreaEventArgs e)
 			{  

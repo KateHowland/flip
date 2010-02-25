@@ -24,16 +24,92 @@
  */
 
 using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
 	/// Description of MoveableAdorner.
 	/// </summary>
-	public class MoveableAdorner
+	public class MoveableAdorner : Adorner
 	{
-		public MoveableAdorner()
+		protected UIElement elementToShow;
+		
+		
+		public MoveableAdorner(UIElement adornedElement) : base(adornedElement)
 		{
+			TextBlock tb = new TextBlock();
+			tb.Width = 70;
+			tb.Height = 40;
+			tb.Text = "Hello sir.";
+			tb.Foreground = Brushes.Red;
+			tb.Background = Brushes.Black;
+			tb.Opacity = 0.7;
+			
+			this.elementToShow = tb;
+			position = new Point(0,0);
+		}
+		
+		
+//		protected override void OnRender(DrawingContext drawingContext)
+//		{
+//			drawingContext.DrawText(new FormattedText("This is an endless pile of horror",System.Globalization.CultureInfo.CurrentCulture,FlowDirection.RightToLeft,
+//			                                          new Typeface("TimesNewRoman"),18,Brushes.Red),new Point (0,0));
+//			base.OnRender(drawingContext);
+//		}
+		
+		
+		protected override Size ArrangeOverride(Size finalSize)
+		{
+			elementToShow.Arrange(new Rect(finalSize));
+			return finalSize;
+		}
+		
+		
+		protected override Size MeasureOverride(Size constraint)
+		{
+			elementToShow.Measure(constraint);
+			return constraint;
+		}
+		
+		
+		protected override Visual GetVisualChild(int index)
+		{
+			return elementToShow;
+		}
+		
+		
+		protected override int VisualChildrenCount {
+			get { return 1; }
+		}
+		
+		
+		Point position;
+		
+		
+		public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
+		{
+			GeneralTransformGroup grp = new GeneralTransformGroup();
+			grp.Children.Add(transform);
+			grp.Children.Add(new TranslateTransform(position.X,position.Y));
+			return grp;
+		}
+		
+		
+		public void UpdatePosition(Point p)
+		{
+			position = p;
+			try {
+				AdornerLayer parentLayer = Parent as AdornerLayer;
+				if (parentLayer != null) parentLayer.Update(AdornedElement);
+				else System.Windows.MessageBox.Show("parentLayer was null.");
+			}
+			catch (Exception e) { // FIXME
+				System.Windows.MessageBox.Show("AdornedElement: " + e.ToString());
+			}
 		}
 	}
 }

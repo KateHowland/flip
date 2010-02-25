@@ -6,52 +6,55 @@
     Height="600" 
 	AllowDrop="False"
 	>	
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="250"/>
-		</Grid.ColumnDefinitions>
-			
-		<Canvas	
-		Name="mainCanvas"
-		Grid.Row="0"
-		Grid.Column="0" 
-		Background="LightBlue"
-		AllowDrop="True">
-		
-			<Button Canvas.Bottom="20" Canvas.Left="20">Refresh</Button>
-		
-		</Canvas>
-					
-		<TabControl 
-		Name="tabs"
-		Grid.Row="0"
-		Grid.Column="1"
-		Drop="DroppedOnBlockBox">
+	<AdornerDecorator>
+		<Grid
+		Name="mainGrid">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="250"/>
+			</Grid.ColumnDefinitions>
 				
-			<TabItem Header="Actions">	
-		
-				<StackPanel
-				Name="ActionsPanel"
-				Orientation="Vertical"
-				Background="DarkBlue"
-				AllowDrop="True"/>
+			<Canvas	
+			Name="mainCanvas"
+			Grid.Row="0"
+			Grid.Column="0" 
+			Background="LightBlue"
+			AllowDrop="True">
 			
-			</TabItem>
-		
-			<TabItem Header="Other">
-							
-				<StackPanel
-				Name="OtherObjectsPanel"
-				Orientation="Vertical"
-				Background="Gray"
-				AllowDrop="True"/>
+				<Button Canvas.Bottom="20" Canvas.Left="20">Refresh</Button>
 			
-			</TabItem>
+			</Canvas>
+						
+			<TabControl 
+			Name="tabs"
+			Grid.Row="0"
+			Grid.Column="1"
+			Drop="DroppedOnBlockBox">
+					
+				<TabItem Header="Actions">	
 			
-		</TabControl>	
-	</Grid>
+					<StackPanel
+					Name="ActionsPanel"
+					Orientation="Vertical"
+					Background="DarkBlue"
+					AllowDrop="True"/>
+				
+				</TabItem>
+			
+				<TabItem Header="Other">
+								
+					<StackPanel
+					Name="OtherObjectsPanel"
+					Orientation="Vertical"
+					Background="Gray"
+					AllowDrop="True"/>
+				
+				</TabItem>
+				
+			</TabControl>	
+		</Grid>
+	</AdornerDecorator>
 </Window>
