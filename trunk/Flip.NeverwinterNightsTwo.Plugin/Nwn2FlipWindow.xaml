@@ -22,11 +22,7 @@
 			Grid.Row="0"
 			Grid.Column="0" 
 			Background="LightBlue"
-			AllowDrop="True">
-			
-				<Button Canvas.Bottom="20" Canvas.Left="20">Refresh</Button>
-			
-			</Canvas>
+			AllowDrop="True"/>
 						
 			<TabControl 
 			Name="tabs"
