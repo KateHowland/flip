@@ -36,23 +36,16 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public class MoveableAdorner : Adorner
 	{
-		protected UIElement elementToShow;
+		protected Moveable elementToShow;
 		
 		
-		public MoveableAdorner(UIElement adornedElement) : base(adornedElement)
-		{
-			TextBlock tb = new TextBlock();
-			tb.Width = 70;
-			tb.Height = 40;
-			tb.Text = "Hello sir.";
-			tb.Foreground = Brushes.Red;
-			tb.Background = Brushes.Black;
-			tb.Opacity = 0.7;
+		public MoveableAdorner(Moveable moveable) : base(moveable)
+		{			
+			elementToShow = moveable.Clone();
+			elementToShow.Opacity = 0.8;
 			
-			this.elementToShow = tb;
 			position = new Point(0,0);
-		}
-		
+		}		
 		
 //		protected override void OnRender(DrawingContext drawingContext)
 //		{

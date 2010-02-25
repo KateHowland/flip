@@ -98,5 +98,14 @@ namespace Sussex.Flip.UI
         public ObjectBlock(Image image) : this(image,null,String.Empty,String.Empty,String.Empty,String.Empty)
         {
         }
+        
+        
+        public override Moveable Clone()
+        {			
+			Image img = new Image();
+			img.Source = DisplayImage.Source;
+			ObjectBlock clone = new ObjectBlock(img,RepresentedObject,Identifier,Type,Subtype,DisplayName);
+			return clone;
+        }
     }
 }

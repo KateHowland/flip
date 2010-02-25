@@ -118,5 +118,8 @@ namespace Sussex.Flip.UI
     			                                    ", which the application does not know how to detach from.");
     		}
     	}
+    	
+    	
+    	public abstract Moveable Clone();
 	}
 }
