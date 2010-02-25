@@ -78,5 +78,11 @@ namespace Sussex.Flip.UI
 			}
 			return sb.ToString();
 		}
+		
+		
+		public override Moveable Clone()
+		{
+			throw new NotImplementedException();
+		}
     }
 }
