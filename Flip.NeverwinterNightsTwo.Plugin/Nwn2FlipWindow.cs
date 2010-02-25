@@ -108,14 +108,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				mainCanvas.Children.Add(block);
 				
 				MoveableAdorner adorner = new MoveableAdorner(block);
-				AdornerLayer layer = AdornerLayer.GetAdornerLayer(mainGrid);
+				AdornerLayer layer = AdornerLayer.GetAdornerLayer(block);//seems to make no difference between block and mainGrid, even if ObjectBlock given AdornerDecorator
 				layer.Add(adorner);
-				
-				//adorner.UpdatePosition(block.TranslatePoint(new Point(0,0),mainGrid));
 					
 				MouseMove += delegate(object sender2, MouseEventArgs mea) 
 				{  
-					Point p = mea.GetPosition(null);
+					Point p = mea.GetPosition(mainGrid);
 					adorner.UpdatePosition(p);
 				};
 			};

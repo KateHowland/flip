@@ -37,6 +37,7 @@ namespace Sussex.Flip.UI
 	public class MoveableAdorner : Adorner
 	{
 		protected Moveable elementToShow;
+		protected Point position;
 		
 		
 		public MoveableAdorner(Moveable moveable) : base(moveable)
@@ -46,13 +47,6 @@ namespace Sussex.Flip.UI
 			
 			position = new Point(0,0);
 		}		
-		
-//		protected override void OnRender(DrawingContext drawingContext)
-//		{
-//			drawingContext.DrawText(new FormattedText("This is an endless pile of horror",System.Globalization.CultureInfo.CurrentCulture,FlowDirection.RightToLeft,
-//			                                          new Typeface("TimesNewRoman"),18,Brushes.Red),new Point (0,0));
-//			base.OnRender(drawingContext);
-//		}
 		
 		
 		protected override Size ArrangeOverride(Size finalSize)
@@ -80,13 +74,11 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		Point position;
-		
-		
 		public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
 		{
 			GeneralTransformGroup grp = new GeneralTransformGroup();
-			grp.Children.Add(transform);
+			//grp.Children.Add(transform);
+			grp.Children.Add(new TranslateTransform((0-(RenderSize.Width/2)),(0-(RenderSize.Height/2))));
 			grp.Children.Add(new TranslateTransform(position.X,position.Y));
 			return grp;
 		}
@@ -95,13 +87,9 @@ namespace Sussex.Flip.UI
 		public void UpdatePosition(Point p)
 		{
 			position = p;
-			try {
-				AdornerLayer parentLayer = Parent as AdornerLayer;
-				if (parentLayer != null) parentLayer.Update(AdornedElement);
-				else System.Windows.MessageBox.Show("parentLayer was null.");
-			}
-			catch (Exception e) { // FIXME
-				System.Windows.MessageBox.Show("AdornedElement: " + e.ToString());
+			AdornerLayer parentLayer = Parent as AdornerLayer;
+			if (parentLayer != null) {
+				parentLayer.Update(AdornedElement);
 			}
 		}
 	}
