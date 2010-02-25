@@ -26,9 +26,17 @@ namespace Sussex.Flip.UI
     	
     	static ObjectSlot()
     	{
-    		ObjectBlock block = new ObjectBlock(null);
-    		width = block.Width;
-    		height = block.Height;
+    		// FIXME:
+//    		try {
+//	    		ObjectBlock block = new ObjectBlock(null);
+//	    		width = block.Width;
+//	    		height = block.Height;
+//    		}
+//    		catch (Exception e) {
+//    			System.Windows.MessageBox.Show(e.ToString());
+//    		}
+			width = 50;
+			height = 50;
     		defaultFitter = new SimpleFitter();
     	}
     	
