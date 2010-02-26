@@ -35,43 +35,56 @@ namespace Sussex.Flip.UI
 	/// Description of MoveableAdorner.
 	/// </summary>
 	public class MoveableAdorner : Adorner
-	{
-		protected Moveable elementToShow;
-		protected Point position;
+	{		
+		private VisualCollection visuals;
+		private ContentPresenter contentPresenter;
 		
 		
 		public MoveableAdorner(Moveable moveable) : base(moveable)
-		{			
-			elementToShow = moveable.Clone();
-			elementToShow.Opacity = 0.8;
-			
-			position = new Point(0,0);
-		}		
-		
-		
-		protected override Size ArrangeOverride(Size finalSize)
 		{
-			elementToShow.Arrange(new Rect(finalSize));
-			return finalSize;
+			visuals = new VisualCollection(this);
+			contentPresenter = new ContentPresenter();
+			visuals.Add(contentPresenter);
+			
+			Moveable clone = moveable.Clone();
+			clone.Opacity = 0.8;
+			//clone.Effect = new System.Windows.Media.Effects.DropShadowEffect();
+			Content = clone;
 		}
 		
 		
 		protected override Size MeasureOverride(Size constraint)
 		{
-			elementToShow.Measure(constraint);
-			return constraint;
+			contentPresenter.Measure(constraint);
+			return contentPresenter.DesiredSize;
+		}
+		
+		
+		protected override Size ArrangeOverride(Size finalSize)
+		{
+			contentPresenter.Arrange(new Rect(0,0,finalSize.Width,finalSize.Height));
+			return contentPresenter.RenderSize;
 		}
 		
 		
 		protected override Visual GetVisualChild(int index)
 		{
-			return elementToShow;
+			return visuals[index];
 		}
 		
 		
 		protected override int VisualChildrenCount {
-			get { return 1; }
+			get { return visuals.Count; }
 		}
+		
+		
+		public object Content {
+			get { return contentPresenter.Content; }
+			set { contentPresenter.Content = value; }
+		}
+		
+		
+		Point position = new Point(0,0);
 		
 		
 		public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
