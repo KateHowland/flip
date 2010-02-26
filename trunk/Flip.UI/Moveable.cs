@@ -41,8 +41,6 @@ namespace Sussex.Flip.UI
 	{
 		public Moveable()
 		{
-    		MouseMove += StartDrag;
-    		MouseDown += RecordDragStartPosition;
 		}
 		
 		
@@ -60,40 +58,6 @@ namespace Sussex.Flip.UI
 			Canvas.SetTop(this,y);
 			//OnMoved(new EventArgs());
 		}
-		
-		
-    	Point? dragPos = null;
-
-    	
-    	private void StartDrag(object sender, MouseEventArgs e)
-    	{
-    		if (dragPos != null) {
-    			Point currentPos = e.GetPosition(null);
-    			Vector moved = dragPos.Value - currentPos;
-    			
-    			// If the mouse has been moved more than a certain minimum distance
-    			// while still held down, start a drag:
-    			if (e.LeftButton == MouseButtonState.Pressed &&
-    			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
-    			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
-
-					MoveableAdorner adorner = new MoveableAdorner(this);
-    				AdornerLayer layer = AdornerLayer.GetAdornerLayer(this);
-    				layer.Add(adorner);
-    				adorner.UpdatePosition(new Point(50,50));
-    				
-    				DataObject dataObject = new DataObject(typeof(Moveable),this);
-    				DragDrop.DoDragDrop(this,dataObject,DragDropEffects.Move);
-    				dragPos = null;
-    			}
-    		}
-    	}    	
-    	
-
-    	private void RecordDragStartPosition(object sender, MouseEventArgs e)
-    	{
-    		dragPos = e.GetPosition(null);
-    	}
     	
     	
     	public void Detach()
