@@ -82,22 +82,6 @@ namespace Sussex.Flip.UI
 		
 		public override Moveable Clone()
 		{
-//			// TODO:
-//			Uri uri = new Uri(@"C:\Flip\object pics\Placeable\plc_nt_bonfire.bmp");
-//			Image img = new Image();
-//			img.Source = new BitmapImage(uri);
-//			ObjectBlock clone = new ObjectBlock(img,new object(),"Something","Sometype","Somesubtype","Mr. Smith");
-//			return clone;
-			
-			
-//			Statement statement = new Statement();
-//			ObjectSlot slot = new ObjectSlot("rar",new SimpleFitter());
-//			statement.AddSlot(slot);
-//			statement.AddTextBar("HEY!!!");statement.AddSlot(new ObjectSlot("kajk",new SimpleFitter()));
-//			slot.SetSlotContents(clone);
-//			
-//			return statement;
-			
 			Statement clone = new Statement();		
 			
 			foreach (UIElement e in MainPanel.Children) {

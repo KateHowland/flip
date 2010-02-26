@@ -69,25 +69,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				tabs.Items.Add(t);
 			}
 							
-			Populate();	
-			
-			
-			
-			
-				
+			Populate();							
 				
 			ToolsetEventReporter reporter = new ToolsetEventReporter();
 			reporter.Start();
 			
 			reporter.InstanceAdded += delegate(object sender, InstanceEventArgs e) 
-			{  				
-				instancePanels[e.Instance.ObjectType].Children.Add(factory.CreateInstanceBlock(e.Instance));
+			{  								
+				ObjectBlock block = factory.CreateInstanceBlock(e.Instance);
+				instancePanels[e.Instance.ObjectType].Children.Add(block);
 			};
-			
-			
-			
-			
-			
 			
 			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
 			{  
@@ -95,6 +86,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				blueprintPanels[e.Blueprint.ObjectType].Children.Add(block);
 			};
 			
+			reporter.AreaAdded += delegate(object sender, AreaEventArgs e)
+			{  
+				ObjectBlock block = factory.CreateAreaBlock(e.Area);
+				OtherObjectsPanel.Children.Add(block);
+			};
 			
 //				MouseMove += delegate(object sender2, MouseEventArgs mea) 
 //				{  
@@ -102,15 +98,54 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 //					adorner.UpdatePosition(p);
 //				};
 			
-			
-			
-			reporter.AreaAdded += delegate(object sender, AreaEventArgs e)
-			{  
-				OtherObjectsPanel.Children.Add(factory.CreateAreaBlock(e.Area));
-			};
-						
-			mainCanvas.Drop += new DragEventHandler(DroppedOnCanvas);
+			mainCanvas.Drop += DroppedOnCanvas;
+			PreviewMouseDown += RecordDragStartPosition;
+			PreviewMouseMove += StartDrag;
 		}
+		
+		
+    	Point? dragPos = null;
+		Moveable dragging = null;	
+    	
+    	
+    	private void StartDrag(object sender, MouseEventArgs e)
+    	{
+//    		if (dragging != null) {
+//    			AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(dragging);
+//    			if (adornerLayer != null) adornerLayer.Update(dragging);
+//    		}
+    		
+    		if (dragging != null && dragPos != null) {
+    			Point currentPos = e.GetPosition(null);
+    			Vector moved = dragPos.Value - currentPos;
+    			
+    			// If the mouse has been moved more than a certain minimum distance
+    			// while still held down, start a drag:
+    			if (e.LeftButton == MouseButtonState.Pressed &&
+    			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
+    			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
+    				
+					MoveableAdorner adorner = new MoveableAdorner(dragging);
+    				AdornerLayer layer = AdornerLayer.GetAdornerLayer(dragging);
+    				layer.Add(adorner);
+    				    				
+    				DataObject dataObject = new DataObject(typeof(Moveable),dragging);
+    				DragDrop.DoDragDrop(dragging,dataObject,DragDropEffects.Move);
+    				
+    				dragPos = null;
+    				dragging = null;
+    			}
+    		}
+    	}    	
+    	
+
+    	private void RecordDragStartPosition(object sender, MouseEventArgs e)
+    	{
+    		if (e.Source is Moveable) {
+    			dragPos = e.GetPosition(null);
+    			dragging = (Moveable)e.Source;
+    		}
+    	}
 				
 
 		protected void DroppedOnCanvas(object sender, DragEventArgs e)
@@ -127,8 +162,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					mainCanvas.Children.Add(moveable);					
 				}					
 				
-				moveable.MoveTo(x,y);
-				
+				moveable.MoveTo(x,y);				
 				ClearAdorner(moveable);
 			}
 		}
@@ -179,13 +213,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
 					ObjectBlock block = factory.CreateBlueprintBlock(blueprint);
 					panel.Children.Add(block);
-					// FIXME:
-				block.MouseDoubleClick += delegate(object sender, MouseButtonEventArgs e) 
-				{  
-					Moveable moveable = block.Clone();
-					mainCanvas.Children.Add(moveable);
-					moveable.MoveTo(100,100);
-				};
 				}
 			}
 		}
@@ -200,13 +227,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					foreach (INWN2Instance instance in activeArea.GetInstancesForObjectType(type)) {
 						ObjectBlock block = factory.CreateInstanceBlock(instance);
 						panel.Children.Add(block);
-				// FIXME:
-				block.MouseDoubleClick += delegate(object sender, MouseButtonEventArgs e) 
-				{  
-					Moveable moveable = block.Clone();
-					mainCanvas.Children.Add(moveable);
-					moveable.MoveTo(100,100);
-				};
 					}
 				}
 			}
@@ -217,15 +237,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{				
 			foreach (Statement action in new Nwn2StatementFactory().GetStatements()) {
 				ActionsPanel.Children.Add(action);
-				
-				
-				// FIXME:
-				action.MouseDoubleClick += delegate(object sender, MouseButtonEventArgs e) 
-				{  
-					Moveable moveable = action.Clone();
-					mainCanvas.Children.Add(moveable);
-					moveable.MoveTo(100,100);
-				};
 			}
 		}
 	}
