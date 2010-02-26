@@ -132,5 +132,11 @@ namespace Sussex.Flip.UI
         {
         	return objectFitter.Fits(block);
         }
+        
+        
+        public ObjectSlot Clone()
+        {
+        	return new ObjectSlot(slotName,objectFitter);
+        }
     }
 }

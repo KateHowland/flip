@@ -27,6 +27,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Xml;
@@ -75,6 +76,11 @@ namespace Sussex.Flip.UI
     			if (e.LeftButton == MouseButtonState.Pressed &&
     			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
     			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
+
+					MoveableAdorner adorner = new MoveableAdorner(this);
+    				AdornerLayer layer = AdornerLayer.GetAdornerLayer(this);
+    				layer.Add(adorner);
+    				adorner.UpdatePosition(new Point(50,50));
     				
     				DataObject dataObject = new DataObject(typeof(Moveable),this);
     				DragDrop.DoDragDrop(this,dataObject,DragDropEffects.Move);
