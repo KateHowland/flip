@@ -102,7 +102,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{  
 				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 				if (moveable != null && adorner == null) {
-					AdornerLayer layer = AdornerLayer.GetAdornerLayer(moveable);
+					AdornerLayer layer = AdornerLayer.GetAdornerLayer(mainGrid);
 					Point p = e.GetPosition(this);
 					adorner = new MoveableAdorner(moveable,layer,p);
 				}
@@ -163,8 +163,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 
     	private void GetDragSource(object sender, MouseEventArgs e)
     	{
-    		Title = "e.Source: " + e.Source + ", e.OriginalSource: " + e.OriginalSource;
-    		
     		FrameworkElement f = e.OriginalSource as FrameworkElement;
     		    		
     		if (f == null) return;
