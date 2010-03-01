@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Building blocks" 
     Width="800"
-    Height="600" 
+    Height="600"
 	AllowDrop="False"
 	>	
 	<AdornerDecorator>
