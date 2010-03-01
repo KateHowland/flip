@@ -31,22 +31,32 @@
 			Drop="DroppedOnBlockBox">
 					
 				<TabItem Header="Actions">	
+					
+					<ScrollViewer
+					Focusable="False">
 			
-					<StackPanel
-					Name="ActionsPanel"
-					Orientation="Vertical"
-					Background="DarkBlue"
-					AllowDrop="True"/>
+						<StackPanel
+						Name="ActionsPanel"
+						Orientation="Vertical"
+						Background="DarkBlue"
+						AllowDrop="True"/>
+						
+					</ScrollViewer>	
 				
 				</TabItem>
 			
 				<TabItem Header="Other">
+					
+					<ScrollViewer
+					Focusable="False">
 								
-					<StackPanel
-					Name="OtherObjectsPanel"
-					Orientation="Vertical"
-					Background="Gray"
-					AllowDrop="True"/>
+						<StackPanel
+						Name="OtherObjectsPanel"
+						Orientation="Vertical"
+						Background="Gray"
+						AllowDrop="True"/>
+						
+					</ScrollViewer>	
 				
 				</TabItem>
 				
