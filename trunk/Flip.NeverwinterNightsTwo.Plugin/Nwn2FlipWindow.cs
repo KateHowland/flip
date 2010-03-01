@@ -30,7 +30,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public Nwn2FlipWindow()
 		{
-			InitializeComponent();	
+			InitializeComponent();				
 			
 			AbstractNwn2BlockFactory factory = new Nwn2BlockFactory();
 						
@@ -92,58 +92,84 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				OtherObjectsPanel.Children.Add(block);
 			};
 			
-//				MouseMove += delegate(object sender2, MouseEventArgs mea) 
-//				{  
-//					Point p = mea.GetPosition(mainGrid);
-//					adorner.UpdatePosition(p);
-//				};
-			
 			mainCanvas.Drop += DroppedOnCanvas;
-			PreviewMouseDown += RecordDragStartPosition;
-			PreviewMouseMove += StartDrag;
+			MouseDown += GetDragSource;
+			MouseMove += StartDrag;
+			
+			PreviewDragEnter += delegate(object sender, DragEventArgs e) 
+			{  
+				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+				if (moveable != null && adorner == null) {
+					AdornerLayer layer = AdornerLayer.GetAdornerLayer(moveable);
+					Point p = e.GetPosition(this);
+					adorner = new MoveableAdorner(moveable,layer,p);
+				}
+			};
+			
+			PreviewDragOver += delegate(object sender, DragEventArgs e) 
+			{  
+				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+				if (moveable != null && adorner != null) {
+					adorner.Position = e.GetPosition(this);
+				}
+			};
+			
+			PreviewDragLeave += delegate(object sender, DragEventArgs e) 
+			{  
+				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+				if (moveable != null && adorner != null) {
+					adorner.Destroy();
+	    			adorner = null;
+				}
+			};
+			
+			PreviewDrop += delegate(object sender, DragEventArgs e) 
+			{  
+				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+				if (moveable != null && adorner != null) {
+					adorner.Destroy();
+	    			adorner = null;
+				}
+			};
 		}
 		
 		
     	Point? dragPos = null;
-		Moveable dragging = null;	
+		MoveableAdorner adorner = null;
+		Moveable dragging = null;
     	
     	
     	private void StartDrag(object sender, MouseEventArgs e)
-    	{
-//    		if (dragging != null) {
-//    			AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(dragging);
-//    			if (adornerLayer != null) adornerLayer.Update(dragging);
-//    		}
-    		
-    		if (dragging != null && dragPos != null) {
+    	{    	
+    		if (dragPos != null) {
     			Point currentPos = e.GetPosition(null);
     			Vector moved = dragPos.Value - currentPos;
     			
-    			// If the mouse has been moved more than a certain minimum distance
-    			// while still held down, start a drag:
     			if (e.LeftButton == MouseButtonState.Pressed &&
     			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
     			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
-    				
-					MoveableAdorner adorner = new MoveableAdorner(dragging);
-    				AdornerLayer layer = AdornerLayer.GetAdornerLayer(dragging);
-    				layer.Add(adorner);
     				    				
     				DataObject dataObject = new DataObject(typeof(Moveable),dragging);
     				DragDrop.DoDragDrop(dragging,dataObject,DragDropEffects.Move);
     				
-    				dragPos = null;
     				dragging = null;
+    				dragPos = null;
     			}
     		}
     	}    	
     	
 
-    	private void RecordDragStartPosition(object sender, MouseEventArgs e)
+    	private void GetDragSource(object sender, MouseEventArgs e)
     	{
-    		if (e.Source is Moveable) {
+    		FrameworkElement f = e.OriginalSource as FrameworkElement;
+    		    		
+    		if (f == null) return;
+    		
+    		while (!(f is Moveable) && (f = f.Parent as FrameworkElement) != null);
+    		
+    		if (f is Moveable) {
     			dragPos = e.GetPosition(null);
-    			dragging = (Moveable)e.Source;
+    			dragging = (Moveable)f;
     		}
     	}
 				
@@ -162,8 +188,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					mainCanvas.Children.Add(moveable);					
 				}					
 				
-				moveable.MoveTo(x,y);				
-				ClearAdorner(moveable);
+				moveable.MoveTo(x,y);	
 			}
 		}
 				
@@ -174,21 +199,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 				if (moveable.Parent == mainCanvas) {
 					moveable.Detach();
-				}
-				ClearAdorner(moveable);
-			}
-		}
-		
-		
-		protected void ClearAdorner(Moveable moveable)
-		{
-			AdornerLayer layer = AdornerLayer.GetAdornerLayer(moveable);
-			if (layer != null) {
-				Adorner[] adorners = layer.GetAdorners(moveable);
-				if (adorners != null) {
-					foreach (Adorner adorner in adorners) {
-						if (adorner is MoveableAdorner) layer.Remove(adorner);
-					}
 				}
 			}
 		}

@@ -36,20 +36,38 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public class MoveableAdorner : Adorner
 	{		
-		private VisualCollection visuals;
-		private ContentPresenter contentPresenter;
+		protected VisualCollection visuals;
+		protected ContentPresenter contentPresenter;
+		protected AdornerLayer layer;
+		protected Point position = new Point(0,0);
 		
 		
-		public MoveableAdorner(Moveable moveable) : base(moveable)
-		{
+		public Point Position {
+			get { return position; }
+			set { 
+				position = value; 
+				layer.Update(AdornedElement);
+			}
+		}
+		
+		
+		public MoveableAdorner(Moveable moveable, AdornerLayer layer, Point position) : base(moveable)
+		{		
+			this.layer = layer;
+			this.position = position;
+			
 			visuals = new VisualCollection(this);
 			contentPresenter = new ContentPresenter();
 			visuals.Add(contentPresenter);
-			
+						
 			Moveable clone = moveable.Clone();
-			clone.Opacity = 0.8;
-			//clone.Effect = new System.Windows.Media.Effects.DropShadowEffect();
+			clone.Opacity = 0.7;
 			Content = clone;
+			
+			layer.Add(this);	
+			
+			IsHitTestVisible = false;						
+			AllowDrop = true;								
 		}
 		
 		
@@ -84,9 +102,6 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		Point position = new Point(0,0);
-		
-		
 		public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
 		{
 			GeneralTransformGroup grp = new GeneralTransformGroup();
@@ -97,13 +112,9 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public void UpdatePosition(Point p)
+		public void Destroy()
 		{
-			position = p;
-			AdornerLayer parentLayer = Parent as AdornerLayer;
-			if (parentLayer != null) {
-				parentLayer.Update(AdornedElement);
-			}
+			layer.Remove(this);
 		}
 	}
 }
