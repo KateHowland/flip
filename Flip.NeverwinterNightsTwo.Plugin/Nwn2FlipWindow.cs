@@ -48,6 +48,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				ScrollViewer sv = new ScrollViewer();
 				sv.Content = sp;
+				sv.Focusable = false;
 				
 				TabItem t = new TabItem();
 				t.Header = typestr + " (B)";
@@ -62,6 +63,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				sv = new ScrollViewer();
 				sv.Content = sp;
+				sv.Focusable = false;
 				
 				t = new TabItem();
 				t.Header = typestr + " (I)";
@@ -161,6 +163,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 
     	private void GetDragSource(object sender, MouseEventArgs e)
     	{
+    		Title = "e.Source: " + e.Source + ", e.OriginalSource: " + e.OriginalSource;
+    		
     		FrameworkElement f = e.OriginalSource as FrameworkElement;
     		    		
     		if (f == null) return;
