@@ -44,19 +44,10 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-        public void MoveBy(double right, double down)
+		public void MoveTo(Point position)
 		{
-			Canvas.SetLeft(this,Canvas.GetLeft(this) + right);
-			Canvas.SetTop(this,Canvas.GetTop(this) + down);
-			//OnMoved(new EventArgs());
-		}
-		
-		
-		public void MoveTo(double x, double y)
-		{
-			Canvas.SetLeft(this,x);
-			Canvas.SetTop(this,y);
-			//OnMoved(new EventArgs());
+			Canvas.SetLeft(this,position.X);
+			Canvas.SetTop(this,position.Y);
 		}
     	
     	
