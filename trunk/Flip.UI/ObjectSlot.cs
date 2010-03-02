@@ -111,10 +111,14 @@ namespace Sussex.Flip.UI
         
         public void SetSlotContents(ObjectBlock block)
         {    	
-        	if (GetSlotContents() == block) return;
+        	if (block == null || GetSlotContents() == block) return;
         	
-        	if (block != null) {
-        		block.Detach();
+        	// TODO: urrrrrrrrrgh fix this, 'if block.parent is BlockPanel' or something similar
+        	if (block.Parent is StackPanel) {
+        		block = (ObjectBlock)block.Clone();
+        	}
+        	else {
+        		block.Detach();        		
         	}
         	
         	slotBorder.Child = block;

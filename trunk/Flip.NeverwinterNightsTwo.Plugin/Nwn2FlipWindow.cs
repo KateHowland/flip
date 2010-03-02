@@ -185,12 +185,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				double x = point.X - (moveable.ActualWidth/2);
 				double y = point.Y - (moveable.ActualHeight/2);
 				
+				if (moveable.Parent is StackPanel) moveable = moveable.Clone();
+				moveable.MoveTo(x,y);
 				if (!(moveable.Parent == mainCanvas)) {
 					moveable.Detach();
-					mainCanvas.Children.Add(moveable);					
-				}					
-				
-				moveable.MoveTo(x,y);	
+					mainCanvas.Children.Add(moveable);
+				}
 			}
 		}
 				
@@ -199,9 +199,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {				
 				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				if (moveable.Parent == mainCanvas) {
-					moveable.Detach();
-				}
+				// TODO urrrrrrrrrgh fix:
+				if (!(moveable.Parent is StackPanel)) moveable.Detach();
 			}
 		}
 		
