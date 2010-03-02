@@ -18,16 +18,20 @@ namespace Sussex.Flip.UI
     /// </summary>
     public partial class ObjectBlock : Moveable
     {
-    	static DependencyProperty TypeProperty;
-    	static DependencyProperty SubtypeProperty;
-    	static DependencyProperty IdentifierProperty;
-    	static DependencyProperty DisplayNameProperty;
-    	static DependencyProperty DisplayImageProperty;
-    	static DependencyProperty RepresentedObjectProperty;
+    	public static readonly Size DefaultSize;
+    	
+    	protected static DependencyProperty TypeProperty;
+    	protected static DependencyProperty SubtypeProperty;
+    	protected static DependencyProperty IdentifierProperty;
+    	protected static DependencyProperty DisplayNameProperty;
+    	protected static DependencyProperty DisplayImageProperty;
+    	protected static DependencyProperty RepresentedObjectProperty;
     	
     	
     	static ObjectBlock()
     	{
+    		DefaultSize = new Size(55,65);
+    		
     		TypeProperty = DependencyProperty.Register("Type",typeof(string),typeof(ObjectBlock));
     		SubtypeProperty = DependencyProperty.Register("Subtype",typeof(string),typeof(ObjectBlock));
     		IdentifierProperty = DependencyProperty.Register("Identifier",typeof(string),typeof(ObjectBlock));
@@ -88,6 +92,9 @@ namespace Sussex.Flip.UI
     		DisplayName = displayName;
     		DisplayImage = image;
     		RepresentedObject = represented;
+    		
+    		Height = DefaultSize.Height;
+    		Width = DefaultSize.Width;
             
             ToolTip = ToString();
             

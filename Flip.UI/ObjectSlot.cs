@@ -20,25 +20,7 @@ namespace Sussex.Flip.UI
 
     public partial class ObjectSlot : UserControl
     {
-    	static double width;
-    	static double height;
-    	static Fitter defaultFitter;
-    	
-    	static ObjectSlot()
-    	{
-    		// FIXME:
-//    		try {
-//	    		ObjectBlock block = new ObjectBlock(null);
-//	    		width = block.Width;
-//	    		height = block.Height;
-//    		}
-//    		catch (Exception e) {
-//    			System.Windows.MessageBox.Show(e.ToString());
-//    		}
-			width = 50;
-			height = 50;
-    		defaultFitter = new SimpleFitter();
-    	}
+    	protected static Fitter defaultFitter = new SimpleFitter();
     	
     	
     	protected string slotName;    	
@@ -65,8 +47,8 @@ namespace Sussex.Flip.UI
             slotName = name;
             objectFitter = fitter;
             
-            slotBorder.Width = width + slotBorder.BorderThickness.Left + slotBorder.BorderThickness.Right;
-            slotBorder.Height = height + slotBorder.BorderThickness.Top + slotBorder.BorderThickness.Bottom;
+            slotBorder.Width = ObjectBlock.DefaultSize.Width + slotBorder.BorderThickness.Left + slotBorder.BorderThickness.Right;
+            slotBorder.Height = ObjectBlock.DefaultSize.Height + slotBorder.BorderThickness.Top + slotBorder.BorderThickness.Bottom;
             
             PreviewDrop += new DragEventHandler(DroppedOnSlotPanel);
             DragEnter += delegate(object sender, DragEventArgs e) 
@@ -79,6 +61,7 @@ namespace Sussex.Flip.UI
             	SetToStandardAppearance();
             };
         }
+        
         
         Thickness thin = new Thickness(0.5);
         Thickness thick = new Thickness(1);
