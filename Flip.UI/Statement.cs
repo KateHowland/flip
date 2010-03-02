@@ -82,23 +82,29 @@ namespace Sussex.Flip.UI
 		
 		public override Moveable Clone()
 		{
-			Statement clone = new Statement();		
+			Statement statement = new Statement();		
 			
 			foreach (UIElement e in MainPanel.Children) {
 				if (e is TextBlock) {
 					TextBlock tb = (TextBlock)e;
-					clone.AddTextBar(tb.Text);
+					statement.AddTextBar(tb.Text);
 				}
 				else if (e is ObjectSlot) {
-					ObjectSlot os = (ObjectSlot)e;
-					clone.AddSlot(os.Clone());
+					ObjectSlot slot = (ObjectSlot)e;
+					ObjectSlot slotClone = slot.Clone();
+					statement.AddSlot(slotClone);
+					ObjectBlock block = slot.GetSlotContents();
+					if (block != null) {
+						ObjectBlock blockClone = (ObjectBlock)block.Clone();
+						slotClone.SetSlotContents(blockClone);
+					}
 				}
 				else {
 					throw new InvalidOperationException("Didn't recognise type '" + e.GetType() + "' when cloning Statement.");
 				}
 			}
 			
-			return clone;
+			return statement;
 		}
     }
 }
