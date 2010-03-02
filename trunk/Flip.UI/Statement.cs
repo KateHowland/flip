@@ -26,7 +26,7 @@ namespace Sussex.Flip.UI
 		
         public Statement()
         {
-            InitializeComponent();  
+            InitializeComponent(); 
         }
 
         

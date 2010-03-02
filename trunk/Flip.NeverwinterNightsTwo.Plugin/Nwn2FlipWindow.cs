@@ -13,7 +13,6 @@ using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
-using Sussex.Flip.Games.NeverwinterNightsTwo.Plugin;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -151,8 +150,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
     			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
     				    				
+    				DragDropEffects effects = IsInBlockBox(dragging) ? DragDropEffects.Copy : DragDropEffects.Move;
     				DataObject dataObject = new DataObject(typeof(Moveable),dragging);
-    				DragDrop.DoDragDrop(dragging,dataObject,DragDropEffects.Move);
+    				DragDrop.DoDragDrop(dragging,dataObject,effects);
     				
     				dragging = null;
     				dragPos = null;
@@ -174,25 +174,82 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     			dragging = (Moveable)f;
     		}
     	}
+		
+		
+		protected void DroppedOnCanvas(object sender, DragEventArgs e)
+		{		
+			if (!e.Handled) {
+				
+				Moveable moveable = null;
+				Size size = new Size(0,0);
+				
+				if (e.Data.GetDataPresent(typeof(Moveable))) {
+					moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+					size = moveable.RenderSize; // use the original's size as the clone has not been drawn yet
+					if (e.AllowedEffects == DragDropEffects.Copy) {
+						moveable = moveable.Clone();
+					}
+				}				
+				else if (e.Data.GetDataPresent(typeof(NWN2InstanceCollection))) {
+					NWN2InstanceCollection instances = (NWN2InstanceCollection)e.Data.GetData(typeof(NWN2InstanceCollection));
+					if (instances.Count > 0) {
+						moveable = factory.CreateInstanceBlock(instances[0]);
+						size = moveable.RenderSize;
+					}
+				}				
+				else if (e.Data.GetDataPresent(typeof(NWN2BlueprintCollection))) {
+					try {
+						NWN2BlueprintCollection blueprints = (NWN2BlueprintCollection)e.Data.GetData(typeof(NWN2BlueprintCollection));
+						if (blueprints.Count > 0) {
+							moveable = factory.CreateBlueprintBlock(blueprints[0]);
+							size = moveable.RenderSize;
+						}
+					}
+					catch (System.Runtime.InteropServices.COMException) {
+						/*
+						 * Weird error occurs here - even though GetDataPresent() returns true,
+						 * actually trying to retrieve the data raises this nasty exception.
+						 * TODO:
+						 * Look for the blueprints directly in the toolset instead.
+						 */
+					}
+				}			
+				
+				if (moveable != null) {		
+					PlaceInWorkspace(moveable);		
+					
+					Point position = e.GetPosition(this);
+					position.X -= (size.Width/2);
+					position.Y -= (size.Height/2);
+					moveable.MoveTo(position);
+				}
+			}
+		}
 				
 
-		protected void DroppedOnCanvas(object sender, DragEventArgs e)
+		protected void DroppedOnBlockBox(object sender, DragEventArgs e)
 		{
-			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
-				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				
-				Point position = e.GetPosition(mainCanvas);
-				position.X -= (moveable.ActualWidth/2);
-				position.Y -= (moveable.ActualHeight/2);
-				
-				if (moveable.Parent is StackPanel) moveable = moveable.Clone();
-				AddToWorkspace(moveable,position);
+			if (!e.Handled) {
+				if (e.Data.GetDataPresent(typeof(Moveable))) {
+					Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+					if (!IsInBlockBox(moveable)) moveable.Detach();
+				}
 			}
 		}
 		
 		
+		public bool IsInBlockBox(Moveable moveable)
+		{
+			FrameworkElement element = moveable.Parent as FrameworkElement;
+			while (element != null && element != tabs) {
+				element = element.Parent as FrameworkElement;
+			}
+			return element == tabs;
+		}
+		
+		
 		protected int zIndex = 0;
-		public void AddToWorkspace(Moveable moveable, Point position)
+		public void PlaceInWorkspace(Moveable moveable)
 		{
 			try {
 				Canvas.SetZIndex(moveable,++zIndex);
@@ -204,20 +261,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 			}
 			
-			moveable.MoveTo(position);
 			if (!(moveable.Parent == mainCanvas)) {
 				moveable.Detach();
 				mainCanvas.Children.Add(moveable);				
-			}			
-		}
-				
-
-		protected void DroppedOnBlockBox(object sender, DragEventArgs e)
-		{
-			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {				
-				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				// TODO urrrrrrrrrgh fix:
-				if (!(moveable.Parent is StackPanel)) moveable.Detach();
 			}
 		}
 		
@@ -226,8 +272,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			PopulateActions();
 			
-			OtherObjectsPanel.Children.Add(factory.CreatePlayerBlock());
-			OtherObjectsPanel.Children.Add(factory.CreateModuleBlock());
+			ObjectBlock block = factory.CreatePlayerBlock();
+			OtherObjectsPanel.Children.Add(block);
+			
+			block = factory.CreateModuleBlock();
+			OtherObjectsPanel.Children.Add(block);
 			
 			PopulateBlueprints();
 			PopulateInstances();

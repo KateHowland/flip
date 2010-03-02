@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Sussex.Flip.UI;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {	
 	/// <summary>
 	/// TODO.

@@ -28,7 +28,7 @@ using NWN2Toolset;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
 	/// A plugin which provides information about the current
@@ -173,7 +173,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
 			
 			pluginMenuItem.Items.Add(scriptAccessMenuItem);
 			
-			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Launch Flip");
+			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Flip");
 			launchFlip.Activate += delegate 
 			{  
 				Nwn2FlipWindow window = new Nwn2FlipWindow();

@@ -81,12 +81,15 @@ namespace Sussex.Flip.UI
 
         private void DroppedOnSlotPanel(object sender, DragEventArgs e)
         {
-			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
-				ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
-				if (block != null && Fits(block)) {
-					SetSlotContents(block);
-				}
-				e.Handled = true;
+        	if (!e.Handled) {
+        		if (e.Data.GetDataPresent(typeof(Moveable))) {
+					ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
+					if (block != null && Fits(block)) {
+						if (e.AllowedEffects == DragDropEffects.Copy) SetSlotContents((ObjectBlock)block.Clone());
+						else if (e.AllowedEffects == DragDropEffects.Move) SetSlotContents(block);
+					}
+					e.Handled = true;
+        		}
 			}
 			SetToStandardAppearance();
         }
@@ -95,15 +98,7 @@ namespace Sussex.Flip.UI
         public void SetSlotContents(ObjectBlock block)
         {    	
         	if (block == null || GetSlotContents() == block) return;
-        	
-        	// TODO: urrrrrrrrrgh fix this, 'if block.parent is BlockPanel' or something similar
-        	if (block.Parent is StackPanel) {
-        		block = (ObjectBlock)block.Clone();
-        	}
-        	else {
-        		block.Detach();        		
-        	}
-        	
+        	block.Detach();
         	slotBorder.Child = block;
         }
         

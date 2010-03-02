@@ -40,7 +40,7 @@ using Crownwood.DotNetMagic.Common;
 using Crownwood.DotNetMagic.Controls;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
 	/// Raises events when certain things occur in a Neverwinter
