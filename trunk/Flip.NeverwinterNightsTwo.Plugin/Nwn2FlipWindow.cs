@@ -181,17 +181,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
 				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 				
-				Point point = e.GetPosition(mainCanvas);
-				double x = point.X - (moveable.ActualWidth/2);
-				double y = point.Y - (moveable.ActualHeight/2);
+				Point position = e.GetPosition(mainCanvas);
+				position.X -= (moveable.ActualWidth/2);
+				position.Y -= (moveable.ActualHeight/2);
 				
 				if (moveable.Parent is StackPanel) moveable = moveable.Clone();
-				moveable.MoveTo(x,y);
-				if (!(moveable.Parent == mainCanvas)) {
-					moveable.Detach();
-					mainCanvas.Children.Add(moveable);
+				AddToWorkspace(moveable,position);
+			}
+		}
+		
+		
+		protected int zIndex = 0;
+		public void AddToWorkspace(Moveable moveable, Point position)
+		{
+			try {
+				Canvas.SetZIndex(moveable,++zIndex);
+			}
+			catch (ArithmeticException) {
+				foreach (UIElement element in mainCanvas.Children) {
+					Canvas.SetZIndex(element,0);
+					zIndex = 0;
 				}
 			}
+			
+			moveable.MoveTo(position);
+			if (!(moveable.Parent == mainCanvas)) {
+				moveable.Detach();
+				mainCanvas.Children.Add(moveable);				
+			}			
 		}
 				
 
