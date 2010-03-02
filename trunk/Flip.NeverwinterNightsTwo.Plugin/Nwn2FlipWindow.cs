@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				tabs.Items.Add(t);
 			}
 							
-			Populate();							
+			Populate();	
 				
 			ToolsetEventReporter reporter = new ToolsetEventReporter();
 			reporter.Start();
@@ -96,7 +96,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			mainCanvas.Drop += DroppedOnCanvas;
 			MouseDown += GetDragSource;
-			MouseMove += StartDrag;
+			MouseMove += StartDrag;			
 			
 			PreviewDragEnter += delegate(object sender, DragEventArgs e) 
 			{  
