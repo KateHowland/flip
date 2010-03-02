@@ -181,7 +181,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (!e.Handled) {
 				
 				Moveable moveable = null;
-				Size size = new Size(0,0);
+				Size size = new Size();
 				
 				if (e.Data.GetDataPresent(typeof(Moveable))) {
 					moveable = (Moveable)e.Data.GetData(typeof(Moveable));
@@ -194,7 +194,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					NWN2InstanceCollection instances = (NWN2InstanceCollection)e.Data.GetData(typeof(NWN2InstanceCollection));
 					if (instances.Count > 0) {
 						moveable = factory.CreateInstanceBlock(instances[0]);
-						size = moveable.RenderSize;
+						size = ObjectBlock.DefaultSize;
 					}
 				}				
 				else if (e.Data.GetDataPresent(typeof(NWN2BlueprintCollection))) {
@@ -202,7 +202,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						NWN2BlueprintCollection blueprints = (NWN2BlueprintCollection)e.Data.GetData(typeof(NWN2BlueprintCollection));
 						if (blueprints.Count > 0) {
 							moveable = factory.CreateBlueprintBlock(blueprints[0]);
-							size = moveable.RenderSize;
+							size = ObjectBlock.DefaultSize;
 						}
 					}
 					catch (System.Runtime.InteropServices.COMException) {
@@ -216,7 +216,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}			
 				
 				if (moveable != null) {		
-					PlaceInWorkspace(moveable);		
+					PlaceInWorkspace(moveable);
 					
 					Point position = e.GetPosition(this);
 					position.X -= (size.Width/2);
