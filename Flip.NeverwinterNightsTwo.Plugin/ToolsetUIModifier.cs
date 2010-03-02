@@ -31,7 +31,7 @@ using NWN2Toolset.NWN2.Views;
 using Crownwood.DotNetMagic.Docking;
 using VisualHint.SmartPropertyGrid;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
 	/// Modifies aspects of the Neverwinter Nights 2 toolset user

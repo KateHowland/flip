@@ -41,6 +41,8 @@ namespace Sussex.Flip.UI
 	{
 		public Moveable()
 		{
+			HorizontalAlignment = HorizontalAlignment.Center;
+			VerticalAlignment = VerticalAlignment.Center;
 		}
 		
 		

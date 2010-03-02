@@ -29,7 +29,7 @@ using System.ServiceModel;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
 	/// Manages the service provided by Nwn2SessionAdapter.

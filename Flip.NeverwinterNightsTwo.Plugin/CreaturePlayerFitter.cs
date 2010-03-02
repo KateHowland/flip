@@ -26,7 +26,7 @@
 using System;
 using Sussex.Flip.UI;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Plugin
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
 	/// Description of CreaturePlayerFitter.
