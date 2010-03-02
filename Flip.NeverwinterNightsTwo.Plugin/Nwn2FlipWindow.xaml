@@ -6,7 +6,7 @@
     Height="600"
 	AllowDrop="False"
 	>	
-	<AdornerDecorator>
+	<AdornerDecorator>		
 		<Grid
 		Name="mainGrid">
 			<Grid.RowDefinitions>
