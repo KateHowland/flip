@@ -1,10 +1,11 @@
-<flipui:Moveable x:Class="Sussex.Flip.UI.Peg"
+<UserControl x:Class="Sussex.Flip.UI.Peg"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
+    VerticalAlignment="Center"
+    HorizontalAlignment="Left"
 	>
 	
-	<flipui:Moveable.Resources>
+	<UserControl.Resources>
 		<LinearGradientBrush 
 		x:Key="metallicBrush"
 		StartPoint="0,0"
@@ -17,7 +18,7 @@
 				<GradientStop Offset="1" Color="Gray"/>
 			</LinearGradientBrush.GradientStops>
 		</LinearGradientBrush>
-	</flipui:Moveable.Resources>
+	</UserControl.Resources>
 	
     <Grid ShowGridLines="False">
     	<Grid.RowDefinitions>
@@ -50,4 +51,5 @@
     	MinWidth="50"/>
 	
     </Grid>
-</flipui:Moveable>
+    
+</UserControl>
