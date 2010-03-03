@@ -96,5 +96,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
     </EmbeddedResource>
+    <Resource Include="images\imagemissing.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="images" />
   </ItemGroup>
 </Project>
