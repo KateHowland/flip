@@ -17,7 +17,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for Peg.xaml
     /// </summary>
 
-    public partial class Peg : Moveable
+    public partial class Peg : UserControl
     {  	
     	protected Brush canDropBrush;
     	protected Brush noFeedbackBrush;
@@ -54,7 +54,7 @@ namespace Sussex.Flip.UI
         	if (!e.Handled) {
         		if (e.Data.GetDataPresent(typeof(Moveable))) {
         			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-					if (moveable != this && Fits(moveable)) {
+					if (Fits(moveable)) {
 						if (e.AllowedEffects == DragDropEffects.Copy) SetSlotContents(moveable.Clone());
 						else if (e.AllowedEffects == DragDropEffects.Move) SetSlotContents(moveable);
 					}
@@ -65,7 +65,7 @@ namespace Sussex.Flip.UI
         }
         
         
-		public override Moveable Clone()
+		public Peg Clone()
 		{
 			Peg peg = new Peg();		
 			return peg;

@@ -106,10 +106,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			// temp:
 			MouseDoubleClick += delegate(object sender, MouseButtonEventArgs e) 
 			{  
-				Peg peg = new Peg();
-				Canvas.SetTop(peg,e.GetPosition(this).Y);
-				Canvas.SetLeft(peg,e.GetPosition(this).X);
-				mainCanvas.Children.Add(peg);
+				Spine spine = new Spine(3);
+				Canvas.SetTop(spine,e.GetPosition(this).Y);
+				Canvas.SetLeft(spine,e.GetPosition(this).X);
+				mainCanvas.Children.Add(spine);
 			};
 		}
 		

@@ -74,6 +74,10 @@
     </Compile>
     <Compile Include="SimpleFitter.cs" />
     <Compile Include="Fitter.cs" />
+    <Compile Include="Spine.xaml.cs">
+      <DependentUpon>Spine.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Statement.cs">
       <DependentUpon>Statement.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -107,5 +111,6 @@
   <ItemGroup>
     <Folder Include="images" />
     <Page Include="Peg.xaml" />
+    <Page Include="Spine.xaml" />
   </ItemGroup>
 </Project>
