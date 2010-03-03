@@ -97,41 +97,50 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			MouseDown += GetDragSource;
 			MouseMove += StartDrag;			
 			
-			PreviewDragEnter += delegate(object sender, DragEventArgs e) 
-			{  
-				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				if (moveable != null && adorner == null) {
-					AdornerLayer layer = AdornerLayer.GetAdornerLayer(mainGrid);
-					Point p = e.GetPosition(this);
-					adorner = new MoveableAdorner(moveable,layer,p);
-				}
-			};
+			PreviewDragEnter += CreateAdorner;
+			PreviewDragOver += UpdateAdorner;			
+			PreviewDragLeave += DestroyAdorner;			
+			PreviewDrop += DestroyAdorner;
 			
-			PreviewDragOver += delegate(object sender, DragEventArgs e) 
+			// TODO:
+			// temp:
+			MouseDoubleClick += delegate(object sender, MouseButtonEventArgs e) 
 			{  
-				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				if (moveable != null && adorner != null) {
-					adorner.Position = e.GetPosition(this);
-				}
+				Peg peg = new Peg();
+				Canvas.SetTop(peg,e.GetPosition(this).Y);
+				Canvas.SetLeft(peg,e.GetPosition(this).X);
+				mainCanvas.Children.Add(peg);
 			};
-			
-			PreviewDragLeave += delegate(object sender, DragEventArgs e) 
-			{  
-				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				if (moveable != null && adorner != null) {
-					adorner.Destroy();
-	    			adorner = null;
-				}
-			};
-			
-			PreviewDrop += delegate(object sender, DragEventArgs e) 
-			{  
-				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				if (moveable != null && adorner != null) {
-					adorner.Destroy();
-	    			adorner = null;
-				}
-			};
+		}
+		
+		
+		protected void CreateAdorner(object sender, DragEventArgs e)
+		{
+			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+			if (moveable != null && adorner == null) {
+				AdornerLayer layer = AdornerLayer.GetAdornerLayer(mainGrid);
+				Point p = e.GetPosition(this);
+				adorner = new MoveableAdorner(moveable,layer,p);
+			}
+		}
+		
+		
+		protected void UpdateAdorner(object sender, DragEventArgs e)
+		{
+			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+			if (moveable != null && adorner != null) {
+				adorner.Position = e.GetPosition(this);
+			}
+		}
+		
+		
+		protected void DestroyAdorner(object sender, DragEventArgs e)
+		{
+			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+			if (moveable != null && adorner != null) {
+				adorner.Destroy();
+	    		adorner = null;
+			}
 		}
 		
 		
