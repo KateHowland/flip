@@ -4,6 +4,10 @@
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}">
 	
+	<flipui:Moveable.Resources>
+		<Image x:Key="defaultimg" Source="images/imagemissing.bmp"/>
+	</flipui:Moveable.Resources>
+	
 		    <Border
 			BorderThickness="0.5"
 			BorderBrush="SlateGray">

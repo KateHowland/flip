@@ -86,6 +86,14 @@ namespace Sussex.Flip.UI
         {
             InitializeComponent();
             
+            if (image == null) {
+            	image = new Image();
+            	Image res = FindResource("defaultimg") as Image;
+            	if (res != null) {
+            		image.Source = res.Source;
+            	}            	
+            }
+
     		Type = type;
     		Subtype = subtype;
     		Identifier = identifier;
@@ -96,7 +104,7 @@ namespace Sussex.Flip.UI
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;
             
-            ToolTip = ToString();
+    		ToolTip = ToString();
             
 //            Template = (ControlTemplate)Resources["objectBlockControlTemplate"];
         }
