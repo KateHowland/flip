@@ -68,6 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MoveableAdorner.cs" />
+    <Compile Include="Peg.xaml.cs">
+      <DependentUpon>Peg.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SimpleFitter.cs" />
     <Compile Include="Fitter.cs" />
     <Compile Include="Statement.cs">
@@ -102,5 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images" />
+    <Page Include="Peg.xaml" />
   </ItemGroup>
 </Project>
