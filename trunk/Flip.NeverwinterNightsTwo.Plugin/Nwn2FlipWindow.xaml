@@ -28,7 +28,7 @@
 			Name="tabs"
 			Grid.Row="0"
 			Grid.Column="1"
-			Drop="DroppedOnBlockBox">
+			PreviewDrop="ReturnMoveableToBox">
 					
 				<TabItem Header="Actions">	
 					
