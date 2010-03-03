@@ -225,14 +225,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 			}
 		}
-				
 
-		protected void DroppedOnBlockBox(object sender, DragEventArgs e)
+
+		protected void ReturnMoveableToBox(object sender, DragEventArgs e)
 		{
 			if (!e.Handled) {
 				if (e.Data.GetDataPresent(typeof(Moveable))) {
 					Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-					if (!IsInBlockBox(moveable)) moveable.Detach();
+					if (!IsInBlockBox(moveable)) {
+						moveable.Remove();
+					}
+					e.Handled = true;
 				}
 			}
 		}
@@ -262,7 +265,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			if (!(moveable.Parent == mainCanvas)) {
-				moveable.Detach();
+				moveable.Remove();
 				mainCanvas.Children.Add(moveable);				
 			}
 		}

@@ -53,7 +53,7 @@ namespace Sussex.Flip.UI
 		}
     	
     	
-    	public void Detach()
+    	public void Remove()
     	{
     		if (Parent is Panel) {
     			Panel panel = (Panel)Parent;

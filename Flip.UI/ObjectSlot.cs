@@ -53,8 +53,12 @@ namespace Sussex.Flip.UI
             PreviewDrop += new DragEventHandler(DroppedOnSlotPanel);
             DragEnter += delegate(object sender, DragEventArgs e) 
             {  
-            	ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
-            	if (block != null && block != GetSlotContents() && Fits(block)) SetToCanDropAppearance();
+            	if (!e.Handled) {
+            		ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
+            		if (block != null && block != GetSlotContents() && Fits(block)) {
+            			SetToCanDropAppearance();
+            		}
+            	}
             };
             DragLeave += delegate(object sender, DragEventArgs e) 
             {  
@@ -98,7 +102,7 @@ namespace Sussex.Flip.UI
         public void SetSlotContents(ObjectBlock block)
         {    	
         	if (block == null || GetSlotContents() == block) return;
-        	block.Detach();
+        	block.Remove();
         	slotBorder.Child = block;
         }
         
