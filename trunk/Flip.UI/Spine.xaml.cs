@@ -19,6 +19,12 @@ namespace Sussex.Flip.UI
 
     public partial class Spine : UserControl
     {
+    	public Spine(int pegs, double extent) : this(pegs)
+    	{
+    		Extends = extent;
+    	}
+    	
+    	
         public Spine(int pegs)
         {
             InitializeComponent();
@@ -26,16 +32,49 @@ namespace Sussex.Flip.UI
         }
         
         
-        public Spine() : this(1)
+        public Spine() : this(5)
         {        	
         }
 
         
-        public void AddPeg()
+        public Peg AddPeg()
         {
         	Peg peg = new Peg();
-        	peg.Margin = new Thickness(0,10,0,10);
-        	pegsPanel.Children.Add(peg);
+        	Pegs.Add(peg);
+        	return peg;
+        }
+
+        
+        public Peg AddPeg(int index)
+        {
+        	Peg peg = new Peg();
+        	Pegs.Insert(index,peg);
+        	return peg;
+        }
+        
+        
+        public void RemovePeg()
+        {
+        	int count = Pegs.Count;
+        	if (count > 0) Pegs.Remove(Pegs[count-1]);
+        }
+        
+        
+        public void RemovePeg(int index)
+        {
+        	int count = Pegs.Count;
+        	if (count - 1 > index) Pegs.Remove(Pegs[count-1]);
+        }
+        
+        
+        public double Extends {
+        	get { return extension.Height.Value; }
+        	set { extension.Height = new GridLength(value); }
+        }
+        
+        
+        public UIElementCollection Pegs {
+        	get { return pegsPanel.Children; }
         }
     }
 }
