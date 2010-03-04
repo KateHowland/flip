@@ -102,15 +102,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			PreviewDragLeave += DestroyAdorner;			
 			PreviewDrop += DestroyAdorner;
 			
-			// TODO:
-			// temp:
-			MouseDoubleClick += delegate(object sender, MouseButtonEventArgs e) 
-			{  
-				Spine spine = new Spine(3);
-				Canvas.SetTop(spine,e.GetPosition(this).Y);
-				Canvas.SetLeft(spine,e.GetPosition(this).X);
-				mainCanvas.Children.Add(spine);
-			};
+			TriggerBar bar = new TriggerBar();
+			Canvas.SetTop(bar,30);
+			Canvas.SetLeft(bar,30);
+			mainCanvas.Children.Add(bar);	
 		}
 		
 		

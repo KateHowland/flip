@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     VerticalAlignment="Center"
     HorizontalAlignment="Left"
+	Margin="0,10,0,10"
 	>
 	
 	<UserControl.Resources>
@@ -20,7 +21,7 @@
 		</LinearGradientBrush>
 	</UserControl.Resources>
 	
-    <Grid ShowGridLines="False">
+    <Grid>
     	<Grid.RowDefinitions>
     		<RowDefinition/>
     	</Grid.RowDefinitions>
@@ -32,9 +33,9 @@
 		<Polygon 
     	Grid.Row="0"
 		Grid.Column="0"
-		Points="0,15 12,15 12,0 25,0 25,40 12,40 12,25 0,25"
+		Points="0,10 12,10 12,0 20,0 20,40 12,40 12,30 0,30"
 		Stroke="Black" 
-		StrokeThickness="2" 
+		StrokeThickness="1" 
     	VerticalAlignment="Center"
     	HorizontalAlignment="Right"
     	Fill="{StaticResource metallicBrush}"/>
@@ -47,8 +48,8 @@
     	Drop="DroppedOnPegSpace"
     	VerticalAlignment="Center"
     	HorizontalAlignment="Left"
-    	MinHeight="50"
-    	MinWidth="50"/>
+    	MinHeight="70"
+    	MinWidth="100"/>
 	
     </Grid>
     

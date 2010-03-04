@@ -5,23 +5,31 @@
 	
 	<Grid>
 		<Grid.RowDefinitions>
+			<RowDefinition x:Name="extension" Height="0"/>
 			<RowDefinition MinHeight="20"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="12"/>
+			<ColumnDefinition Width="16"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		
-		<Rectangle 
+		<Border
 		Grid.Row="0"
 		Grid.Column="0"
-		Fill="Black"
+		Grid.RowSpan="2"
+		BorderThickness="2"
+		BorderBrush="Black"
 		HorizontalAlignment="Stretch"
-		VerticalAlignment="Stretch"/>
+		VerticalAlignment="Stretch">
+		
+			<Rectangle
+			Fill="DimGray"/>
+		
+		</Border>
 	
 	    <StackPanel
 		x:Name="pegsPanel"
-		Grid.Row="0"
+		Grid.Row="1"
 		Grid.Column="1"
 		Orientation="Vertical"/>
 	

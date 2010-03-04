@@ -67,7 +67,9 @@ namespace Sussex.Flip.UI
 			layer.Add(this);	
 			
 			IsHitTestVisible = false;						
-			AllowDrop = true;								
+			AllowDrop = true;
+			
+			AdornedElement.IsHitTestVisible = false;
 		}
 		
 		
@@ -115,6 +117,7 @@ namespace Sussex.Flip.UI
 		public void Destroy()
 		{
 			layer.Remove(this);
+			AdornedElement.IsHitTestVisible = true;			
 		}
 	}
 }

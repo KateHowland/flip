@@ -95,6 +95,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StatementFactory.cs" />
+    <Compile Include="TriggerBar.xaml.cs">
+      <DependentUpon>TriggerBar.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Page Include="Statement.xaml" />
     <Page Include="ObjectBlock.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -112,5 +116,6 @@
     <Folder Include="images" />
     <Page Include="Peg.xaml" />
     <Page Include="Spine.xaml" />
+    <Page Include="TriggerBar.xaml" />
   </ItemGroup>
 </Project>
