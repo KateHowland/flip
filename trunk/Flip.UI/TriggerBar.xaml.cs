@@ -26,16 +26,14 @@ namespace Sussex.Flip.UI
         public TriggerBar()
         {
         	string[] triggers = new string[] {"player sees creature", "player picks up item", "player is attacked", "player dies"};
-        	spine = new Spine(2);
+        	spine = new Spine(3);
         	Grid.SetRow(spine,0);
         	Grid.SetColumn(spine,0);
         	spine.Margin = new Thickness(14,0,0,0);
-        	spine.Extends = 100;
-        	
-        	ScaleTransform scale = new ScaleTransform(1.0,1.0);
-        	spine.LayoutTransform = scale;
         	
             InitializeComponent();
+            
+            spine.Extends = border.Height + 20;
         	
         	Grid.SetZIndex(spine,1);
         	Grid.SetZIndex(border,2);
