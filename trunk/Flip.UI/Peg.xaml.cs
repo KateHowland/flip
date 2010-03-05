@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Effects;
 
 namespace Sussex.Flip.UI
 {
@@ -19,18 +20,18 @@ namespace Sussex.Flip.UI
 
     public partial class Peg : UserControl
     {  	
-    	protected Brush canDropBrush;
+    	protected RadialGradientBrush canDropBrush;
     	protected Brush noFeedbackBrush;
+    	protected DropShadowEffect glow;
     	
     	
         public Peg()
-        {
-        	canDropBrush = new RadialGradientBrush(Colors.LightBlue,Colors.Blue);
-        	canDropBrush.Opacity = 0.4;        	
+        {        	
+        	canDropBrush = new RadialGradientBrush(Colors.Blue,Colors.LightBlue);
         	noFeedbackBrush = Brushes.Transparent;
         	
             InitializeComponent();
-            
+                   	
             DragEnter += delegate(object sender, DragEventArgs e) 
             {  
             	if (!e.Handled) {

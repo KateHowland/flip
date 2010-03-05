@@ -24,7 +24,7 @@
 	x:Name="mainGrid">
 		
 		<Border
-		Name="border"
+		x:Name="border"
 		Height="80"
 		VerticalAlignment="Top"
 	    HorizontalAlignment="Stretch"

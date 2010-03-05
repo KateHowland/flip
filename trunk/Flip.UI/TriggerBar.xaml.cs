@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -19,15 +20,20 @@ namespace Sussex.Flip.UI
 
     public partial class TriggerBar : UserControl
     {
+    	protected Spine spine;
+    	
+    	
         public TriggerBar()
         {
         	string[] triggers = new string[] {"player sees creature", "player picks up item", "player is attacked", "player dies"};
-        	Spine spine = new Spine(5);
-        	spine.Name = "spine";
+        	spine = new Spine(2);
         	Grid.SetRow(spine,0);
         	Grid.SetColumn(spine,0);
         	spine.Margin = new Thickness(14,0,0,0);
         	spine.Extends = 100;
+        	
+        	ScaleTransform scale = new ScaleTransform(1.0,1.0);
+        	spine.LayoutTransform = scale;
         	
             InitializeComponent();
         	
@@ -37,7 +43,12 @@ namespace Sussex.Flip.UI
             mainGrid.Children.Add(spine);
             triggersComboBox.ItemsSource = triggers;
             
-            Effect = new System.Windows.Media.Effects.DropShadowEffect();
+            Effect = new DropShadowEffect();
+        }
+        
+        
+        public Spine Spine {
+        	get { return spine; }
         }
     }
 }
