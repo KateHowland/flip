@@ -20,9 +20,9 @@ namespace Sussex.Flip.UI
 
     public partial class Spine : UserControl
     {
-    	public Spine(int pegs, double extent) : this(pegs)
+    	public Spine(int pegs, double extends) : this(pegs)
     	{
-    		Extends = extent;
+    		Extends = extends;
     	}
     	
     	
@@ -33,7 +33,7 @@ namespace Sussex.Flip.UI
         }
         
         
-        public Spine() : this(5)
+        public Spine() : this(3)
         {        	
         }
 

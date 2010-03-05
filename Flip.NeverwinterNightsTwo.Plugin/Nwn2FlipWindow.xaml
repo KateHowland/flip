@@ -6,6 +6,19 @@
     Height="600"
 	AllowDrop="False"
 	>	
+	
+	<Window.Resources>
+		<LinearGradientBrush 
+		x:Key="skyBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="LightSkyBlue"/>
+				<GradientStop Offset="1" Color="LightBlue"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	</Window.Resources>
+	
 	<AdornerDecorator>		
 		<Grid
 		Name="mainGrid">
@@ -21,7 +34,7 @@
 			Name="mainCanvas"
 			Grid.Row="0"
 			Grid.Column="0" 
-			Background="LightBlue"
+			Background="{StaticResource skyBrush}"
 			AllowDrop="True"/>
 						
 			<TabControl 

@@ -68,7 +68,7 @@ namespace Sussex.Flip.UI
         
 		public Peg Clone()
 		{
-			Peg peg = new Peg();		
+			Peg peg = new Peg();
 			return peg;
 		}
 		
