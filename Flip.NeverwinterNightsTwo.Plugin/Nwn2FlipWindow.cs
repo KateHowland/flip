@@ -105,9 +105,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			TriggerBar bar = new TriggerBar();
 			Canvas.SetTop(bar,30);
 			Canvas.SetLeft(bar,30);
-			mainCanvas.Children.Add(bar);	
+			mainCanvas.Children.Add(bar);
 		}
-		
+			
 		
 		protected void CreateAdorner(object sender, DragEventArgs e)
 		{
@@ -165,7 +165,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	}    	
     	
 
-    	private void GetDragSource(object sender, MouseEventArgs e)
+    	protected void GetDragSource(object sender, MouseEventArgs e)
     	{
     		FrameworkElement f = e.OriginalSource as FrameworkElement;
     		    		
@@ -177,7 +177,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     			dragPos = e.GetPosition(null);
     			dragging = (Moveable)f;
     		}
-    	}
+    	}			
 		
 		
 		protected void DroppedOnCanvas(object sender, DragEventArgs e)
