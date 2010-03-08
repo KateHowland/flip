@@ -21,6 +21,8 @@ namespace Sussex.Flip.UI
     public partial class StatementSlot : UserControl
     {
     	protected static Fitter defaultFitter = new SimpleFitter();
+    	protected Thickness thin;
+    	protected Thickness thick;
     	
     	
     	protected string slotName;    	
@@ -43,6 +45,9 @@ namespace Sussex.Flip.UI
         public StatementSlot(string name, Fitter fitter)
         {
             InitializeComponent();
+            
+            thin = (Thickness)Resources["thin"];
+            thick = (Thickness)Resources["thick"];
             
             slotName = name;
             objectFitter = fitter;
@@ -67,8 +72,6 @@ namespace Sussex.Flip.UI
         }
         
         
-        Thickness thin = new Thickness(0.5);
-        Thickness thick = new Thickness(1);
         protected void SetToCanDropAppearance()
         {
         	slotBorder.BorderBrush = Brushes.Blue;
@@ -113,8 +116,7 @@ namespace Sussex.Flip.UI
         			slotBorder.Child = value;
         		}
         	}
-        }
-        
+        }        
         
         
         public bool Fits(ObjectBlock block)
