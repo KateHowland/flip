@@ -93,10 +93,9 @@ namespace Sussex.Flip.UI
 					ObjectSlot slot = (ObjectSlot)e;
 					ObjectSlot slotClone = slot.Clone();
 					statement.AddSlot(slotClone);
-					ObjectBlock block = slot.GetSlotContents();
-					if (block != null) {
-						ObjectBlock blockClone = (ObjectBlock)block.Clone();
-						slotClone.SetSlotContents(blockClone);
+					
+					if (slot.Attached != null) {
+						slotClone.Attached = (ObjectBlock)slot.Attached.Clone();
 					}
 				}
 				else {
