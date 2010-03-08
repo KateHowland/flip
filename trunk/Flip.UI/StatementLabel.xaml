@@ -1,0 +1,67 @@
+<UserControl x:Class="Sussex.Flip.UI.StatementLabel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+		
+	<UserControl.Resources>
+		
+		<Color x:Key="red">Red</Color>
+		<Color x:Key="actionColor">PaleGreen</Color>
+		<Color x:Key="conditionColor">PaleTurquoise</Color>
+		<Color x:Key="triggerColor">PaleVioletRed</Color>
+		
+		<LinearGradientBrush 
+		x:Key="actionBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="-0.5" Color="{StaticResource red}"/>
+				<GradientStop Offset="0.5" Color="{StaticResource actionColor}"/>
+				<GradientStop Offset="1.5" Color="{StaticResource red}"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+		
+		<LinearGradientBrush 
+		x:Key="conditionBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="-0.5" Color="{StaticResource red}"/>
+				<GradientStop Offset="0.5" Color="{StaticResource conditionColor}"/>
+				<GradientStop Offset="1.5" Color="{StaticResource red}"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+		
+		<LinearGradientBrush 
+		x:Key="triggerBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="-0.5" Color="{StaticResource red}"/>
+				<GradientStop Offset="0.5" Color="{StaticResource triggerColor}"/>
+				<GradientStop Offset="1.5" Color="{StaticResource red}"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+	</UserControl.Resources>
+	
+    <Border
+	BorderBrush="Black"
+    BorderThickness="0.5"
+	VerticalAlignment="Center"
+	HorizontalAlignment="Center">
+		
+    	<TextBlock
+    	x:Name="textBlock"
+    	FontFamily="Helvetica"
+    	FontSize="16"
+    	Foreground="Black"
+    	Padding="10"
+    	Width="80"
+    	TextAlignment="Center"
+    	HorizontalAlignment="Center"
+    	VerticalAlignment="Center"
+    	/>
+	
+    </Border>
+
+</UserControl>

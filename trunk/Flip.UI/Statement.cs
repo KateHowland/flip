@@ -19,9 +19,9 @@ namespace Sussex.Flip.UI
 
     public partial class Statement : Moveable
     {
-		private FontFamily font = new FontFamily("Times New Roman");
-		private Brush pink = new LinearGradientBrush(Colors.Pink,Colors.Salmon,45);
-		protected bool tested = false;
+		private static FontFamily font = new FontFamily("Helvetica");
+		protected static Thickness thickness10 = new Thickness(10);
+		protected static Thickness thickness0point5 = new Thickness(0.5);
 		
 		
         public Statement()
@@ -30,38 +30,18 @@ namespace Sussex.Flip.UI
         }
 
         
-        public void AddSlot(ObjectSlot slot)
+        public void AddSlot(StatementSlot slot)
         {
         	MainPanel.Children.Add(slot);          
             ToolTip = ToString();
         }
 
         
-        public void AddTextBar(string text)
+        public void AddText(StatementLabel label)
         {
-        	TextBlock tb = CreateTextBlock(text,pink);
-        	MainPanel.Children.Add(tb);          
+        	MainPanel.Children.Add(label);          
             ToolTip = ToString();
         }
-        
-				
-		public TextBlock CreateTextBlock(string text, Brush background)
-		{
-			TextBlock tb = new TextBlock();
-			tb.Text = text;
-			tb.FontSize = 16;
-			tb.FontFamily = font; 
-			tb.FontWeight = FontWeights.Bold;
-			tb.Foreground = Brushes.Black;
-			tb.Background = background;
-			tb.TextAlignment = TextAlignment.Center;
-			tb.VerticalAlignment = VerticalAlignment.Center;
-			tb.HorizontalAlignment = HorizontalAlignment.Center;
-			tb.Padding = new Thickness(10);
-			tb.Width = 80;
-			tb.Height = 35;
-			return tb;
-		}
 		
 		
 		public override string ToString()
@@ -69,10 +49,10 @@ namespace Sussex.Flip.UI
 			System.Text.StringBuilder sb = new StringBuilder();
 			int count = MainPanel.Children.Count;
 			for (int i = 0; i < count; i++) {
-				ObjectSlot slot = MainPanel.Children[i] as ObjectSlot;
-				TextBlock text = MainPanel.Children[i] as TextBlock;
+				StatementSlot slot = MainPanel.Children[i] as StatementSlot;
+				StatementLabel label = MainPanel.Children[i] as StatementLabel;
 				if (slot != null) sb.Append(slot.SlotName);
-				else if (text != null) sb.Append(text.Text);
+				else if (label != null) sb.Append(label.Text);
 				else sb.Append("?");				
 				if (i < count - 1) sb.Append(" ");
 			}
@@ -85,13 +65,14 @@ namespace Sussex.Flip.UI
 			Statement statement = new Statement();		
 			
 			foreach (UIElement e in MainPanel.Children) {
-				if (e is TextBlock) {
-					TextBlock tb = (TextBlock)e;
-					statement.AddTextBar(tb.Text);
+				if (e is StatementLabel) {
+					StatementLabel label = (StatementLabel)e;
+					StatementLabel labelClone = label.Clone();
+					statement.AddText(labelClone);
 				}
-				else if (e is ObjectSlot) {
-					ObjectSlot slot = (ObjectSlot)e;
-					ObjectSlot slotClone = slot.Clone();
+				else if (e is StatementSlot) {
+					StatementSlot slot = (StatementSlot)e;
+					StatementSlot slotClone = slot.Clone();
 					statement.AddSlot(slotClone);
 					
 					if (slot.Attached != null) {

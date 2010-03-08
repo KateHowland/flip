@@ -15,10 +15,10 @@ using System.Windows.Shapes;
 namespace Sussex.Flip.UI
 {
     /// <summary>
-    /// Interaction logic for ObjectSlot.xaml
+    /// Interaction logic for StatementSlot.xaml
     /// </summary>
 
-    public partial class ObjectSlot : UserControl
+    public partial class StatementSlot : UserControl
     {
     	protected static Fitter defaultFitter = new SimpleFitter();
     	
@@ -35,12 +35,12 @@ namespace Sussex.Flip.UI
 		}
         
         
-        public ObjectSlot(string name) : this(name,defaultFitter)
+        public StatementSlot(string name) : this(name,defaultFitter)
         {        	
         }
     	
     	
-        public ObjectSlot(string name, Fitter fitter)
+        public StatementSlot(string name, Fitter fitter)
         {
             InitializeComponent();
             
@@ -123,9 +123,9 @@ namespace Sussex.Flip.UI
         }
         
         
-        public ObjectSlot Clone()
+        public StatementSlot Clone()
         {
-        	return new ObjectSlot(slotName,objectFitter);
+        	return new StatementSlot(slotName,objectFitter);
         }
     }
 }

@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Windows.Media;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -49,6 +50,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Fitter onlyCreaturesOrPlayers;
 		protected Fitter onlyDoorsOrPlaceables;
 		protected Fitter onlyInstances;
+		protected LinearGradientBrush actionBrush = new LinearGradientBrush(Colors.Blue,Colors.Orange,45);
+		protected LinearGradientBrush conditionBrush = new LinearGradientBrush(Colors.Yellow,Colors.Purple,45);
+		protected LinearGradientBrush triggerBrush = new LinearGradientBrush(Colors.Red,Colors.Green,45);
 		
 		
 		public Nwn2StatementFactory()
@@ -87,9 +91,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Attacks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("attacks");
-			statement.AddSlot(new ObjectSlot("creature2",onlyCreaturesOrPlayers));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("attacks",actionBrush));
+			statement.AddSlot(new StatementSlot("creature2",onlyCreaturesOrPlayers));
 			return statement;
 		}
 		
@@ -97,9 +101,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement PicksUp()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("picks up");
-			statement.AddSlot(new ObjectSlot("item1",onlyItems));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("picks up",actionBrush));
+			statement.AddSlot(new StatementSlot("item1",onlyItems));
 			return statement;
 		}	
 		
@@ -107,9 +111,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Drops()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("drops");
-			statement.AddSlot(new ObjectSlot("item1",onlyItems));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("drops",actionBrush));
+			statement.AddSlot(new StatementSlot("item1",onlyItems));
 			return statement;
 		}	
 		
@@ -117,9 +121,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Equips()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("equips");
-			statement.AddSlot(new ObjectSlot("item1",onlyItems));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("equips",actionBrush));
+			statement.AddSlot(new StatementSlot("item1",onlyItems));
 			return statement;
 		}	
 		
@@ -127,9 +131,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Unequips()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("unequips");
-			statement.AddSlot(new ObjectSlot("item1",onlyItems));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("unequips",actionBrush));
+			statement.AddSlot(new StatementSlot("item1",onlyItems));
 			return statement;
 		}	
 		
@@ -137,8 +141,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Grows()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreatures));
-			statement.AddTextBar("grows");
+			statement.AddSlot(new StatementSlot("creature1",onlyCreatures));
+			statement.AddText(new StatementLabel("grows",actionBrush));
 			return statement;
 		}	
 		
@@ -146,8 +150,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Shrinks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreatures));
-			statement.AddTextBar("shrinks");
+			statement.AddSlot(new StatementSlot("creature1",onlyCreatures));
+			statement.AddText(new StatementLabel("shrinks",actionBrush));
 			return statement;
 		}	
 		
@@ -155,8 +159,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Opens()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("door1",onlyDoorsOrPlaceables));
-			statement.AddTextBar("opens");
+			statement.AddSlot(new StatementSlot("door1",onlyDoorsOrPlaceables));
+			statement.AddText(new StatementLabel("opens",actionBrush));
 			return statement;
 		}	
 		
@@ -164,8 +168,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Closes()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("door1",onlyDoorsOrPlaceables));
-			statement.AddTextBar("closes");
+			statement.AddSlot(new StatementSlot("door1",onlyDoorsOrPlaceables));
+			statement.AddText(new StatementLabel("closes",actionBrush));
 			return statement;
 		}	
 		
@@ -173,8 +177,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Locks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("door1",onlyDoorsOrPlaceables));
-			statement.AddTextBar("locks");
+			statement.AddSlot(new StatementSlot("door1",onlyDoorsOrPlaceables));
+			statement.AddText(new StatementLabel("locks",actionBrush));
 			return statement;
 		}	
 		
@@ -182,8 +186,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Unlocks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("door1",onlyDoorsOrPlaceables));
-			statement.AddTextBar("unlocks");
+			statement.AddSlot(new StatementSlot("door1",onlyDoorsOrPlaceables));
+			statement.AddText(new StatementLabel("unlocks",actionBrush));
 			return statement;
 		}	
 		
@@ -191,8 +195,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement GetsXP()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("player1",onlyPlayers));
-			statement.AddTextBar("gets XP");
+			statement.AddSlot(new StatementSlot("player1",onlyPlayers));
+			statement.AddText(new StatementLabel("gets XP",actionBrush));
 			return statement;
 		}	
 		
@@ -200,9 +204,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Walks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("walks");
-			statement.AddSlot(new ObjectSlot("instance1",onlyInstances));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("walks",actionBrush));
+			statement.AddSlot(new StatementSlot("instance1",onlyInstances));
 			return statement;
 		}	
 		
@@ -210,9 +214,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Runs()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("runs");
-			statement.AddSlot(new ObjectSlot("instance1",onlyInstances));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("runs",actionBrush));
+			statement.AddSlot(new StatementSlot("instance1",onlyInstances));
 			return statement;
 		}
 		
@@ -220,9 +224,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Teleports()
 		{
 			Statement statement = new Statement();
-			statement.AddSlot(new ObjectSlot("creature1",onlyCreaturesOrPlayers));
-			statement.AddTextBar("teleports");
-			statement.AddSlot(new ObjectSlot("instance1",onlyInstances));
+			statement.AddSlot(new StatementSlot("creature1",onlyCreaturesOrPlayers));
+			statement.AddText(new StatementLabel("teleports",actionBrush));
+			statement.AddSlot(new StatementSlot("instance1",onlyInstances));
 			return statement;
 		}
 	}
