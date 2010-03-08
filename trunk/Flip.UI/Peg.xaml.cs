@@ -37,7 +37,7 @@ namespace Sussex.Flip.UI
             	if (!e.Handled) {
             		if (e.Data.GetDataPresent(typeof(Moveable))) {
             			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-            			if (moveable != GetSlotContents() && Fits(moveable)) {
+            			if (moveable != Attached && Fits(moveable)) {
             				SetToCanDropAppearance();
             			}
             		}
@@ -56,8 +56,12 @@ namespace Sussex.Flip.UI
         		if (e.Data.GetDataPresent(typeof(Moveable))) {
         			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 					if (Fits(moveable)) {
-						if (e.AllowedEffects == DragDropEffects.Copy) SetSlotContents(moveable.Clone());
-						else if (e.AllowedEffects == DragDropEffects.Move) SetSlotContents(moveable);
+        				if (e.AllowedEffects == DragDropEffects.Copy) {
+        					Attached = moveable.Clone();
+        				}
+        				else if (e.AllowedEffects == DragDropEffects.Move) {
+        					Attached = moveable;
+        				}
 					}
 					e.Handled = true;
         		}
@@ -85,18 +89,16 @@ namespace Sussex.Flip.UI
         }
         
         
-        public void SetSlotContents(Moveable moveable)
-        {    	
-        	if (moveable == null || GetSlotContents() == moveable) return;
-        	moveable.Remove();
-        	border.Child = moveable;
-        }
-        
-        
-        public Moveable GetSlotContents()
-        {
-        	if (border.Child == null) return null;
-        	else return (Moveable)border.Child;
+        public Moveable Attached {
+        	get {
+        		return border.Child as Moveable;
+        	}
+        	set {
+        		if (value != Attached) {
+        			if (value != null) value.Remove();
+        			border.Child = value;
+        		}
+        	}
         }
         
         

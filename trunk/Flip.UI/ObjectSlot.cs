@@ -55,7 +55,7 @@ namespace Sussex.Flip.UI
             {  
             	if (!e.Handled) {
             		ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
-            		if (block != null && block != GetSlotContents() && Fits(block)) {
+            		if (block != null && block != Attached && Fits(block)) {
             			SetToCanDropAppearance();
             		}
             	}
@@ -89,8 +89,12 @@ namespace Sussex.Flip.UI
         		if (e.Data.GetDataPresent(typeof(Moveable))) {
 					ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
 					if (block != null && Fits(block)) {
-						if (e.AllowedEffects == DragDropEffects.Copy) SetSlotContents((ObjectBlock)block.Clone());
-						else if (e.AllowedEffects == DragDropEffects.Move) SetSlotContents(block);
+						if (e.AllowedEffects == DragDropEffects.Copy) {
+							Attached = (ObjectBlock)block.Clone();
+						}
+						else if (e.AllowedEffects == DragDropEffects.Move) {
+							Attached = block;
+						}
 					}
 					e.Handled = true;
         		}
@@ -99,19 +103,18 @@ namespace Sussex.Flip.UI
         }
         
         
-        public void SetSlotContents(ObjectBlock block)
-        {    	
-        	if (block == null || GetSlotContents() == block) return;
-        	block.Remove();
-        	slotBorder.Child = block;
+        public ObjectBlock Attached {
+        	get {
+        		return slotBorder.Child as ObjectBlock;
+        	}
+        	set {
+        		if (value != Attached) {
+        			if (value != null) value.Remove();
+        			slotBorder.Child = value;
+        		}
+        	}
         }
         
-        
-        public ObjectBlock GetSlotContents()
-        {
-        	if (slotBorder.Child == null) return null;
-        	else return (ObjectBlock)slotBorder.Child;
-        }
         
         
         public bool Fits(ObjectBlock block)
