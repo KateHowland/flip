@@ -5,6 +5,13 @@
 	AllowDrop="True"
 	Background="LightGray">
 	
+	<UserControl.Resources>
+	
+		<Thickness x:Key="thick">1</Thickness>
+		<Thickness x:Key="thin">0.5</Thickness>
+	
+	</UserControl.Resources>
+	
     	<Border 
 		x:Name="slotBorder"
     	BorderThickness="0.5"
