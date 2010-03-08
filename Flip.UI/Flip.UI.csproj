@@ -90,11 +90,15 @@
       <SubType>Code</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="ObjectSlot.cs">
-      <DependentUpon>ObjectSlot.xaml</DependentUpon>
+    <Compile Include="StatementSlot.cs">
+      <DependentUpon>StatementSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StatementFactory.cs" />
+    <Compile Include="StatementLabel.xaml.cs">
+      <DependentUpon>StatementLabel.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="TriggerBar.xaml.cs">
       <DependentUpon>TriggerBar.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -103,7 +107,7 @@
     <Page Include="ObjectBlock.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
-    <Page Include="ObjectSlot.xaml" />
+    <Page Include="StatementSlot.xaml" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
@@ -116,6 +120,7 @@
     <Folder Include="images" />
     <Page Include="Peg.xaml" />
     <Page Include="Spine.xaml" />
+    <Page Include="StatementLabel.xaml" />
     <Page Include="TriggerBar.xaml" />
   </ItemGroup>
 </Project>
