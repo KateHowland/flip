@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -17,7 +18,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for StatementLabel.xaml
     /// </summary>
 
-    public partial class StatementLabel : UserControl
+    public partial class StatementLabel : UserControl, IDeepCopyable<StatementLabel>
     {
     	public string Text {
     		get { return textBlock.Text; }
@@ -49,7 +50,7 @@ namespace Sussex.Flip.UI
         }
         
         
-        public StatementLabel Clone()
+        public StatementLabel DeepCopy()
         {
         	return new StatementLabel(Text,BackgroundBrush);
         }

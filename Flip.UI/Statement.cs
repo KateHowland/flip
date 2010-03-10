@@ -60,23 +60,23 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public override Moveable Clone()
+		public override Moveable DeepCopy()
 		{
 			Statement statement = new Statement();		
 			
 			foreach (UIElement e in MainPanel.Children) {
 				if (e is StatementLabel) {
 					StatementLabel label = (StatementLabel)e;
-					StatementLabel labelClone = label.Clone();
+					StatementLabel labelClone = label.DeepCopy();
 					statement.AddText(labelClone);
 				}
 				else if (e is StatementSlot) {
 					StatementSlot slot = (StatementSlot)e;
-					StatementSlot slotClone = slot.Clone();
+					StatementSlot slotClone = slot.DeepCopy();
 					statement.AddSlot(slotClone);
 					
 					if (slot.Attached != null) {
-						slotClone.Attached = (ObjectBlock)slot.Attached.Clone();
+						slotClone.Attached = (ObjectBlock)slot.Attached.DeepCopy();
 					}
 				}
 				else {

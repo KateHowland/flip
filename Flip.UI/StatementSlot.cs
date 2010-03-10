@@ -11,6 +11,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -18,7 +19,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for StatementSlot.xaml
     /// </summary>
 
-    public partial class StatementSlot : UserControl
+    public partial class StatementSlot : UserControl, IDeepCopyable<StatementSlot>
     {
     	protected static Fitter defaultFitter = new SimpleFitter();
     	protected Thickness thin;
@@ -93,7 +94,7 @@ namespace Sussex.Flip.UI
 					ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
 					if (block != null && Fits(block)) {
 						if (e.AllowedEffects == DragDropEffects.Copy) {
-							Attached = (ObjectBlock)block.Clone();
+							Attached = (ObjectBlock)block.DeepCopy();
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
 							Attached = block;
@@ -125,7 +126,7 @@ namespace Sussex.Flip.UI
         }
         
         
-        public StatementSlot Clone()
+        public StatementSlot DeepCopy()
         {
         	return new StatementSlot(slotName,objectFitter);
         }

@@ -192,7 +192,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 					size = moveable.RenderSize; // use the original's size as the clone has not been drawn yet
 					if (e.AllowedEffects == DragDropEffects.Copy) {
-						moveable = moveable.Clone();
+						moveable = moveable.DeepCopy();
 					}
 				}				
 				else if (e.Data.GetDataPresent(typeof(NWN2InstanceCollection))) {
@@ -321,7 +321,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected void PopulateActions()
 		{							
 			Nwn2Fitters fitters = new Nwn2Fitters();
-			Brush brush = brush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.Green,45); 
+			Brush brush = brush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.PaleGreen,45); 
 			
 			foreach (Statement action in new Nwn2ActionFactory(fitters,brush).GetStatements()) {
 				ActionsPanel.Children.Add(action);

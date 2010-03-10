@@ -31,13 +31,14 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Xml;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
 	/// Description of Moveable.
 	/// </summary>
-	public abstract class Moveable : UserControl
+	public abstract class Moveable : UserControl, IDeepCopyable<Moveable>
 	{
 		public Moveable()
 		{
@@ -82,7 +83,7 @@ namespace Sussex.Flip.UI
     		}
     	}
     	
-    	
-    	public abstract Moveable Clone();
+		
+		public abstract Moveable DeepCopy();
 	}
 }

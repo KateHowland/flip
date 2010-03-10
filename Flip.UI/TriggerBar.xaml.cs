@@ -21,6 +21,11 @@ namespace Sussex.Flip.UI
     public partial class TriggerBar : UserControl
     {
     	protected Spine spine;
+        
+        
+        public Spine Spine {
+        	get { return spine; }
+        }
     	
     	
         public TriggerBar()
@@ -42,11 +47,6 @@ namespace Sussex.Flip.UI
             triggersComboBox.ItemsSource = triggers;
             
             Effect = new DropShadowEffect();
-        }
-        
-        
-        public Spine Spine {
-        	get { return spine; }
         }
     }
 }
