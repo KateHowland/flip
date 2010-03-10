@@ -20,59 +20,58 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 29/07/2009 at 10:53.
+ * This file added by Keiron Nicholson on 10/03/2010 at 11:37.
  */
- 
-using System;
-using Sussex.Flip.Language;
 
-namespace Sussex.Flip.Games
+using System;
+
+namespace Sussex.Flip.Core
 {
 	/// <summary>
-	/// Provides the ability to compile Flip source code
-	/// into the scripting language of a target game, and attach the results 
-	/// to a user-created module or level of that game. 
+	/// Translates and attaches Flip source code to 
+	/// to an artifact of the target game. 
 	/// </summary>
-	public abstract class FlipCompiler
+	public abstract class FlipAttacher
 	{
 		#region Fields
-				
-		/// <summary>
-		/// The name of the language which will be compiled to the target language.
-		/// </summary>
-		protected string inputLanguage;
+		
+		protected GameInformation game;
+		protected FlipTranslator translator;
 		
 		#endregion
 		
 		#region Properties
-							
+		
 		/// <summary>
-		/// The name of the language which will be compiled to the target language.
+		/// Provides information about the target game.
 		/// </summary>
-		public string InputLanguage { 
-			get { return inputLanguage; }
+		public GameInformation Game { 
+			get { return game; }
 		}
 		
 		/// <summary>
-		/// The name of the game software which compiled scripts will be used with.
+		/// Translate Flip source code
+		/// into the target language.
 		/// </summary>
-		public abstract string Game { get; }
-		
-		/// <summary>
-		/// The name of the scripting language used by the targeted game.
-		/// </summary>
-		public abstract string TargetLanguage { get; }
+		public FlipTranslator Translator {
+			get { return translator; }
+		}
 		
 		#endregion
 		
 		#region Constructors
 		
 		/// <summary>
-		/// Constructs a new <see cref="FlipCompiler"/> instance.
+		/// Constructs a new <see cref="FlipAttacher"/> instance.
 		/// </summary>
-		public FlipCompiler()
-		{			
-			inputLanguage = "Flip";
+		/// <param name="game">The game that translated scripts
+		/// will be attached to.</param>
+		/// <param name="translator">The translator which will
+		/// be used to translate scripts before attaching them.</param>
+		public FlipAttacher(GameInformation game, FlipTranslator translator)
+		{
+			this.game = game;
+			this.translator = translator;
 		}
 		
 		#endregion
@@ -80,14 +79,14 @@ namespace Sussex.Flip.Games
 		#region Methods
 				
 		/// <summary>
-		/// Compiles Flip code to the scripted language of the target game, and
-		/// attaches the results to the appropriate point in a user-created 
+		/// Translates Flip source into the language of the target game, compiles
+		/// the generated code if necessary, and attaches the results to a
 		/// module or level of that game.
 		/// </summary>
-		/// <param name="script">The Flip script to be attached.</param>
+		/// <param name="source">The Flip source to be compiled.</param>
 		/// <param name="target">An object representing the game level, area or 
 		/// module it is to be attached to.</param>
-		public abstract void CompileAndAttach(FlipScript script, object target);
+		public abstract void Attach(FlipScript source, object target);
 		
 		#endregion
 	}
