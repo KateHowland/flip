@@ -101,6 +101,8 @@
     </Compile>
     <Compile Include="Nwn2BlockFactory.cs" />
     <Compile Include="Nwn2ActionFactory.cs" />
+    <Compile Include="NWScriptAttacher.cs" />
+    <Compile Include="NWScriptTranslator.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="ToolsetEventReporter.cs" />
@@ -112,6 +114,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
+      <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
+      <Name>Flip.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Utils\Flip.NeverwinterNightsTwo.Utils.csproj">
       <Project>{C6ADDA1C-09F3-4149-99C7-56495FC9C1B2}</Project>
       <Name>Flip.NeverwinterNightsTwo.Utils</Name>

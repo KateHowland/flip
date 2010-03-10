@@ -35,7 +35,6 @@ namespace Sussex.Flip.Core
 	{
 		#region Fields
 		
-		protected GameInformation game;
 		protected FlipTranslator translator;
 		
 		#endregion
@@ -45,9 +44,7 @@ namespace Sussex.Flip.Core
 		/// <summary>
 		/// Provides information about the target game.
 		/// </summary>
-		public GameInformation Game { 
-			get { return game; }
-		}
+		public abstract GameInformation Game { get; }
 		
 		/// <summary>
 		/// Translate Flip source code
@@ -64,13 +61,10 @@ namespace Sussex.Flip.Core
 		/// <summary>
 		/// Constructs a new <see cref="FlipAttacher"/> instance.
 		/// </summary>
-		/// <param name="game">The game that translated scripts
-		/// will be attached to.</param>
 		/// <param name="translator">The translator which will
 		/// be used to translate scripts before attaching them.</param>
-		public FlipAttacher(GameInformation game, FlipTranslator translator)
+		public FlipAttacher(FlipTranslator translator)
 		{
-			this.game = game;
 			this.translator = translator;
 		}
 		

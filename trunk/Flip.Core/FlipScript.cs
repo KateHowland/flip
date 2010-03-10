@@ -34,11 +34,9 @@ namespace Sussex.Flip.Core
 	{		
 		#region Fields
 		
-		/// <summary>
-		/// The source code of the script.
-		/// </summary>
-		protected string source;
-						
+		protected string code;
+		protected string name;
+		
 		#endregion
 		
 		#region Properties
@@ -46,11 +44,19 @@ namespace Sussex.Flip.Core
 		/// <summary>
 		/// The source code of the script.
 		/// </summary>
-		public string Source {
-			get { return source; }
-			set { source = value; }
+		public string Code {
+			get { return code; }
+			set { code = value; }
 		}
 		
+		/// <summary>
+		/// The name of the script.
+		/// </summary>
+		public string Name {
+			get { return name; }
+			set { name = value; }
+		}
+						
 		#endregion
 		
 		#region Constructors
@@ -58,9 +64,11 @@ namespace Sussex.Flip.Core
 		/// <summary>
 		/// Constructs a new <see cref="FlipScript"/> instance.
 		/// </summary>
-		/// <param name="source">The source code of the script.</param>
-		public FlipScript(string source)
+		/// <param name="code">The source code of the script.</param>
+		public FlipScript(string code)
 		{
+			this.code = code;
+			this.name = String.Empty;
 		}
 		
 		#endregion	
