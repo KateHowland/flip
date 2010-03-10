@@ -57,6 +57,21 @@
 					</ScrollViewer>	
 				
 				</TabItem>
+					
+				<TabItem Header="Conditions">	
+					
+					<ScrollViewer
+					Focusable="False">
+			
+						<StackPanel
+						Name="ConditionsPanel"
+						Orientation="Vertical"
+						Background="DarkGreen"
+						AllowDrop="True"/>
+						
+					</ScrollViewer>	
+				
+				</TabItem>
 			
 				<TabItem Header="Other">
 					
