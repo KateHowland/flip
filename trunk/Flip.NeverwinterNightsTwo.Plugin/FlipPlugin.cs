@@ -174,11 +174,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			pluginMenuItem.Items.Add(scriptAccessMenuItem);
 			
 			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Flip");
-			launchFlip.Activate += delegate 
-			{  
-				Nwn2FlipWindow window = new Nwn2FlipWindow();
-				window.Show();
-			};
+			launchFlip.Activate += delegate { LaunchFlip(); };
 			
 			pluginMenuItem.Items.Add(launchFlip);
 		}
@@ -192,7 +188,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
 		{	
-			Nwn2FlipWindow window = new Nwn2FlipWindow();
+			LaunchFlip();
+		}
+		
+		
+		protected void LaunchFlip()
+		{
+			Sussex.Flip.Core.FlipTranslator translator = new NWScriptTranslator();
+			Sussex.Flip.Core.FlipAttacher attacher = new NWScriptAttacher(translator,new Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Nwn2Session());
+				
+			Nwn2FlipWindow window = new Nwn2FlipWindow(attacher);
 			window.Show();
 			window.Activate();
 		}
