@@ -110,16 +110,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 						
 			try {
-				string translated = translator.Translate(source);	
+				string nwscript = translator.Translate(source);					
+				string name = GetUnusedScriptName(source.Name);
+					
+				NWN2GameScript script = session.AddScript(name,nwscript);
 				
-				NWN2GameScript script = session.AddScript(source.Name,source.Code);
 				session.CompileScript(script);
-				
-				// TODO:
-				// might not be necessary outside of the test class - it only 
-				// was necessary in the first place because of weird behaviour -
-				// test it and hopefully we can delete these commented out bits.
-				//while (!WaitForCompiledScriptToAppear(script.Name));
 				
 				// TODO:
 				// extract the slot and attaching object information from the script.
@@ -132,39 +128,30 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 			}
 			catch (Exception e) {
-				throw new ApplicationException("Failed to translate and attach script.",e);
+				throw new ApplicationException("Failed to translate and attach script.\n\n" + e.ToString(),e);
 			}
 		}
 		
 		
-//		/// <summary>
-//		/// Checks for a compiled script with the given name in the current module,
-//		/// timing out after a specified time.
-//		/// </summary>
-//		/// <param name="scriptName">The script name.</param>
-//		/// <param name="timeout">The number of milliseconds to check for.</param>
-//		/// <returns>True if the compiled script file was found, false otherwise.</returns>
-//		protected bool WaitForCompiledScriptToAppear(string scriptName, int timeout)
-//		{			
-//			int original = timeout;
-//			int interval = 1;
-//			while (!session.HasCompiled(scriptName) && timeout >= 0) {
-//				System.Threading.Thread.Sleep(interval);
-//				timeout -= interval;
-//			}
-//			return session.HasCompiled(scriptName);
-//		}
-//		
-//				
-//		/// <summary>
-//		/// Checks for a compiled script with the given name in the current module,
-//		/// timing out after 1 second.
-//		/// </summary>
-//		/// <param name="scriptName">The script name.</param>
-//		protected bool WaitForCompiledScriptToAppear(string scriptName)
-//		{			
-//			return WaitForCompiledScriptToAppear(scriptName,1000);
-//		}
+		/// <summary>
+		/// Get a script name which has not already been taken in this module.
+		/// </summary>
+		/// <param name="preferred">The preferred name for the script,
+		/// which will be amended based on availability.</param>
+		/// <returns>An available script name.</returns>
+		public string GetUnusedScriptName(string preferred)
+		{
+			if (preferred == null) throw new ArgumentNullException("preferred");
+			
+			string name = preferred;			
+			int count = 2;
+			
+			while (session.HasUncompiled(name)) {
+				name = preferred + " (" + count++ + ")";
+			}
+			
+			return name;
+		}
 		
 		#endregion
 	}

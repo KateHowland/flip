@@ -12,6 +12,7 @@ using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
+using Sussex.Flip.Core;
 using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
@@ -27,13 +28,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Dictionary<NWN2ObjectType,StackPanel> blueprintPanels;
 		protected Dictionary<NWN2ObjectType,StackPanel> instancePanels;
 		protected TriggerBar triggerBar;
+		protected FlipAttacher attacher;		
 		
 		
-		public Nwn2FlipWindow()
+		public Nwn2FlipWindow(FlipAttacher attacher)
 		{
+			if (attacher == null) throw new ArgumentNullException("attacher");
+			this.attacher = attacher;
+			
 			InitializeComponent();				
 			
-			AbstractNwn2BlockFactory factory = new Nwn2BlockFactory();
+			factory = new Nwn2BlockFactory();
 						
 			blueprintPanels = new Dictionary<NWN2ObjectType,StackPanel>(15);
 			instancePanels = new Dictionary<NWN2ObjectType,StackPanel>(15);
@@ -108,6 +113,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
+			
+			// TODO:
+			// TEMP:
+			Button button = new Button();
+			button.Content = "Compile and attach";
+			button.Click += CompileAndAttach;
+			button.Width = 100;
+			button.Height = 25;
+			Canvas.SetBottom(button,30);
+			Canvas.SetRight(button,30);
+			mainCanvas.Children.Add(button);
+		}
+		
+		
+		protected void CompileAndAttach(object sender, RoutedEventArgs e)
+		{
+			// TODO:
+			// TEMP:
+			FlipScript script = new FlipScript("some code");
+			script.Name = "mrscript";
+			attacher.Attach(script,NWN2Toolset.NWN2ToolsetMainForm.App.Module);
 		}
 			
 		
@@ -279,14 +305,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void Populate()
 		{
-			PopulateActions();
-			
+			PopulateStatements();
+				
 			ObjectBlock block = factory.CreatePlayerBlock();
 			OtherObjectsPanel.Children.Add(block);
-			
+				
 			block = factory.CreateModuleBlock();
 			OtherObjectsPanel.Children.Add(block);
-			
+				
 			PopulateBlueprints();
 			PopulateInstances();
 		}
@@ -319,10 +345,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected void PopulateActions()
+		protected void PopulateStatements()
 		{							
 			Nwn2Fitters fitters = new Nwn2Fitters();
-			Brush brush = brush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.PaleGreen,45); 
+			Brush brush = brush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.Green,45); 
 			
 			foreach (Statement action in new Nwn2ActionFactory(fitters,brush).GetStatements()) {
 				ActionsPanel.Children.Add(action);
