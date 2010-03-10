@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
@@ -318,9 +319,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		protected void PopulateActions()
-		{				
-			foreach (Statement action in new Nwn2StatementFactory().GetStatements()) {
+		{							
+			Nwn2Fitters fitters = new Nwn2Fitters();
+			Brush brush = brush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.Green,45); 
+			
+			foreach (Statement action in new Nwn2ActionFactory(fitters,brush).GetStatements()) {
 				ActionsPanel.Children.Add(action);
+			}
+			
+			brush = new System.Windows.Media.LinearGradientBrush(Colors.Lavender,Colors.Salmon,45); 
+			
+			foreach (Statement condition in new Nwn2ConditionFactory(fitters,brush).GetStatements()) {
+				ConditionsPanel.Children.Add(condition);
 			}
 		}
 	}
