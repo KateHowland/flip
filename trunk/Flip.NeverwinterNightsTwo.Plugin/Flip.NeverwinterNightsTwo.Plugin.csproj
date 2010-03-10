@@ -122,6 +122,11 @@
       <Name>Flip.UI</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
+      <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>
+      <Name>Flip.Utils</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <Page Include="Nwn2FlipWindow.xaml" />
   </ItemGroup>
 </Project>

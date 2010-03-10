@@ -60,7 +60,7 @@ namespace Sussex.Flip.UI
 			contentPresenter = new ContentPresenter();
 			visuals.Add(contentPresenter);
 						
-			Moveable clone = moveable.Clone();
+			Moveable clone = moveable.DeepCopy();
 			clone.Opacity = 0.7;
 			Content = clone;
 			

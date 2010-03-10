@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Effects;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -18,7 +19,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for Peg.xaml
     /// </summary>
 
-    public partial class Peg : UserControl
+    public partial class Peg : UserControl, IDeepCopyable<Peg>
     {  	
     	protected RadialGradientBrush canDropBrush;
     	protected Brush noFeedbackBrush;
@@ -57,7 +58,7 @@ namespace Sussex.Flip.UI
         			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 					if (Fits(moveable)) {
         				if (e.AllowedEffects == DragDropEffects.Copy) {
-        					Attached = moveable.Clone();
+        					Attached = moveable.DeepCopy();
         				}
         				else if (e.AllowedEffects == DragDropEffects.Move) {
         					Attached = moveable;
@@ -70,7 +71,7 @@ namespace Sussex.Flip.UI
         }
         
         
-		public Peg Clone()
+		public Peg DeepCopy()
 		{
 			Peg peg = new Peg();
 			return peg;

@@ -115,12 +115,12 @@ namespace Sussex.Flip.UI
         }
         
         
-        public override Moveable Clone()
-        {			
+		public override Moveable DeepCopy()
+		{
 			Image img = new Image();
 			img.Source = DisplayImage.Source;
-			ObjectBlock clone = new ObjectBlock(img,RepresentedObject,Identifier,Type,Subtype,DisplayName);
-			return clone;
-        }
+			ObjectBlock copy = new ObjectBlock(img,RepresentedObject,Identifier,Type,Subtype,DisplayName);
+			return copy;
+		}
     }
 }
