@@ -23,9 +23,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public partial class Nwn2FlipWindow : Window
 	{
-		protected AbstractNwn2BlockFactory factory = new Nwn2BlockFactory();
+		protected AbstractNwn2BlockFactory factory;
 		protected Dictionary<NWN2ObjectType,StackPanel> blueprintPanels;
 		protected Dictionary<NWN2ObjectType,StackPanel> instancePanels;
+		protected TriggerBar triggerBar;
 		
 		
 		public Nwn2FlipWindow()
@@ -103,10 +104,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			PreviewDragLeave += DestroyAdorner;			
 			PreviewDrop += DestroyAdorner;
 			
-			TriggerBar bar = new TriggerBar();
-			Canvas.SetTop(bar,30);
-			Canvas.SetLeft(bar,30);
-			mainCanvas.Children.Add(bar);
+			triggerBar = new TriggerBar();
+			Canvas.SetTop(triggerBar,30);
+			Canvas.SetLeft(triggerBar,30);
+			mainCanvas.Children.Add(triggerBar);
 		}
 			
 		
