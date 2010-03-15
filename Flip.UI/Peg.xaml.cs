@@ -48,6 +48,15 @@ namespace Sussex.Flip.UI
             {  
             	SetToStandardAppearance();
             };
+            
+            // TODO:
+            // including this directly in XAML frequently
+            // causes a 'cannot find file' exception - why?
+            DropZone dropZone = new DropZone();
+            Grid.SetRow(dropZone,1);
+            Grid.SetColumn(dropZone,0);
+            Grid.SetColumnSpan(dropZone,2);
+            mainGrid.Children.Add(dropZone);
         }
 
         

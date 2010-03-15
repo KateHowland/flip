@@ -22,7 +22,8 @@
 		</LinearGradientBrush>
 	</UserControl.Resources>
 	
-    <Grid>
+    <Grid
+	x:Name="mainGrid">
     	<Grid.RowDefinitions>
     		<RowDefinition/>
     		<RowDefinition/>
@@ -54,10 +55,10 @@
     	MinHeight="70"
     	MinWidth="130"/>
 	
-		<flipui:DropZone
+		<!--<flipui:DropZone
     	Grid.Row="1"
     	Grid.Column="0"
-    	Grid.ColumnSpan="2"/>
+    	Grid.ColumnSpan="2"/>-->
 	
     </Grid>
     
