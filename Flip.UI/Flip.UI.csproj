@@ -75,7 +75,13 @@
       <DependentUpon>FlipWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IMoveableManager.cs" />
     <Compile Include="MoveableAdorner.cs" />
+    <Compile Include="MoveableProvider.cs" />
+    <Compile Include="MoveablesPanel.xaml.cs">
+      <DependentUpon>MoveablesPanel.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Peg.xaml.cs">
       <DependentUpon>Peg.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -128,6 +134,7 @@
     <Folder Include="images" />
     <Page Include="DropZone.xaml" />
     <Page Include="FlipWindow.xaml" />
+    <Page Include="MoveablesPanel.xaml" />
     <Page Include="Peg.xaml" />
     <Page Include="Spine.xaml" />
     <Page Include="StatementLabel.xaml" />
