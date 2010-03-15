@@ -67,6 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeAttacher.cs" />
+    <Compile Include="FakeTranslator.cs" />
     <Compile Include="FlipAttacher.cs" />
     <Compile Include="FlipTranslator.cs" />
     <Compile Include="FlipScript.cs" />
