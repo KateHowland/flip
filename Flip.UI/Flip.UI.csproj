@@ -67,6 +67,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DropZone.xaml.cs">
+      <DependentUpon>DropZone.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlipWindow.xaml.cs">
+      <DependentUpon>FlipWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MoveableAdorner.cs" />
     <Compile Include="Peg.xaml.cs">
       <DependentUpon>Peg.xaml</DependentUpon>
@@ -118,10 +126,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images" />
+    <Page Include="DropZone.xaml" />
+    <Page Include="FlipWindow.xaml" />
     <Page Include="Peg.xaml" />
     <Page Include="Spine.xaml" />
     <Page Include="StatementLabel.xaml" />
     <Page Include="TriggerBar.xaml" />
+    <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
+      <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
+      <Name>Flip.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
       <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>
       <Name>Flip.Utils</Name>
