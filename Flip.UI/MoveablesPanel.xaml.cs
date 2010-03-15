@@ -41,6 +41,7 @@ namespace Sussex.Flip.UI
 			if (bags.ContainsKey(bagName)) throw new ArgumentException("Bag named '" + bagName + "' already exists.", "name"); 
 
 			StackPanel sp = new StackPanel();
+			sp.Background = Brushes.DarkBlue;
 			bags.Add(bagName,sp.Children);
 			sp.AllowDrop = true;
 

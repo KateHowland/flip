@@ -50,6 +50,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// tracking toolset activities and raising events.</remarks>
 	public class ToolsetEventReporter
 	{		
+		#region Fields
+		
+		protected bool isRunning = false;		
+		
+		#endregion
+		
+		#region Properties
+		
+		public bool IsRunning {
+			get { return isRunning; }
+		}
+		
+		#endregion
+		
 		#region Events
 		
 		/// <summary>
@@ -258,8 +272,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <summary>
 		/// Begins tracking toolset activities and raising associated events.
 		/// </summary>
+		/// <exception cref="InvalidOperationException">Start() has already been called on this instance.</exception>
 		public void Start()
 		{
+			if (IsRunning) throw new InvalidOperationException("ToolsetEventReporter is already running.");
+			
+			isRunning = true;
+			
 			/*
 			 * Track when a module is opened, when resources are added to or removed from
 			 * the module, when blueprints are added to or removed from the module, and 

@@ -136,5 +136,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			return location;
 		}
+		
+		
+		public static bool NeverwinterNightsTwoToolsetIsRunning()
+		{
+			// TODO:
+			// check this works when working with the actual toolset and not just Flip.UI.Generic:
+			return NWN2Toolset.NWN2ToolsetMainForm.App != null;
+		}
 	}
 }

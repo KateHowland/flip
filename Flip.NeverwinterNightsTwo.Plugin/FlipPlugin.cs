@@ -24,9 +24,11 @@
  */
 
 using System;
+using System.Windows.Media;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
+using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -196,10 +198,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			Sussex.Flip.Core.FlipTranslator translator = new NWScriptTranslator();
 			Sussex.Flip.Core.FlipAttacher attacher = new NWScriptAttacher(translator,new Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Nwn2Session());
-				
-			Nwn2FlipWindow window = new Nwn2FlipWindow(attacher);
+							
+			Nwn2Fitters fitters = new Nwn2Fitters();
+			Brush actionBrush = new LinearGradientBrush(Colors.LightGreen,Colors.Green,45);
+			Brush conditionBrush = new LinearGradientBrush(Colors.Lavender,Colors.Salmon,45);	
+			
+			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters,actionBrush,conditionBrush);			
+			Nwn2BlockFactory blocks = new Nwn2BlockFactory();
+			
+			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,new ToolsetEventReporter());
+						
+			FlipWindow window = new FlipWindow(attacher,provider);			
 			window.Show();
-			window.Activate();
 		}
 		
 		
