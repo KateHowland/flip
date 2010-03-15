@@ -25,8 +25,8 @@ namespace Sussex.Flip.UI
             try {
             	InitializeComponent();
             
-            	grow = new DoubleAnimation(30,100,new Duration(new TimeSpan(0,0,1)));
-        		shrink = new DoubleAnimation(100,30,new Duration(new TimeSpan(0,0,1)));
+            	grow = new DoubleAnimation(30,100,new Duration(new TimeSpan(1000)));
+        		shrink = new DoubleAnimation(100,30,new Duration(new TimeSpan(1000)));
             }
         	catch (Exception e) {
         		System.Windows.MessageBox.Show(e.ToString());
