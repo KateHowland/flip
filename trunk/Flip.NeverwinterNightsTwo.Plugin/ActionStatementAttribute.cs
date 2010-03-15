@@ -20,30 +20,34 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 15/02/2010 at 14:49.
+ * This file added by Keiron Nicholson on 15/03/2010 at 15:22.
  */
 
 using System;
-using System.Collections.Generic;
-using NWN2Toolset.NWN2.Data;
-using NWN2Toolset.NWN2.Data.Blueprints;
-using NWN2Toolset.NWN2.Data.Instances;
-using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
-using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of AbstractNwn2BlockFactory.
+	/// Description of ActionStatementAttribute.
 	/// </summary>
-	public abstract class AbstractNwn2BlockFactory
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.ReturnValue)]
+	public class ActionStatementAttribute : Attribute
 	{
-		public abstract ObjectBlock CreatePlayerBlock();
-		public abstract ObjectBlock CreateModuleBlock();
-		public abstract ObjectBlock CreateTypeBlock(Nwn2Type type);
-		public abstract ObjectBlock CreateAreaBlock(NWN2GameArea area);
-		public abstract ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint);
-		public abstract ObjectBlock CreateInstanceBlock(INWN2Instance instance);
-		public abstract ObjectBlock CreateInstanceBlock(List<INWN2Instance> instances);
+		protected string name;		
+		public string Name {
+			get { return name; }
+			set { name = value; }
+		}
+		
+		
+		public ActionStatementAttribute() : this(String.Empty)
+		{			
+		}
+		
+		
+		public ActionStatementAttribute(string name)
+		{
+			this.name = name;
+		}
 	}
 }

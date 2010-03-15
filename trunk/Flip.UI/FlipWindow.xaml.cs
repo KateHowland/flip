@@ -15,65 +15,29 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public partial class FlipWindow : Window
 	{
-		// HACK:
-//		protected AbstractNwn2BlockFactory factory;
-//		protected Dictionary<NWN2ObjectType,StackPanel> blueprintPanels;
-//		protected Dictionary<NWN2ObjectType,StackPanel> instancePanels;
 		protected TriggerBar triggerBar;
 		protected FlipAttacher attacher;		
+		protected MoveablesPanel mp;
 		
 		
-		public FlipWindow(FlipAttacher attacher)
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider)
 		{
 			if (attacher == null) throw new ArgumentNullException("attacher");
+			if (provider == null) throw new ArgumentNullException("provider");
+			
 			this.attacher = attacher;
 			
 			InitializeComponent();
 			
-			ObjectBlock block = new ObjectBlock(null,null,"knich1","Person","Geek","keiron");
-			OtherObjectsPanel.Children.Add(block);
+			mp = new MoveablesPanel();
+			mp.Name = "moveablesPanel";
+			Grid.SetRow(mp,0);
+			Grid.SetColumn(mp,1);
+			mp.PreviewDrop += ReturnMoveableToBox;
 			
-			//HACK:
-//			factory = new Nwn2BlockFactory();
-//						
-//			blueprintPanels = new Dictionary<NWN2ObjectType,StackPanel>(15);
-//			instancePanels = new Dictionary<NWN2ObjectType,StackPanel>(15);
-//			
-//			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {				
-//				string typestr = type.ToString();
-//				
-//				StackPanel sp = new StackPanel();
-//				sp.Name = typestr + "BlueprintsPanel";
-//				sp.Background = System.Windows.Media.Brushes.Gray;
-//				sp.AllowDrop = true;
-//				blueprintPanels.Add(type,sp);
-//				
-//				ScrollViewer sv = new ScrollViewer();
-//				sv.Content = sp;
-//				sv.Focusable = false;
-//				
-//				TabItem t = new TabItem();
-//				t.Header = typestr + " (B)";
-//				t.Content = sv;
-//				tabs.Items.Add(t);
-//				
-//				sp = new StackPanel();	
-//				sp.Name = typestr + "InstancesPanel";
-//				sp.Background = System.Windows.Media.Brushes.DarkGray;
-//				sp.AllowDrop = true;
-//				instancePanels.Add(type,sp);
-//				
-//				sv = new ScrollViewer();
-//				sv.Content = sp;
-//				sv.Focusable = false;
-//				
-//				t = new TabItem();
-//				t.Header = typestr + " (I)";
-//				t.Content = sv;
-//				tabs.Items.Add(t);
-//			}
-							
-			Populate();	
+			provider.Populate(mp);
+				
+			mainGrid.Children.Add(mp);
 				
 			// HACK:
 //			ToolsetEventReporter reporter = new ToolsetEventReporter();
@@ -271,14 +235,15 @@ namespace Sussex.Flip.UI
 			}
 		}
 		
-		
+		// TODO:
+		// move into MoveablesPanel or IMoveableManager
 		public bool IsInBlockBox(Moveable moveable)
 		{
 			FrameworkElement element = moveable.Parent as FrameworkElement;
-			while (element != null && element != tabs) {
+			while (element != null && element != mp) {
 				element = element.Parent as FrameworkElement;
 			}
-			return element == tabs;
+			return element == mp;
 		}
 		
 		
@@ -300,66 +265,5 @@ namespace Sussex.Flip.UI
 				mainCanvas.Children.Add(moveable);				
 			}
 		}
-		
-		
-		protected void Populate()
-		{
-			// HACK:
-//			PopulateStatements();
-//				
-//			ObjectBlock block = factory.CreatePlayerBlock();
-//			OtherObjectsPanel.Children.Add(block);
-//				
-//			block = factory.CreateModuleBlock();
-//			OtherObjectsPanel.Children.Add(block);
-//				
-//			PopulateBlueprints();
-//			PopulateInstances();
-		}
-		
-		
-		// HACK:
-//		private void PopulateBlueprints()
-//		{
-//			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
-//				StackPanel panel = blueprintPanels[type];
-//				foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
-//					ObjectBlock block = factory.CreateBlueprintBlock(blueprint);
-//					panel.Children.Add(block);
-//				}
-//			}
-//		}
-//		
-//		
-//		private void PopulateInstances()
-//		{
-//			NWN2GameArea activeArea = NWN2ToolsetMainForm.App.AreaContents.Area;
-//			if (activeArea != null) {				
-//				foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
-//					StackPanel panel = instancePanels[type];
-//					foreach (INWN2Instance instance in activeArea.GetInstancesForObjectType(type)) {
-//						ObjectBlock block = factory.CreateInstanceBlock(instance);
-//						panel.Children.Add(block);
-//					}
-//				}
-//			}
-//		}
-//		
-//		
-//		protected void PopulateStatements()
-//		{							
-//			Nwn2Fitters fitters = new Nwn2Fitters();
-//			Brush brush = brush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.Green,45); 
-//			
-//			foreach (Statement action in new Nwn2ActionFactory(fitters,brush).GetStatements()) {
-//				ActionsPanel.Children.Add(action);
-//			}
-//			
-//			brush = new System.Windows.Media.LinearGradientBrush(Colors.Lavender,Colors.Salmon,45); 
-//			
-//			foreach (Statement condition in new Nwn2ConditionFactory(fitters,brush).GetStatements()) {
-//				ConditionsPanel.Children.Add(condition);
-//			}
-//		}
 	}
 }

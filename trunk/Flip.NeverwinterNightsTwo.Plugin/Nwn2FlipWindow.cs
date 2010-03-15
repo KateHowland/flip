@@ -24,7 +24,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public partial class Nwn2FlipWindow : Window
 	{
-		protected AbstractNwn2BlockFactory factory;
+		protected Nwn2BlockFactory factory;
 		protected Dictionary<NWN2ObjectType,StackPanel> blueprintPanels;
 		protected Dictionary<NWN2ObjectType,StackPanel> instancePanels;
 		protected TriggerBar triggerBar;
@@ -347,18 +347,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void PopulateStatements()
 		{							
-			Nwn2Fitters fitters = new Nwn2Fitters();
-			Brush brush = brush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.Green,45); 
-			
-			foreach (Statement action in new Nwn2ActionFactory(fitters,brush).GetStatements()) {
-				ActionsPanel.Children.Add(action);
-			}
-			
-			brush = new System.Windows.Media.LinearGradientBrush(Colors.Lavender,Colors.Salmon,45); 
-			
-			foreach (Statement condition in new Nwn2ConditionFactory(fitters,brush).GetStatements()) {
-				ConditionsPanel.Children.Add(condition);
-			}
+//			Nwn2Fitters fitters = new Nwn2Fitters();
+//			Brush actionBrush = new System.Windows.Media.LinearGradientBrush(Colors.LightGreen,Colors.Green,45); 
+//			brush = new System.Windows.Media.LinearGradientBrush(Colors.Lavender,Colors.Salmon,45); 
+//			
+//			foreach (Statement action in new Nwn2StatementFactory(fitters,brush).GetStatements()) {
+//				ActionsPanel.Children.Add(action);
+//			}
+//			
+//			
+//			foreach (Statement condition in new Nwn2ConditionFactory(fitters,brush).GetStatements()) {
+//				ConditionsPanel.Children.Add(condition);
+//			}
 		}
 	}
 }

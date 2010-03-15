@@ -39,7 +39,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// <summary>
 	/// Description of Nwn2BlockFactory.
 	/// </summary>
-	public class Nwn2BlockFactory : AbstractNwn2BlockFactory
+	public class Nwn2BlockFactory
 	{		
 		protected string pathFormat;
 		
@@ -56,7 +56,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override ObjectBlock CreatePlayerBlock()
+		public ObjectBlock CreatePlayerBlock()
 		{
 			Image image = GetImage("Other","Player");
 			if (image == null) image = GetImage("Placeholder","Default");	
@@ -64,7 +64,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override ObjectBlock CreateModuleBlock()
+		public ObjectBlock CreateModuleBlock()
 		{
 			Image image = GetImage("Other","Module");
 			if (image == null) image = GetImage("Placeholder","Default");
@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override ObjectBlock CreateTypeBlock(Nwn2Type type)
+		public ObjectBlock CreateTypeBlock(Nwn2Type type)
 		{
 			string t = type.ToString();
 			string filename = String.Format("Type_{0}",t);
@@ -82,7 +82,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override ObjectBlock CreateAreaBlock(NWN2GameArea area)
+		public ObjectBlock CreateAreaBlock(NWN2GameArea area)
 		{
 			string terrain = area.HasTerrain ? "Exterior" : "Interior";
 			string filename = String.Format("Area_{0}",terrain);
@@ -92,7 +92,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint)
+		public ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint)
 		{			
 			// TODO: Check first for a picture of ResourceName.Value (the actual blueprint)
 			// then for TemplateResRef.Value (the blueprint its based on).
@@ -104,7 +104,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override ObjectBlock CreateInstanceBlock(INWN2Instance instance)
+		public ObjectBlock CreateInstanceBlock(INWN2Instance instance)
 		{			
 			string objectType = instance.ObjectType.ToString();
 			Image image = GetImage(objectType,instance.Template.ResRef.Value);
@@ -115,7 +115,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override ObjectBlock CreateInstanceBlock(List<INWN2Instance> instances)
+		public ObjectBlock CreateInstanceBlock(List<INWN2Instance> instances)
 		{
 			// TODO safety check:
 			INWN2Instance instance = instances[0];

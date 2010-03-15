@@ -90,17 +90,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractNwn2BlockFactory.cs" />
+    <Compile Include="ActionStatementAttribute.cs" />
+    <Compile Include="ConditionStatementAttribute.cs" />
     <Compile Include="CreaturePlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
-    <Compile Include="Nwn2ConditionFactory.cs" />
+    <Compile Include="Nwn2StatementFactory.cs" />
     <Compile Include="Nwn2Fitters.cs" />
     <Compile Include="Nwn2FlipWindow.cs">
       <SubType>Code</SubType>
       <DependentUpon>Nwn2FlipWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Nwn2BlockFactory.cs" />
-    <Compile Include="Nwn2ActionFactory.cs" />
+    <Compile Include="Nwn2MoveableProvider.cs" />
     <Compile Include="NWScriptAttacher.cs" />
     <Compile Include="NWScriptTranslator.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
