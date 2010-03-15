@@ -61,10 +61,12 @@
     <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
       <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
       <Name>Flip.Core</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Flip.UI\Flip.UI.csproj">
       <Project>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</Project>
       <Name>Flip.UI</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
 </Project>
