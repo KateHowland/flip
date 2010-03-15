@@ -1,0 +1,94 @@
+<Window x:Class="Sussex.Flip.UI.FlipWindow"
+	xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Generic Flip window" 
+    Width="800"
+    Height="600"
+	AllowDrop="False"
+	>	
+	
+	<Window.Resources>
+		<LinearGradientBrush 
+		x:Key="skyBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="LightSkyBlue"/>
+				<GradientStop Offset="1" Color="LightBlue"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	</Window.Resources>
+	
+	<AdornerDecorator>		
+		<Grid
+		Name="mainGrid">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="250"/>
+			</Grid.ColumnDefinitions>
+				
+			<Canvas	
+			Name="mainCanvas"
+			Grid.Row="0"
+			Grid.Column="0" 
+			Background="{StaticResource skyBrush}"
+			AllowDrop="True"/>
+						
+			<TabControl 
+			Name="tabs"
+			Grid.Row="0"
+			Grid.Column="1"
+			PreviewDrop="ReturnMoveableToBox">
+					
+				<TabItem Header="Actions">	
+					
+					<ScrollViewer
+					Focusable="False">
+			
+						<StackPanel
+						Name="ActionsPanel"
+						Orientation="Vertical"
+						Background="DarkBlue"
+						AllowDrop="True"/>
+						
+					</ScrollViewer>	
+				
+				</TabItem>
+					
+				<TabItem Header="Conditions">	
+					
+					<ScrollViewer
+					Focusable="False">
+			
+						<StackPanel
+						Name="ConditionsPanel"
+						Orientation="Vertical"
+						Background="DarkGreen"
+						AllowDrop="True"/>
+						
+					</ScrollViewer>	
+				
+				</TabItem>
+			
+				<TabItem Header="Other">
+					
+					<ScrollViewer
+					Focusable="False">
+								
+						<StackPanel
+						Name="OtherObjectsPanel"
+						Orientation="Vertical"
+						Background="Gray"
+						AllowDrop="True"/>
+						
+					</ScrollViewer>	
+				
+				</TabItem>
+				
+			</TabControl>	
+		</Grid>
+	</AdornerDecorator>
+</Window>

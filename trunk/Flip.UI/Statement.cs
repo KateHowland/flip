@@ -19,11 +19,6 @@ namespace Sussex.Flip.UI
 
     public partial class Statement : Moveable
     {
-		private static FontFamily font = new FontFamily("Helvetica");
-		protected static Thickness thickness10 = new Thickness(10);
-		protected static Thickness thickness0point5 = new Thickness(0.5);
-		
-		
         public Statement()
         {
             InitializeComponent(); 
@@ -32,15 +27,13 @@ namespace Sussex.Flip.UI
         
         public void AddSlot(StatementSlot slot)
         {
-        	MainPanel.Children.Add(slot);          
-            ToolTip = ToString();
+        	MainPanel.Children.Add(slot);
         }
 
         
         public void AddText(StatementLabel label)
         {
-        	MainPanel.Children.Add(label);          
-            ToolTip = ToString();
+        	MainPanel.Children.Add(label);
         }
 		
 		
