@@ -87,8 +87,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string output = Translate(script);			
 			WriteToFile(output,path);
 		}
+				
 		
-		
+		/// <summary>
+		/// Write a text string to a file at a given path.
+		/// </summary>
+		/// <param name="text">The text to write.</param>
+		/// <param name="path">The path to create the file at.</param>
 		protected void WriteToFile(string text, string path)
 		{
 			using (StreamWriter writer = File.CreateText(path)) {
