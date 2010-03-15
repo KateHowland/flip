@@ -26,7 +26,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Media;
+using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Templates;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -38,6 +40,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{
 		protected Nwn2BlockFactory blocks;
 		protected Nwn2StatementFactory statements;
+		protected IMoveableManager manager; // only set on Populate() call
+		
+		protected const string ActionsBagName = "Actions";
+		protected const string ConditionsBagName = "Conditions";
+		protected const string OtherBagName = "Other";
+		protected const string BlueprintBagNamingFormat = "{0} blueprints";
+		protected const string InstanceBagNamingFormat = "{0} instances";
 		
 		
 		public Nwn2MoveableProvider(Nwn2BlockFactory blocks, Nwn2StatementFactory statements)
@@ -47,6 +56,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			this.blocks = blocks;
 			this.statements = statements;
+			this.manager = null;
+		}
+		
+		
+		public Nwn2MoveableProvider(Nwn2BlockFactory blocks, Nwn2StatementFactory statements, ToolsetEventReporter reporter) : this(blocks,statements)
+		{
+			if (reporter != null) {
+				TrackToolsetChanges(reporter);
+			}
 		}
 		
 		
@@ -54,44 +72,46 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (manager == null) throw new ArgumentNullException("manager");
 			
-			CreateBags(manager);
-			CreateStatements(manager);
-			CreateBlocks(manager);
+			this.manager = manager;
+			
+			CreateBags();
+			CreateStatements();
+			CreateBlocks();
 		}
 		
 		
-		protected void CreateBags(IMoveableManager manager)
+		protected void CreateBags()
 		{
-			manager.AddBag("Actions");
-			manager.AddBag("Conditions");
-			manager.AddBag("Other");
+			manager.AddBag(ActionsBagName);
+			manager.AddBag(ConditionsBagName);
+			manager.AddBag(OtherBagName);
 			 
 			string[] nwn2Types = Enum.GetNames(typeof(NWN2ObjectType));
 			
 			foreach (string nwn2Type in nwn2Types) {
-				manager.AddBag(String.Format("{0} blueprints",nwn2Type));
+				manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
 			}
 			foreach (string nwn2Type in nwn2Types) {
-				manager.AddBag(String.Format("{0} instances",nwn2Type));
+				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}			
 		}
 		
 		
-		protected void CreateStatements(IMoveableManager manager)
+		protected void CreateStatements()
 		{	
 			foreach (Statement statement in statements.GetActions()) {
-				manager.AddMoveable("Actions",statement);
+				manager.AddMoveable(ActionsBagName,statement);
 			}					
 			foreach (Statement statement in statements.GetConditions()) {
-				manager.AddMoveable("Conditions",statement);
+				manager.AddMoveable(ConditionsBagName,statement);
 			}
 		}
 		
 		
-		protected void CreateBlocks(IMoveableManager manager)
+		protected void CreateBlocks()
 		{
-			manager.AddMoveable("Other",blocks.CreatePlayerBlock());
-			manager.AddMoveable("Other",blocks.CreateModuleBlock());
+			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
+			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
 			PopulateBlueprints();
 			PopulateInstances();
 		}
@@ -99,28 +119,59 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void PopulateBlueprints()
 		{
-//			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
-//				StackPanel panel = blueprintPanels[type];
-//				foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
-//					ObjectBlock block = factory.CreateBlueprintBlock(blueprint);
-//					panel.Children.Add(block);
-//				}
-//			}
+			if (!Utils.Nwn2ToolsetFunctions.NeverwinterNightsTwoToolsetIsRunning()) return;
+			
+			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {				
+				foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
+					ObjectBlock block = blocks.CreateBlueprintBlock(blueprint);
+					manager.AddMoveable(String.Format(BlueprintBagNamingFormat,type.ToString()),block);
+				}
+			}
 		}
 		
 		
 		protected void PopulateInstances()
 		{
-//			NWN2GameArea activeArea = NWN2ToolsetMainForm.App.AreaContents.Area;
-//			if (activeArea != null) {				
-//				foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
-//					StackPanel panel = instancePanels[type];
-//					foreach (INWN2Instance instance in activeArea.GetInstancesForObjectType(type)) {
-//						ObjectBlock block = factory.CreateInstanceBlock(instance);
-//						panel.Children.Add(block);
-//					}
-//				}
-//			}
+			// TODO:
+			// check this works when working with the actual toolset and not just Flip.UI.Generic:
+			if (!Utils.Nwn2ToolsetFunctions.NeverwinterNightsTwoToolsetIsRunning()) return;
+			
+			NWN2Toolset.NWN2.Data.NWN2GameArea activeArea = NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area;
+			if (activeArea != null) {				
+				foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+					foreach (NWN2Toolset.NWN2.Data.Instances.INWN2Instance instance in activeArea.GetInstancesForObjectType(type)) {
+						ObjectBlock block = blocks.CreateInstanceBlock(instance);
+						manager.AddMoveable(String.Format(InstanceBagNamingFormat,type.ToString()),block);
+					}
+				}
+			}
+		}
+		
+		
+		protected void TrackToolsetChanges(ToolsetEventReporter reporter)
+		{			
+			if (!reporter.IsRunning) reporter.Start();
+			
+			reporter.InstanceAdded += delegate(object sender, InstanceEventArgs e) 
+			{  	
+				if (manager == null) return;
+				ObjectBlock block = blocks.CreateInstanceBlock(e.Instance);
+				manager.AddMoveable(String.Format(InstanceBagNamingFormat,e.Instance.ObjectType.ToString()),block);
+			};
+			
+			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
+			{  
+				if (manager == null) return;
+				ObjectBlock block = blocks.CreateBlueprintBlock(e.Blueprint);
+				manager.AddMoveable(String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString()),block);
+			};
+			
+			reporter.AreaAdded += delegate(object sender, AreaEventArgs e)
+			{  
+				if (manager == null) return;
+				ObjectBlock block = blocks.CreateAreaBlock(e.Area);
+				manager.AddMoveable(OtherBagName,block);
+			};
 		}
 	}
 }

@@ -38,29 +38,7 @@ namespace Sussex.Flip.UI
 			provider.Populate(mp);
 				
 			mainGrid.Children.Add(mp);
-				
-			// HACK:
-//			ToolsetEventReporter reporter = new ToolsetEventReporter();
-//			reporter.Start();
-//			
-//			reporter.InstanceAdded += delegate(object sender, InstanceEventArgs e) 
-//			{  								
-//				ObjectBlock block = factory.CreateInstanceBlock(e.Instance);
-//				instancePanels[e.Instance.ObjectType].Children.Add(block);
-//			};
-//			
-//			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
-//			{  
-//				ObjectBlock block = factory.CreateBlueprintBlock(e.Blueprint);
-//				blueprintPanels[e.Blueprint.ObjectType].Children.Add(block);
-//			};
-//			
-//			reporter.AreaAdded += delegate(object sender, AreaEventArgs e)
-//			{  
-//				ObjectBlock block = factory.CreateAreaBlock(e.Area);
-//				OtherObjectsPanel.Children.Add(block);
-//			};
-			
+						
 			mainCanvas.Drop += DroppedOnCanvas;
 			MouseDown += GetDragSource;
 			MouseMove += StartDrag;			
