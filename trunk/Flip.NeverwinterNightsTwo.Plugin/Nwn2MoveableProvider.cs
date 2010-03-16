@@ -119,7 +119,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void PopulateBlueprints()
 		{
-			if (!Utils.Nwn2ToolsetFunctions.NeverwinterNightsTwoToolsetIsRunning()) return;
+			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {				
 				foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
@@ -134,7 +134,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			// TODO:
 			// check this works when working with the actual toolset and not just Flip.UI.Generic:
-			if (!Utils.Nwn2ToolsetFunctions.NeverwinterNightsTwoToolsetIsRunning()) return;
+			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			NWN2Toolset.NWN2.Data.NWN2GameArea activeArea = NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area;
 			if (activeArea != null) {				

@@ -78,9 +78,7 @@ namespace Sussex.Flip.Core
 		/// module or level of that game.
 		/// </summary>
 		/// <param name="source">The Flip source to be compiled.</param>
-		/// <param name="target">An object representing the game level, area or 
-		/// module it is to be attached to.</param>
-		public abstract void Attach(FlipScript source, object target);
+		public abstract void Attach(FlipScript source);
 		
 		#endregion
 	}

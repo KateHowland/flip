@@ -138,7 +138,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		}
 		
 		
-		public static bool NeverwinterNightsTwoToolsetIsRunning()
+		public static bool ToolsetIsOpen()
 		{
 			// TODO:
 			// check this works when working with the actual toolset and not just Flip.UI.Generic:

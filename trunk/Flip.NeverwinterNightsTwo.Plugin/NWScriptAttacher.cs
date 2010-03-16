@@ -75,38 +75,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		/// <summary>
 		/// Translates Flip source into NWScript, compiles it, 
-		/// and attaches the results to Neverwinter Nights 2 module.
+		/// and attaches the results to a Neverwinter Nights 2 module.
 		/// </summary>
 		/// <param name="source">The Flip source to be compiled.</param>
-		/// <param name="target">A Neverwinter Nights 2 game module.</param>
-		/// <remarks>The given module must currently be open in the 
-		/// Neverwinter Nights 2 toolset.</remarks>
-		public override void Attach(FlipScript source, object target)
-		{
-			NWN2GameModule module = target as NWN2GameModule;
-			
-			if (module == null) {
-				throw new ArgumentException("Must pass object of type NWN2Toolset.NWN2.Data.NWN2GameModule to attach script.");
-			}
-			
-			Attach(source,module);
-		}		
-		
-		
-		/// <summary>
-		/// Translates Flip source into NWScript, compiles it, 
-		/// and attaches the results to Neverwinter Nights 2 module.
-		/// </summary>
-		/// <param name="source">The Flip source to be compiled.</param>
-		/// <param name="module">A Neverwinter Nights 2 game module.</param>
-		/// <remarks>The given module must currently be open in the 
-		/// Neverwinter Nights 2 toolset.</remarks>
-		public void Attach(FlipScript source, NWN2GameModule module)
+		public override void Attach(FlipScript source)
 		{
 			if (source == null) throw new ArgumentNullException("source");
-			if (module == null) throw new ArgumentNullException("module");
-			if (module != session.GetModule()) {
-				throw new InvalidOperationException("The given module is not currently open in the toolset.");
+			if (!Nwn2ToolsetFunctions.ToolsetIsOpen()) throw new InvalidOperationException("Toolset must be open to attach scripts.");
+			
+			NWN2GameModule module = session.GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open in the toolset.");
 			}
 						
 			try {
