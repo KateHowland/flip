@@ -20,20 +20,50 @@
 		</LinearGradientBrush>
 	</Window.Resources>
 	
-	<AdornerDecorator>		
+	<AdornerDecorator>	
+		
 		<Grid
 		Name="mainGrid">
 			<Grid.RowDefinitions>
+				<RowDefinition Height="20"/>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="250"/>
 			</Grid.ColumnDefinitions>
+			
+	
+			<Menu  
+			Grid.Row="0" 
+			Grid.Column="0" 
+			Grid.ColumnSpan="2" 
+			VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch">
+				
+				<MenuItem 
+				Header="File"
+				IsEnabled="False"/>
+					
+				<MenuItem 
+				Header="Development"
+				IsEnabled="True">
+				
+					<MenuItem
+					Header="Compile and attach"
+					Click="CompileAndAttach"/>
+				
+				</MenuItem>
+					
+				<MenuItem 
+				Header="About"
+				IsEnabled="False"/>
+				
+			</Menu>
 				
 			<Canvas	
 			Name="mainCanvas"
-			Grid.Row="0"
+			Grid.Row="1"
 			Grid.Column="0" 
 			Background="{StaticResource skyBrush}"
 			AllowDrop="True"/>
@@ -45,5 +75,6 @@
 			PreviewDrop="ReturnMoveableToBox"/>	-->
 		
 		</Grid>
+	
 	</AdornerDecorator>
 </Window>

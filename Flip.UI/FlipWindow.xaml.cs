@@ -31,7 +31,7 @@ namespace Sussex.Flip.UI
 			
 			mp = new MoveablesPanel();
 			mp.Name = "moveablesPanel";
-			Grid.SetRow(mp,0);
+			Grid.SetRow(mp,1);
 			Grid.SetColumn(mp,1);
 			mp.PreviewDrop += ReturnMoveableToBox;
 			
@@ -52,17 +52,6 @@ namespace Sussex.Flip.UI
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
-			
-			// TODO:
-			// TEMP:
-			Button button = new Button();
-			button.Content = "Compile and attach";
-			button.Click += CompileAndAttach;
-			button.Width = 100;
-			button.Height = 25;
-			Canvas.SetBottom(button,30);
-			Canvas.SetRight(button,30);
-			mainCanvas.Children.Add(button);
 		}
 		
 		
@@ -72,8 +61,7 @@ namespace Sussex.Flip.UI
 			// TEMP:
 			FlipScript script = new FlipScript("some code");
 			script.Name = "mrscript";
-			// HACK:
-			//attacher.Attach(script,NWN2Toolset.NWN2ToolsetMainForm.App.Module);
+			attacher.Attach(script);
 		}
 			
 		
