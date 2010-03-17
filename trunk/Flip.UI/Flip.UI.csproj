@@ -71,6 +71,10 @@
       <DependentUpon>DropZone.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EventBlock.xaml.cs">
+      <DependentUpon>EventBlock.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="FlipWindow.xaml.cs">
       <DependentUpon>FlipWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -132,6 +136,7 @@
   <ItemGroup>
     <Folder Include="images" />
     <Page Include="DropZone.xaml" />
+    <Page Include="EventBlock.xaml" />
     <Page Include="FlipWindow.xaml" />
     <Page Include="MoveablesPanel.xaml" />
     <Page Include="Peg.xaml" />
