@@ -118,8 +118,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			return conditions;
 		}
 		
-		#endregion
-		
 		#region Actions
 		
 		[ActionStatement("Attacks")]
@@ -353,6 +351,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			return statement;
 		}
 		
+		#endregion
+	
 		#endregion
 	}
 }

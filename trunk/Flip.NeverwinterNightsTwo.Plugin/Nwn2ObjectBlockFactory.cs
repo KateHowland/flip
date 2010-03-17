@@ -37,9 +37,9 @@ using Sussex.Flip.UI;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of Nwn2BlockFactory.
+	/// Description of Nwn2ObjectBlockFactory.
 	/// </summary>
-	public class Nwn2BlockFactory
+	public class Nwn2ObjectBlockFactory
 	{		
 		protected string pathFormat;
 		
@@ -50,7 +50,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// (should also have a parameterless constructor?)
 		
 		
-		public Nwn2BlockFactory()
+		public Nwn2ObjectBlockFactory()
 		{
 			pathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
 		}

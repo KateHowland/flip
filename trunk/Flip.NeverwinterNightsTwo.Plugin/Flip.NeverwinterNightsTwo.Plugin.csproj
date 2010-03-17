@@ -94,9 +94,10 @@
     <Compile Include="ConditionStatementAttribute.cs" />
     <Compile Include="CreaturePlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
+    <Compile Include="Nwn2EventBlockFactory.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />
     <Compile Include="Nwn2Fitters.cs" />
-    <Compile Include="Nwn2BlockFactory.cs" />
+    <Compile Include="Nwn2ObjectBlockFactory.cs" />
     <Compile Include="Nwn2MoveableProvider.cs" />
     <Compile Include="NWScriptAttacher.cs" />
     <Compile Include="NWScriptTranslator.cs" />

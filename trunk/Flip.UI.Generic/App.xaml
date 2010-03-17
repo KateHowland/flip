@@ -1,4 +1,4 @@
-﻿<Application x:Class="Flip.UI.Generic.App"
+﻿<Application x:Class="Sussex.Flip.UI.Generic.App"
     xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     >
