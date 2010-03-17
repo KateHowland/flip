@@ -45,6 +45,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected const string ActionsBagName = "Actions";
 		protected const string ConditionsBagName = "Conditions";
 		protected const string OtherBagName = "Other";
+		protected const string EventsBagName = "Events";
 		protected const string BlueprintBagNamingFormat = "{0} blueprints";
 		protected const string InstanceBagNamingFormat = "{0} instances";
 		
@@ -77,6 +78,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			CreateBags();
 			CreateStatements();
 			CreateBlocks();
+			CreateEvents();
 		}
 		
 		
@@ -85,6 +87,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddBag(ActionsBagName);
 			manager.AddBag(ConditionsBagName);
 			manager.AddBag(OtherBagName);
+			manager.AddBag(EventsBagName);
 			 
 			string[] nwn2Types = Enum.GetNames(typeof(NWN2ObjectType));
 			
@@ -114,6 +117,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
 			PopulateBlueprints();
 			PopulateInstances();
+		}
+		
+		
+		protected void CreateEvents()
+		{
+			EventBlock eb = new EventBlock("dies");			
+			manager.AddMoveable(EventsBagName,eb);
+			eb = new EventBlock("is attacked");			
+			manager.AddMoveable(EventsBagName,eb);
+			eb = new EventBlock("is damaged");			
+			manager.AddMoveable(EventsBagName,eb);	
+			eb = new EventBlock("sees something");			
+			manager.AddMoveable(EventsBagName,eb);
 		}
 		
 		
