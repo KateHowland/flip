@@ -47,16 +47,6 @@
 	    		VerticalAlignment="Center"
 	    		HorizontalAlignment="Center"
 	    		Padding="20"/>
-	    	
-	    		<ComboBox
-	    		x:Name="triggersComboBox"
-	    		Foreground="Black"
-	    		FontSize="16"
-	    		FontFamily="Courier"
-	    		VerticalAlignment="Center"
-	    		HorizontalAlignment="Left"
-	    		Height="30"
-	    		Width="250"/>
 	    		
 	    	</StackPanel>
 			

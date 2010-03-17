@@ -44,9 +44,11 @@ namespace Sussex.Flip.UI
         	Grid.SetZIndex(border,2);
             
             mainGrid.Children.Add(spine);
-            triggersComboBox.ItemsSource = triggers;
             
             Effect = new DropShadowEffect();
+            
+            TriggerSlot triggerSlot = new TriggerSlot();
+            triggerBarPanel.Children.Add(triggerSlot);
         }
     }
 }

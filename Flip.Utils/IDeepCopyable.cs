@@ -28,10 +28,14 @@ using System;
 namespace Sussex.Flip.Utils
 {
 	/// <summary>
-	/// Description of IDeepCopyable.
+	/// Provides a deep copy of an instance of the implementing class.
 	/// </summary>
 	public interface IDeepCopyable<T>
 	{
+		/// <summary>
+		/// Gets a deep copy of this instance.
+		/// </summary>
+		/// <returns>A deep copy of this instance.</returns>
 		T DeepCopy();
 	}
 }
