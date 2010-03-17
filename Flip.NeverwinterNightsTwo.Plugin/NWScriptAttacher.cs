@@ -113,7 +113,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		/// <summary>
-		/// Get a script name which has not already been taken in this module.
+		/// Get a script name which has not already been taken in the current module.
 		/// </summary>
 		/// <param name="preferred">The preferred name for the script,
 		/// which will be amended based on availability.</param>

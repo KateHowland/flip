@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// TODO.
 	/// Description of Nwn2ConditionFactory.
 	/// </summary>
-	public class Nwn2StatementFactory : StatementFactory
+	public class Nwn2StatementFactory
 	{			
 		#region Fields
 		
@@ -95,7 +95,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override List<Statement> GetStatements()
+		public List<Statement> GetStatements()
 		{
 			List<Statement> statements, actions, conditions;
 			GetStatements(out statements, out actions, out conditions);

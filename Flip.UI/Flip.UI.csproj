@@ -108,7 +108,6 @@
       <DependentUpon>StatementSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StatementFactory.cs" />
     <Compile Include="StatementLabel.xaml.cs">
       <DependentUpon>StatementLabel.xaml</DependentUpon>
       <SubType>Code</SubType>
