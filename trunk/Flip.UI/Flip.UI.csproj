@@ -82,6 +82,7 @@
     <Compile Include="IMoveableManager.cs" />
     <Compile Include="MoveableAdorner.cs" />
     <Compile Include="MoveableProvider.cs" />
+    <Compile Include="MoveableSlot.cs" />
     <Compile Include="MoveablesPanel.xaml.cs">
       <DependentUpon>MoveablesPanel.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -120,6 +121,10 @@
       <DependentUpon>TriggerBar.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TriggerSlot.xaml.cs">
+      <DependentUpon>TriggerSlot.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Page Include="Statement.xaml" />
     <Page Include="ObjectBlock.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -143,6 +148,7 @@
     <Page Include="Spine.xaml" />
     <Page Include="StatementLabel.xaml" />
     <Page Include="TriggerBar.xaml" />
+    <Page Include="TriggerSlot.xaml" />
     <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
       <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
       <Name>Flip.Core</Name>

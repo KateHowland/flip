@@ -1,0 +1,183 @@
+/*
+ * Flip - a visual programming language for scripting video games
+ * Copyright (C) 2009, 2010 University of Sussex
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * To contact the authors of this program, email flip@sussex.ac.uk.
+ *
+ * You can also write to Keiron Nicholson at the School of Informatics, 
+ * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
+ * 
+ * This file added by Keiron Nicholson on 17/03/2010 at 14:18.
+ */
+
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using Sussex.Flip.Utils;
+
+namespace Sussex.Flip.UI
+{
+	/// <summary>
+	/// A slot which can hold a Moveable object.
+	/// </summary>
+	public abstract class MoveableSlot : UserControl, IDeepCopyable<MoveableSlot>
+    {
+		#region Fields
+		
+    	/// <summary>
+    	/// Decides whether a given Moveable can fit into this slot.
+    	/// </summary>
+    	protected Fitter objectFitter; 
+    	
+		/// <summary>
+		/// A default Fitter which accepts any Moveable.
+		/// </summary>
+		/// <remarks>Used if no custom fitter is provided upon creation.</remarks>
+    	protected static Fitter defaultFitter = new SimpleFitter();	
+    	
+    	#endregion
+    	
+    	#region Properties
+    	
+    	/// <summary>
+    	/// The Moveable held by this slot.
+    	/// </summary>
+        public abstract ObjectBlock Contents { get; set; }
+        
+        
+    	/// <summary>
+    	/// Decides whether a given Moveable can fit into this slot.
+    	/// </summary>
+		public Fitter ObjectFitter {
+			get { return objectFitter; }
+			set { objectFitter = value; }
+		}
+        
+    	#endregion
+    	
+    	#region Constructors
+        
+		/// <summary>
+		/// Constructs a new <see cref="MoveableSlot"/> instance.
+		/// </summary>
+        public MoveableSlot() : this(defaultFitter)
+        {        	
+        }
+    	
+    	
+		/// <summary>
+		/// Constructs a new <see cref="MoveableSlot"/> instance.
+		/// </summary>
+		/// <param name="fitter">A fitter which decides whether a 
+		/// given Moveable can fit into this slot.</param>
+        public MoveableSlot(Fitter fitter)
+        {            
+            objectFitter = fitter;
+            
+            PreviewDrop += ReplaceSlotContents;
+            DragEnter += HandleDragEnter;
+            DragLeave += HandleDragLeave;
+        }
+        
+        #endregion
+        
+        #region Methods
+        
+        /// <summary>
+        /// Change the appearance of the control to indicate
+        /// that it will accept a drop.
+        /// </summary>
+        protected abstract void SetSlottableAppearance();
+        
+        
+        /// <summary>
+        /// Restore the default appearance of the control.
+        /// </summary>
+        protected abstract void SetDefaultAppearance();
+        
+        
+		/// <summary>
+        /// If the dragged object can fit into this slot,
+        /// change the appearance of the control to indicate
+        /// that it will accept a drop.
+		/// </summary>
+        protected virtual void HandleDragEnter(object sender, DragEventArgs e)
+        {
+            if (!e.Handled) {
+            	ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock; // should become Moveables
+            	if (block != null && block != Contents && Fits(block)) {
+            		SetSlottableAppearance();
+            	}
+            }
+        }
+        
+
+        /// <summary>
+        /// Restore the default appearance of the control.
+        /// </summary>
+        protected virtual void HandleDragLeave(object sender, DragEventArgs e)
+        {
+        	SetDefaultAppearance();
+        }
+        
+
+        /// <summary>
+        /// Accepts dropped Moveable objects, if they fit this slot.
+        /// </summary>
+        protected virtual void ReplaceSlotContents(object sender, DragEventArgs e)
+        {
+        	if (!e.Handled) {
+        		if (e.Data.GetDataPresent(typeof(Moveable))) {
+					ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
+					if (block != null && block != Contents && Fits(block)) { // should become Moveables
+						
+						if (e.AllowedEffects == DragDropEffects.Copy) {
+							Contents = (ObjectBlock)block.DeepCopy();
+						}
+						else if (e.AllowedEffects == DragDropEffects.Move) {
+							block.Remove();
+							Contents = block;
+						}
+					}
+					e.Handled = true;
+        		}
+			}
+			SetDefaultAppearance();
+        }
+        
+                
+        /// <summary>
+        /// Checks whether a given Moveable can be placed
+        /// into this slot.
+        /// </summary>
+        /// <param name="block">The Moveable to check.</param>
+        /// <returns>True if the given Moveable can fit
+        /// in this slot; false otherwise.</returns>
+        public bool Fits(ObjectBlock block)
+        {
+        	return objectFitter.Fits(block);
+        }
+        
+        
+		/// <summary>
+		/// Gets a deep copy of this instance.
+		/// </summary>
+		/// <returns>A deep copy of this instance.</returns>
+        public abstract MoveableSlot DeepCopy();
+        
+        #endregion
+    }
+}
