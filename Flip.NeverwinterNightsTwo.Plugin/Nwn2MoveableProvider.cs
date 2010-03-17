@@ -38,8 +38,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class Nwn2MoveableProvider : MoveableProvider
 	{
-		protected Nwn2BlockFactory blocks;
+		protected Nwn2ObjectBlockFactory blocks;
 		protected Nwn2StatementFactory statements;
+		protected Nwn2EventBlockFactory events;
 		protected IMoveableManager manager; // only set on Populate() call
 		
 		protected const string ActionsBagName = "Actions";
@@ -50,18 +51,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected const string InstanceBagNamingFormat = "{0} instances";
 		
 		
-		public Nwn2MoveableProvider(Nwn2BlockFactory blocks, Nwn2StatementFactory statements)
+		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, Nwn2StatementFactory statements, Nwn2EventBlockFactory events)
 		{
 			if (blocks == null) throw new ArgumentNullException("blocks");	
 			if (statements == null) throw new ArgumentNullException("statements");	
+			if (events == null) throw new ArgumentNullException("events");	
 			
 			this.blocks = blocks;
 			this.statements = statements;
+			this.events = events;
 			this.manager = null;
 		}
 		
 		
-		public Nwn2MoveableProvider(Nwn2BlockFactory blocks, Nwn2StatementFactory statements, ToolsetEventReporter reporter) : this(blocks,statements)
+		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, 
+		                            Nwn2StatementFactory statements, 
+		                            Nwn2EventBlockFactory events, 
+		                            ToolsetEventReporter reporter) : this(blocks,statements,events)
 		{
 			if (reporter != null) {
 				TrackToolsetChanges(reporter);
@@ -122,14 +128,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void CreateEvents()
 		{
-			EventBlock eb = new EventBlock("dies");			
-			manager.AddMoveable(EventsBagName,eb);
-			eb = new EventBlock("is attacked");			
-			manager.AddMoveable(EventsBagName,eb);
-			eb = new EventBlock("is damaged");			
-			manager.AddMoveable(EventsBagName,eb);	
-			eb = new EventBlock("sees something");			
-			manager.AddMoveable(EventsBagName,eb);
+			foreach (EventBlock eventBlock in events.GetEvents()) {
+				manager.AddMoveable(EventsBagName,eventBlock);
+			}
 		}
 		
 		

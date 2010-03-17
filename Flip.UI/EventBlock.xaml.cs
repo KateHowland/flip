@@ -19,9 +19,16 @@ namespace Sussex.Flip.UI
 
     public partial class EventBlock : Moveable
     {
+    	protected static DependencyProperty DisplayNameProperty;
     	protected static DependencyProperty EventNameProperty;
     	
     	
+    	public string DisplayName {
+    		get { return (string)base.GetValue(DisplayNameProperty); }
+    		set { base.SetValue(DisplayNameProperty,value); }
+    	}
+    	
+    	    	
     	public string EventName {
     		get { return (string)base.GetValue(EventNameProperty); }
     		set { base.SetValue(EventNameProperty,value); }
@@ -30,20 +37,30 @@ namespace Sussex.Flip.UI
     	
     	static EventBlock()
     	{
+    		DisplayNameProperty = DependencyProperty.Register("DisplayName",typeof(string),typeof(EventBlock));
     		EventNameProperty = DependencyProperty.Register("EventName",typeof(string),typeof(EventBlock));
     	}
     	
     	
-        public EventBlock(string eventName)
+    	public EventBlock(string eventName) : this(eventName,eventName)
         {
-            EventName = eventName;
+        }
+    	
+    	
+        public EventBlock(string eventName, string displayName)
+        {
+        	if (eventName == null) throw new ArgumentNullException("eventName");
+        	if (displayName == null) throw new ArgumentNullException("displayName");
+        	
+        	EventName = eventName;
+            DisplayName = displayName;
             InitializeComponent();
         }
 
         
 		public override Moveable DeepCopy()
 		{
-			return new EventBlock(EventName);
+			return new EventBlock(DisplayName);
 		}
     }
 }
