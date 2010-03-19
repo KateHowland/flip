@@ -19,35 +19,11 @@ namespace Sussex.Flip.UI
     /// Interaction logic for Peg.xaml
     /// </summary>
 
-    public partial class Peg : UserControl, IDeepCopyable<Peg>
-    {  	
-    	protected RadialGradientBrush canDropBrush;
-    	protected Brush noFeedbackBrush;
-    	protected DropShadowEffect glow;
-    	
-    	
+    public partial class Peg : UserControl
+    {  	    	
         public Peg()
-        {        	
-        	canDropBrush = new RadialGradientBrush(Colors.Blue,Colors.LightBlue);
-        	noFeedbackBrush = Brushes.Transparent;
-        	
+        {       
             InitializeComponent();
-                   	
-            DragEnter += delegate(object sender, DragEventArgs e) 
-            {  
-            	if (!e.Handled) {
-            		if (e.Data.GetDataPresent(typeof(Moveable))) {
-            			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-            			if (moveable != Attached && Fits(moveable)) {
-            				SetToCanDropAppearance();
-            			}
-            		}
-            	}
-            };
-            DragLeave += delegate(object sender, DragEventArgs e) 
-            {  
-            	SetToStandardAppearance();
-            };
             
             // TODO:
             // including this directly in XAML frequently
@@ -57,64 +33,16 @@ namespace Sussex.Flip.UI
             Grid.SetColumn(dropZone,0);
             Grid.SetColumnSpan(dropZone,2);
             mainGrid.Children.Add(dropZone);
-        }
-
-        
-        protected void DroppedOnPegSpace(object sender, DragEventArgs e)
-        {
-        	if (!e.Handled) {
-        		if (e.Data.GetDataPresent(typeof(Moveable))) {
-        			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-					if (Fits(moveable)) {
-        				if (e.AllowedEffects == DragDropEffects.Copy) {
-        					Attached = moveable.DeepCopy();
-        				}
-        				else if (e.AllowedEffects == DragDropEffects.Move) {
-        					Attached = moveable;
-        				}
-					}
-					e.Handled = true;
-        		}
-			}
-			SetToStandardAppearance();
-        }
-        
-        
-		public Peg DeepCopy()
-		{
-			Peg peg = new Peg();
-			return peg;
-		}
-		
-		
-        protected void SetToCanDropAppearance()
-        {
-        	border.Background = canDropBrush;
-        }
-        
-        
-        protected void SetToStandardAppearance()
-        {
-        	border.Background = noFeedbackBrush;
-        }
-        
-        
-        public Moveable Attached {
-        	get {
-        		return border.Child as Moveable;
-        	}
-        	set {
-        		if (value != Attached) {
-        			if (value != null) value.Remove();
-        			border.Child = value;
-        		}
-        	}
-        }
-        
-        
-        public bool Fits(Moveable moveable)
-        {
-        	return moveable is Statement;
+            
+            // TODO:
+            // including this directly in XAML frequently
+            // causes a 'cannot find file' exception - why?
+            PegSlot slot = new PegSlot(new StatementFitter());
+            slot.Height = 70;
+            slot.Width = 130;
+            Grid.SetRow(slot,0);
+            Grid.SetColumn(slot,1);
+            mainGrid.Children.Add(slot);
         }
     }
 }

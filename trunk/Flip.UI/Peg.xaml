@@ -44,22 +44,6 @@
     	HorizontalAlignment="Right"
     	Fill="{StaticResource metallicBrush}"/>
 	
-		<Border
-    	x:Name="border"
-    	Grid.Row="0"
-    	Grid.Column="1"
-		Background="Transparent"
-    	Drop="DroppedOnPegSpace"
-    	VerticalAlignment="Center"
-    	HorizontalAlignment="Left"
-    	MinHeight="70"
-    	MinWidth="130"/>
-	
-		<!--<flipui:DropZone
-    	Grid.Row="1"
-    	Grid.Column="0"
-    	Grid.ColumnSpan="2"/>-->
-	
     </Grid>
     
 </UserControl>

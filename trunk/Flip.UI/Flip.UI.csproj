@@ -94,6 +94,10 @@
     </Compile>
     <Compile Include="ObjectBlockFitter.cs" />
     <Compile Include="Fitter.cs" />
+    <Compile Include="PegSlot.xaml.cs">
+      <DependentUpon>PegSlot.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Spine.xaml.cs">
       <DependentUpon>Spine.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -114,6 +118,7 @@
       <DependentUpon>ObjectBlockSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StatementFitter.cs" />
     <Compile Include="StatementLabel.xaml.cs">
       <DependentUpon>StatementLabel.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -146,6 +151,7 @@
     <Page Include="FlipWindow.xaml" />
     <Page Include="MoveablesPanel.xaml" />
     <Page Include="Peg.xaml" />
+    <Page Include="PegSlot.xaml" />
     <Page Include="Spine.xaml" />
     <Page Include="StatementLabel.xaml" />
     <Page Include="TriggerBar.xaml" />
