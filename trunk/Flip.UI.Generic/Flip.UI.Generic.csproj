@@ -66,6 +66,7 @@
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Plugin\Flip.NeverwinterNightsTwo.Plugin.csproj">
       <Project>{7FBBABEB-7227-4B42-8EBD-309EDFC82687}</Project>
       <Name>Flip.NeverwinterNightsTwo.Plugin</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Flip.UI\Flip.UI.csproj">
       <Project>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</Project>

@@ -20,35 +20,28 @@ namespace Sussex.Flip.UI
 
     public partial class TriggerBar : UserControl
     {
-    	protected Spine spine;
-        
-        
-        public Spine Spine {
-        	get { return spine; }
-        }
-    	
-    	
         public TriggerBar()
         {
-        	string[] triggers = new string[] {"player sees creature", "player picks up item", "player is attacked", "player dies"};
-        	spine = new Spine(3);
+        	Spine spine = new Spine(3);
         	Grid.SetRow(spine,0);
         	Grid.SetColumn(spine,0);
         	spine.Margin = new Thickness(14,0,0,0);
         	
             InitializeComponent();
             
-            spine.Extends = border.Height + 20;
-        	
+            spine.Extends = border.Height + 20;        	
         	Grid.SetZIndex(spine,1);
-        	Grid.SetZIndex(border,2);
-            
+        	Grid.SetZIndex(border,2);            
             mainGrid.Children.Add(spine);
             
             Effect = new DropShadowEffect();
             
-            EventBlockSlot triggerSlot = new EventBlockSlot(new EventBlockFitter());
-            triggerBarPanel.Children.Add(triggerSlot);
+            ObjectBlockSlot eventRaiserSlot = new ObjectBlockSlot("eventraiser",new ObjectBlockFitter());
+            eventRaiserSlot.Padding = new Thickness(10);
+            triggerBarPanel.Children.Add(eventRaiserSlot);
+            
+            EventBlockSlot eventSlot = new EventBlockSlot(new EventBlockFitter());
+            triggerBarPanel.Children.Add(eventSlot);
         }
     }
 }

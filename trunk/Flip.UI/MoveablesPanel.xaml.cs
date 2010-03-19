@@ -40,14 +40,14 @@ namespace Sussex.Flip.UI
 			if (bagName == null) throw new ArgumentNullException("name"); 
 			if (bags.ContainsKey(bagName)) throw new ArgumentException("Bag named '" + bagName + "' already exists.", "name"); 
 
-			StackPanel sp = new StackPanel();
-			sp.Background = Brushes.DarkBlue;
-			bags.Add(bagName,sp.Children);
-			sp.AllowDrop = true;
+			WrapPanel p = new WrapPanel();
+			p.Background = Brushes.DarkBlue;
+			bags.Add(bagName,p.Children);
+			p.AllowDrop = true;
 
 			ScrollViewer sv = new ScrollViewer();
 			sv.Focusable = false;
-			sv.Content = sp;
+			sv.Content = p;
 
 			TabItem t = new TabItem();
 			t.Header = displayName;

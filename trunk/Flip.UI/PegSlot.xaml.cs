@@ -26,12 +26,6 @@ namespace Sussex.Flip.UI
     	
     	/// <summary>
     	/// A brush for indicating that a dragged
-    	/// object cannot be dropped into this slot.
-    	/// </summary>
-    	protected new static Brush noDropBrush;
-    	
-    	/// <summary>
-    	/// A brush for indicating that a dragged
     	/// object can be dropped into this slot.
     	/// </summary>
     	protected new static Brush dropBrush;
@@ -62,8 +56,6 @@ namespace Sussex.Flip.UI
     	static PegSlot()
     	{
     		defaultBrush = Brushes.Transparent;
-    		noDropBrush = MoveableSlot.noDropBrush.Clone();
-    		noDropBrush.Opacity = 0.3;
     		dropBrush = MoveableSlot.dropBrush.Clone();
     		dropBrush.Opacity = 0.3;
     	}
@@ -103,7 +95,7 @@ namespace Sussex.Flip.UI
         /// </summary>
         protected override void SetNoDropAppearance()
 		{
-        	border.Background = noDropBrush;
+        	SetDefaultAppearance();
 		}
         
         

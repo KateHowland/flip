@@ -49,6 +49,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Fitter onlyCreaturesOrPlayers;		
 		protected Fitter onlyDoorsOrPlaceables;		
 		protected Fitter onlyInstances;		
+		protected Fitter onlyEventRaisers;		
 		
 		#endregion
 		
@@ -106,6 +107,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			get { return onlyInstances; }
 		}
 		
+		public Fitter OnlyEventRaisers {
+			get { return onlyEventRaisers; }
+		}
+		
 		#endregion
 		
 		#region Constructors
@@ -125,6 +130,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			onlyCreaturesOrPlayers = new CreaturePlayerFitter();
 			onlyDoorsOrPlaceables = new ObjectBlockFitter("Instance",new List<string>{"Door","Placeable"});
 			onlyInstances = new ObjectBlockFitter("Instance");
+			onlyEventRaisers = new ObjectBlockFitter(new List<string>{"Area","Module","Instance"});
 		}
 		
 		#endregion
