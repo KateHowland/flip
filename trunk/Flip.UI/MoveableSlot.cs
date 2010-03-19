@@ -26,6 +26,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
@@ -40,7 +41,25 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// Decides whether a given Moveable can fit into this slot.
     	/// </summary>
-    	protected Fitter moveableFitter; 
+    	protected Fitter moveableFitter;
+    	
+    	/// <summary>
+    	/// A brush for indicating that no drag operation
+    	/// has been detected over this slot.
+    	/// </summary>
+    	protected static Brush defaultBrush;
+    	
+    	/// <summary>
+    	/// A brush for indicating that a dragged
+    	/// object cannot be dropped into this slot.
+    	/// </summary>
+    	protected static Brush noDropBrush;
+    	
+    	/// <summary>
+    	/// A brush for indicating that a dragged
+    	/// object can be dropped into this slot.
+    	/// </summary>
+    	protected static Brush dropBrush;
     	
     	#endregion
     	
@@ -64,6 +83,17 @@ namespace Sussex.Flip.UI
     	
     	#region Constructors
         
+    	/// <summary>
+    	/// Initialises shared brushes.
+    	/// </summary>
+    	static MoveableSlot()
+    	{    		
+    		defaultBrush = Brushes.Black;
+    		noDropBrush = Brushes.Gray;
+    		dropBrush = Brushes.Blue;
+    	}
+    	
+    	
 		/// <summary>
 		/// Constructs a new <see cref="MoveableSlot"/> instance.
 		/// </summary>
@@ -86,7 +116,14 @@ namespace Sussex.Flip.UI
         /// Change the appearance of the control to indicate
         /// that it will accept a drop.
         /// </summary>
-        protected abstract void SetSlottableAppearance();
+        protected abstract void SetDropAppearance();
+        
+        
+        /// <summary>
+        /// Change the appearance of the control to indicate
+        /// that it will not accept a drop.
+        /// </summary>
+        protected abstract void SetNoDropAppearance();
         
         
         /// <summary>
@@ -104,8 +141,9 @@ namespace Sussex.Flip.UI
         {
             if (!e.Handled) {
             	Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable; 
-            	if (moveable != null && moveable != Contents && Fits(moveable)) {
-            		SetSlottableAppearance();
+            	if (moveable != null && moveable != Contents) {
+            		if (Fits(moveable)) SetDropAppearance();
+            		else SetNoDropAppearance();
             	}
             }
         }

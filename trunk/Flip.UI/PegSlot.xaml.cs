@@ -14,16 +14,27 @@ using System.Windows.Shapes;
 
 namespace Sussex.Flip.UI
 {
-    /// <summary>
-    /// Interaction logic for PegSlot.xaml
-    /// </summary>
-
     public partial class PegSlot : MoveableSlot
     {
     	#region Fields
     	
-    	protected static RadialGradientBrush acceptingBrush;
-    	protected static Brush defaultBrush;
+    	/// <summary>
+    	/// A brush for indicating that no drag operation
+    	/// has been detected over this slot.
+    	/// </summary>
+    	protected new static Brush defaultBrush;
+    	
+    	/// <summary>
+    	/// A brush for indicating that a dragged
+    	/// object cannot be dropped into this slot.
+    	/// </summary>
+    	protected new static Brush noDropBrush;
+    	
+    	/// <summary>
+    	/// A brush for indicating that a dragged
+    	/// object can be dropped into this slot.
+    	/// </summary>
+    	protected new static Brush dropBrush;
     	
     	#endregion
     	
@@ -42,14 +53,27 @@ namespace Sussex.Flip.UI
 		}
     	
     	#endregion
-        
+    	
+    	#region Constructors
+    	
+    	/// <summary>
+    	/// Initialises brushes.
+    	/// </summary>
     	static PegSlot()
     	{
-        	acceptingBrush = new RadialGradientBrush(Colors.Blue,Colors.LightBlue);
-        	defaultBrush = Brushes.Transparent;
+    		defaultBrush = Brushes.Transparent;
+    		noDropBrush = MoveableSlot.noDropBrush.Clone();
+    		noDropBrush.Opacity = 0.3;
+    		dropBrush = MoveableSlot.dropBrush.Clone();
+    		dropBrush.Opacity = 0.3;
     	}
     	
     	
+		/// <summary>
+		/// Constructs a new <see cref="PegSlot"/> instance.
+		/// </summary>
+		/// <param name="fitter">A fitter which decides whether a 
+		/// given Moveable can fit into this slot.</param>
     	public PegSlot(Fitter fitter) : base(fitter)
         {
             InitializeComponent();            
@@ -59,15 +83,28 @@ namespace Sussex.Flip.UI
             SetDefaultAppearance();
         }
         
+    	#endregion
         
+    	#region Methods
+    	
         /// <summary>
         /// Change the appearance of the control to indicate
         /// that it will accept a drop.
         /// </summary>
-        protected override void SetSlottableAppearance()
+        protected override void SetDropAppearance()
         {    	
-        	border.Background = acceptingBrush;
+        	border.Background = dropBrush;
         }
+        
+        
+        /// <summary>
+        /// Change the appearance of the control to indicate
+        /// that it will not accept a drop.
+        /// </summary>
+        protected override void SetNoDropAppearance()
+		{
+        	border.Background = noDropBrush;
+		}
         
         
         /// <summary>
@@ -79,9 +116,15 @@ namespace Sussex.Flip.UI
         }
         
         
+		/// <summary>
+		/// Gets a deep copy of this instance.
+		/// </summary>
+		/// <returns>A deep copy of this instance.</returns>
         public override MoveableSlot DeepCopy()
         {
         	return new PegSlot(moveableFitter);
         }
+        
+        #endregion
     }
 }

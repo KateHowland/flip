@@ -18,32 +18,7 @@ namespace Sussex.Flip.UI
 	/// </summary>
     public partial class EventBlockSlot : MoveableSlot
     {    	
-    	#region Fields
-    	
-    	/// <summary>
-    	/// The default border brush.
-    	/// </summary>
-    	protected static Brush defaultBorderBrush;
-    	
-    	/// <summary>
-    	/// The border brush that indicates a dragged
-    	/// object can be dropped into this slot.
-    	/// </summary>
-    	protected static Brush dropBorderBrush;
-    	
-    	#endregion
-    	
     	#region Constructors
-    	
-    	/// <summary>
-    	/// Initialises brushes.
-    	/// </summary>
-    	static EventBlockSlot()
-    	{
-    		defaultBorderBrush = Brushes.Black;
-    		dropBorderBrush = Brushes.Blue;
-    	}
-    	
     	
 		/// <summary>
 		/// Constructs a new <see cref="EventBlockSlot"/> instance.
@@ -80,9 +55,19 @@ namespace Sussex.Flip.UI
         /// Change the appearance of the control to indicate
         /// that it will accept a drop.
         /// </summary>
-		protected override void SetSlottableAppearance()
+		protected override void SetDropAppearance()
 		{
-			border.BorderBrush = dropBorderBrush;
+			border.BorderBrush = dropBrush;
+		}
+        
+        
+        /// <summary>
+        /// Change the appearance of the control to indicate
+        /// that it will not accept a drop.
+        /// </summary>
+        protected override void SetNoDropAppearance()
+		{
+        	border.BorderBrush = noDropBrush;
 		}
         
                 
@@ -91,7 +76,7 @@ namespace Sussex.Flip.UI
         /// </summary>
 		protected override void SetDefaultAppearance()
 		{
-			border.BorderBrush = defaultBorderBrush;
+			border.BorderBrush = defaultBrush;
 		}
         
         
