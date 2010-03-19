@@ -28,40 +28,40 @@ using System.Collections.Generic;
 
 namespace Sussex.Flip.UI
 {
-	public class SimpleFitter : Fitter
+	public class ObjectBlockFitter : Fitter
 	{
 		protected List<string> types;
 		protected List<string> subtypes;
 		
 		
-		public SimpleFitter()
+		public ObjectBlockFitter()
 		{			
 			this.types = null;
 			this.subtypes = null;
 		}
 		
 		
-		public SimpleFitter(string type) : this(new List<string>{type},null)
+		public ObjectBlockFitter(string type) : this(new List<string>{type},null)
 		{			
 		}
 		
 		
-		public SimpleFitter(List<string> types) : this(types,null)
+		public ObjectBlockFitter(List<string> types) : this(types,null)
 		{			
 		}
 		
 		
-		public SimpleFitter(string type, string subtype) : this(new List<string>{type},new List<string>{subtype})
+		public ObjectBlockFitter(string type, string subtype) : this(new List<string>{type},new List<string>{subtype})
 		{			
 		}
 		
 		
-		public SimpleFitter(string type, List<string> subtypes) : this(new List<string>{type},subtypes)
+		public ObjectBlockFitter(string type, List<string> subtypes) : this(new List<string>{type},subtypes)
 		{			
 		}
 		
 		
-		public SimpleFitter(List<string> types, List<string> subtypes)
+		public ObjectBlockFitter(List<string> types, List<string> subtypes)
 		{
 			this.types = types;
 			this.subtypes = subtypes;
@@ -74,9 +74,10 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public override bool Fits(ObjectBlock block)
+		public override bool Fits(Moveable moveable)
 		{
-			return Fits(block.Type,block.Subtype);
+			ObjectBlock block = moveable as ObjectBlock;			
+			return block != null && Fits(block.Type,block.Subtype);
 		}
 	}
 }

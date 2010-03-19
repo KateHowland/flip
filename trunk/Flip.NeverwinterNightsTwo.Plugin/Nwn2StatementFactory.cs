@@ -124,9 +124,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Attacks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("attacks",actionBrush));
-			statement.AddSlot(new StatementSlot("creature2",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature2",fitters.OnlyCreaturesOrPlayers));
 			return statement;
 		}
 		
@@ -135,9 +135,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement PicksUp()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("picks up",actionBrush));
-			statement.AddSlot(new StatementSlot("item1",fitters.OnlyItems));
+			statement.AddSlot(new ObjectBlockSlot("item1",fitters.OnlyItems));
 			return statement;
 		}	
 		
@@ -146,9 +146,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Drops()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("drops",actionBrush));
-			statement.AddSlot(new StatementSlot("item1",fitters.OnlyItems));
+			statement.AddSlot(new ObjectBlockSlot("item1",fitters.OnlyItems));
 			return statement;
 		}	
 		
@@ -157,9 +157,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Equips()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("equips",actionBrush));
-			statement.AddSlot(new StatementSlot("item1",fitters.OnlyItems));
+			statement.AddSlot(new ObjectBlockSlot("item1",fitters.OnlyItems));
 			return statement;
 		}	
 		
@@ -168,9 +168,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Unequips()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("unequips",actionBrush));
-			statement.AddSlot(new StatementSlot("item1",fitters.OnlyItems));
+			statement.AddSlot(new ObjectBlockSlot("item1",fitters.OnlyItems));
 			return statement;
 		}	
 		
@@ -179,7 +179,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Grows()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreatures));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreatures));
 			statement.AddText(new StatementLabel("grows",actionBrush));
 			return statement;
 		}	
@@ -189,7 +189,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Shrinks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreatures));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreatures));
 			statement.AddText(new StatementLabel("shrinks",actionBrush));
 			return statement;
 		}	
@@ -199,7 +199,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Opens()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("opens",actionBrush));
 			return statement;
 		}	
@@ -209,7 +209,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Closes()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("closes",actionBrush));
 			return statement;
 		}	
@@ -219,7 +219,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Locks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("locks",actionBrush));
 			return statement;
 		}	
@@ -229,7 +229,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Unlocks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("unlocks",actionBrush));
 			return statement;
 		}	
@@ -239,7 +239,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement GetsXP()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("player1",fitters.OnlyPlayers));
+			statement.AddSlot(new ObjectBlockSlot("player1",fitters.OnlyPlayers));
 			statement.AddText(new StatementLabel("gets XP",actionBrush));
 			return statement;
 		}	
@@ -249,9 +249,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Walks()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("walks",actionBrush));
-			statement.AddSlot(new StatementSlot("instance1",fitters.OnlyInstances));
+			statement.AddSlot(new ObjectBlockSlot("instance1",fitters.OnlyInstances));
 			return statement;
 		}	
 		
@@ -260,9 +260,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Runs()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("runs",actionBrush));
-			statement.AddSlot(new StatementSlot("instance1",fitters.OnlyInstances));
+			statement.AddSlot(new ObjectBlockSlot("instance1",fitters.OnlyInstances));
 			return statement;
 		}
 		
@@ -271,9 +271,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Teleports()
 		{
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("teleports",actionBrush));
-			statement.AddSlot(new StatementSlot("instance1",fitters.OnlyInstances));
+			statement.AddSlot(new ObjectBlockSlot("instance1",fitters.OnlyInstances));
 			return statement;
 		}
 		
@@ -285,7 +285,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement IsDead()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("is dead",conditionBrush));
 			return statement;
 		}
@@ -295,7 +295,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement IsAlive()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("is alive",conditionBrush));
 			return statement;
 		}
@@ -305,9 +305,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement IsCarrying()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("creature1",fitters.OnlyCreaturesOrPlayers));
+			statement.AddSlot(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
 			statement.AddText(new StatementLabel("is carrying",conditionBrush));
-			statement.AddSlot(new StatementSlot("item1",fitters.OnlyItems));
+			statement.AddSlot(new ObjectBlockSlot("item1",fitters.OnlyItems));
 			return statement;
 		}
 		
@@ -316,7 +316,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement IsOpen()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("is open",conditionBrush));
 			return statement;
 		}
@@ -326,7 +326,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement IsClosed()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("is closed",conditionBrush));
 			return statement;
 		}
@@ -336,7 +336,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement IsLocked()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("is locked",conditionBrush));
 			return statement;
 		}
@@ -346,7 +346,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement IsUnlocked()
 		{			
 			Statement statement = new Statement();
-			statement.AddSlot(new StatementSlot("door1",fitters.OnlyDoorsOrPlaceables));
+			statement.AddSlot(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
 			statement.AddText(new StatementLabel("is unlocked",conditionBrush));
 			return statement;
 		}

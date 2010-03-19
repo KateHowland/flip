@@ -16,12 +16,10 @@ using Sussex.Flip.Utils;
 namespace Sussex.Flip.UI
 {
     /// <summary>
-    /// Interaction logic for StatementSlot.xaml
+    /// A slot which TODO
     /// </summary>
-
     public partial class StatementSlot : UserControl, IDeepCopyable<StatementSlot>
     {
-    	protected static Fitter defaultFitter = new SimpleFitter();
     	protected Thickness thin;
     	protected Thickness thick;
     	
@@ -32,9 +30,9 @@ namespace Sussex.Flip.UI
 		}
     	
     	
-    	protected Fitter objectFitter;    	
-		public Fitter ObjectFitter {
-			get { return objectFitter; }
+    	protected Fitter moveableFitter;    	
+		public Fitter MoveableFitter {
+			get { return moveableFitter; }
 		}
         
         
@@ -51,7 +49,7 @@ namespace Sussex.Flip.UI
             thick = (Thickness)Resources["thick"];
             
             slotName = name;
-            objectFitter = fitter;
+            moveableFitter = fitter;
             
             slotBorder.Width = ObjectBlock.DefaultSize.Width + slotBorder.BorderThickness.Left + slotBorder.BorderThickness.Right;
             slotBorder.Height = ObjectBlock.DefaultSize.Height + slotBorder.BorderThickness.Top + slotBorder.BorderThickness.Bottom;
@@ -91,13 +89,13 @@ namespace Sussex.Flip.UI
         {
         	if (!e.Handled) {
         		if (e.Data.GetDataPresent(typeof(Moveable))) {
-					ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
-					if (block != null && Fits(block)) {
+					Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable;
+					if (moveable != null && Fits(moveable)) {
 						if (e.AllowedEffects == DragDropEffects.Copy) {
-							Attached = (ObjectBlock)block.DeepCopy();
+							Attached = (Moveable)moveable.DeepCopy();
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
-							Attached = block;
+							Attached = moveable;
 						}
 					}
 					e.Handled = true;
@@ -107,9 +105,9 @@ namespace Sussex.Flip.UI
         }
         
         
-        public ObjectBlock Attached {
+        public Moveable Attached {
         	get {
-        		return slotBorder.Child as ObjectBlock;
+        		return slotBorder.Child as Moveable;
         	}
         	set {
         		if (value != Attached) {
@@ -120,15 +118,15 @@ namespace Sussex.Flip.UI
         }        
         
         
-        public bool Fits(ObjectBlock block)
+        public bool Fits(Moveable moveable)
         {
-        	return objectFitter.Fits(block);
+        	return moveableFitter.Fits(moveable);
         }
         
         
         public StatementSlot DeepCopy()
         {
-        	return new StatementSlot(slotName,objectFitter);
+        	return new StatementSlot(slotName,moveableFitter);
         }
     }
 }

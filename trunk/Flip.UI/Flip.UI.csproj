@@ -75,6 +75,7 @@
       <DependentUpon>EventBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EventBlockFitter.cs" />
     <Compile Include="FlipWindow.xaml.cs">
       <DependentUpon>FlipWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -91,7 +92,7 @@
       <DependentUpon>Peg.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SimpleFitter.cs" />
+    <Compile Include="ObjectBlockFitter.cs" />
     <Compile Include="Fitter.cs" />
     <Compile Include="Spine.xaml.cs">
       <DependentUpon>Spine.xaml</DependentUpon>
@@ -109,8 +110,8 @@
       <SubType>Code</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="StatementSlot.cs">
-      <DependentUpon>StatementSlot.xaml</DependentUpon>
+    <Compile Include="ObjectBlockSlot.cs">
+      <DependentUpon>ObjectBlockSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StatementLabel.xaml.cs">
@@ -121,15 +122,15 @@
       <DependentUpon>TriggerBar.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TriggerSlot.xaml.cs">
-      <DependentUpon>TriggerSlot.xaml</DependentUpon>
+    <Compile Include="EventBlockSlot.cs">
+      <DependentUpon>EventBlockSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Statement.xaml" />
     <Page Include="ObjectBlock.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
-    <Page Include="StatementSlot.xaml" />
+    <Page Include="ObjectBlockSlot.xaml" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
@@ -148,7 +149,7 @@
     <Page Include="Spine.xaml" />
     <Page Include="StatementLabel.xaml" />
     <Page Include="TriggerBar.xaml" />
-    <Page Include="TriggerSlot.xaml" />
+    <Page Include="EventBlockSlot.xaml" />
     <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
       <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
       <Name>Flip.Core</Name>

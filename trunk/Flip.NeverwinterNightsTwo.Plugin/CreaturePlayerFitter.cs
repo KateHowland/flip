@@ -33,9 +33,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class CreaturePlayerFitter : Fitter
 	{
-		public override bool Fits(ObjectBlock block)
+		public override bool Fits(Moveable moveable)
 		{
-			return block.Type == "Player" || (block.Type == "Instance" && block.Subtype == "Creature");
+			ObjectBlock block = moveable as ObjectBlock;
+			return block != null && block.Type == "Player" || (block.Type == "Instance" && block.Subtype == "Creature");
 		}
 	}
 }
