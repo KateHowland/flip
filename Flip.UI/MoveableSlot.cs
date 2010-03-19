@@ -40,13 +40,7 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// Decides whether a given Moveable can fit into this slot.
     	/// </summary>
-    	protected Fitter objectFitter; 
-    	
-		/// <summary>
-		/// A default Fitter which accepts any Moveable.
-		/// </summary>
-		/// <remarks>Used if no custom fitter is provided upon creation.</remarks>
-    	protected static Fitter defaultFitter = new SimpleFitter();	
+    	protected Fitter moveableFitter; 
     	
     	#endregion
     	
@@ -55,15 +49,15 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// The Moveable held by this slot.
     	/// </summary>
-        public abstract ObjectBlock Contents { get; set; }
+        public abstract Moveable Contents { get; set; }
         
         
     	/// <summary>
     	/// Decides whether a given Moveable can fit into this slot.
     	/// </summary>
-		public Fitter ObjectFitter {
-			get { return objectFitter; }
-			set { objectFitter = value; }
+		public Fitter MoveableFitter {
+			get { return moveableFitter; }
+			set { moveableFitter = value; }
 		}
         
     	#endregion
@@ -73,19 +67,11 @@ namespace Sussex.Flip.UI
 		/// <summary>
 		/// Constructs a new <see cref="MoveableSlot"/> instance.
 		/// </summary>
-        public MoveableSlot() : this(defaultFitter)
-        {        	
-        }
-    	
-    	
-		/// <summary>
-		/// Constructs a new <see cref="MoveableSlot"/> instance.
-		/// </summary>
 		/// <param name="fitter">A fitter which decides whether a 
 		/// given Moveable can fit into this slot.</param>
         public MoveableSlot(Fitter fitter)
         {            
-            objectFitter = fitter;
+            moveableFitter = fitter;
             
             PreviewDrop += ReplaceSlotContents;
             DragEnter += HandleDragEnter;
@@ -117,8 +103,8 @@ namespace Sussex.Flip.UI
         protected virtual void HandleDragEnter(object sender, DragEventArgs e)
         {
             if (!e.Handled) {
-            	ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock; // should become Moveables
-            	if (block != null && block != Contents && Fits(block)) {
+            	Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable; 
+            	if (moveable != null && moveable != Contents && Fits(moveable)) {
             		SetSlottableAppearance();
             	}
             }
@@ -141,15 +127,15 @@ namespace Sussex.Flip.UI
         {
         	if (!e.Handled) {
         		if (e.Data.GetDataPresent(typeof(Moveable))) {
-					ObjectBlock block = e.Data.GetData(typeof(Moveable)) as ObjectBlock;
-					if (block != null && block != Contents && Fits(block)) { // should become Moveables
+					Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable;
+					if (moveable != null && moveable != Contents && Fits(moveable)) {
 						
 						if (e.AllowedEffects == DragDropEffects.Copy) {
-							Contents = (ObjectBlock)block.DeepCopy();
+							Contents = (Moveable)moveable.DeepCopy();
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
-							block.Remove();
-							Contents = block;
+							moveable.Remove();
+							Contents = moveable;
 						}
 					}
 					e.Handled = true;
@@ -163,12 +149,12 @@ namespace Sussex.Flip.UI
         /// Checks whether a given Moveable can be placed
         /// into this slot.
         /// </summary>
-        /// <param name="block">The Moveable to check.</param>
+        /// <param name="moveable">The Moveable to check.</param>
         /// <returns>True if the given Moveable can fit
         /// in this slot; false otherwise.</returns>
-        public bool Fits(ObjectBlock block)
+        public bool Fits(Moveable moveable)
         {
-        	return objectFitter.Fits(block);
+        	return moveableFitter.Fits(moveable);
         }
         
         

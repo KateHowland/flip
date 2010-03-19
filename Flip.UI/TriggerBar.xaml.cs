@@ -47,7 +47,7 @@ namespace Sussex.Flip.UI
             
             Effect = new DropShadowEffect();
             
-            TriggerSlot triggerSlot = new TriggerSlot();
+            EventBlockSlot triggerSlot = new EventBlockSlot(new EventBlockFitter());
             triggerBarPanel.Children.Add(triggerSlot);
         }
     }

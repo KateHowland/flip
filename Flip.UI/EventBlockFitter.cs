@@ -20,7 +20,7 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/02/2010 at 13:11.
+ * This file added by Keiron Nicholson on 17/03/2010 at 15:55.
  */
 
 using System;
@@ -28,10 +28,20 @@ using System;
 namespace Sussex.Flip.UI
 {
 	/// <summary>
-	/// Description of Fitter.
+	/// Description of EventBlockFitter.
 	/// </summary>
-	public abstract class Fitter
-	{
-		public abstract bool Fits(Moveable moveable);
+	public class EventBlockFitter : Fitter
+	{		
+		public EventBlockFitter() : base()
+		{
+			
+		}
+		
+		
+		public override bool Fits(Moveable moveable)
+		{
+			EventBlock block = moveable as EventBlock;
+			return block != null;
+		}
 	}
 }

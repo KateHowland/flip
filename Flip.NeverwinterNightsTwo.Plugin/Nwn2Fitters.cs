@@ -112,19 +112,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public Nwn2Fitters()
 		{
-			onlyCreatures = new SimpleFitter("Instance","Creature");
-			onlyDoors = new SimpleFitter("Instance","Door");
-			onlyItems = new SimpleFitter("Instance","Item");
-			onlyPlaceables = new SimpleFitter("Instance","Placeable");
-			onlyStores = new SimpleFitter("Instance","Store");
-			onlyTriggers = new SimpleFitter("Instance","Trigger");
-			onlyWaypoints = new SimpleFitter("Instance","Waypoint");
-			onlyPlayers = new SimpleFitter("Player");
-			onlyAreas = new SimpleFitter("Area");
-			onlyModules = new SimpleFitter("Module");
+			onlyCreatures = new ObjectBlockFitter("Instance","Creature");
+			onlyDoors = new ObjectBlockFitter("Instance","Door");
+			onlyItems = new ObjectBlockFitter("Instance","Item");
+			onlyPlaceables = new ObjectBlockFitter("Instance","Placeable");
+			onlyStores = new ObjectBlockFitter("Instance","Store");
+			onlyTriggers = new ObjectBlockFitter("Instance","Trigger");
+			onlyWaypoints = new ObjectBlockFitter("Instance","Waypoint");
+			onlyPlayers = new ObjectBlockFitter("Player");
+			onlyAreas = new ObjectBlockFitter("Area");
+			onlyModules = new ObjectBlockFitter("Module");
 			onlyCreaturesOrPlayers = new CreaturePlayerFitter();
-			onlyDoorsOrPlaceables = new SimpleFitter("Instance",new List<string>{"Door","Placeable"});
-			onlyInstances = new SimpleFitter("Instance");
+			onlyDoorsOrPlaceables = new ObjectBlockFitter("Instance",new List<string>{"Door","Placeable"});
+			onlyInstances = new ObjectBlockFitter("Instance");
 		}
 		
 		#endregion

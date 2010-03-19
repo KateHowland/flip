@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:flipui="clr-namespace:Sussex.Flip.UI"
 	Height="30"
-	Width="140"
+	Width="180"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}">
 	
 	<UserControl.Resources>

@@ -25,7 +25,7 @@ namespace Sussex.Flip.UI
         }
 
         
-        public void AddSlot(StatementSlot slot)
+        public void AddSlot(ObjectBlockSlot slot)
         {
         	MainPanel.Children.Add(slot);
         }
@@ -42,10 +42,10 @@ namespace Sussex.Flip.UI
 			System.Text.StringBuilder sb = new StringBuilder();
 			int count = MainPanel.Children.Count;
 			for (int i = 0; i < count; i++) {
-				StatementSlot slot = MainPanel.Children[i] as StatementSlot;
+				ObjectBlockSlot slot = MainPanel.Children[i] as ObjectBlockSlot;
 				StatementLabel label = MainPanel.Children[i] as StatementLabel;
-				if (slot != null) sb.Append(slot.SlotName);
-				else if (label != null) sb.Append(label.Text);
+				if (slot != null) sb.Append(slot.ToString());
+				else if (label != null) sb.Append(label.ToString());
 				else sb.Append("?");				
 				if (i < count - 1) sb.Append(" ");
 			}
@@ -63,13 +63,13 @@ namespace Sussex.Flip.UI
 					StatementLabel labelClone = label.DeepCopy();
 					statement.AddText(labelClone);
 				}
-				else if (e is StatementSlot) {
-					StatementSlot slot = (StatementSlot)e;
-					StatementSlot slotClone = slot.DeepCopy();
+				else if (e is ObjectBlockSlot) {
+					ObjectBlockSlot slot = (ObjectBlockSlot)e;
+					ObjectBlockSlot slotClone = (ObjectBlockSlot)slot.DeepCopy();
 					statement.AddSlot(slotClone);
 					
-					if (slot.Attached != null) {
-						slotClone.Attached = (ObjectBlock)slot.Attached.DeepCopy();
+					if (slot.Contents != null) {
+						slotClone.Contents = (ObjectBlock)slot.Contents.DeepCopy();
 					}
 				}
 				else {
