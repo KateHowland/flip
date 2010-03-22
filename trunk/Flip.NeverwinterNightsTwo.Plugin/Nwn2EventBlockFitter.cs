@@ -47,7 +47,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected MoveableSlot eventRaiserSlot = null;
+		protected ObjectBlockSlot eventRaiserSlot = null;
 		protected ObjectBlock GetEventRaiserBlock()
 		{
 			if (eventRaiserSlot == null) return null;
