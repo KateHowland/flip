@@ -20,27 +20,40 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/02/2010 at 13:11.
+ * This file added by Keiron Nicholson on 22/03/2010 at 11:34.
  */
 
 using System;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	// TODO better name. CriteriaChecker? MoveableAssessor?
-	// MoveableFitter? MoveableGuard?
 	/// <summary>
-	/// Contains logic about whether a given Moveable meets
-	/// some set of criteria.
+	/// Description of Nwn2TriggerBarFitter.
 	/// </summary>
-	public abstract class Fitter
+	public class Nwn2TriggerBarFitter : TriggerBarFitter
 	{
-		/// <summary>
-		/// Gets whether a given Moveable meets the criteria
-		/// embodied by this Fitter.
-		/// </summary>
-		/// <param name="moveable"></param>
-		/// <returns></returns>
-		public abstract bool Fits(Moveable moveable);
+		protected Fitter eventRaiserFitter;
+		protected Fitter eventFitter;
+		
+		
+		public override Fitter EventRaiserFitter {
+			get { return eventRaiserFitter; }
+		}
+		
+		
+		public override Fitter EventFitter {
+			get { return eventFitter; }
+		}	
+		
+		
+		public Nwn2TriggerBarFitter(Fitter eventRaiserFitter, Fitter eventFitter) : base()
+		{
+			if (eventRaiserFitter == null) throw new ArgumentNullException("eventRaiserFitter");
+			if (eventFitter == null) throw new ArgumentNullException("eventFitter");
+			
+			this.eventRaiserFitter = eventRaiserFitter;
+			this.eventFitter = eventFitter;
+		}
 	}
 }

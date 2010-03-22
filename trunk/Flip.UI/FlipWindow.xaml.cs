@@ -20,10 +20,11 @@ namespace Sussex.Flip.UI
 		protected MoveablesPanel mp;
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider)
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, TriggerBarFitter triggerBarFitter)
 		{
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
+        	if (triggerBarFitter == null) throw new ArgumentNullException("triggerBarFitter"); // HACK
 			
 			this.attacher = attacher;
 			
@@ -48,7 +49,7 @@ namespace Sussex.Flip.UI
 			PreviewDragLeave += DestroyAdorner;			
 			PreviewDrop += DestroyAdorner;
 			
-			triggerBar = new TriggerBar();
+			triggerBar = new TriggerBar(triggerBarFitter);
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
