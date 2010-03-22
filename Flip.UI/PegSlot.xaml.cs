@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 
 namespace Sussex.Flip.UI
 {
-    public partial class PegSlot : MoveableSlot
+    public partial class PegSlot : MoveableSlot<Moveable>
     {
     	#region Fields
     	
@@ -56,7 +56,7 @@ namespace Sussex.Flip.UI
     	static PegSlot()
     	{
     		defaultBrush = Brushes.Transparent;
-    		dropBrush = MoveableSlot.dropBrush.Clone();
+    		dropBrush = MoveableSlot<Moveable>.dropBrush.Clone();
     		dropBrush.Opacity = 0.3;
     	}
     	
@@ -112,7 +112,7 @@ namespace Sussex.Flip.UI
 		/// Gets a deep copy of this instance.
 		/// </summary>
 		/// <returns>A deep copy of this instance.</returns>
-        public override MoveableSlot DeepCopy()
+        public override MoveableSlot<Moveable> DeepCopy()
         {
         	return new PegSlot(moveableFitter);
         }

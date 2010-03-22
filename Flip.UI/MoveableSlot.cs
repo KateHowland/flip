@@ -34,7 +34,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// A slot which can hold a Moveable object.
 	/// </summary>
-	public abstract class MoveableSlot : UserControl, IDeepCopyable<MoveableSlot>
+	public abstract class MoveableSlot<T> : UserControl, IDeepCopyable<MoveableSlot<T>> where T : Moveable 
     {
 		#region Fields
 		
@@ -68,7 +68,7 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// The Moveable held by this slot.
     	/// </summary>
-        public abstract Moveable Contents { get; set; }
+        public abstract T Contents { get; set; }
         
         
     	/// <summary>
@@ -169,11 +169,11 @@ namespace Sussex.Flip.UI
 					if (moveable != null && moveable != Contents && Fits(moveable)) {
 						
 						if (e.AllowedEffects == DragDropEffects.Copy) {
-							Contents = (Moveable)moveable.DeepCopy();
+							Contents = (T)moveable.DeepCopy();
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
 							moveable.Remove();
-							Contents = moveable;
+							Contents = (T)moveable;
 						}
 					}
 					e.Handled = true;
@@ -200,7 +200,7 @@ namespace Sussex.Flip.UI
 		/// Gets a deep copy of this instance.
 		/// </summary>
 		/// <returns>A deep copy of this instance.</returns>
-        public abstract MoveableSlot DeepCopy();
+        public abstract MoveableSlot<T> DeepCopy();
         
         #endregion
     }
