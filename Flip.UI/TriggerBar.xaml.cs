@@ -20,8 +20,16 @@ namespace Sussex.Flip.UI
 
     public partial class TriggerBar : UserControl
     {
-        public TriggerBar()
+    	protected ObjectBlockSlot eventRaiserSlot;
+    	protected EventBlockSlot eventSlot;
+    	
+    	
+        public TriggerBar(TriggerBarFitter triggerBarFitter)
         {
+        	if (triggerBarFitter == null) throw new ArgumentNullException("triggerBarFitter"); // HACK
+        	if (triggerBarFitter.EventFitter == null) throw new ArgumentException("TriggerBarFitter has a null EventFitter.","triggerBarFitter"); // HACK
+        	if (triggerBarFitter.EventRaiserFitter == null) throw new ArgumentException("TriggerBarFitter has a null EventRaiserFitter.","triggerBarFitter"); // HACK
+        	
         	Spine spine = new Spine(3);
         	Grid.SetRow(spine,0);
         	Grid.SetColumn(spine,0);
@@ -36,12 +44,27 @@ namespace Sussex.Flip.UI
             
             Effect = new DropShadowEffect();
             
-            ObjectBlockSlot eventRaiserSlot = new ObjectBlockSlot("eventraiser",new ObjectBlockFitter());
+            eventRaiserSlot = new ObjectBlockSlot("eventraiser",triggerBarFitter.EventRaiserFitter);
             eventRaiserSlot.Padding = new Thickness(10);
             triggerBarPanel.Children.Add(eventRaiserSlot);
             
-            EventBlockSlot eventSlot = new EventBlockSlot(new EventBlockFitter());
+            eventSlot = new EventBlockSlot(triggerBarFitter.EventFitter);
             triggerBarPanel.Children.Add(eventSlot);
         }
+        
+        
+//        public ObjectBlock GetEventRaiser()
+//        {
+//        	
+//        }
+//        
+//        
+//        public EventBlock GetEvent()
+//        {
+//        	try {
+//        		return (EventBlock)eventSlot.Contents;
+//        	}
+//        	catch (
+//        }
     }
 }
