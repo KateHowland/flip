@@ -131,7 +131,7 @@
       <DependentUpon>EventBlockSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TriggerBarFitter.cs" />
+    <Compile Include="TriggerControl.cs" />
     <Page Include="Statement.xaml" />
     <Page Include="ObjectBlock.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

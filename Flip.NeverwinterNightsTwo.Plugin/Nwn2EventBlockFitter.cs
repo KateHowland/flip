@@ -35,23 +35,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class Nwn2EventBlockFitter : Fitter
 	{		
-		protected ObjectBlock raiserBlock;		
-		public ObjectBlock RaiserBlock {
-			get { return raiserBlock; }
-			internal set { raiserBlock = value; }
+		protected ObjectBlockSlot raiserSlot = null;
+		
+		
+		public Nwn2EventBlockFitter(ObjectBlockSlot raiserSlot) : base()
+		{
+			this.raiserSlot = raiserSlot;
 		}
 		
 		
-		public Nwn2EventBlockFitter() : base()
+		protected ObjectBlock GetRaiserBlock()
 		{
-		}
-		
-		
-		protected ObjectBlockSlot eventRaiserSlot = null;
-		protected ObjectBlock GetEventRaiserBlock()
-		{
-			if (eventRaiserSlot == null) return null;
-			else return eventRaiserSlot.Contents as ObjectBlock;
+			if (raiserSlot == null) return null;
+			
+			else return raiserSlot.Contents as ObjectBlock;
 		}
 		
 		
@@ -65,10 +62,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			EventBlock block = moveable as EventBlock;		
 			if (block == null) return false;
 			
-			ObjectBlock raiserBlock = GetEventRaiserBlock();
-			if (raiserBlock == null) return true; // fit any event if no event raiser is specified
-				
-			IList<string> validEvents = Nwn2EventRaiserBlockFitter.GetEvents(raiserBlock);
+			ObjectBlock raiserBlock = GetRaiserBlock();
+			if (raiserBlock == null) {
+				return true; // fit any event if no event raiser is specified
+			}
+			
+			IList<string> validEvents = Nwn2RaiserBlockFitter.GetEvents(raiserBlock);
 				
 			return validEvents.Contains(block.EventName);
 		}

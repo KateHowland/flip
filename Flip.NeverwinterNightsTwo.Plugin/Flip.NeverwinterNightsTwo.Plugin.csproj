@@ -96,12 +96,12 @@
     <Compile Include="FlipPlugin.cs" />
     <Compile Include="Nwn2EventBlockFactory.cs" />
     <Compile Include="Nwn2EventBlockFitter.cs" />
-    <Compile Include="Nwn2EventRaiserBlockFitter.cs" />
+    <Compile Include="Nwn2RaiserBlockFitter.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />
     <Compile Include="Nwn2Fitters.cs" />
     <Compile Include="Nwn2ObjectBlockFactory.cs" />
     <Compile Include="Nwn2MoveableProvider.cs" />
-    <Compile Include="Nwn2TriggerBarFitter.cs" />
+    <Compile Include="Nwn2TriggerControl.xaml.cs" />
     <Compile Include="NWScriptAttacher.cs" />
     <Compile Include="NWScriptTranslator.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
@@ -135,5 +135,6 @@
       <Name>Flip.Utils</Name>
       <Private>False</Private>
     </ProjectReference>
+    <Page Include="Nwn2TriggerControl.xaml" />
   </ItemGroup>
 </Project>
