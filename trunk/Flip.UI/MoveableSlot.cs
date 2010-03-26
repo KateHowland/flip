@@ -34,7 +34,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// A slot which can hold a Moveable object.
 	/// </summary>
-	public abstract class MoveableSlot<T> : UserControl, IDeepCopyable<MoveableSlot<T>> where T : Moveable 
+	public abstract class MoveableSlot : UserControl, IDeepCopyable<MoveableSlot>
     {
 		#region Fields
 		
@@ -68,7 +68,15 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// The Moveable held by this slot.
     	/// </summary>
-        public abstract T Contents { get; set; }
+    	public Moveable Contents { 
+    		get { 
+    			return GetMoveable(); 
+    		}
+    		set { 
+    			SetMoveable(value); 
+    			OnMoveableChanged(new MoveableEventArgs(value));
+    		}
+    	}
         
         
     	/// <summary>
@@ -79,6 +87,20 @@ namespace Sussex.Flip.UI
 			set { moveableFitter = value; }
 		}
         
+    	#endregion
+    	
+    	#region Events
+    	
+    	public event EventHandler<MoveableEventArgs> MoveableChanged;
+    	
+		protected virtual void OnMoveableChanged(MoveableEventArgs e)
+		{
+			EventHandler<MoveableEventArgs> handler = MoveableChanged;
+			if (handler != null) {
+				handler(this,e);
+			}
+		}
+    	
     	#endregion
     	
     	#region Constructors
@@ -111,6 +133,19 @@ namespace Sussex.Flip.UI
         #endregion
         
         #region Methods
+        
+        /// <summary>
+        /// Gets the Moveable held by this slot.
+        /// </summary>
+        /// <returns>A Moveable, or null if the slot is empty.</returns>
+        protected abstract Moveable GetMoveable();
+                
+        
+        /// <summary>
+        /// Sets the Moveable held by this slot.
+        /// </summary>
+        protected abstract void SetMoveable(Moveable moveable);
+        
         
         /// <summary>
         /// Change the appearance of the control to indicate
@@ -169,11 +204,11 @@ namespace Sussex.Flip.UI
 					if (moveable != null && moveable != Contents && Fits(moveable)) {
 						
 						if (e.AllowedEffects == DragDropEffects.Copy) {
-							Contents = (T)moveable.DeepCopy();
+							Contents = moveable.DeepCopy();
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
 							moveable.Remove();
-							Contents = (T)moveable;
+							Contents = moveable;
 						}
 					}
 					e.Handled = true;
@@ -200,7 +235,7 @@ namespace Sussex.Flip.UI
 		/// Gets a deep copy of this instance.
 		/// </summary>
 		/// <returns>A deep copy of this instance.</returns>
-        public abstract MoveableSlot<T> DeepCopy();
+        public abstract MoveableSlot DeepCopy();
         
         #endregion
     }

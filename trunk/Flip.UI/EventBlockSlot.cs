@@ -16,24 +16,8 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// A slot which can hold an EventBlock.
 	/// </summary>
-    public partial class EventBlockSlot : MoveableSlot<EventBlock>
+    public partial class EventBlockSlot : MoveableSlot
     {    	
-		#region Properties
-        
-    	/// <summary>
-    	/// The EventBlock held by this slot.
-    	/// </summary>
-		public override EventBlock Contents {
-			get {
-				return border.Child as EventBlock;
-			}
-			set {
-				border.Child = value;
-			}
-		}
-    	
-    	#endregion
-    	
     	#region Constructors
     	
 		/// <summary>
@@ -50,6 +34,25 @@ namespace Sussex.Flip.UI
 		#endregion
         
     	#region Methods
+        
+        /// <summary>
+        /// Gets the Moveable held by this slot.
+        /// </summary>
+        /// <returns>A Moveable, or null if the slot is empty.</returns>
+        protected override Moveable GetMoveable()
+        {
+        	return border.Child as EventBlock;
+        }
+                
+        
+        /// <summary>
+        /// Sets the Moveable held by this slot.
+        /// </summary>
+        protected override void SetMoveable(Moveable moveable)
+        {
+        	border.Child = moveable;
+        }
+        
         
         /// <summary>
         /// Change the appearance of the control to indicate
@@ -84,10 +87,10 @@ namespace Sussex.Flip.UI
 		/// Gets a deep copy of this instance.
 		/// </summary>
 		/// <returns>A deep copy of this instance.</returns>
-		public override MoveableSlot<EventBlock> DeepCopy()
+		public override MoveableSlot DeepCopy()
 		{
 			EventBlockSlot copy = new EventBlockSlot(moveableFitter);
-			copy.Contents = (EventBlock)this.Contents.DeepCopy();
+			copy.Contents = this.Contents.DeepCopy();
 			return copy;
 		}
 		
