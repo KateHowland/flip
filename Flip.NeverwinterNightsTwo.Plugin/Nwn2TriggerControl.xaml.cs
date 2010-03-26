@@ -26,7 +26,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	    	
 		public override ObjectBlock RaiserBlock {
 			get {
-				return raiserSlot.Contents;
+				return raiserSlot.Contents as ObjectBlock;
 			}
 			set {
 				raiserSlot.Contents = value;
@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	
 		public override EventBlock EventBlock {
 			get {
-				return eventSlot.Contents;
+				return eventSlot.Contents as EventBlock;
 			}
 			set {
 				eventSlot.Contents = value;
@@ -49,14 +49,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         	raiserSlot = new ObjectBlockSlot("raiser",new Nwn2RaiserBlockFitter());
             raiserSlot.Padding = new Thickness(10);
             eventSlot = new EventBlockSlot(new Nwn2EventBlockFitter(raiserSlot));
-//            raiserSlot.MoveableChanging += delegate(object sender, MoveableEventArgs e) { 
-//            	MessageBox.Show("MoveableChanging"); 
-//            	EventBlock eb = e.Moveable as EventBlock;
-//            	if (eb != null && eb.EventName == "OnInventoryDisturbed") e.Cancel = true;
-//            };
             
-//            raiserSlot.MoveableChanged += delegate { MessageBox.Show("MoveableChanged"); };
+            raiserSlot.MoveableChanged += delegate(object sender, MoveableEventArgs e) 
+            {  
+            	if (e.Moveable == null) {
+            	}
+            	else {
+            	}
+            };
             
+            eventSlot.MoveableChanged += delegate(object sender, MoveableEventArgs e) 
+            {  
+            	if (e.Moveable == null) {
+            	}
+            	else {
+            	}
+            };
             
             InitializeComponent();
             

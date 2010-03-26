@@ -54,8 +54,22 @@ namespace Sussex.Flip.UI
 		}
     	
     	
+		// HACK:
     	public void Remove()
     	{
+    		FrameworkElement f = this;
+    		
+    		while (f != null) {
+    			
+    			MoveableSlot slot = f as MoveableSlot;
+    			if (slot != null && slot.Contents == this) {
+    				slot.Contents = null;
+    				return;
+    			}
+    			
+    			else f = f.Parent as FrameworkElement;
+    		}
+    		
     		if (Parent is Panel) {
     			Panel panel = (Panel)Parent;
     			if (panel.Children.Contains(this)) {

@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="IMoveableManager.cs" />
     <Compile Include="MoveableAdorner.cs" />
+    <Compile Include="MoveableEventArgs.cs" />
     <Compile Include="MoveableProvider.cs" />
     <Compile Include="MoveableSlot.cs" />
     <Compile Include="MoveablesPanel.xaml.cs">

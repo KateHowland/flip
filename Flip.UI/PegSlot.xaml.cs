@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 
 namespace Sussex.Flip.UI
 {
-    public partial class PegSlot : MoveableSlot<Moveable>
+    public partial class PegSlot : MoveableSlot
     {
     	#region Fields
     	
@@ -32,22 +32,6 @@ namespace Sussex.Flip.UI
     	
     	#endregion
     	
-		#region Properties
-        
-    	/// <summary>
-    	/// The Moveable held by this slot.
-    	/// </summary>
-		public override Moveable Contents {
-			get {
-				return border.Child as Moveable;
-			}
-			set {
-				border.Child = value;
-			}
-		}
-    	
-    	#endregion
-    	
     	#region Constructors
     	
     	/// <summary>
@@ -56,7 +40,7 @@ namespace Sussex.Flip.UI
     	static PegSlot()
     	{
     		defaultBrush = Brushes.Transparent;
-    		dropBrush = MoveableSlot<Moveable>.dropBrush.Clone();
+    		dropBrush = MoveableSlot.dropBrush.Clone();
     		dropBrush.Opacity = 0.3;
     	}
     	
@@ -79,6 +63,25 @@ namespace Sussex.Flip.UI
         
     	#region Methods
     	
+        /// <summary>
+        /// Gets the Moveable held by this slot.
+        /// </summary>
+        /// <returns>A Moveable, or null if the slot is empty.</returns>
+        protected override Moveable GetMoveable()
+        {
+        	return border.Child as Moveable;
+        }
+                
+        
+        /// <summary>
+        /// Sets the Moveable held by this slot.
+        /// </summary>
+        protected override void SetMoveable(Moveable moveable)
+        {
+        	border.Child = moveable;
+        }
+        
+        
         /// <summary>
         /// Change the appearance of the control to indicate
         /// that it will accept a drop.
@@ -112,7 +115,7 @@ namespace Sussex.Flip.UI
 		/// Gets a deep copy of this instance.
 		/// </summary>
 		/// <returns>A deep copy of this instance.</returns>
-        public override MoveableSlot<Moveable> DeepCopy()
+        public override MoveableSlot DeepCopy()
         {
         	return new PegSlot(moveableFitter);
         }
