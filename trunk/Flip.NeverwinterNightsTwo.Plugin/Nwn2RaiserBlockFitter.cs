@@ -33,7 +33,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// <summary>
 	/// TODO Description of Nwn2EventRaiserBlockFitter.
 	/// </summary>
-	public class Nwn2EventRaiserBlockFitter : Fitter
+	public class Nwn2RaiserBlockFitter : Fitter
 	{		
 		#region Fields
 		
@@ -49,7 +49,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <summary>
 		/// Initialises the list of names of Nwn2ObjectTypes which raise events.
 		/// </summary>
-		static Nwn2EventRaiserBlockFitter()
+		static Nwn2RaiserBlockFitter()
 		{
 			instanceEventRaisers = new List<string> {
 				"Creature",
@@ -64,7 +64,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <summary>
 		/// Constructs a new <see cref="Sussex.Flip.Games.NeverwinterNightsTwo.Nwn2EventRaiserBlockFitter"/> instance.
 		/// </summary>
-		public Nwn2EventRaiserBlockFitter() : base()
+		public Nwn2RaiserBlockFitter() : base()
 		{			
 		}
 		
@@ -99,6 +99,30 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="block"></param>
+		/// <returns></returns>
+		public static Nwn2Type? GetNwn2Type(ObjectBlock block)
+		{	
+			if (block.Type == "Module") return Nwn2Type.Module;
+			
+			else if (block.Type == "Area") return Nwn2Type.Area;
+			
+			else if (block.Type == "Instance" && instanceEventRaisers.Contains(block.Subtype)) {
+				try {
+					return (Nwn2Type)Enum.Parse(typeof(Nwn2Type),block.Subtype,true);
+				}
+				catch (ArgumentException) {
+					return null;
+				}
+			}
+			
+			else return null;
+		}
+		
+		
+		/// <summary>
 		/// Gets a list of events which can be raised by a NWN2 type
 		/// represented by this block.
 		/// </summary>
@@ -111,13 +135,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (block == null) throw new ArgumentNullException("block");
 			
 			if (CanRaiseEvents(block)) {
-				try {
-					Nwn2Type nwn2Type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),block.Subtype,true);
-					return Nwn2ScriptSlot.GetScriptSlotNames(nwn2Type);
-				}
-				catch (ArgumentException) { 
-					return new List<string>(); 
-				}
+				Nwn2Type? type = GetNwn2Type(block);
+				if (type != null) return Nwn2ScriptSlot.GetScriptSlotNames(type.Value);
+				else return new List<string>();
 			}
 			else {
 				return new List<string>();

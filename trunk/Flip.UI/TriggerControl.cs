@@ -20,19 +20,20 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 22/03/2010 at 11:23.
+ * This file added by Keiron Nicholson on 22/03/2010 at 16:53.
  */
 
 using System;
+using System.Windows.Controls;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
-	/// Description of TriggerBarFitter.
+	/// Description of TriggerControl.
 	/// </summary>
-	public abstract class TriggerBarFitter
+	public abstract class TriggerControl : UserControl
 	{
-		public abstract Fitter EventRaiserFitter { get; }
-		public abstract Fitter EventFitter { get; }
+		public abstract ObjectBlock RaiserBlock { get; set; }
+		public abstract EventBlock EventBlock { get; set; }
 	}
 }

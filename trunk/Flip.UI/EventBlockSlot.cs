@@ -18,21 +18,6 @@ namespace Sussex.Flip.UI
 	/// </summary>
     public partial class EventBlockSlot : MoveableSlot<EventBlock>
     {    	
-    	#region Constructors
-    	
-		/// <summary>
-		/// Constructs a new <see cref="EventBlockSlot"/> instance.
-		/// </summary>
-		/// <param name="fitter">A fitter which decides whether a 
-		/// given Moveable can fit into this slot.</param>
-		public EventBlockSlot(Fitter fitter) : base(fitter)
-		{		
-        	InitializeComponent();
-        	SetDefaultAppearance();	
-		}
-
-		#endregion
-		
 		#region Properties
         
     	/// <summary>
@@ -48,6 +33,21 @@ namespace Sussex.Flip.UI
 		}
     	
     	#endregion
+    	
+    	#region Constructors
+    	
+		/// <summary>
+		/// Constructs a new <see cref="EventBlockSlot"/> instance.
+		/// </summary>
+		/// <param name="fitter">A fitter which decides whether a 
+		/// given Moveable can fit into this slot.</param>
+		public EventBlockSlot(Fitter fitter) : base(fitter)
+		{		
+        	InitializeComponent();
+        	SetDefaultAppearance();	
+		}
+
+		#endregion
         
     	#region Methods
         

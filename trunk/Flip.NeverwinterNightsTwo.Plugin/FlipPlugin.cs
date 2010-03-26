@@ -209,9 +209,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory(eventBrush);
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,new ToolsetEventReporter());
-			Nwn2TriggerBarFitter triggerFitter = new Nwn2TriggerBarFitter(new Nwn2EventRaiserBlockFitter(),new Nwn2EventBlockFitter());
+			Nwn2TriggerControl trigger = new Nwn2TriggerControl();
 			
-			FlipWindow window = new FlipWindow(attacher,provider,triggerFitter);			
+			FlipWindow window = new FlipWindow(attacher,provider,trigger);			
 			window.Show();
 		}
 		
