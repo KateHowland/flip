@@ -58,11 +58,18 @@ namespace Sussex.Flip.UI
 		
 		protected void CompileAndAttach(object sender, RoutedEventArgs e)
 		{
-			// TODO:
-			// TEMP:
-			FlipScript script = new FlipScript("some code");
-			script.Name = "mrscript";
-			attacher.Attach(script);
+			FlipScript script = new FlipScript("...~~~...");
+			
+			script.Name = "EmptyScript";
+			
+			string eventName = triggerBar.GetEvent();
+			
+			try {
+				attacher.Attach(script,eventName);
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.ToString());
+			}
 		}
 			
 		

@@ -78,9 +78,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// and attaches the results to a Neverwinter Nights 2 module.
 		/// </summary>
 		/// <param name="source">The Flip source to be compiled.</param>
-		public override void Attach(FlipScript source)
+		/// <param name="eventName">The event to attach the source to. HACK.</param>
+		public override void Attach(FlipScript source, string eventName) //HACK
 		{
 			if (source == null) throw new ArgumentNullException("source");
+			if (eventName == null) throw new ArgumentNullException("eventName");//HACK
+			if (eventName == String.Empty) throw new ArgumentException("eventName must not be empty.","eventName");//HACK
 			if (!Nwn2ToolsetFunctions.ToolsetIsOpen()) throw new InvalidOperationException("Toolset must be open to attach scripts.");
 			
 			NWN2GameModule module = session.GetModule();
@@ -101,10 +104,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				// TODO:
 				// temp:
-				session.AttachScriptToModule(script,"OnPlayerRest");
-				foreach (NWN2GameArea area in module.Areas.Values) {
-					session.AttachScriptToArea(script,area,"OnClientEnterScript");
-				}
+				session.AttachScriptToModule(script,eventName);
 			}
 			catch (Exception e) {
 				throw new ApplicationException("Failed to translate and attach script.\n\n" + e.ToString(),e);
