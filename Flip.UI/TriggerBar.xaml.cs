@@ -20,6 +20,9 @@ namespace Sussex.Flip.UI
 
     public partial class TriggerBar : UserControl
     {
+    	protected TriggerControl triggerControl;
+    	
+    	
         public TriggerBar(TriggerControl triggerControl)
         {
         	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
@@ -38,7 +41,15 @@ namespace Sussex.Flip.UI
             
             Effect = new DropShadowEffect();
             
+            this.triggerControl = triggerControl;
             triggerBarPanel.Children.Add(triggerControl);
+        }
+        
+        
+        public string GetEvent()
+        {
+        	if (triggerControl.EventBlock == null) return null;
+        	else return triggerControl.EventBlock.EventName;
         }
     }
 }
