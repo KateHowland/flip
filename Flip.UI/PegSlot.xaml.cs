@@ -54,7 +54,7 @@ namespace Sussex.Flip.UI
         {
             InitializeComponent();            
             
-            this.moveableFitter = fitter;
+            this.fitter = fitter;
             
             SetDefaultAppearance();
         }
@@ -117,7 +117,7 @@ namespace Sussex.Flip.UI
 		/// <returns>A deep copy of this instance.</returns>
         public override MoveableSlot DeepCopy()
         {
-        	return new PegSlot(moveableFitter);
+        	return new PegSlot(fitter);
         }
         
         #endregion

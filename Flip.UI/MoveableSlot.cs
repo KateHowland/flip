@@ -41,7 +41,7 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// Decides whether a given Moveable can fit into this slot.
     	/// </summary>
-    	protected Fitter moveableFitter;
+    	protected Fitter fitter;
     	
     	/// <summary>
     	/// A brush for indicating that no drag operation
@@ -82,9 +82,9 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// Decides whether a given Moveable can fit into this slot.
     	/// </summary>
-		public Fitter MoveableFitter {
-			get { return moveableFitter; }
-			set { moveableFitter = value; }
+		public Fitter Fitter {
+			get { return fitter; }
+			set { fitter = value; }
 		}
         
     	#endregion
@@ -123,7 +123,7 @@ namespace Sussex.Flip.UI
 		/// given Moveable can fit into this slot.</param>
         public MoveableSlot(Fitter fitter)
         {            
-            moveableFitter = fitter;
+            this.fitter = fitter;
             
             PreviewDrop += ReplaceSlotContents;
             DragEnter += HandleDragEnter;
@@ -227,7 +227,7 @@ namespace Sussex.Flip.UI
         /// in this slot; false otherwise.</returns>
         public bool Fits(Moveable moveable)
         {
-        	return moveableFitter.Fits(moveable);
+        	return fitter.Fits(moveable);
         }
         
         
