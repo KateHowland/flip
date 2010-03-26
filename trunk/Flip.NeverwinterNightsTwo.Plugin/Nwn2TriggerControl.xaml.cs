@@ -15,9 +15,8 @@ using Sussex.Flip.UI;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
     /// <summary>
-    /// Interaction logic for Nwn2TriggerControl.xaml
+    /// TODO
     /// </summary>
-
     public partial class Nwn2TriggerControl : TriggerControl
     {
     	protected ObjectBlockSlot raiserSlot;
@@ -44,32 +43,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
     	
     	
+		/// <summary>
+		/// Constructs a new <see cref="Nwn2TriggerControl"/> instance.
+		/// </summary>
         public Nwn2TriggerControl()
         {
         	raiserSlot = new ObjectBlockSlot("raiser",new Nwn2RaiserBlockFitter());
             raiserSlot.Padding = new Thickness(10);
             eventSlot = new EventBlockSlot(new Nwn2EventBlockFitter(raiserSlot));
             
-            raiserSlot.MoveableChanged += delegate(object sender, MoveableEventArgs e) 
-            {  
-            	if (e.Moveable == null) {
-            	}
-            	else {
-            	}
-            };
-            
-            eventSlot.MoveableChanged += delegate(object sender, MoveableEventArgs e) 
-            {  
-            	if (e.Moveable == null) {
-            	}
-            	else {
-            	}
-            };
-            
             InitializeComponent();
+            
+            raiserSlot.MoveableChanged += CheckEventFits;
             
             mainPanel.Children.Add(raiserSlot);
             mainPanel.Children.Add(eventSlot);
+        }
+        
+
+        /// <summary>
+        /// Check that the new event raiser is capable of raising the
+        /// selected event, and if not, remove that event.
+        /// </summary>
+        protected void CheckEventFits(object sender, MoveableEventArgs e)
+        {
+           	if (eventSlot.Contents != null && !eventSlot.Fits(eventSlot.Contents)) {
+           		eventSlot.Contents = null;
+           	}
         }
     }
 }

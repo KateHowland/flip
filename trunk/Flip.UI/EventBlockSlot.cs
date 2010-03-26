@@ -89,7 +89,7 @@ namespace Sussex.Flip.UI
 		/// <returns>A deep copy of this instance.</returns>
 		public override MoveableSlot DeepCopy()
 		{
-			EventBlockSlot copy = new EventBlockSlot(moveableFitter);
+			EventBlockSlot copy = new EventBlockSlot(fitter);
 			copy.Contents = this.Contents.DeepCopy();
 			return copy;
 		}
