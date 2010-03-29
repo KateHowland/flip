@@ -35,11 +35,9 @@ namespace Sussex.Flip.UI
 		}
 		
     	
-        public Peg()
+        public Peg(Fitter fitter)
         {       
             InitializeComponent();
-            
-            StatementFitter fitter = new StatementFitter();
             
             dropZone = new DropZone(fitter);
             Grid.SetRow(dropZone,1);
