@@ -116,9 +116,12 @@ namespace Sussex.Flip.UI
 			        	
 			        	Peg pegToUse = null;
 			        	
-			        	// If there's an empty peg below the drop zone, use that, otherwise create a new one:
+			        	// If there's an empty peg below/above the drop zone, use that, otherwise create a new one:
 			        	if (index <= Pegs.Count && ((Peg)Pegs[index]).Slot.Contents == null) {
 			        		pegToUse = (Peg)Pegs[index];
+			        	}
+			        	else if (index > 0 && ((Peg)Pegs[index-1]).Slot.Contents == null) {
+			        		pegToUse = (Peg)Pegs[index-1];
 			        	}
 			        	else {
 			        		pegToUse = AddPeg(false,index);
