@@ -4,9 +4,9 @@
 	
     <Grid 
 	x:Name="grid"
-	Background="Pink"
-	Height="30"
-	Width="100"
+	Background="Transparent"
+	Height="20"
+	HorizontalAlignment="Stretch"
 	DragEnter="DropZoneDragEnter"
 	DragLeave="DropZoneDragLeave"
 	/>

@@ -20,6 +20,9 @@ namespace Sussex.Flip.UI
 
     public partial class Spine : UserControl
     {
+    	protected Duration animationTime;
+    	    	
+    	
     	public Spine(int pegs, double extends) : this(pegs)
     	{
     		Extends = extends;
@@ -28,6 +31,7 @@ namespace Sussex.Flip.UI
     	
         public Spine(int pegs)
         {
+        	animationTime = new Duration(new TimeSpan(1000000/2));
             InitializeComponent();
             for (int i = 0; i < pegs; i++) AddPeg();
         }
@@ -50,6 +54,9 @@ namespace Sussex.Flip.UI
         }
         
         
+        //TODO:
+        protected Fitter tempSharedFitter = new StatementFitter();
+        
         public Peg AddPeg(bool animate, int index)
         {
         	if (index > Pegs.Count) throw new ArgumentException("Index out of range.","index");
@@ -64,6 +71,8 @@ namespace Sussex.Flip.UI
         	
         	Pegs.Insert(index,peg);
         	
+        	peg.Drop += new DragEventHandler(peg_Drop);
+        	
         	// TODO:
         	// temp:
         	peg.MouseDoubleClick += delegate { 
@@ -72,7 +81,7 @@ namespace Sussex.Flip.UI
         	};
         	
         	if (animate) {
-	        	DoubleAnimation anim = new DoubleAnimation(0,1,new Duration(new TimeSpan(1000000)));
+	        	DoubleAnimation anim = new DoubleAnimation(0,1,animationTime);
 	        	anim.AutoReverse = false;
 	        	anim.IsAdditive = false;
         		scale.BeginAnimation(ScaleTransform.ScaleXProperty,anim);
@@ -80,6 +89,39 @@ namespace Sussex.Flip.UI
         	}
         	
         	return peg;
+        }
+
+        
+        protected void peg_Drop(object sender, DragEventArgs e)
+        {   		
+	        if (!e.Handled) {
+        		
+	        	if (e.Data.GetDataPresent(typeof(Moveable))) {
+        			
+					Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable;
+					Peg dropPeg = sender as Peg;
+					
+					if (dropPeg != null && moveable != null && tempSharedFitter.Fits(moveable)) {
+						
+						int index = this.Pegs.IndexOf(dropPeg);
+						if (index == -1) {
+							throw new InvalidOperationException("Dropped on Peg which was not attached to this spine.");
+						}
+												
+						if (e.AllowedEffects == DragDropEffects.Copy) {
+							Peg newPeg = AddPeg(false,index+1);
+		       				newPeg.Slot.Contents = moveable.DeepCopy();
+						}
+						else if (e.AllowedEffects == DragDropEffects.Move) {
+							Peg newPeg = AddPeg(false,index+1);
+							moveable.Remove();
+		       				newPeg.Slot.Contents = moveable;
+						}
+						
+					}
+					e.Handled = true;
+	        	}
+			}
         }
         
         
@@ -108,7 +150,7 @@ namespace Sussex.Flip.UI
         		ScaleTransform scale = new ScaleTransform(1,1);
         		peg.LayoutTransform = scale;
         		
-	        	DoubleAnimation anim = new DoubleAnimation(1,0,new Duration(new TimeSpan(1000000)));
+	        	DoubleAnimation anim = new DoubleAnimation(1,0,animationTime);
 	        	anim.AutoReverse = false;
 	        	anim.IsAdditive = false;
 	        	anim.Completed += delegate { Pegs.Remove(peg); };

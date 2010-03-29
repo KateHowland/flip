@@ -4,7 +4,6 @@
     xmlns:flipui="clr-namespace:Sussex.Flip.UI"
     VerticalAlignment="Center"
     HorizontalAlignment="Left"
-	Margin="0,10,0,10"
 	>
 	
 	<UserControl.Resources>

@@ -20,27 +20,21 @@ namespace Sussex.Flip.UI
 
     public partial class DropZone : UserControl
     {    	
-        DoubleAnimation grow;
-        DoubleAnimation shrink;
-    	
-    	
         public DropZone()
         {
             InitializeComponent();
-            grow = new DoubleAnimation(30,100,new Duration(new TimeSpan(0,0,1)));
-        	shrink = new DoubleAnimation(100,30,new Duration(new TimeSpan(0,0,1)));
         }
 
         
         protected void DropZoneDragEnter(object sender, DragEventArgs e)
-        {
-            grid.BeginAnimation(HeightProperty,grow);
+        {   	
+        	grid.Background = Brushes.Blue;
         }
 
 	
         protected void DropZoneDragLeave(object sender, DragEventArgs e)
         {
-            grid.BeginAnimation(HeightProperty,shrink);
+        	grid.Background = Brushes.Transparent;
         }
     }
 }

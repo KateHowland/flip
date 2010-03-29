@@ -21,28 +21,31 @@ namespace Sussex.Flip.UI
 
     public partial class Peg : UserControl
     {  	    	
+		protected PegSlot slot;
+
+		
+		public PegSlot Slot {
+			get { return slot; }
+		}
+		
+    	
         public Peg()
         {       
             InitializeComponent();
             
-            // TODO:
-            // including this directly in XAML frequently
-            // causes a 'cannot find file' exception - why?
-//            DropZone dropZone = new DropZone();
-//            Grid.SetRow(dropZone,1);
-//            Grid.SetColumn(dropZone,0);
-//            Grid.SetColumnSpan(dropZone,2);
-//            mainGrid.Children.Add(dropZone);
+            DropZone dropZone = new DropZone();
+            Grid.SetRow(dropZone,1);
+            Grid.SetColumn(dropZone,0);
+            Grid.SetColumnSpan(dropZone,2);
+            mainGrid.Children.Add(dropZone);
             
-            // TODO:
-            // including this directly in XAML frequently
-            // causes a 'cannot find file' exception - why?
-            PegSlot slot = new PegSlot(new StatementFitter());
+            StatementFitter fitter = new StatementFitter();
+            slot = new PegSlot(fitter);
             slot.MinHeight = 70;
             slot.MinWidth = 130;
             Grid.SetRow(slot,0);
             Grid.SetColumn(slot,1);
             mainGrid.Children.Add(slot);
-        }
+        }  
     }
 }
