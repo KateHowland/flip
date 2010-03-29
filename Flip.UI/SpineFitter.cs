@@ -27,12 +27,9 @@ using System;
 
 namespace Sussex.Flip.UI
 {
-	/// <summary>
-	/// Description of StatementFitter.
-	/// </summary>
-	public class StatementFitter : Fitter
+	public class SpineFitter : Fitter
 	{		
-		public StatementFitter() : base()
+		public SpineFitter() : base()
 		{
 			
 		}
@@ -40,8 +37,10 @@ namespace Sussex.Flip.UI
 		
 		public override bool Fits(Moveable moveable)
 		{
-			Statement statement = moveable as Statement;
-			return statement != null;
+			// TODO:
+			// Also return true on conditional structures.
+			// (Not conditions).
+			return moveable as ActionStatement != null;
 		}
 	}
 }

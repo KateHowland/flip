@@ -30,22 +30,17 @@ namespace Sussex.Flip.UI
     		get { return textBlock.Background.Clone(); }
     		set { textBlock.Background = value; }
     	}
-    	
-    	
-        public StatementLabel()
+        
+        
+        public StatementLabel(string text) : this(text,Brushes.Gray)
+        {
+        }
+        
+        
+        public StatementLabel(string text, Brush background)
         {
             InitializeComponent();
-        }
-        
-        
-        public StatementLabel(string text) : this()
-        {
         	Text = text;
-        }
-        
-        
-        public StatementLabel(string text, Brush background) : this(text)
-        {
         	BackgroundBrush = background;
         }
         

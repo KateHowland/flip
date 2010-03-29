@@ -67,6 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionStatement.cs" />
+    <Compile Include="ConditionStatement.cs" />
     <Compile Include="DropZone.xaml.cs">
       <DependentUpon>DropZone.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -119,7 +121,7 @@
       <DependentUpon>ObjectBlockSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StatementFitter.cs" />
+    <Compile Include="SpineFitter.cs" />
     <Compile Include="StatementLabel.xaml.cs">
       <DependentUpon>StatementLabel.xaml</DependentUpon>
       <SubType>Code</SubType>

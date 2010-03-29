@@ -49,7 +49,7 @@ namespace Sussex.Flip.UI
 			PreviewDragLeave += DestroyAdorner;			
 			PreviewDrop += DestroyAdorner;
 			
-			Fitter spineFitter = new StatementFitter();
+			Fitter spineFitter = new SpineFitter();
 			triggerBar = new TriggerBar(triggerControl,spineFitter);
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
