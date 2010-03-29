@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -31,7 +25,7 @@ namespace Sussex.Flip.UI
     	
         public Spine(int pegs)
         {
-        	animationTime = new Duration(new TimeSpan(1000000/2));
+        	animationTime = new Duration(new TimeSpan(1000000));
             InitializeComponent();
             for (int i = 0; i < pegs; i++) AddPeg();
         }
@@ -71,7 +65,7 @@ namespace Sussex.Flip.UI
         	
         	Pegs.Insert(index,peg);
         	
-        	peg.Drop += new DragEventHandler(peg_Drop);
+        	peg.DropZone.Drop += new DragEventHandler(Expand);
         	
         	// TODO:
         	// temp:
@@ -92,35 +86,42 @@ namespace Sussex.Flip.UI
         }
 
         
-        protected void peg_Drop(object sender, DragEventArgs e)
-        {   		
-	        if (!e.Handled) {
+        /// <summary>
+        /// When a Moveable is dropped under a peg, create a new peg
+        /// underneath that peg, and attach the Moveable to it.
+        /// </summary>
+        protected void Expand(object sender, DragEventArgs e)
+        {	
+		    if (!e.Handled) {
         		
-	        	if (e.Data.GetDataPresent(typeof(Moveable))) {
-        			
+	        	DropZone dropZone = (DropZone)sender;
+	        	if (dropZone == null) return;
+	        	
+	        	Peg dropPeg = UIHelper.TryFindParent<Peg>(dropZone);        		
+	        	if (dropPeg == null) return;
+	        	
+	        	int index = Pegs.IndexOf(dropPeg);
+	        	if (index == -1) throw new InvalidOperationException("Peg not found on spine.");
+	        	
+		       	if (e.Data.GetDataPresent(typeof(Moveable))) {
+	        		
 					Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable;
-					Peg dropPeg = sender as Peg;
 					
-					if (dropPeg != null && moveable != null && tempSharedFitter.Fits(moveable)) {
-						
-						int index = this.Pegs.IndexOf(dropPeg);
-						if (index == -1) {
-							throw new InvalidOperationException("Dropped on Peg which was not attached to this spine.");
-						}
-												
+					if (moveable != null && tempSharedFitter.Fits(moveable)) {
+																			
 						if (e.AllowedEffects == DragDropEffects.Copy) {
 							Peg newPeg = AddPeg(false,index+1);
-		       				newPeg.Slot.Contents = moveable.DeepCopy();
+			      			newPeg.Slot.Contents = moveable.DeepCopy();
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
 							Peg newPeg = AddPeg(false,index+1);
 							moveable.Remove();
-		       				newPeg.Slot.Contents = moveable;
+			      			newPeg.Slot.Contents = moveable;
 						}
 						
 					}
 					e.Handled = true;
-	        	}
+		       	}
 			}
         }
         

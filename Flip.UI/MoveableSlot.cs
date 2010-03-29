@@ -125,7 +125,7 @@ namespace Sussex.Flip.UI
         {            
             this.fitter = fitter;
             
-            PreviewDrop += ReplaceSlotContents;
+            PreviewDrop += AcceptDrop;
             DragEnter += HandleDragEnter;
             DragLeave += HandleDragLeave;
         }
@@ -196,7 +196,7 @@ namespace Sussex.Flip.UI
         /// <summary>
         /// Accepts dropped Moveable objects, if they fit this slot.
         /// </summary>
-        protected virtual void ReplaceSlotContents(object sender, DragEventArgs e)
+        protected virtual void AcceptDrop(object sender, DragEventArgs e)
         {
         	if (!e.Handled) {
         		if (e.Data.GetDataPresent(typeof(Moveable))) {

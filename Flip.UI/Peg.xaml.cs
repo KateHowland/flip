@@ -21,7 +21,13 @@ namespace Sussex.Flip.UI
 
     public partial class Peg : UserControl
     {  	    	
+		protected DropZone dropZone;
 		protected PegSlot slot;
+		
+		
+		public DropZone DropZone {
+			get { return dropZone; }
+		}
 
 		
 		public PegSlot Slot {
@@ -33,13 +39,14 @@ namespace Sussex.Flip.UI
         {       
             InitializeComponent();
             
-            DropZone dropZone = new DropZone();
+            StatementFitter fitter = new StatementFitter();
+            
+            dropZone = new DropZone(fitter);
             Grid.SetRow(dropZone,1);
             Grid.SetColumn(dropZone,0);
             Grid.SetColumnSpan(dropZone,2);
             mainGrid.Children.Add(dropZone);
             
-            StatementFitter fitter = new StatementFitter();
             slot = new PegSlot(fitter);
             slot.MinHeight = 70;
             slot.MinWidth = 130;
