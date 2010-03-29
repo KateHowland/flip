@@ -49,7 +49,8 @@ namespace Sussex.Flip.UI
 			PreviewDragLeave += DestroyAdorner;			
 			PreviewDrop += DestroyAdorner;
 			
-			triggerBar = new TriggerBar(triggerControl);
+			Fitter spineFitter = new StatementFitter();
+			triggerBar = new TriggerBar(triggerControl,spineFitter);
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
@@ -110,21 +111,26 @@ namespace Sussex.Flip.UI
     	
     	private void StartDrag(object sender, MouseEventArgs e)
     	{    	
-    		if (dragPos != null) {
-    			Point currentPos = e.GetPosition(null);
-    			Vector moved = dragPos.Value - currentPos;
-    			
-    			if (e.LeftButton == MouseButtonState.Pressed &&
-    			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
-    			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
-    				    				
-    				DragDropEffects effects = IsInBlockBox(dragging) ? DragDropEffects.Copy : DragDropEffects.Move;
-    				DataObject dataObject = new DataObject(typeof(Moveable),dragging);
-    				DragDrop.DoDragDrop(dragging,dataObject,effects);
-    				
-    				dragging = null;
-    				dragPos = null;
-    			}
+    		try {
+	    		if (dragPos != null) {
+	    			Point currentPos = e.GetPosition(null);
+	    			Vector moved = dragPos.Value - currentPos;
+	    			
+	    			if (e.LeftButton == MouseButtonState.Pressed &&
+	    			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
+	    			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
+	    				    				
+	    				DragDropEffects effects = IsInBlockBox(dragging) ? DragDropEffects.Copy : DragDropEffects.Move;
+	    				DataObject dataObject = new DataObject(typeof(Moveable),dragging);
+	    				DragDrop.DoDragDrop(dragging,dataObject,effects);
+	    				
+	    				dragging = null;
+	    				dragPos = null;
+	    			}
+	    		}
+    		}
+    		catch (Exception ex) {
+    			MessageBox.Show(String.Format("Failed to carry out drag-drop operation.{0}{1}",Environment.NewLine,ex.ToString()));
     		}
     	}    	
     	

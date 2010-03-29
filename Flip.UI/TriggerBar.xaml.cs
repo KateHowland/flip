@@ -23,11 +23,11 @@ namespace Sussex.Flip.UI
     	protected TriggerControl triggerControl;
     	
     	
-        public TriggerBar(TriggerControl triggerControl)
+        public TriggerBar(TriggerControl triggerControl, Fitter fitter)
         {
         	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
         	
-        	Spine spine = new Spine(3);
+        	Spine spine = new Spine(fitter,3);
         	Grid.SetRow(spine,0);
         	Grid.SetColumn(spine,0);
         	spine.Margin = new Thickness(14,0,0,0);

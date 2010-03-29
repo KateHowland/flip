@@ -15,25 +15,44 @@ namespace Sussex.Flip.UI
     public partial class Spine : UserControl
     {
     	protected Duration animationTime;
+    	protected Fitter fitter;
+
+    	
+		public Fitter Fitter {
+			get { return fitter; }
+			set { fitter = value; }
+		}
+        
+        
+    	public Spine() : this(new StatementFitter())
+        {        	
+        }
+        
+        
+    	public Spine(Fitter fitter) : this(fitter,3)
+        {        	
+        }
+    	
+    	
+    	public Spine(Fitter fitter, int pegs)
+    	{
+    		if (fitter == null) throw new ArgumentNullException("fitter");
+    		this.fitter = fitter;
+    		
+        	animationTime = new Duration(new TimeSpan(1000000));
+        	
+    		InitializeComponent();    		
+    		
+    		for (int i = 0; i < pegs; i++) {
+    			AddPeg();
+    		}
+    	}
     	    	
     	
-    	public Spine(int pegs, double extends) : this(pegs)
+    	public Spine(Fitter fitter, int pegs, double extends) : this(fitter,pegs)
     	{
     		Extends = extends;
     	}
-    	
-    	
-        public Spine(int pegs)
-        {
-        	animationTime = new Duration(new TimeSpan(1000000));
-            InitializeComponent();
-            for (int i = 0; i < pegs; i++) AddPeg();
-        }
-        
-        
-        public Spine() : this(3)
-        {        	
-        }
 
         
         public Peg AddPeg()
@@ -47,15 +66,12 @@ namespace Sussex.Flip.UI
         	return AddPeg(animate,Pegs.Count);
         }
         
-        
-        //TODO:
-        protected Fitter tempSharedFitter = new StatementFitter();
-        
+                
         public Peg AddPeg(bool animate, int index)
         {
         	if (index > Pegs.Count) throw new ArgumentException("Index out of range.","index");
         	
-        	Peg peg = new Peg();
+        	Peg peg = new Peg(fitter);
         	
         	ScaleTransform scale = null;        	
         	if (animate) {
@@ -98,7 +114,7 @@ namespace Sussex.Flip.UI
         	
         	Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable;
 				
-        	if (tempSharedFitter.Fits(moveable)) {
+        	if (fitter.Fits(moveable)) {
         		
 			   	DropZone dropZone = sender as DropZone;
 			   	if (dropZone == null) return;
