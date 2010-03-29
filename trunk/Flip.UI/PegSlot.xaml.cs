@@ -52,10 +52,7 @@ namespace Sussex.Flip.UI
 		/// given Moveable can fit into this slot.</param>
     	public PegSlot(Fitter fitter) : base(fitter)
         {
-            InitializeComponent();            
-            
-            this.fitter = fitter;
-            
+            InitializeComponent();
             SetDefaultAppearance();
         }
         
