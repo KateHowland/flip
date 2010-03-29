@@ -93,33 +93,46 @@ namespace Sussex.Flip.UI
         protected void Expand(object sender, DragEventArgs e)
         {	
 		    if (!e.Handled) {
-        		
-	        	DropZone dropZone = (DropZone)sender;
-	        	if (dropZone == null) return;
 	        	
-	        	Peg dropPeg = UIHelper.TryFindParent<Peg>(dropZone);        		
-	        	if (dropPeg == null) return;
-	        	
-	        	int index = Pegs.IndexOf(dropPeg);
-	        	if (index == -1) throw new InvalidOperationException("Peg not found on spine.");
-	        	
-		       	if (e.Data.GetDataPresent(typeof(Moveable))) {
+		       	if (e.Data.GetDataPresent(typeof(Moveable))) {        		
 	        		
 					Moveable moveable = e.Data.GetData(typeof(Moveable)) as Moveable;
 					
-					if (moveable != null && tempSharedFitter.Fits(moveable)) {
-																			
+					if (!(e.AllowedEffects == DragDropEffects.Copy || e.AllowedEffects == DragDropEffects.Move)) {
+						return;
+					}
+					
+					if (tempSharedFitter.Fits(moveable)) {
+						
+			        	DropZone dropZone = (DropZone)sender;
+			        	if (dropZone == null) return;
+			        	
+			        	Peg dropPeg = UIHelper.TryFindParent<Peg>(dropZone);        		
+			        	if (dropPeg == null) return;
+			        	
+			        	int index = Pegs.IndexOf(dropPeg);
+			        	if (index == -1) throw new InvalidOperationException("Peg not found on spine.");
+			        	index++;
+			        	
+			        	Peg pegToUse = null;
+			        	
+			        	// If there's an empty peg below the drop zone, use that, otherwise create a new one:
+			        	if (index <= Pegs.Count && ((Peg)Pegs[index]).Slot.Contents == null) {
+			        		pegToUse = (Peg)Pegs[index];
+			        	}
+			        	else {
+			        		pegToUse = AddPeg(false,index);
+			        	}
+			        	
 						if (e.AllowedEffects == DragDropEffects.Copy) {
-							Peg newPeg = AddPeg(false,index+1);
-			      			newPeg.Slot.Contents = moveable.DeepCopy();
+				      		pegToUse.Slot.Contents = moveable.DeepCopy();
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
-							Peg newPeg = AddPeg(false,index+1);
 							moveable.Remove();
-			      			newPeg.Slot.Contents = moveable;
+				      		pegToUse.Slot.Contents = moveable;
 						}
-						
-					}
+        			}
+        		
 					e.Handled = true;
 		       	}
 			}
