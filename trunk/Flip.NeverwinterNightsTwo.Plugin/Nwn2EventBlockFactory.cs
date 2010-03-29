@@ -37,24 +37,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class Nwn2EventBlockFactory
 	{		
-		#region Fields
-		
-		protected Brush brush;
-		
-		#endregion
-		
 		#region Constructors
 		
-		public Nwn2EventBlockFactory() : this(null)
+		public Nwn2EventBlockFactory()
 		{
-		}
-		
-		
-		public Nwn2EventBlockFactory(Brush eventBrush)
-		{
-			if (eventBrush == null) eventBrush = Brushes.Transparent;
-			
-			this.brush = eventBrush;
 		}
 			
 		#endregion

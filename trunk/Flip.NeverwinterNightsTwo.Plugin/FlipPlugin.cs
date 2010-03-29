@@ -199,14 +199,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Sussex.Flip.Core.FlipTranslator translator = new NWScriptTranslator();
 			Sussex.Flip.Core.FlipAttacher attacher = new NWScriptAttacher(translator,new Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Nwn2Session());
 							
-			Nwn2Fitters fitters = new Nwn2Fitters();
-			Brush actionBrush = new LinearGradientBrush(Colors.LightGreen,Colors.Green,45);
-			Brush conditionBrush = new LinearGradientBrush(Colors.Lavender,Colors.Salmon,45);	
-			Brush eventBrush = new LinearGradientBrush(Colors.Maroon,Colors.Firebrick,45);	
-			
-			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters,actionBrush,conditionBrush);			
+			Nwn2Fitters fitters = new Nwn2Fitters();			
+			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);			
 			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
-			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory(eventBrush);
+			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory();
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,new ToolsetEventReporter());
 			Nwn2TriggerControl trigger = new Nwn2TriggerControl();

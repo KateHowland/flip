@@ -19,8 +19,21 @@ namespace Sussex.Flip.UI
 
     public partial class Statement : Moveable
     {
+    	protected static Brush brush;
+    	
+    	
+    	static Statement()
+    	{
+    		GradientStopCollection stops = new GradientStopCollection(3);
+    		stops.Add(new GradientStop(Colors.Gray,-0.5));
+    		stops.Add(new GradientStop(Colors.White,0.5));
+    		stops.Add(new GradientStop(Colors.Gray,1.5));
+    		brush = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
+    	}
+    	    
+    	
         public Statement()
-        {
+        {        	
             InitializeComponent(); 
         }
 
@@ -31,9 +44,22 @@ namespace Sussex.Flip.UI
         }
 
         
-        public void AddText(StatementLabel label)
+        public void AddLabel(StatementLabel label)
         {
         	MainPanel.Children.Add(label);
+        }
+
+        
+        public void AddLabel(string text)
+        {
+        	StatementLabel label = new StatementLabel(text,GetBrush());
+        	MainPanel.Children.Add(label);
+        }
+        
+        
+        protected virtual Brush GetBrush()
+        {
+        	return brush;
         }
 		
 		
@@ -61,13 +87,14 @@ namespace Sussex.Flip.UI
 				if (e is StatementLabel) {
 					StatementLabel label = (StatementLabel)e;
 					StatementLabel labelClone = label.DeepCopy();
-					statement.AddText(labelClone);
+					statement.AddLabel(labelClone);
 				}
 				else if (e is ObjectBlockSlot) {
 					ObjectBlockSlot slot = (ObjectBlockSlot)e;
 					ObjectBlockSlot slotClone = (ObjectBlockSlot)slot.DeepCopy();
 					statement.AddSlot(slotClone);
-					
+					// TODO: think I kept this separate from ObjectBlockSlot.DeepCopy()
+					// for a reason, but not sure what it was..?:
 					if (slot.Contents != null) {
 						slotClone.Contents = (ObjectBlock)slot.Contents.DeepCopy();
 					}

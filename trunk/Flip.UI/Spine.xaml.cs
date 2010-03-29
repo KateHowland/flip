@@ -24,7 +24,7 @@ namespace Sussex.Flip.UI
 		}
         
         
-    	public Spine() : this(new StatementFitter())
+    	public Spine() : this(new SpineFitter())
         {        	
         }
         
