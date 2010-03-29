@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,6 +17,7 @@ namespace Sussex.Flip.UI
     {
     	protected Duration animationTime;
     	protected Fitter fitter;
+    	protected int minPegs = 2; // TODO settable but not below 1
 
     	
 		public Fitter Fitter {
@@ -41,11 +43,18 @@ namespace Sussex.Flip.UI
     		
         	animationTime = new Duration(new TimeSpan(1000000));
         	
-    		InitializeComponent();    		
+    		InitializeComponent();
+    		
+    		pegs = Math.Max(minPegs,pegs);
     		
     		for (int i = 0; i < pegs; i++) {
     			AddPeg();
     		}
+        	
+        	MouseDoubleClick += delegate 
+        	{    			
+    			Shrink(true);
+        	};
     	}
     	    	
     	
@@ -82,13 +91,6 @@ namespace Sussex.Flip.UI
         	Pegs.Insert(index,peg);
         	
         	peg.DropZone.Drop += new DragEventHandler(AttachToSpine);
-        	
-        	// TODO:
-        	// temp:
-        	peg.MouseDoubleClick += delegate { 
-        		if (Keyboard.IsKeyDown(Key.LeftShift)) RemovePeg(true,Pegs.IndexOf(peg));
-        		else AddPeg(true,Pegs.IndexOf(peg)+1); 
-        	};
         	
         	if (animate) {
 	        	DoubleAnimation anim = new DoubleAnimation(0,1,animationTime);
@@ -200,6 +202,34 @@ namespace Sussex.Flip.UI
         	}
         	else {
         		Pegs.Remove(peg);
+        	}
+        }
+        
+        
+        public void RemovePeg(bool animate, Peg peg)
+        {
+        	int index = Pegs.IndexOf(peg);
+        	if (index == -1) throw new ArgumentException("Peg is not present on this spine.","peg");
+        	RemovePeg(animate,index);
+        }
+        
+        
+        public void Shrink(bool animate)
+        {
+        	if (Pegs.Count <= minPegs) return;
+        	
+        	List<Peg> removing = new List<Peg>();
+        	
+        	foreach (UIElement element in Pegs) {
+        		Peg peg = element as Peg;
+        		if (peg != null && peg.Slot.Contents == null) {
+        			removing.Add(peg);
+        			if (Pegs.Count <= (minPegs + removing.Count)) break;
+        		}
+        	}
+        	
+        	foreach (Peg peg in removing) {
+        		RemovePeg(animate,peg);
         	}
         }
         
