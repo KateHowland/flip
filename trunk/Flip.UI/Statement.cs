@@ -21,7 +21,7 @@ namespace Sussex.Flip.UI
     {
     	protected static Brush brush;
     	
-    	
+    	    	
     	static Statement()
     	{
     		GradientStopCollection stops = new GradientStopCollection(3);
@@ -40,20 +40,20 @@ namespace Sussex.Flip.UI
         
         public void AddSlot(ObjectBlockSlot slot)
         {
-        	MainPanel.Children.Add(slot);
+        	mainPanel.Children.Add(slot);
         }
 
         
         public void AddLabel(StatementLabel label)
         {
-        	MainPanel.Children.Add(label);
+        	mainPanel.Children.Add(label);
         }
 
         
         public void AddLabel(string text)
         {
         	StatementLabel label = new StatementLabel(text,GetBrush());
-        	MainPanel.Children.Add(label);
+        	mainPanel.Children.Add(label);
         }
         
         
@@ -66,10 +66,10 @@ namespace Sussex.Flip.UI
 		public override string ToString()
 		{
 			System.Text.StringBuilder sb = new StringBuilder();
-			int count = MainPanel.Children.Count;
+			int count = mainPanel.Children.Count;
 			for (int i = 0; i < count; i++) {
-				ObjectBlockSlot slot = MainPanel.Children[i] as ObjectBlockSlot;
-				StatementLabel label = MainPanel.Children[i] as StatementLabel;
+				ObjectBlockSlot slot = mainPanel.Children[i] as ObjectBlockSlot;
+				StatementLabel label = mainPanel.Children[i] as StatementLabel;
 				if (slot != null) sb.Append(slot.ToString());
 				else if (label != null) sb.Append(label.ToString());
 				else sb.Append("?");				
@@ -83,7 +83,7 @@ namespace Sussex.Flip.UI
 		{
 			Statement statement = new Statement();		
 			
-			foreach (UIElement e in MainPanel.Children) {
+			foreach (UIElement e in mainPanel.Children) {
 				if (e is StatementLabel) {
 					StatementLabel label = (StatementLabel)e;
 					StatementLabel labelClone = label.DeepCopy();
@@ -108,15 +108,33 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		public List<ObjectBlockSlot> GetSlots()
+		{
+			List<ObjectBlockSlot> slots = new List<ObjectBlockSlot>(2);
+			foreach (UIElement element in mainPanel.Children) {
+				ObjectBlockSlot slot = element as ObjectBlockSlot;
+				if (slot != null) slots.Add(slot);
+			}
+			return slots;
+		}
+		
+		
 		public override string GetCode()
 		{
-			return "Statement";
+			System.Text.StringBuilder code = new System.Text.StringBuilder("Statement(");
+			
+			foreach (ObjectBlockSlot slot in GetSlots()) {
+				code.Append(String.Format("{0},",slot.GetCode()));
+			}			
+			code.Append(")");
+			
+			return code.ToString();
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return "Statement";
+			return GetCode();
 		}
     }
 }

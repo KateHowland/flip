@@ -53,13 +53,9 @@ namespace Sussex.Flip.UI
 		{
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 			
-			string condition;
-			if (slot.Contents == null) condition = String.Empty;
-			else condition = slot.Contents.GetCode();
-			
-			code.AppendLine(String.Format("if ({0}) {{",condition));			
+			code.AppendLine(String.Format("if ({0}) {{",slot.GetCode()));
 			code.AppendLine(spine.GetCode());			
-			code.AppendLine(String.Format("}}",condition));
+			code.AppendLine("}");
 			
 			return code.ToString();
 		}
@@ -68,12 +64,8 @@ namespace Sussex.Flip.UI
 		public override string GetNaturalLanguage()
 		{
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
-			
-			string condition;
-			if (slot.Contents == null) condition = "some condition is met";
-			else condition = slot.Contents.GetNaturalLanguage();
-			
-			code.AppendLine(String.Format("if {0},",condition));			
+						
+			code.AppendLine(String.Format("if {0},",slot.GetNaturalLanguage()));
 			code.AppendLine(spine.GetNaturalLanguage());			
 			code.Append(".");
 			

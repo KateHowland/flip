@@ -62,7 +62,7 @@ namespace Sussex.Flip.UI
 		{
 			ActionStatement statement = new ActionStatement();		
 			
-			foreach (UIElement e in MainPanel.Children) {
+			foreach (UIElement e in mainPanel.Children) {
 				if (e is StatementLabel) {
 					StatementLabel label = (StatementLabel)e;
 					StatementLabel labelClone = label.DeepCopy();
