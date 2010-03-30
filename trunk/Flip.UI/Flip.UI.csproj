@@ -75,6 +75,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConditionStatement.cs" />
+    <Compile Include="Core\FlipAttacher.cs" />
+    <Compile Include="Core\FlipScript.cs" />
+    <Compile Include="Core\FlipTranslator.cs" />
+    <Compile Include="Core\GameInformation.cs" />
     <Compile Include="DropZone.xaml.cs">
       <DependentUpon>DropZone.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -161,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images" />
+    <Folder Include="Core" />
     <Page Include="ConditionSlot.xaml" />
     <Page Include="DropZone.xaml" />
     <Page Include="EventBlock.xaml" />
@@ -173,11 +178,6 @@
     <Page Include="StatementLabel.xaml" />
     <Page Include="TriggerBar.xaml" />
     <Page Include="EventBlockSlot.xaml" />
-    <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
-      <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
-      <Name>Flip.Core</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
       <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>
       <Name>Flip.Utils</Name>

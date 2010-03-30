@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 # SharpDevelop 3.0.0.3800
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.Core", "Flip.Core\Flip.Core.csproj", "{6CB759C0-8A82-4C83-8379-597CC2D3491A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.Tests", "Flip.Tests\Flip.Tests.csproj", "{FAA2CB8C-8150-41DE-A4C6-86FDC1269FB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.Utils", "Flip.Utils\Flip.Utils.csproj", "{DA0F7D30-A224-4957-B80B-7F2700D50C54}"
@@ -22,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6CB759C0-8A82-4C83-8379-597CC2D3491A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CB759C0-8A82-4C83-8379-597CC2D3491A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CB759C0-8A82-4C83-8379-597CC2D3491A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CB759C0-8A82-4C83-8379-597CC2D3491A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAA2CB8C-8150-41DE-A4C6-86FDC1269FB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAA2CB8C-8150-41DE-A4C6-86FDC1269FB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FAA2CB8C-8150-41DE-A4C6-86FDC1269FB4}.Release|Any CPU.Build.0 = Release|Any CPU

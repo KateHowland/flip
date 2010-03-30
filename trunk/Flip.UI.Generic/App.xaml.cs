@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml;
+using Sussex.Flip.Core;
 using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
 
@@ -18,8 +19,8 @@ namespace Sussex.Flip.UI.Generic
 		{
 //			InitializeComponent();
 			
-			Sussex.Flip.Core.FakeTranslator translator = new Sussex.Flip.Core.FakeTranslator();
-			Sussex.Flip.Core.FlipAttacher attacher = new Sussex.Flip.Core.FakeAttacher(translator);			
+			FlipTranslator translator = new FakeTranslator();
+			FlipAttacher attacher = new FakeAttacher(translator);			
 			
 			Nwn2Fitters fitters = new Nwn2Fitters();
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);			

@@ -101,10 +101,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Flip.Core\Flip.Core.csproj">
-      <Project>{6CB759C0-8A82-4C83-8379-597CC2D3491A}</Project>
-      <Name>Flip.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Plugin\Flip.NeverwinterNightsTwo.Plugin.csproj">
       <Project>{7FBBABEB-7227-4B42-8EBD-309EDFC82687}</Project>
       <Name>Flip.NeverwinterNightsTwo.Plugin</Name>
