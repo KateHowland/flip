@@ -17,17 +17,35 @@ namespace Sussex.Flip.UI
     /// Interaction logic for IfControl.xaml
     /// </summary>
 
-    public partial class IfControl : Moveable
+    public partial class IfControl : ConditionalControl
     {
+    	protected ConditionSlot slot;
+    	protected Spine spine;
+    	
+    	
         public IfControl()
         {
+        	slot = new ConditionSlot(new ConditionFitter());
+        	slot.Padding = new Thickness(10);
+        	
+        	spine = new Spine(new SpineFitter(),1,10);
+            
             InitializeComponent();
+            
+            Grid.SetRow(slot,1);
+            Grid.SetColumn(slot,0);
+            grid.Children.Add(slot);
+                        
+            Grid.SetRow(spine,3);
+            Grid.SetColumn(spine,0);
+            grid.Children.Add(spine);
         }
 
         
 		public override Moveable DeepCopy()
 		{
-			return new IfControl();
+			IfControl copy = new IfControl();
+			return copy;
 		}
     }
 }
