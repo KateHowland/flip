@@ -71,5 +71,41 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
            		eventSlot.Contents = null;
            	}
         }
+        
+        
+		public override string GetCode()
+		{			
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+						
+			string raiser, eventName;
+			
+			if (RaiserBlock == null) raiser = String.Empty;
+			else raiser = RaiserBlock.GetCode();
+			
+			if (EventBlock == null) eventName = String.Empty;
+			else eventName = EventBlock.GetCode();
+			
+			code.Append(String.Format("when ({0}.{1}) do: ",raiser,eventName));
+			
+			return code.ToString();
+		}
+		
+		
+		public override string GetNaturalLanguage()
+		{			
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+						
+			string raiser, eventName;
+			
+			if (RaiserBlock == null) raiser = String.Empty;
+			else raiser = RaiserBlock.GetNaturalLanguage();
+			
+			if (EventBlock == null) eventName = String.Empty;
+			else eventName = EventBlock.GetNaturalLanguage();
+			
+			code.Append(String.Format("When {0} happens on {1}, do this: ",eventName,raiser));
+			
+			return code.ToString();
+		}
     }
 }

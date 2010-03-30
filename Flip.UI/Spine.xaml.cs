@@ -259,7 +259,13 @@ namespace Sussex.Flip.UI
     	
 		public string GetNaturalLanguage()
 		{
-			throw new NotImplementedException();
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+			foreach (Peg peg in Pegs) {
+				if (peg.Slot.Contents != null) {
+					code.Append(String.Format("{0}. ",peg.Slot.Contents.GetNaturalLanguage()));
+				}
+			}
+			return code.ToString();
 		}
     }
 }

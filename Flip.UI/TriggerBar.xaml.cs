@@ -18,16 +18,17 @@ namespace Sussex.Flip.UI
     /// Interaction logic for TriggerBar.xaml
     /// </summary>
 
-    public partial class TriggerBar : UserControl
+    public partial class TriggerBar : UserControl, ITranslatable
     {
     	protected TriggerControl triggerControl;
+    	protected Spine spine;
     	
     	
         public TriggerBar(TriggerControl triggerControl, Fitter fitter)
         {
         	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
         	
-        	Spine spine = new Spine(fitter,3);
+        	spine = new Spine(fitter,3);
         	Grid.SetRow(spine,0);
         	Grid.SetColumn(spine,0);
         	spine.Margin = new Thickness(14,0,0,0);
@@ -51,5 +52,29 @@ namespace Sussex.Flip.UI
         	if (triggerControl.EventBlock == null) return null;
         	else return triggerControl.EventBlock.EventName;
         }
+    	
+        
+		public string GetCode()
+		{
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+			
+			code.AppendLine("void main()");
+			code.AppendLine("{");
+			code.AppendLine(spine.GetCode());
+			code.AppendLine("}");
+			
+			return code.ToString();
+		}
+    	
+        
+		public string GetNaturalLanguage()
+		{
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+			
+			code.AppendLine(triggerControl.GetNaturalLanguage());
+			code.AppendLine(spine.GetNaturalLanguage());
+			
+			return code.ToString();
+		}
     }
 }

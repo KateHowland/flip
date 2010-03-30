@@ -31,9 +31,11 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of TriggerControl.
 	/// </summary>
-	public abstract class TriggerControl : UserControl
+	public abstract class TriggerControl : UserControl, ITranslatable
 	{
 		public abstract ObjectBlock RaiserBlock { get; set; }
-		public abstract EventBlock EventBlock { get; set; }
+		public abstract EventBlock EventBlock { get; set; }		
+		public abstract string GetCode();
+		public abstract string GetNaturalLanguage();
 	}
 }
