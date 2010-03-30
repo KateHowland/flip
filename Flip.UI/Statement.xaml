@@ -61,7 +61,7 @@
 	</UserControl.Resources>
 	
     <StackPanel
-	x:Name="MainPanel"
+	x:Name="mainPanel"
 	Orientation="Horizontal"/>
 
 </flipui:Moveable>

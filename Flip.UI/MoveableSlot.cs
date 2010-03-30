@@ -34,7 +34,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// A slot which can hold a Moveable object.
 	/// </summary>
-	public abstract class MoveableSlot : UserControl, IDeepCopyable<MoveableSlot>
+	public abstract class MoveableSlot : UserControl, IDeepCopyable<MoveableSlot>, ITranslatable
     {
 		#region Fields
 		
@@ -237,6 +237,20 @@ namespace Sussex.Flip.UI
 		/// <returns>A deep copy of this instance.</returns>
         public abstract MoveableSlot DeepCopy();
         
-        #endregion
+        
+		public string GetCode()
+		{
+			if (Contents == null) return String.Empty;
+			else return Contents.GetCode();
+		}
+		
+		
+		public string GetNaturalLanguage()
+		{
+			if (Contents == null) return String.Empty;
+			else return Contents.GetNaturalLanguage();
+		}
+		
+		#endregion
     }
 }
