@@ -24,8 +24,9 @@
  */
 
 using System;
+using Sussex.Flip.Core;
 
-namespace Sussex.Flip.Core
+namespace Sussex.Flip.UI.Generic
 {
 	/// <summary>
 	/// Implements the FlipAttacher interface

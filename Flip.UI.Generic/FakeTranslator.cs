@@ -25,8 +25,9 @@
  
 using System;
 using System.IO;
+using Sussex.Flip.Core;
 
-namespace Sussex.Flip.Core
+namespace Sussex.Flip.UI.Generic
 {
 	/// <summary>
 	/// Implements the FlipTranslator interface
