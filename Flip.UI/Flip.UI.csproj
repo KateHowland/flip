@@ -106,6 +106,7 @@
       <DependentUpon>MoveablesPanel.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ObjectBlockSlot.cs" />
     <Compile Include="Peg.xaml.cs">
       <DependentUpon>Peg.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -132,10 +133,6 @@
       <SubType>Code</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="ObjectBlockSlot.cs">
-      <DependentUpon>ObjectBlockSlot.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="SpineFitter.cs" />
     <Compile Include="StatementLabel.xaml.cs">
       <DependentUpon>StatementLabel.xaml</DependentUpon>
@@ -154,7 +151,6 @@
     <Page Include="ObjectBlock.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
-    <Page Include="ObjectBlockSlot.xaml" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
@@ -172,6 +168,7 @@
     <Page Include="FlipWindow.xaml" />
     <Page Include="IfControl.xaml" />
     <Page Include="MoveablesPanel.xaml" />
+    <Page Include="ObjectBlockSlot.xaml" />
     <Page Include="Peg.xaml" />
     <Page Include="PegSlot.xaml" />
     <Page Include="Spine.xaml" />
