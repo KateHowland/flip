@@ -38,7 +38,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of Moveable.
 	/// </summary>
-	public abstract class Moveable : UserControl, IDeepCopyable<Moveable>
+	public abstract class Moveable : UserControl, IDeepCopyable<Moveable>, ITranslatable
 	{
 		public Moveable()
 		{
@@ -99,5 +99,9 @@ namespace Sussex.Flip.UI
     	
 		
 		public abstract Moveable DeepCopy();
+		
+		
+		public abstract string GetCode();
+		public abstract string GetNaturalLanguage();
 	}
 }
