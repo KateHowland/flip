@@ -125,7 +125,7 @@ namespace Sussex.Flip.UI
         {            
             this.fitter = fitter;
             
-            PreviewDrop += AcceptDrop;
+            Drop += AcceptDrop;
             DragEnter += HandleDragEnter;
             DragLeave += HandleDragLeave;
         }
