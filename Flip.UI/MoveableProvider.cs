@@ -32,6 +32,31 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class MoveableProvider
 	{
-		public abstract void Populate(IMoveableManager manager);
+		protected const string ProgrammingConstructsBagName = "Programming Constructs";
+		
+		
+		public void Populate(IMoveableManager manager)
+		{
+			if (manager == null) throw new ArgumentNullException("manager");
+			
+			CreateProgrammingConstructs(manager);
+			CreateMoveables(manager);
+		}
+		
+		
+		protected virtual void CreateProgrammingConstructs(IMoveableManager manager)
+		{
+			manager.AddBag(ProgrammingConstructsBagName);
+			
+			manager.AddMoveable(ProgrammingConstructsBagName,new IfControl());
+		}
+		
+		
+		protected abstract void CreateMoveables(IMoveableManager manager);
 	}
 }
+
+
+
+
+

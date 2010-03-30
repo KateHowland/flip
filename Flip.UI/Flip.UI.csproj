@@ -82,6 +82,10 @@
       <DependentUpon>FlipWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IfControl.xaml.cs">
+      <DependentUpon>IfControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IMoveableManager.cs" />
     <Compile Include="MoveableAdorner.cs" />
     <Compile Include="MoveableEventArgs.cs" />
@@ -153,6 +157,7 @@
     <Page Include="DropZone.xaml" />
     <Page Include="EventBlock.xaml" />
     <Page Include="FlipWindow.xaml" />
+    <Page Include="IfControl.xaml" />
     <Page Include="MoveablesPanel.xaml" />
     <Page Include="Peg.xaml" />
     <Page Include="PegSlot.xaml" />

@@ -42,6 +42,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Nwn2StatementFactory statements;
 		protected Nwn2EventBlockFactory events;
 		protected IMoveableManager manager; // only set on Populate() call
+		protected static string[] nwn2Types;
+			
 		
 		protected const string ActionsBagName = "Actions";
 		protected const string ConditionsBagName = "Conditions";
@@ -49,6 +51,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected const string EventsBagName = "Events";
 		protected const string BlueprintBagNamingFormat = "{0} blueprints";
 		protected const string InstanceBagNamingFormat = "{0} instances";
+		
+		
+		static Nwn2MoveableProvider()
+		{
+			nwn2Types = Enum.GetNames(typeof(NWN2ObjectType));
+		}
 		
 		
 		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, Nwn2StatementFactory statements, Nwn2EventBlockFactory events)
@@ -75,39 +83,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override void Populate(IMoveableManager manager)
+		protected override void CreateMoveables(IMoveableManager manager)
 		{
 			if (manager == null) throw new ArgumentNullException("manager");
 			
 			this.manager = manager;
 			
-			CreateBags();
 			CreateStatements();
 			CreateBlocks();
 			CreateEvents();
 		}
 		
 		
-		protected void CreateBags()
-		{
-			manager.AddBag(ActionsBagName);
-			manager.AddBag(ConditionsBagName);
-			manager.AddBag(OtherBagName);
-			manager.AddBag(EventsBagName);
-			 
-			string[] nwn2Types = Enum.GetNames(typeof(NWN2ObjectType));
-			
-			foreach (string nwn2Type in nwn2Types) {
-				manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
-			}
-			foreach (string nwn2Type in nwn2Types) {
-				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
-			}			
-		}
-		
-		
 		protected void CreateStatements()
 		{	
+			manager.AddBag(ActionsBagName);
+			manager.AddBag(ConditionsBagName);
+			
 			foreach (Statement statement in statements.GetActions()) {
 				manager.AddMoveable(ActionsBagName,statement);
 			}					
@@ -119,23 +111,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void CreateBlocks()
 		{
+			manager.AddBag(OtherBagName);
+			
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
-			PopulateBlueprints();
-			PopulateInstances();
+			CreateBlueprints();
+			CreateInstances();
 		}
 		
 		
 		protected void CreateEvents()
 		{
+			manager.AddBag(EventsBagName);
+			
 			foreach (EventBlock eventBlock in events.GetEvents()) {
 				manager.AddMoveable(EventsBagName,eventBlock);
 			}
 		}
 		
 		
-		protected void PopulateBlueprints()
+		protected void CreateBlueprints()
 		{
+			foreach (string nwn2Type in nwn2Types) {
+				manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
+			}		
+			
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {				
@@ -147,10 +147,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected void PopulateInstances()
+		protected void CreateInstances()
 		{
-			// TODO:
-			// check this works when working with the actual toolset and not just Flip.UI.Generic:
+			foreach (string nwn2Type in nwn2Types) {
+				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
+			}	
+			
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			NWN2Toolset.NWN2.Data.NWN2GameArea activeArea = NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area;
