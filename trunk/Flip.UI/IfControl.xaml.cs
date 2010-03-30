@@ -74,7 +74,7 @@ namespace Sussex.Flip.UI
 			else condition = slot.Contents.GetNaturalLanguage();
 			
 			code.AppendLine(String.Format("if {0},",condition));			
-			code.AppendLine(spine.GetCode());			
+			code.AppendLine(spine.GetNaturalLanguage());			
 			code.Append(".");
 			
 			return code.ToString();
