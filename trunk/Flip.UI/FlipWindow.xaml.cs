@@ -57,6 +57,22 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		protected void DisplayText(object sender, DragEventArgs e)
+		{
+			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
+				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+				this.naturalLanguageTextBlock.Text = moveable.GetNaturalLanguage();
+				this.targetCodeTextBlock.Text = moveable.GetCode();
+			}
+		}
+		
+		
+		protected void Dropped(object sender, DragEventArgs e)
+		{
+			if (!e.Handled) e.Handled = true;
+		}
+		
+		
 		protected void CompileAndAttach(object sender, RoutedEventArgs e)
 		{
 			FlipScript script = new FlipScript("...~~~...");

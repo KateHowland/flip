@@ -93,6 +93,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IMoveableManager.cs" />
+    <Compile Include="ITranslatable.cs" />
     <Compile Include="MoveableAdorner.cs" />
     <Compile Include="MoveableEventArgs.cs" />
     <Compile Include="MoveableProvider.cs" />

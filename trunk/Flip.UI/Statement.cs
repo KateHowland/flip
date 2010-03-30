@@ -106,5 +106,17 @@ namespace Sussex.Flip.UI
 			
 			return statement;
 		}
+		
+		
+		public override string GetCode()
+		{
+			return "Statement";
+		}
+		
+		
+		public override string GetNaturalLanguage()
+		{
+			return "Statement";
+		}
     }
 }

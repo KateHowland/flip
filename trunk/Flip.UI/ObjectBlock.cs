@@ -75,11 +75,6 @@ namespace Sussex.Flip.UI
     		get { return (object)base.GetValue(RepresentedObjectProperty); }
     		set { base.SetValue(RepresentedObjectProperty,value); }
     	}
-    	   	    	
-    	
-    	// protected ObjectBlockBehaviour behaviour;
-    	// behaviour.GetSource();
-    	// behaviour.GetNaturalLanguage();
     	
     	
         public ObjectBlock(Image image, object represented, string identifier, string type, string subtype, string displayName)
@@ -121,6 +116,23 @@ namespace Sussex.Flip.UI
 			img.Source = DisplayImage.Source;
 			ObjectBlock copy = new ObjectBlock(img,RepresentedObject,Identifier,Type,Subtype,DisplayName);
 			return copy;
+		}
+    	   	    	
+    	
+    	// protected ObjectBlockBehaviour behaviour;
+    	// behaviour.GetSource();
+    	// behaviour.GetNaturalLanguage();
+		
+		
+		public override string GetCode()
+		{
+			return Identifier;
+		}
+		
+		
+		public override string GetNaturalLanguage()
+		{
+			return DisplayName;
 		}
     }
 }

@@ -62,5 +62,17 @@ namespace Sussex.Flip.UI
 		{
 			return new EventBlock(DisplayName);
 		}
+		
+		
+		public override string GetCode()
+		{
+			return EventName;
+		}
+		
+		
+		public override string GetNaturalLanguage()
+		{
+			return DisplayName;
+		}
     }
 }

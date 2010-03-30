@@ -13,7 +13,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for Spine.xaml
     /// </summary>
 
-    public partial class Spine : UserControl
+    public partial class Spine : UserControl, ITranslatable
     {
     	protected Duration animationTime;
     	protected Fitter fitter;
@@ -243,5 +243,23 @@ namespace Sussex.Flip.UI
         public UIElementCollection Pegs {
         	get { return pegsPanel.Children; }
         }
+    	
+        
+		public string GetCode()
+		{
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+			foreach (Peg peg in Pegs) {
+				if (peg.Slot.Contents != null) {
+					code.AppendLine(String.Format("\t{0}",peg.Slot.Contents.GetCode()));
+				}
+			}
+			return code.ToString();
+		}
+		
+    	
+		public string GetNaturalLanguage()
+		{
+			throw new NotImplementedException();
+		}
     }
 }

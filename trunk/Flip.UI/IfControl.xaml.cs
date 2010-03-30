@@ -47,5 +47,37 @@ namespace Sussex.Flip.UI
 			IfControl copy = new IfControl();
 			return copy;
 		}
+    	
+        
+		public override string GetCode()
+		{
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+			
+			string condition;
+			if (slot.Contents == null) condition = String.Empty;
+			else condition = slot.Contents.GetCode();
+			
+			code.AppendLine(String.Format("if ({0}) {{",condition));			
+			code.AppendLine(spine.GetCode());			
+			code.AppendLine(String.Format("}}",condition));
+			
+			return code.ToString();
+		}
+    	
+        
+		public override string GetNaturalLanguage()
+		{
+			System.Text.StringBuilder code = new System.Text.StringBuilder();
+			
+			string condition;
+			if (slot.Contents == null) condition = "some condition is met";
+			else condition = slot.Contents.GetNaturalLanguage();
+			
+			code.AppendLine(String.Format("if {0},",condition));			
+			code.AppendLine(spine.GetCode());			
+			code.Append(".");
+			
+			return code.ToString();
+		}
     }
 }
