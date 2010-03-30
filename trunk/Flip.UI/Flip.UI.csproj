@@ -68,6 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionStatement.cs" />
+    <Compile Include="ConditionalControl.cs" />
+    <Compile Include="ConditionFitter.cs" />
+    <Compile Include="ConditionSlot.xaml.cs">
+      <DependentUpon>ConditionSlot.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ConditionStatement.cs" />
     <Compile Include="DropZone.xaml.cs">
       <DependentUpon>DropZone.xaml</DependentUpon>
@@ -154,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images" />
+    <Page Include="ConditionSlot.xaml" />
     <Page Include="DropZone.xaml" />
     <Page Include="EventBlock.xaml" />
     <Page Include="FlipWindow.xaml" />

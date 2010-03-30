@@ -17,7 +17,7 @@ namespace Sussex.Flip.UI
     {
     	protected Duration animationTime;
     	protected Fitter fitter;
-    	protected int minPegs = 2; // TODO settable but not below 1
+    	protected int minPegs = 1; // TODO settable but not below 1
 
     	
 		public Fitter Fitter {
