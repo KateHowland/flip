@@ -31,8 +31,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="250"/>
-			</Grid.ColumnDefinitions>
-			
+			</Grid.ColumnDefinitions>			
 	
 			<Menu  
 			Grid.Row="0" 
@@ -66,19 +65,7 @@
 			Grid.Row="1"
 			Grid.Column="0" 
 			Background="{StaticResource skyBrush}"
-			AllowDrop="True">
-			
-				<!--<flipui:TriggerBar
-				Canvas.Top="30"
-				Canvas.Left="30"/>-->
-			
-			</Canvas>
-						
-			<!--<flipui:MoveablesPanel
-			x:Name="moveablesPanel"
-			Grid.Row="1"
-			Grid.Column="1"
-			PreviewDrop="ReturnMoveableToBox"/>	-->
+			AllowDrop="True"/>
 		
 		</Grid>
 	
