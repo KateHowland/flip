@@ -43,5 +43,11 @@ namespace Sussex.Flip.UI
 			EventBlock block = moveable as EventBlock;
 			return block != null;
 		}
+		
+		
+		public override string GetMoveableDescription()
+		{
+			return "event";
+		}
 	}
 }

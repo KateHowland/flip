@@ -247,7 +247,7 @@ namespace Sussex.Flip.UI
 		
 		public string GetNaturalLanguage()
 		{
-			if (Contents == null) return String.Empty;
+			if (Contents == null) return fitter.GetMoveableDescription();
 			else return Contents.GetNaturalLanguage();
 		}
 		

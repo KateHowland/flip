@@ -79,5 +79,15 @@ namespace Sussex.Flip.UI
 			ObjectBlock block = moveable as ObjectBlock;			
 			return block != null && Fits(block.Type,block.Subtype);
 		}
+		
+		// TODO:
+		// ObjectBlockFitter will need to be provided with a description string
+		// on instantiation as it's too complex to generate automatically.
+		// In which case, all Fitters should probably just be instantiated this way!
+		// This'll do for now.
+		public override string GetMoveableDescription()
+		{
+			return "object";
+		}
 	}
 }

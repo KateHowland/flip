@@ -144,6 +144,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 		}
 		
+		
+		public override string GetMoveableDescription()
+		{
+			return "event raiser";
+		}
+		
 		#endregion
 	}
 }

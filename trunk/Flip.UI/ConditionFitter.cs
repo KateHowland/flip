@@ -40,5 +40,11 @@ namespace Sussex.Flip.UI
 			Statement statement = moveable as Statement;
 			return statement != null && statement.StatementType == StatementType.Condition;
 		}
+		
+		
+		public override string GetMoveableDescription()
+		{
+			return "condition";
+		}
 	}
 }

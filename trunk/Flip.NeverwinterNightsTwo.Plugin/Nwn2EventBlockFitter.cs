@@ -71,5 +71,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 			return validEvents.Contains(block.EventName);
 		}
+		
+		
+		public override string GetMoveableDescription()
+		{
+			return "event";
+		}
 	}
 }

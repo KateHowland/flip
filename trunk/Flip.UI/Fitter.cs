@@ -27,8 +27,8 @@ using System;
 
 namespace Sussex.Flip.UI
 {
-	// TODO better name. CriteriaChecker? MoveableAssessor?
-	// MoveableFitter? MoveableGuard?
+	// TODO better name. CriteriaChecker? 
+	// MoveableFitter? 
 	/// <summary>
 	/// Contains logic about whether a given Moveable meets
 	/// some set of criteria.
@@ -39,8 +39,17 @@ namespace Sussex.Flip.UI
 		/// Gets whether a given Moveable meets the criteria
 		/// embodied by this Fitter.
 		/// </summary>
-		/// <param name="moveable"></param>
-		/// <returns></returns>
+		/// <param name="moveable">TODO</param>
+		/// <returns>TODO</returns>
 		public abstract bool Fits(Moveable moveable);
+		
+		
+		/// <summary>
+		/// Gets a natural language description for the type(s)
+		/// of Moveable which will be accepted by this Fitter.
+		/// </summary>
+		/// <returns>A text string describing acceptable
+		/// Moveables.</returns>
+		public abstract string GetMoveableDescription();
 	}
 }
