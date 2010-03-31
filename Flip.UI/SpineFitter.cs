@@ -42,6 +42,12 @@ namespace Sussex.Flip.UI
 			
 			return conditional != null || (statement != null && statement.StatementType == StatementType.Action);			
 		}
+		
+		
+		public override string GetMoveableDescription()
+		{
+			return "action or conditional";
+		}
 	}
 }
 

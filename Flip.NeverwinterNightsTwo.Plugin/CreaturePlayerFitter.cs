@@ -38,5 +38,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ObjectBlock block = moveable as ObjectBlock;
 			return block != null && block.Type == "Player" || (block.Type == "Instance" && block.Subtype == "Creature");
 		}
+		
+		
+		public override string GetMoveableDescription()
+		{
+			return "creature";
+		}
 	}
 }
