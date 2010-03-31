@@ -20,28 +20,19 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 19/03/2010 at 13:13.
+ * This file added by Keiron Nicholson on 31/03/2010 at 10:50.
  */
 
 using System;
+using System.Collections.Generic;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
-	public class SpineFitter : Fitter
-	{		
-		public SpineFitter() : base()
-		{
-			
-		}
-		
-		
-		public override bool Fits(Moveable moveable)
-		{
-			ConditionalControl conditional = moveable as ConditionalControl;
-			Statement statement = moveable as Statement;
-			
-			return conditional != null || (statement != null && statement.StatementType == StatementType.Action);			
-		}
+	public enum ComponentType
+	{
+		Attribute,
+		Label,
+		Parameter
 	}
 }
-

@@ -100,11 +100,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddBag(ActionsBagName);
 			manager.AddBag(ConditionsBagName);
 			
-			foreach (Statement statement in statements.GetActions()) {
-				manager.AddMoveable(ActionsBagName,statement);
+			List<Statement> s,a,c;
+			statements.GetStatements(out s, out a, out c);
+			
+			foreach (Statement action in a) {
+				try {
+					manager.AddMoveable(ActionsBagName,action);
+				}
+				catch (Exception e) {
+					System.Windows.MessageBox.Show(e.ToString() + "\n\n" + action.Parent.ToString());
+				}
 			}					
-			foreach (Statement statement in statements.GetConditions()) {
-				manager.AddMoveable(ConditionsBagName,statement);
+			foreach (Statement condition in c) {
+				try {
+					manager.AddMoveable(ConditionsBagName,condition);
+				}
+				catch (Exception e) {					
+					System.Windows.MessageBox.Show(e.ToString() + "\n\n" + condition.Parent.ToString());
+				}
 			}
 		}
 		

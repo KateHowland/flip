@@ -20,34 +20,18 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 15/03/2010 at 15:22.
+ * This file added by Keiron Nicholson on 31/03/2010 at 10:50.
  */
 
 using System;
+using System.Collections.Generic;
+using Sussex.Flip.Utils;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo
+namespace Sussex.Flip.UI
 {
-	/// <summary>
-	/// Description of ConditionStatementAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.ReturnValue)]
-	public class ConditionStatementAttribute : Attribute
+	public enum StatementType
 	{
-		protected string name;		
-		public string Name {
-			get { return name; }
-			set { name = value; }
-		}
-		
-		
-		public ConditionStatementAttribute() : this(String.Empty)
-		{			
-		}
-		
-		
-		public ConditionStatementAttribute(string name)
-		{
-			this.name = name;
-		}
+		Action,
+		Condition
 	}
 }

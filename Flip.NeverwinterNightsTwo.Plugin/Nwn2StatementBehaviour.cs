@@ -20,28 +20,25 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 19/03/2010 at 13:13.
+ * This file added by Keiron Nicholson on 31/03/2010 at 15:33.
  */
 
 using System;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class SpineFitter : Fitter
-	{		
-		public SpineFitter() : base()
-		{
-			
-		}
+	/// <summary>
+	/// Description of Nwn2StatementBehaviour.
+	/// </summary>
+	public abstract class Nwn2StatementBehaviour : StatementBehaviour
+	{
+		protected Nwn2Fitters fitters;
 		
 		
-		public override bool Fits(Moveable moveable)
+		public Nwn2StatementBehaviour(Nwn2Fitters fitters)
 		{
-			ConditionalControl conditional = moveable as ConditionalControl;
-			Statement statement = moveable as Statement;
-			
-			return conditional != null || (statement != null && statement.StatementType == StatementType.Action);			
+			this.fitters = fitters;
 		}
 	}
 }
-

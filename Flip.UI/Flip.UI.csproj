@@ -67,14 +67,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionStatement.cs" />
+    <Compile Include="ComponentType.cs" />
     <Compile Include="ConditionalControl.cs" />
     <Compile Include="ConditionFitter.cs" />
     <Compile Include="ConditionSlot.xaml.cs">
       <DependentUpon>ConditionSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConditionStatement.cs" />
     <Compile Include="Core\FlipAttacher.cs" />
     <Compile Include="Core\FlipScript.cs" />
     <Compile Include="Core\FlipTranslator.cs" />
@@ -135,10 +134,12 @@
     </Compile>
     <Compile Include="SpineFitter.cs" />
     <Compile Include="StatementBehaviour.cs" />
+    <Compile Include="StatementComponent.cs" />
     <Compile Include="StatementLabel.xaml.cs">
       <DependentUpon>StatementLabel.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StatementType.cs" />
     <Compile Include="TriggerBar.xaml.cs">
       <DependentUpon>TriggerBar.xaml</DependentUpon>
       <SubType>Code</SubType>

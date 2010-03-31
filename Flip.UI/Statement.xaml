@@ -5,60 +5,6 @@
 	AllowDrop="True"
 	HorizontalAlignment="Center"
 	VerticalAlignment="Center">
-		
-	<UserControl.Resources>
-		
-		<Color x:Key="edgeColor">Red</Color>
-		<Color x:Key="defaultColor">White</Color>
-		<Color x:Key="actionColor">PaleGreen</Color>
-		<Color x:Key="conditionColor">PaleTurquoise</Color>
-		<Color x:Key="triggerColor">PaleVioletRed</Color>
-		
-		<LinearGradientBrush 
-		x:Key="defaultBrush"
-		StartPoint="0,0"
-		EndPoint="1,1">
-			<LinearGradientBrush.GradientStops>
-				<GradientStop Offset="-0.5" Color="{StaticResource edgeColor}"/>
-				<GradientStop Offset="0.5" Color="{StaticResource defaultColor}"/>
-				<GradientStop Offset="1.5" Color="{StaticResource edgeColor}"/>
-			</LinearGradientBrush.GradientStops>
-		</LinearGradientBrush>
-		
-		<LinearGradientBrush 
-		x:Key="actionBrush"
-		StartPoint="0,0"
-		EndPoint="1,1">
-			<LinearGradientBrush.GradientStops>
-				<GradientStop Offset="-0.5" Color="{StaticResource edgeColor}"/>
-				<GradientStop Offset="0.5" Color="{StaticResource actionColor}"/>
-				<GradientStop Offset="1.5" Color="{StaticResource edgeColor}"/>
-			</LinearGradientBrush.GradientStops>
-		</LinearGradientBrush>
-		
-		<LinearGradientBrush 
-		x:Key="conditionBrush"
-		StartPoint="0,0"
-		EndPoint="1,1">
-			<LinearGradientBrush.GradientStops>
-				<GradientStop Offset="-0.5" Color="{StaticResource edgeColor}"/>
-				<GradientStop Offset="0.5" Color="{StaticResource conditionColor}"/>
-				<GradientStop Offset="1.5" Color="{StaticResource edgeColor}"/>
-			</LinearGradientBrush.GradientStops>
-		</LinearGradientBrush>
-		
-		<LinearGradientBrush 
-		x:Key="triggerBrush"
-		StartPoint="0,0"
-		EndPoint="1,1">
-			<LinearGradientBrush.GradientStops>
-				<GradientStop Offset="-0.5" Color="{StaticResource edgeColor}"/>
-				<GradientStop Offset="0.5" Color="{StaticResource triggerColor}"/>
-				<GradientStop Offset="1.5" Color="{StaticResource edgeColor}"/>
-			</LinearGradientBrush.GradientStops>
-		</LinearGradientBrush>
-	
-	</UserControl.Resources>
 	
     <StackPanel
 	x:Name="mainPanel"

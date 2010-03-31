@@ -19,7 +19,17 @@ namespace Sussex.Flip.UI
 
     public partial class Statement : Moveable
     {
-    	protected static Brush brush;
+    	protected static Brush defaultBrush;
+    	protected static Brush actionBrush;
+    	protected static Brush conditionBrush;    	
+    	
+    	
+    	protected StatementBehaviour behaviour;
+    	
+    	
+    	public StatementType StatementType {
+    		get { return behaviour.StatementType; }
+    	}
     	
     	    	
     	static Statement()
@@ -28,30 +38,86 @@ namespace Sussex.Flip.UI
     		stops.Add(new GradientStop(Colors.Gray,-0.5));
     		stops.Add(new GradientStop(Colors.White,0.5));
     		stops.Add(new GradientStop(Colors.Gray,1.5));
-    		brush = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
+    		defaultBrush = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
+    		
+    		stops = new GradientStopCollection(3);
+    		stops.Add(new GradientStop(Colors.Green,-0.5));
+    		stops.Add(new GradientStop(Colors.White,0.5));
+    		stops.Add(new GradientStop(Colors.Green,1.5));
+    		actionBrush = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
+    		
+    		stops = new GradientStopCollection(3);
+    		stops.Add(new GradientStop(Colors.Red,-0.5));
+    		stops.Add(new GradientStop(Colors.White,0.5));
+    		stops.Add(new GradientStop(Colors.Red,1.5));
+    		conditionBrush = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
     	}
-    	    
-    	
-        public Statement()
+        
+        
+        public Statement(StatementBehaviour behaviour)
+        {
+        	if (behaviour == null) throw new ArgumentNullException("behaviour");
+        	
+        	InitializeComponent();
+        	this.behaviour = behaviour;
+        	Initialise();
+        }
+        
+        
+        protected void Initialise()
+        {
+        	if (behaviour == null) throw new InvalidOperationException("This Statement has not been assigned a behaviour.");
+        	
+        	foreach (StatementComponent component in behaviour.GetComponents()) {
+        		AddComponent(component);
+        	}
+        }
+        
+        
+        protected void AddComponent(StatementComponent info)
+        {
+        	switch (info.ComponentType) {
+        		case ComponentType.Attribute:
+        			break;
+        		case ComponentType.Label:
+        			AddLabel(info.LabelText);
+        			break;
+        		case ComponentType.Parameter:
+        			AddParameter(info.ParameterFitter);
+        			break;
+        	}
+        }
+        
+        
+        protected void AddParameter(Fitter fitter)
         {        	
-            InitializeComponent(); 
+        	if (fitter == null) throw new ArgumentNullException("fitter","Can't add a parameter without providing a fitter.");
+        	
+        	ObjectBlockSlot parameter = new ObjectBlockSlot(fitter);
+        	AddParameter(parameter);
         }
 
         
-        public void AddSlot(ObjectBlockSlot slot)
+        protected void AddParameter(ObjectBlockSlot parameter)
         {
-        	mainPanel.Children.Add(slot);
+        	if (parameter == null) throw new ArgumentNullException("parameter","Can't add a null parameter.");
+        	
+        	mainPanel.Children.Add(parameter);
         }
 
         
-        public void AddLabel(StatementLabel label)
+        protected void AddLabel(StatementLabel label)
         {
+        	if (label == null) throw new ArgumentNullException("label","Can't add a null label.");
+        	
         	mainPanel.Children.Add(label);
         }
 
         
-        public void AddLabel(string text)
+        protected void AddLabel(string text)
         {
+        	if (text == null) throw new ArgumentNullException("text","Can't add a label with null text.");
+        	
         	StatementLabel label = new StatementLabel(text,GetBrush());
         	mainPanel.Children.Add(label);
         }
@@ -59,52 +125,40 @@ namespace Sussex.Flip.UI
         
         protected virtual Brush GetBrush()
         {
-        	return brush;
+        	switch (StatementType) {
+        		case StatementType.Action:
+        			return actionBrush;
+        		case StatementType.Condition:
+        			return conditionBrush;
+        		default:
+        			return defaultBrush;
+        	}
         }
 		
 		
 		public override string ToString()
 		{
-			System.Text.StringBuilder sb = new StringBuilder();
-			int count = mainPanel.Children.Count;
-			for (int i = 0; i < count; i++) {
-				ObjectBlockSlot slot = mainPanel.Children[i] as ObjectBlockSlot;
-				StatementLabel label = mainPanel.Children[i] as StatementLabel;
-				if (slot != null) sb.Append(slot.ToString());
-				else if (label != null) sb.Append(label.ToString());
-				else sb.Append("?");				
-				if (i < count - 1) sb.Append(" ");
-			}
-			return sb.ToString();
+			return GetNaturalLanguage();
 		}
 		
 		
 		public override Moveable DeepCopy()
 		{
-			Statement statement = new Statement();		
+			Statement copy = new Statement(behaviour.DeepCopy());
 			
-			foreach (UIElement e in mainPanel.Children) {
-				if (e is StatementLabel) {
-					StatementLabel label = (StatementLabel)e;
-					StatementLabel labelClone = label.DeepCopy();
-					statement.AddLabel(labelClone);
-				}
-				else if (e is ObjectBlockSlot) {
-					ObjectBlockSlot slot = (ObjectBlockSlot)e;
-					ObjectBlockSlot slotClone = (ObjectBlockSlot)slot.DeepCopy();
-					statement.AddSlot(slotClone);
-					// TODO: think I kept this separate from ObjectBlockSlot.DeepCopy()
-					// for a reason, but not sure what it was..?:
-					if (slot.Contents != null) {
-						slotClone.Contents = (ObjectBlock)slot.Contents.DeepCopy();
-					}
-				}
-				else {
-					throw new InvalidOperationException("Didn't recognise type '" + e.GetType() + "' when cloning Statement.");
-				}
+			List<ObjectBlockSlot> slots = GetSlots();
+			List<ObjectBlockSlot> copySlots = copy.GetSlots();
+				
+			if (slots.Count != copySlots.Count) 
+				throw new ApplicationException("Statement.DeepCopy() returned a copy with a different number of slots.");
+				
+			for (int i = 0; i < slots.Count; i++) {
+				Moveable contents = slots[i].Contents;
+				if (contents != null) copySlots[i].Contents = contents.DeepCopy();
+				else copySlots[i].Contents = null;
 			}
 			
-			return statement;
+			return copy;
 		}
 		
 		
@@ -121,20 +175,31 @@ namespace Sussex.Flip.UI
 		
 		public override string GetCode()
 		{
-			System.Text.StringBuilder code = new System.Text.StringBuilder("Statement(");
+			if (behaviour == null) return "BEHAVIOUR_MISSING";
 			
-			foreach (ObjectBlockSlot slot in GetSlots()) {
-				code.Append(String.Format("{0},",slot.GetCode()));
-			}			
-			code.Append(")");
+			List<ObjectBlockSlot> slots = GetSlots();
+			string[] args = new string[slots.Count];
 			
-			return code.ToString();
+			foreach (ObjectBlockSlot slot in slots) {
+				args[slots.IndexOf(slot)] = slot.GetCode();
+			}
+			
+			return behaviour.GetCode(args);
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return GetCode();
+			if (behaviour == null) return "BEHAVIOUR_MISSING";
+			
+			List<ObjectBlockSlot> slots = GetSlots();
+			string[] args = new string[slots.Count];
+			
+			foreach (ObjectBlockSlot slot in slots) {
+				args[slots.IndexOf(slot)] = slot.GetNaturalLanguage();
+			}
+			
+			return behaviour.GetNaturalLanguage(args);
 		}
     }
 }
