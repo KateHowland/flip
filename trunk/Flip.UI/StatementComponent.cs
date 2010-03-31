@@ -20,34 +20,50 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 15/03/2010 at 15:22.
+ * This file added by Keiron Nicholson on 31/03/2010 at 10:50.
  */
 
 using System;
+using System.Collections.Generic;
+using Sussex.Flip.Utils;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo
+namespace Sussex.Flip.UI
 {
-	/// <summary>
-	/// Description of ActionStatementAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.ReturnValue)]
-	public class ActionStatementAttribute : Attribute
+	public class StatementComponent
 	{
-		protected string name;		
-		public string Name {
-			get { return name; }
-			set { name = value; }
+		protected ComponentType componentType;		
+		protected Fitter parameterFitter;		
+		protected string labelText;
+		
+		
+		public ComponentType ComponentType {
+			get { return componentType; }
 		}
 		
 		
-		public ActionStatementAttribute() : this(String.Empty)
-		{			
+		public Fitter ParameterFitter {
+			get { return parameterFitter; }
 		}
 		
 		
-		public ActionStatementAttribute(string name)
+		public string LabelText {
+			get { return labelText; }
+		}
+		
+		
+		public StatementComponent(Fitter parameterFitter)
 		{
-			this.name = name;
+			this.parameterFitter = parameterFitter;			
+			this.labelText = null;
+			this.componentType = ComponentType.Parameter;
+		}
+		
+		
+		public StatementComponent(string labelText)
+		{
+			this.parameterFitter = null;			
+			this.labelText = labelText;
+			this.componentType = ComponentType.Label;
 		}
 	}
 }

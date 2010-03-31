@@ -37,7 +37,8 @@ namespace Sussex.Flip.UI
 		
 		public override bool Fits(Moveable moveable)
 		{
-			return moveable as ConditionStatement != null;
+			Statement statement = moveable as Statement;
+			return statement != null && statement.StatementType == StatementType.Condition;
 		}
 	}
 }

@@ -35,10 +35,16 @@ namespace Sussex.Flip.UI
 	public abstract class StatementBehaviour: IDeepCopyable<StatementBehaviour>
 	{		
 		protected int parameterCount;
-		protected List<ComponentInfo> components;
+		protected List<StatementComponent> components;
+		protected StatementType statementType;
 		
 		
-		public virtual List<ComponentInfo> GetComponents()
+		public StatementType StatementType {
+			get { return statementType; }
+		}
+		
+		
+		public virtual List<StatementComponent> GetComponents()
 		{
 			return components;
 		}
@@ -52,93 +58,6 @@ namespace Sussex.Flip.UI
 		
 		public abstract string GetCode(params string[] args);
 		public abstract string GetNaturalLanguage(params string[] args);
-		
-		
 		public abstract StatementBehaviour DeepCopy();
-	}
-
-		
-	public class Attacks : StatementBehaviour
-	{	
-		// Attack oAttackee.
-		// - bPassive: If this is TRUE, attack is in passive mode.
-		// void ActionAttack(object oAttackee, int bPassive=FALSE);
-		
-		public Attacks()
-		{
-			parameterCount = 1;
-			components = new List<ComponentInfo>(3) 
-			{ 
-				new ComponentInfo(new ObjectBlockFitter()),
-				new ComponentInfo("attacks"),
-				new ComponentInfo(new ObjectBlockFitter())
-			};
-		}
-		
-		
-		public override string GetCode(params string[] args)
-		{
-			if (args.Length != parameterCount) {
-				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
-			}
-			
-			return String.Format("AssignCommand({0}, ActionAttack({1}));",args);
-		}
-		
-		
-		public override string GetNaturalLanguage(params string[] args)
-		{
-			if (args.Length != parameterCount) {
-				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
-			}
-			
-			return String.Format("{0} attacks {1}",args);
-		}
-		
-		
-		public override StatementBehaviour DeepCopy()
-		{
-			return new Attacks();
-		}
-	}
-	
-	
-	public class ComponentInfo
-	{
-		protected bool isParameter;
-		protected bool isLabel;
-		protected bool isAttribute;				
-		protected Fitter parameterFitter;		
-		protected string labelText;
-		
-		
-		public Fitter ParameterFitter {
-			get { return parameterFitter; }
-		}
-		
-		
-		public string LabelText {
-			get { return labelText; }
-		}
-		
-		
-		public ComponentInfo(Fitter parameterFitter)
-		{
-			this.parameterFitter = parameterFitter;			
-			this.labelText = null;
-			this.isAttribute = false;
-			this.isParameter = true;
-			this.isLabel = false;
-		}
-		
-		
-		public ComponentInfo(string labelText)
-		{
-			this.parameterFitter = null;			
-			this.labelText = labelText;
-			this.isAttribute = false;
-			this.isParameter = false;
-			this.isLabel = true;
-		}
 	}
 }
