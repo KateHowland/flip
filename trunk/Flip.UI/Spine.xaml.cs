@@ -243,6 +243,16 @@ namespace Sussex.Flip.UI
         public UIElementCollection Pegs {
         	get { return pegsPanel.Children; }
         }
+        
+        
+        protected List<Peg> GetFilledPegs()
+        {
+        	List<Peg> filled = new List<Peg>();
+        	foreach (Peg peg in Pegs) {
+        		if (peg.Slot.Contents != null) filled.Add(peg);
+        	}
+        	return filled;
+        }
     	
         
 		public string GetCode()
@@ -260,11 +270,26 @@ namespace Sussex.Flip.UI
 		public string GetNaturalLanguage()
 		{
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
-			foreach (Peg peg in Pegs) {
+			
+			// can't use Pegs as an empty Peg might screw up our formatting:
+			List<Peg> filledPegs = GetFilledPegs(); 
+			
+			for (int i = 0; i < filledPegs.Count; i++) {
+				Peg peg = (Peg)filledPegs[i];
+				
 				if (peg.Slot.Contents != null) {
-					code.Append(String.Format("{0}. ",peg.Slot.Contents.GetNaturalLanguage()));
+					
+					bool last = (i == filledPegs.Count - 1);
+					
+					if (last && filledPegs.Count > 1) code.Append("and ");
+					
+					code.Append(peg.Slot.GetNaturalLanguage());
+					
+					if (last) code.Append(".");
+					else code.Append(", ");
 				}
 			}
+			
 			return code.ToString();
 		}
     }

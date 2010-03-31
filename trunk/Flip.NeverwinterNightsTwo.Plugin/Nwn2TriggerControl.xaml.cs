@@ -87,7 +87,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{			
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 			
-			code.Append(String.Format("When {0} happens on {1}, do this: ",eventSlot.GetNaturalLanguage(),raiserSlot.GetNaturalLanguage()));
+			code.Append(String.Format("When {0} happens on {1}, this happens: ",eventSlot.GetNaturalLanguage(),raiserSlot.GetNaturalLanguage()));
 			
 			return code.ToString();
 		}

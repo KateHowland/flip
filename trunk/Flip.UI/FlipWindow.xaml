@@ -73,7 +73,7 @@
 				BorderBrush="Black"
 				Canvas.Right="30"
 				Canvas.Bottom="30"
-				Width="250"
+				Width="350"
 				Height="200">
 				
 					<TextBlock
@@ -92,9 +92,9 @@
 				<Border
 				BorderThickness="3"
 				BorderBrush="Black"
-				Canvas.Right="295"
+				Canvas.Right="395"
 				Canvas.Bottom="30"
-				Width="250"
+				Width="350"
 				Height="200">
 				
 					<TextBlock
