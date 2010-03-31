@@ -134,6 +134,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="SpineFitter.cs" />
+    <Compile Include="StatementBehaviour.cs" />
     <Compile Include="StatementLabel.xaml.cs">
       <DependentUpon>StatementLabel.xaml</DependentUpon>
       <SubType>Code</SubType>
