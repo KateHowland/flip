@@ -105,6 +105,7 @@
       <DependentUpon>MoveablesPanel.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ObjectBehaviour.cs" />
     <Compile Include="ObjectBlockSlot.cs" />
     <Compile Include="Peg.xaml.cs">
       <DependentUpon>Peg.xaml</DependentUpon>

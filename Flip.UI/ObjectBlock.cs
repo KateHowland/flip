@@ -25,7 +25,9 @@ namespace Sussex.Flip.UI
     	protected static DependencyProperty IdentifierProperty;
     	protected static DependencyProperty DisplayNameProperty;
     	protected static DependencyProperty DisplayImageProperty;
-    	protected static DependencyProperty RepresentedObjectProperty;
+    	
+    	
+    	protected static DependencyProperty BehaviourProperty;
     	
     	
     	static ObjectBlock()
@@ -37,31 +39,32 @@ namespace Sussex.Flip.UI
     		IdentifierProperty = DependencyProperty.Register("Identifier",typeof(string),typeof(ObjectBlock));
     		DisplayNameProperty = DependencyProperty.Register("DisplayName",typeof(string),typeof(ObjectBlock));
     		DisplayImageProperty = DependencyProperty.Register("DisplayImage",typeof(Image),typeof(ObjectBlock));
-    		RepresentedObjectProperty = DependencyProperty.Register("RepresentedObject",typeof(object),typeof(ObjectBlock));
+    		
+    		BehaviourProperty = DependencyProperty.Register("Behaviour",typeof(TempObjectBehaviour),typeof(ObjectBlock));
     	}
     	
     	
     	public string Type {
-    		get { return (string)base.GetValue(TypeProperty); }
-    		set { base.SetValue(TypeProperty,value); }
+    		get { return Behaviour.Type; }
+    		set { Behaviour.Type = value; }
     	}
     	
     	
     	public string Subtype {
-    		get { return (string)base.GetValue(SubtypeProperty); }
-    		set { base.SetValue(SubtypeProperty,value); }
+    		get { return Behaviour.Subtype; }
+    		set { Behaviour.Subtype = value; }
     	}
     	
     	
     	public string Identifier {
-    		get { return (string)base.GetValue(IdentifierProperty); }
-    		set { base.SetValue(IdentifierProperty,value); }
+    		get { return Behaviour.Identifier; }
+    		set { Behaviour.Identifier = value; }
     	}
     	
     	
     	public string DisplayName {
-    		get { return (string)base.GetValue(DisplayNameProperty); }
-    		set { base.SetValue(DisplayNameProperty,value); }
+    		get { return Behaviour.DisplayName; }
+    		set { Behaviour.DisplayName = value; }
     	}
     	
     	
@@ -71,14 +74,16 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-    	public object RepresentedObject {
-    		get { return (object)base.GetValue(RepresentedObjectProperty); }
-    		set { base.SetValue(RepresentedObjectProperty,value); }
+    	public TempObjectBehaviour Behaviour {
+    		get { return (TempObjectBehaviour)base.GetValue(BehaviourProperty); }
+    		set { base.SetValue(BehaviourProperty,value); }
     	}
     	
     	
         public ObjectBlock(Image image, object represented, string identifier, string type, string subtype, string displayName)
         {
+        	Behaviour = new TempObjectBehaviour(type,subtype,identifier,displayName);
+        	
             InitializeComponent();
             
             if (image == null) {
@@ -89,19 +94,12 @@ namespace Sussex.Flip.UI
             	}            	
             }
 
-    		Type = type;
-    		Subtype = subtype;
-    		Identifier = identifier;
-    		DisplayName = displayName;
     		DisplayImage = image;
-    		RepresentedObject = represented;
     		
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;
             
     		ToolTip = ToString();
-            
-//            Template = (ControlTemplate)Resources["objectBlockControlTemplate"];
         }
     	
     	
@@ -114,25 +112,21 @@ namespace Sussex.Flip.UI
 		{
 			Image img = new Image();
 			img.Source = DisplayImage.Source;
-			ObjectBlock copy = new ObjectBlock(img,RepresentedObject,Identifier,Type,Subtype,DisplayName);
+			ObjectBlock copy = new ObjectBlock(img,null,Identifier,Type,Subtype,DisplayName);
+			copy.Behaviour = (TempObjectBehaviour)Behaviour.DeepCopy(); //HACK
 			return copy;
 		}
-    	   	    	
-    	
-    	// protected ObjectBlockBehaviour behaviour;
-    	// behaviour.GetSource();
-    	// behaviour.GetNaturalLanguage();
 		
 		
 		public override string GetCode()
 		{
-			return Identifier;
+			return Behaviour.GetCode();
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return DisplayName;
+			return Behaviour.GetNaturalLanguage();
 		}
     }
 }
