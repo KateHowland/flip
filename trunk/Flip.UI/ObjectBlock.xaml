@@ -24,68 +24,20 @@
 				    <Label    	
 		    		Grid.Row="0"
 				    Grid.Column="0"
-			    	Content="{Binding Path=DisplayImage}"
+			    	Content="{Binding DisplayImage}"
 			    	Padding="0"
-			    	/>
+			    	/>	    		
 		    	
 		    		<TextBlock
 		    		Grid.Row="1"
 				    Grid.Column="0"
-		    		Text="{Binding Path=Identifier}"
+		    		Text="{Binding Path=Behaviour.Identifier}"
 		    		Background="AntiqueWhite"
 		    		Foreground="DarkBlue"
 		    		FontSize="8"
 		    		/>
 		    	
 		    	</Grid>			
-			</Border>		
-	
-	
-	
-	
-<!--	<flipui:Moveable.Resources>
-	
-		<ControlTemplate 
-		x:Key="objectBlockControlTemplate"	
-		TargetType="{x:Type flipui:ObjectBlock}">
-			
-		    <Border
-			BorderThickness="0.5"
-			BorderBrush="SlateGray">
-		    	
-		    	<Grid>		    		
-		    	<Grid.RowDefinitions>
-		    		<RowDefinition/>
-		    		<RowDefinition Height="10"/>
-		    	</Grid.RowDefinitions>
-		    	<Grid.ColumnDefinitions>
-		    		<ColumnDefinition/>
-		    	</Grid.ColumnDefinitions>
-			    	
-				    <Label    	
-		    		Grid.Row="0"
-				    Grid.Column="0"
-			    	Content="{Binding Path=DisplayImage}"
-			    	Padding="0"
-			    	/>
-		    	
-		    		<TextBlock
-		    		Grid.Row="1"
-				    Grid.Column="0"
-		    		Text="{Binding Path=Identifier}"
-		    		Background="AntiqueWhite"
-		    		Foreground="DarkBlue"
-		    		FontSize="8"
-		    		/>
-		    	
-		    	</Grid>			
-			</Border>		
-		</ControlTemplate>
-	
-	</flipui:Moveable.Resources>
-
-	<flipui:Moveable.Template>
-		<StaticResource ResourceKey="objectBlockControlTemplate"/>
-	</flipui:Moveable.Template>-->
+			</Border>	
 
 </flipui:Moveable>
