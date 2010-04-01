@@ -111,7 +111,6 @@
       <DependentUpon>Peg.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ObjectBlockFitter.cs" />
     <Compile Include="Fitter.cs" />
     <Compile Include="PegSlot.xaml.cs">
       <DependentUpon>PegSlot.xaml</DependentUpon>

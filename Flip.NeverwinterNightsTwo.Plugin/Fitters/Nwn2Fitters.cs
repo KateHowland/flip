@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using NWN2Toolset.NWN2.Data.Templates;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -117,20 +118,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public Nwn2Fitters()
 		{
-			onlyCreatures = new ObjectBlockFitter("Instance","Creature");
-			onlyDoors = new ObjectBlockFitter("Instance","Door");
-			onlyItems = new ObjectBlockFitter("Instance","Item");
-			onlyPlaceables = new ObjectBlockFitter("Instance","Placeable");
-			onlyStores = new ObjectBlockFitter("Instance","Store");
-			onlyTriggers = new ObjectBlockFitter("Instance","Trigger");
-			onlyWaypoints = new ObjectBlockFitter("Instance","Waypoint");
-			onlyPlayers = new ObjectBlockFitter("Player");
-			onlyAreas = new ObjectBlockFitter("Area");
-			onlyModules = new ObjectBlockFitter("Module");
-			onlyCreaturesOrPlayers = new CreaturePlayerFitter();
-			onlyDoorsOrPlaceables = new ObjectBlockFitter("Instance",new List<string>{"Door","Placeable"});
-			onlyInstances = new ObjectBlockFitter("Instance");
-			onlyEventRaisers = new ObjectBlockFitter(new List<string>{"Area","Module","Instance"});
+			onlyCreatures = new InstanceFitter(NWN2ObjectType.Creature,"a creature");
+			onlyDoors = new InstanceFitter(NWN2ObjectType.Door,"a door");
+			onlyItems = new InstanceFitter(NWN2ObjectType.Item,"an item");
+			onlyPlaceables = new InstanceFitter(NWN2ObjectType.Placeable,"a placeable");
+			onlyStores = new InstanceFitter(NWN2ObjectType.Store,"a store");
+			onlyTriggers = new InstanceFitter(NWN2ObjectType.Trigger,"a trigger");
+			onlyWaypoints = new InstanceFitter(NWN2ObjectType.Waypoint,"a waypoint");
+			onlyDoorsOrPlaceables = new InstanceFitter(new List<NWN2ObjectType>{NWN2ObjectType.Door,NWN2ObjectType.Placeable},"something which can be opened");
+			
+			onlyPlayers = new PlayerFitter();
+			onlyAreas = new AreaFitter();
+			onlyModules = new ModuleFitter();
+			onlyInstances = new InstanceFitter();			
+			onlyCreaturesOrPlayers = new CreaturePlayerFitter();			
+			onlyEventRaisers = new EventRaiserFitter();
 		}
 		
 		#endregion

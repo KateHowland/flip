@@ -20,31 +20,29 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 19/03/2010 at 13:13.
+ * This file added by Keiron Nicholson on 01/04/2010 at 17:46.
  */
 
 using System;
+using System.Collections.Generic;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class SpineFitter : Fitter
-	{		
-		public SpineFitter() : base()
-		{
-			
-		}
-		
-		
+	/// <summary>
+	/// Description of EventRaiserFitter.
+	/// </summary>
+	public class EventRaiserFitter : Nwn2Fitter
+	{
 		public override bool Fits(Moveable moveable)
 		{
-			return IsAction(moveable) || IsConditionalConstruct(moveable);
+			return CanRaiseEvents(moveable);
 		}
 		
 		
 		public override string GetMoveableDescription()
 		{
-			return "an action or conditional";
+			return "an event raiser";
 		}
 	}
 }
-

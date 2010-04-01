@@ -27,20 +27,20 @@ using System;
 
 namespace Sussex.Flip.UI
 {
-	// TODO better name. CriteriaChecker? 
-	// MoveableFitter? 
 	/// <summary>
 	/// Contains logic about whether a given Moveable meets
 	/// some set of criteria.
 	/// </summary>
+	/// <remarks>Rename CriteriaChecker?</remarks>
 	public abstract class Fitter
 	{
 		/// <summary>
 		/// Gets whether a given Moveable meets the criteria
 		/// embodied by this Fitter.
 		/// </summary>
-		/// <param name="moveable">TODO</param>
-		/// <returns>TODO</returns>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the given Moveable meets the
+		/// criteria; false otherwise.</returns>
 		public abstract bool Fits(Moveable moveable);
 		
 		
@@ -53,6 +53,11 @@ namespace Sussex.Flip.UI
 		public abstract string GetMoveableDescription();
 		
 		
+		/// <summary>
+		/// Gets whether a given Moveable represents an 'action' statement.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is an 'action' statement; false otherwise.</returns>
 		public static bool IsAction(Moveable moveable)
 		{
 			Statement statement = moveable as Statement;
@@ -60,6 +65,11 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		/// <summary>
+		/// Gets whether a given Moveable represents a boolean expression.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is a boolean expression; false otherwise.</returns>
 		public static bool IsBooleanExpression(Moveable moveable)
 		{
 			Statement statement = moveable as Statement;
@@ -67,6 +77,11 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		/// <summary>
+		/// Gets whether a given Moveable represents a conditional construct.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is a conditional construct; false otherwise.</returns>
 		public static bool IsConditionalConstruct(Moveable moveable)
 		{
 			ConditionalControl conditionalConstruct = moveable as ConditionalControl;
@@ -74,6 +89,11 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		/// <summary>
+		/// Gets whether a given Moveable represents an event.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is an event; false otherwise.</returns>
 		public static bool IsEvent(Moveable moveable)
 		{
 			EventBlock eventBlock = moveable as EventBlock;
@@ -81,7 +101,12 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public static bool IsObject(Moveable moveable)
+		/// <summary>
+		/// Gets whether a given Moveable is an ObjectBlock.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is an ObjectBlock; false otherwise.</returns>
+		public static bool IsObjectBlock(Moveable moveable)
 		{
 			ObjectBlock objectBlock = moveable as ObjectBlock;
 			return objectBlock != null;

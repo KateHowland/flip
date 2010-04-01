@@ -24,6 +24,7 @@
  */
 
 using System;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
@@ -31,7 +32,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// <summary>
 	/// Description of Module.
 	/// </summary>
-	public class Module : ObjectBehaviour
+	public class Module : Nwn2ObjectBehaviour
 	{
 		public Module() : base(String.Empty,"module")
 		{						
@@ -58,7 +59,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override string GetDescriptionOfObjectType()
 		{
-			return "Nwn2.Module";
+			return Nwn2Fitter.ModuleDescription;
+		}
+		
+		
+		public override Nwn2Type GetNwn2Type()
+		{
+			return Nwn2Type.Module;
 		}
 	}
 }

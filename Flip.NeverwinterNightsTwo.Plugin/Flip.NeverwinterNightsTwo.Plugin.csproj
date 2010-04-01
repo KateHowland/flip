@@ -93,22 +93,30 @@
     <Compile Include="Actions\Attacks.cs" />
     <Compile Include="Actions\PicksUp.cs" />
     <Compile Include="Conditions\IsDead.cs" />
-    <Compile Include="CreaturePlayerFitter.cs" />
+    <Compile Include="Fitters\AreaFitter.cs" />
+    <Compile Include="Fitters\CreaturePlayerFitter.cs" />
+    <Compile Include="Fitters\EventRaiserFitter.cs" />
+    <Compile Include="Fitters\InstanceFitter.cs" />
+    <Compile Include="Fitters\ModuleFitter.cs" />
+    <Compile Include="Fitters\Nwn2EventBlockFitter.cs" />
+    <Compile Include="Fitters\Nwn2Fitter.cs" />
+    <Compile Include="Fitters\Nwn2Fitters.cs" />
+    <Compile Include="Fitters\Nwn2RaiserBlockFitter.cs" />
+    <Compile Include="Fitters\PlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
     <Compile Include="Nwn2EventBlockFactory.cs" />
-    <Compile Include="Nwn2EventBlockFitter.cs" />
-    <Compile Include="Nwn2RaiserBlockFitter.cs" />
     <Compile Include="Nwn2StatementBehaviour.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />
-    <Compile Include="Nwn2Fitters.cs" />
     <Compile Include="Nwn2ObjectBlockFactory.cs" />
     <Compile Include="Nwn2MoveableProvider.cs" />
     <Compile Include="Nwn2TriggerControl.xaml.cs" />
     <Compile Include="NWScriptAttacher.cs" />
     <Compile Include="NWScriptTranslator.cs" />
     <Compile Include="Objects\Area.cs" />
+    <Compile Include="Objects\Blueprint.cs" />
     <Compile Include="Objects\Instance.cs" />
     <Compile Include="Objects\Module.cs" />
+    <Compile Include="Objects\Nwn2ObjectBehaviour.cs" />
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
     <Compile Include="ServiceController.cs" />
@@ -139,6 +147,7 @@
     <Page Include="Nwn2TriggerControl.xaml" />
     <Folder Include="Actions" />
     <Folder Include="Conditions" />
+    <Folder Include="Fitters" />
     <Folder Include="Objects" />
   </ItemGroup>
 </Project>

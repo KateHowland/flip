@@ -24,33 +24,28 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
-using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
-using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
+using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of Nwn2ObjectBlockFactory.
+	/// Creates ObjectBlocks representing Neverwinter Nights 2 objects.
 	/// </summary>
 	public class Nwn2ObjectBlockFactory
 	{		
-		protected string pathFormat;
+		#region Blocks
 		
-		
-		public Nwn2ObjectBlockFactory()
-		{
-			pathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
-		}
-		
-		
+		/// <summary>
+		/// Creates an ObjectBlock representing the player.
+		/// </summary>
+		/// <returns>An ObjectBlock representing the player.</returns>
 		public ObjectBlock CreatePlayerBlock()
 		{
 			Image image = GetImage("Other","Player");
@@ -60,6 +55,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		/// <summary>
+		/// Creates an ObjectBlock representing the module.
+		/// </summary>
+		/// <returns>An ObjectBlock representing the module.</returns>
 		public ObjectBlock CreateModuleBlock()
 		{
 			Image image = GetImage("Other","Module");
@@ -69,6 +68,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		/// <summary>
+		/// Creates an ObjectBlock representing a given area.
+		/// </summary>
+		/// <param name="area">The area to represent.</param>
+		/// <returns>An ObjectBlock representing the given area.</returns>
 		public ObjectBlock CreateAreaBlock(NWN2GameArea area)
 		{
 			if (area == null) throw new ArgumentNullException("area");
@@ -84,23 +88,39 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			return new ObjectBlock(image,GetAreaBlockBehaviour(area.Tag,displayName));
 		}
 		
-		
+				
+		/// <summary>
+		/// Creates an ObjectBlock representing a given blueprint.
+		/// </summary>
+		/// <param name="blueprint">The blueprint to represent.</param>
+		/// <returns>An ObjectBlock representing the given blueprint.</returns>
 		public ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint)
 		{			
 			if (blueprint == null) throw new ArgumentNullException("blueprint");
 			
-			throw new NotImplementedException();
+			string objectTypeString = blueprint.ObjectType.ToString();
 			
-//			// TODO: Check first for a picture of ResourceName.Value (the actual blueprint)
-//			// then for TemplateResRef.Value (the blueprint its based on).
-//			string objectType = blueprint.ObjectType.ToString();
-//			Image image = GetImage(objectType,blueprint.TemplateResRef.Value);		
-//			if (image == null) image = GetImage("Placeholder","Blueprint");//String.Format("Blueprint_{0}",objectType));
-//			ObjectBlock block = new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"Blueprint",objectType,blueprint.Name);
-//			return block;
+			// First try to retrieve an image of this particular blueprint:
+			string blueprintResRef = blueprint.ResourceName.Value;			
+			Image image = GetImage(objectTypeString,blueprintResRef);
+			
+			// Failing that, try to retrieve an image of the blueprint it derives from:
+			string baseResRef = blueprint.TemplateResRef.Value;
+			if (image == null) image = GetImage(objectTypeString,baseResRef);
+			
+			// If neither is available, use a placeholder image:
+			if (image == null) image = GetImage("Placeholder","Blueprint");// TODO: String.Format("Blueprint_{0}",objectType));
+						
+			ObjectBlock block = new ObjectBlock(image,GetBlueprintBlockBehaviour(blueprintResRef,blueprint.Name,blueprint.ObjectType));
+			return block;
 		}
 		
 		
+		/// <summary>
+		/// Creates an ObjectBlock representing a given instance.
+		/// </summary>
+		/// <param name="instance">The instance to represent.</param>
+		/// <returns>An ObjectBlock representing the given instance.</returns>
 		public ObjectBlock CreateInstanceBlock(INWN2Instance instance)
 		{						
 			if (instance == null) throw new ArgumentNullException("instance");
@@ -121,23 +141,76 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 		}
 		
+		#endregion
 		
-		public ObjectBlock CreateInstanceBlock(List<INWN2Instance> instances)
-		{	
-			if (instances == null) throw new ArgumentNullException("instances");
-			
-			throw new NotImplementedException();
-			
-//			// TODO safety check:
-//			INWN2Instance instance = instances[0];
-//			string objectType = instance.ObjectType.ToString();
-//			Image image = GetImage(objectType,instance.Template.ResRef.Value);
-//			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
-//			ObjectBlock block = new ObjectBlock(image,instances,((INWN2Object)instance).Tag,"Instance",objectType,instances[0].Name);
-//			return block;
+		#region Behaviours
+		
+		/// <summary>
+		/// Gets an ObjectBehaviour representing the player.
+		/// </summary>
+		/// <returns>An ObjectBehaviour representing the player.</returns>
+		protected ObjectBehaviour GetPlayerBlockBehaviour()
+		{
+			return new Player();
 		}
 		
 		
+		/// <summary>
+		/// Gets an ObjectBehaviour representing the module.
+		/// </summary>
+		/// <returns>An ObjectBehaviour representing the module.</returns>
+		protected ObjectBehaviour GetModuleBlockBehaviour()
+		{
+			return new Module();
+		}
+		
+		
+		/// <summary>
+		/// Gets an ObjectBehaviour representing a particular area.
+		/// </summary>
+		/// <param name="tag">The tag of the area.</param>
+		/// <param name="displayName">The display name for this area.</param>
+		/// <returns>An ObjectBehaviour representing a particular area.</returns>
+		protected ObjectBehaviour GetAreaBlockBehaviour(string tag, string displayName)
+		{
+			return new Area(tag,displayName);
+		}
+		
+		
+		/// <summary>
+		/// Gets an ObjectBehaviour representing a particular instance.
+		/// </summary>
+		/// <param name="tag">The tag of the instance.</param>
+		/// <param name="displayName">The display name for this instance.</param>
+		/// <param name="type">The type of this instance.</param>
+		/// <returns>An ObjectBehaviour representing a particular instance.</returns>
+		protected ObjectBehaviour GetInstanceBlockBehaviour(string tag, string displayName, NWN2ObjectType type)
+		{
+			return new Instance(tag,displayName,type);
+		}
+		
+				
+		/// <summary>
+		/// Gets an ObjectBehaviour representing a particular blueprint.
+		/// </summary>
+		/// <param name="tag">The tag of the blueprint.</param>
+		/// <param name="displayName">The display name for this blueprint.</param>
+		/// <param name="type">The type of this blueprint.</param>
+		/// <returns>An ObjectBehaviour representing a particular blueprint.</returns>
+		protected ObjectBehaviour GetBlueprintBlockBehaviour(string resRef, string displayName, NWN2ObjectType type)
+		{
+			return new Blueprint(resRef,displayName,type);
+		}
+		
+		#endregion
+		
+		#region Images
+		
+		/// <summary>
+		/// Gets an Image from an image file at the given path.
+		/// </summary>
+		/// <param name="path">The path to locate an image.</param>
+		/// <returns>An Image, or null if an exception was raised.</returns>
 		protected Image GetImage(string path)
 		{			
 			if (path == null) throw new ArgumentNullException("path");
@@ -156,40 +229,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		/// <summary>
+		/// Gets an image representing a particular Neverwinter Nights 2
+		/// entity, of a given name and type.
+		/// </summary>
+		/// <param name="type">The type of entity to get an image of. Examples
+		/// include 'Creature', 'Door', 'Placeholder' and 'Other'.</param>
+		/// <param name="name">The name of the specific entity of the given
+		/// type to get an image of. Usually the tag of an instance or the
+		/// ResRef of a blueprint.</param>
+		/// <returns>An Image, or null if an exception was raised.</returns>
 		protected Image GetImage(string type, string name)
 		{
+			// TODO:
+			// We should ultimately be using a .dll collection
+			// of image resources.
+			string pathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
 			string path = String.Format(pathFormat,type,name);
 			return GetImage(path);
 		}
 		
-		
-		protected ObjectBehaviour GetPlayerBlockBehaviour()
-		{
-			return new Player();
-		}
-		
-		
-		protected ObjectBehaviour GetModuleBlockBehaviour()
-		{
-			return new Module();
-		}
-		
-		
-		protected ObjectBehaviour GetAreaBlockBehaviour(string tag, string displayName)
-		{
-			return new Area(tag,displayName);
-		}
-		
-		
-		protected ObjectBehaviour GetInstanceBlockBehaviour(string tag, string displayName, NWN2ObjectType type)
-		{
-			return new Instance(tag,displayName,type);
-		}
-		
-		
-		protected ObjectBehaviour GetBlueprintBlockBehaviour()
-		{
-			throw new NotImplementedException();
-		}
+		#endregion
 	}
 }

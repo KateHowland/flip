@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -33,43 +34,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// <summary>
 	/// TODO Description of Nwn2EventRaiserBlockFitter.
 	/// </summary>
-	public class Nwn2RaiserBlockFitter : Fitter
+	public class Nwn2RaiserBlockFitter : Nwn2Fitter
 	{		
-		#region Fields
-		
-		/// <summary>
-		/// A list of names of Nwn2ObjectTypes which raise events.
-		/// </summary>
-		protected static readonly List<string> instanceEventRaisers;
-		
-		#endregion
-		
-		#region Constructors
-		
-		/// <summary>
-		/// Initialises the list of names of Nwn2ObjectTypes which raise events.
-		/// </summary>
-		static Nwn2RaiserBlockFitter()
-		{
-			instanceEventRaisers = new List<string> {
-				"Creature",
-				"Door",
-				"Encounter",
-				"Placeable",
-				"Store",
-				"Trigger"};
-		}
-				
-
-		/// <summary>
-		/// Constructs a new <see cref="Sussex.Flip.Games.NeverwinterNightsTwo.Nwn2EventRaiserBlockFitter"/> instance.
-		/// </summary>
-		public Nwn2RaiserBlockFitter() : base()
-		{			
-		}
-		
-		#endregion
-		
 		#region Methods
 		
 		/// <summary>
@@ -79,26 +45,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns></returns>
 		public override bool Fits(Moveable moveable)
 		{
-			ObjectBlock block = moveable as ObjectBlock;		
-			if (block == null) return false;
-			else return CanRaiseEvents(block);
-		}
-		
-		
-		/// <summary>
-		/// Gets whether a given ObjectBlock represents a NWN2 type
-		/// which can raise events.
-		/// </summary>
-		/// <param name="block">The ObjectBlock which may raise events.</param>
-		/// <returns>True if the given ObjectBlock represents a NWN2 type
-		/// which can raise events; false otherwise.</returns>
-		public static bool CanRaiseEvents(ObjectBlock block)
-		{	
-			//HACK
-			return true;
-			
-			//TODO
-			//return block.Type == "Module" || block.Type == "Area" || (block.Type == "Instance" && instanceEventRaisers.Contains(block.Subtype));
+			return CanRaiseEvents(moveable);
 		}
 		
 		
@@ -109,24 +56,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns></returns>
 		public static Nwn2Type? GetNwn2Type(ObjectBlock block)
 		{	
-			//HACK		
-			return null;
+			if (block == null) throw new ArgumentNullException("block");
 			
-			//TODO	
-//			if (block.Type == "Module") return Nwn2Type.Module;
-//			
-//			else if (block.Type == "Area") return Nwn2Type.Area;
-//			
-//			else if (block.Type == "Instance" && instanceEventRaisers.Contains(block.Subtype)) {
-//				try {
-//					return (Nwn2Type)Enum.Parse(typeof(Nwn2Type),block.Subtype,true);
-//				}
-//				catch (ArgumentException) {
-//					return null;
-//				}
-//			}
-//			
-//			else return null;
+			Nwn2ObjectBehaviour behaviour = block.Behaviour as Nwn2ObjectBehaviour;
+			
+			if (behaviour == null) {
+				return null;
+			}
+			else {
+				return behaviour.GetNwn2Type();
+			}
 		}
 		
 		
@@ -142,7 +81,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{	
 			if (block == null) throw new ArgumentNullException("block");
 			
-			if (CanRaiseEvents(block)) {
+			if (Nwn2Fitter.CanRaiseEvents(block)) {
 				Nwn2Type? type = GetNwn2Type(block);
 				if (type != null) return Nwn2ScriptSlot.GetScriptSlotNames(type.Value);
 				else return new List<string>();
@@ -155,7 +94,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override string GetMoveableDescription()
 		{
-			return "event raiser";
+			return "some event raiser";
 		}
 		
 		#endregion

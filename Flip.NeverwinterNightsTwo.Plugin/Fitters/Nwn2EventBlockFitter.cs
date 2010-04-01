@@ -33,7 +33,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// <summary>
 	/// Description of EventBlockFitter.
 	/// </summary>
-	public class Nwn2EventBlockFitter : Fitter
+	public class Nwn2EventBlockFitter : Nwn2Fitter
 	{		
 		protected ObjectBlockSlot raiserSlot = null;
 		
@@ -75,7 +75,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override string GetMoveableDescription()
 		{
-			return "event";
+			return "an event";
 		}
 	}
 }

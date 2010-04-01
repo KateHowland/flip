@@ -20,33 +20,65 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/03/2010 at 15:55.
+ * This file added by Keiron Nicholson on 01/04/2010 at 17:32.
  */
 
 using System;
+using System.Collections.Generic;
+using NWN2Toolset.NWN2.Data.Templates;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of EventBlockFitter.
+	/// Description of InstanceFitter.
 	/// </summary>
-	public class EventBlockFitter : Fitter
-	{		
-		public EventBlockFitter() : base()
+	public class InstanceFitter : Nwn2Fitter
+	{
+		protected List<NWN2ObjectType> types;
+		protected string description;
+		
+		
+		public InstanceFitter()
 		{
+			this.types = new List<NWN2ObjectType>(0);
+			this.description = "something";
+		}
+		
+		
+		public InstanceFitter(NWN2ObjectType type, string description)
+		{	
+			if (description == null) throw new ArgumentException("description");
 			
+			this.types = new List<NWN2ObjectType>{type};
+			this.description = description;
+		}
+		
+		
+		public InstanceFitter(List<NWN2ObjectType> types, string description)
+		{
+			if (types == null) this.types = new List<NWN2ObjectType>(0);
+			if (description == null) throw new ArgumentException("description");
+			
+			this.types = types;
+			this.description = description;
 		}
 		
 		
 		public override bool Fits(Moveable moveable)
 		{
-			return IsEvent(moveable);
+			if (types.Count > 0) {
+				return IsInstance(moveable,types);
+			}
+			else {
+				return IsInstance(moveable);
+			}
 		}
 		
 		
 		public override string GetMoveableDescription()
 		{
-			return "some event";
+			return description;
 		}
 	}
 }
