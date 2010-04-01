@@ -40,14 +40,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// <summary> 
 	/// A facade for a Neverwinter Nights 2 area.
 	/// </summary>
-	public class Area : AreaBase
+	public class AreaFacade : AreaBase
 	{
 		#region Constructors
 
 		/// <summary>
 		/// Constructs a new <see cref="Area"/> instance.
 		/// </summary>
-		public Area(NWN2GameArea area)
+		public AreaFacade(NWN2GameArea area)
 		{
 			if (area == null) throw new ArgumentNullException("area"); 
 			this.nwn2Area = area;

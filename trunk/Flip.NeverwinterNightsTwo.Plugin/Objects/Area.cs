@@ -20,31 +20,52 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 19/03/2010 at 13:13.
+ * This file added by Keiron Nicholson on 01/04/2010 at 13:38.
  */
 
 using System;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 {
-	public class SpineFitter : Fitter
-	{		
-		public SpineFitter() : base()
+	/// <summary>
+	/// Description of Area.
+	/// </summary>
+	public class Area : ObjectBehaviour
+	{
+		public Area(string tag, string displayName) : base(tag,displayName)
+		{		
+		}
+		
+		
+		public override string GetCode()
 		{
+			/* Does not appear possible to retrieve an area object in a single
+			 * line of code. You can iterate through areas, and presumably
+			 * retrieve a tag from the area object (which is just class 'object')
+			 * in order to identify one, but that's too complex for GetCode().
+			 * Currently no reason to believe this will be needed, as specific
+			 * area blocks will simply be used for attaching events. */
 			
+			return String.Empty;
 		}
 		
 		
-		public override bool Fits(Moveable moveable)
+		public override string GetNaturalLanguage()
 		{
-			return IsAction(moveable) || IsConditionalConstruct(moveable);
+			return DisplayName;
 		}
 		
 		
-		public override string GetMoveableDescription()
+		public override ObjectBehaviour DeepCopy()
 		{
-			return "action or conditional";
+			return new Area(Identifier,DisplayName);
+		}
+		
+		
+		public override string GetDescriptionOfObjectType()
+		{
+			return "Nwn2.Area";
 		}
 	}
 }
-

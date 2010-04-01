@@ -192,11 +192,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);
 			
-			service.AddArea("area1",true,Area.SmallestAreaSize);
+			service.AddArea("area1",true,AreaFacade.SmallestAreaSize);
 			testCallbacks.Callbacks.Pop(); // get rid of the 'area viewer opened' message
 			Assert.AreEqual("added resource... Type: Area, Name: area1",testCallbacks.Callbacks.Peek());
 			
-			service.AddArea("area2",true,Area.SmallestAreaSize);		
+			service.AddArea("area2",true,AreaFacade.SmallestAreaSize);		
 			testCallbacks.Callbacks.Pop(); // get rid of the 'area viewer opened' message	
 			Assert.AreEqual("added resource... Type: Area, Name: area2",testCallbacks.Callbacks.Peek());
 			
@@ -256,7 +256,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);
 			
-			service.AddArea("area1",true,Area.SmallestAreaSize);
+			service.AddArea("area1",true,AreaFacade.SmallestAreaSize);
 					
 			string expected, actual;
 			
@@ -293,10 +293,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.File);
 			service.OpenModule(path,ModuleLocationType.File);
 			
-			service.AddArea("area1",true,Area.SmallestAreaSize);
+			service.AddArea("area1",true,AreaFacade.SmallestAreaSize);
 			Assert.AreEqual("opened Area 'area1'",testCallbacks.Callbacks.Peek());
 			
-			service.AddArea("area2",true,Area.SmallestAreaSize);		
+			service.AddArea("area2",true,AreaFacade.SmallestAreaSize);		
 			Assert.AreEqual("opened Area 'area2'",testCallbacks.Callbacks.Peek());
 			
 			service.CloseArea("area2");		
@@ -356,7 +356,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 						
 			string areaName = "area";
-			service.AddArea(areaName,false,Area.SmallestAreaSize);			
+			service.AddArea(areaName,false,AreaFacade.SmallestAreaSize);			
 			service.AddObject(areaName,NWN2ObjectType.Creature,"c_werewolf","werewolf");
 			
 			string scriptName = "givegold";
@@ -937,7 +937,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			string areaName = "area";		
-			service.AddArea(areaName,false,Area.SmallestAreaSize);
+			service.AddArea(areaName,false,AreaFacade.SmallestAreaSize);
 			Guid catID = service.AddObject(areaName,NWN2ObjectType.Creature,"c_cat","cat");
 			Bean cat = service.GetObject(areaName,NWN2ObjectType.Creature,catID,false);	
 			Assert.IsFalse(cat.HasValue("Strength"));
@@ -2114,7 +2114,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			string areaName = "area";
-			service.AddArea(areaName,false,Area.SmallestAreaSize);
+			service.AddArea(areaName,false,AreaFacade.SmallestAreaSize);
 			service.SaveModule();
 			
 			string scriptName = "myscript";
@@ -2155,7 +2155,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
 			string areaName = "area";
-			service.AddArea(areaName,false,Area.SmallestAreaSize);
+			service.AddArea(areaName,false,AreaFacade.SmallestAreaSize);
 			service.SaveModule();
 			
 			string scriptName = "myscript";
@@ -2335,10 +2335,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			string area1 = "forest";
 			string area2 = "castle";
 			
-			service.AddArea(area1,true,Area.SmallestAreaSize);			
+			service.AddArea(area1,true,AreaFacade.SmallestAreaSize);			
 			Assert.AreEqual(area1,service.GetCurrentArea());
 			
-			service.AddArea(area2,false,Area.SmallestAreaSize);
+			service.AddArea(area2,false,AreaFacade.SmallestAreaSize);
 			Assert.AreEqual(area2,service.GetCurrentArea());
 			
 			service.CloseArea(area2);
@@ -2408,7 +2408,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 		{
 			service.CreateAndOpenTemporaryModule();
 			
-			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			Size size = new Size(AreaFacade.MinimumAreaLength,AreaFacade.MinimumAreaLength);
 			
 			string area1 = "alaska";
 			string area2 = "hawaii";
@@ -2785,7 +2785,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			
 			service.OpenModule(path,ModuleLocationType.File);
 			
-			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			Size size = new Size(AreaFacade.MinimumAreaLength,AreaFacade.MinimumAreaLength);
 			
 			string area1 = "land of wind and ghosts";
 			string area2 = "land of milk and honey";
@@ -2821,7 +2821,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.CreateModule(path,ModuleLocationType.Directory);
 			service.OpenModule(path,ModuleLocationType.Directory);
 			
-			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			Size size = new Size(AreaFacade.MinimumAreaLength,AreaFacade.MinimumAreaLength);
 			
 			string area1 = "alaska";
 			string area2 = "hawaii";
@@ -2857,7 +2857,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Tests
 			service.OpenModule(path,ModuleLocationType.File);
 			
 			string areaName = "duplicate area";
-			Size size = new Size(Area.MinimumAreaLength,Area.MinimumAreaLength);
+			Size size = new Size(AreaFacade.MinimumAreaLength,AreaFacade.MinimumAreaLength);
 			
 			service.AddArea(areaName,true,size);
 						

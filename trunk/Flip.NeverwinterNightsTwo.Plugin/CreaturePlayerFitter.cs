@@ -36,7 +36,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public override bool Fits(Moveable moveable)
 		{
 			ObjectBlock block = moveable as ObjectBlock;
-			return block != null && block.Type == "Player" || (block.Type == "Instance" && block.Subtype == "Creature");
+			
+			//HACK:
+			return true;
+			
+			// TODO:
+			//return block != null && block.Type == "Player" || (block.Type == "Instance" && block.Subtype == "Creature");
 		}
 		
 		

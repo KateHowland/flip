@@ -77,7 +77,11 @@ namespace Sussex.Flip.UI
 		public override bool Fits(Moveable moveable)
 		{
 			ObjectBlock block = moveable as ObjectBlock;			
-			return block != null && Fits(block.Type,block.Subtype);
+			return block != null;//
+			
+			// TODO:
+			// Reinstate for new system:
+			// && Fits(block.Type,block.Subtype);
 		}
 		
 		// TODO:

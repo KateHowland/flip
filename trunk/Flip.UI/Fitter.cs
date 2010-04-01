@@ -51,5 +51,40 @@ namespace Sussex.Flip.UI
 		/// <returns>A text string describing acceptable
 		/// Moveables.</returns>
 		public abstract string GetMoveableDescription();
+		
+		
+		public static bool IsAction(Moveable moveable)
+		{
+			Statement statement = moveable as Statement;
+			return statement != null && statement.StatementType == StatementType.Action;
+		}
+		
+		
+		public static bool IsBooleanExpression(Moveable moveable)
+		{
+			Statement statement = moveable as Statement;
+			return statement != null && statement.StatementType == StatementType.Condition;
+		}
+		
+		
+		public static bool IsConditionalConstruct(Moveable moveable)
+		{
+			ConditionalControl conditionalConstruct = moveable as ConditionalControl;
+			return conditionalConstruct != null;
+		}
+		
+		
+		public static bool IsEvent(Moveable moveable)
+		{
+			EventBlock eventBlock = moveable as EventBlock;
+			return eventBlock != null;
+		}
+		
+		
+		public static bool IsObject(Moveable moveable)
+		{
+			ObjectBlock objectBlock = moveable as ObjectBlock;
+			return objectBlock != null;
+		}
 	}
 }

@@ -31,8 +31,9 @@ using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
-using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -44,12 +45,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected string pathFormat;
 		
 		
-		// TODO:
-		// ObjectBlock should have a generic image to use (as an embedded resource)
-		// if the image it's given is rubbish (or it isn't given one)
-		// (should also have a parameterless constructor?)
-		
-		
 		public Nwn2ObjectBlockFactory()
 		{
 			pathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
@@ -59,8 +54,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public ObjectBlock CreatePlayerBlock()
 		{
 			Image image = GetImage("Other","Player");
-			if (image == null) image = GetImage("Placeholder","Default");	
-			return new ObjectBlock(image,null,null,"Player",null,"Player");
+			if (image == null) image = GetImage("Placeholder","Default");
+			
+			return new ObjectBlock(image,GetPlayerBlockBehaviour());
 		}
 		
 		
@@ -68,62 +64,77 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			Image image = GetImage("Other","Module");
 			if (image == null) image = GetImage("Placeholder","Default");
-			return new ObjectBlock(image,null,null,"Module",null,"Module");
-		}
-		
-		
-		public ObjectBlock CreateTypeBlock(Nwn2Type type)
-		{
-			string t = type.ToString();
-			string filename = String.Format("Type_{0}",t);
-			Image image = GetImage("Other","Type");//filename);
-			if (image == null) image = GetImage("Placeholder","Default");
-			return new ObjectBlock(image,null,null,"Type",t,t);
+			
+			return new ObjectBlock(image,GetModuleBlockBehaviour());
 		}
 		
 		
 		public ObjectBlock CreateAreaBlock(NWN2GameArea area)
 		{
-			string terrain = area.HasTerrain ? "Exterior" : "Interior";
-			string filename = String.Format("Area_{0}",terrain);
-			Image image = GetImage("Other",filename);
-			if (image == null) image = GetImage("Placeholder","Default");
-			return new ObjectBlock(image,area,area.Name,"Area",terrain,area.Name);
+			if (area == null) throw new ArgumentNullException("area");
+			
+			Image image;
+			if (area.HasTerrain) image = GetImage("Other","Area_Exterior");
+			else image = GetImage("Other","Area_Interior");
+						
+			if (image == null) image = GetImage("Placeholder","Default");			
+			
+			string displayName = area.DisplayName.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage).Value;
+			
+			return new ObjectBlock(image,GetAreaBlockBehaviour(area.Tag,displayName));
 		}
 		
 		
 		public ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint)
 		{			
-			// TODO: Check first for a picture of ResourceName.Value (the actual blueprint)
-			// then for TemplateResRef.Value (the blueprint its based on).
-			string objectType = blueprint.ObjectType.ToString();
-			Image image = GetImage(objectType,blueprint.TemplateResRef.Value);		
-			if (image == null) image = GetImage("Placeholder","Blueprint");//String.Format("Blueprint_{0}",objectType));
-			ObjectBlock block = new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"Blueprint",objectType,blueprint.Name);
-			return block;
+			if (blueprint == null) throw new ArgumentNullException("blueprint");
+			
+			throw new NotImplementedException();
+			
+//			// TODO: Check first for a picture of ResourceName.Value (the actual blueprint)
+//			// then for TemplateResRef.Value (the blueprint its based on).
+//			string objectType = blueprint.ObjectType.ToString();
+//			Image image = GetImage(objectType,blueprint.TemplateResRef.Value);		
+//			if (image == null) image = GetImage("Placeholder","Blueprint");//String.Format("Blueprint_{0}",objectType));
+//			ObjectBlock block = new ObjectBlock(image,blueprint,blueprint.ResourceName.Value,"Blueprint",objectType,blueprint.Name);
+//			return block;
 		}
 		
 		
 		public ObjectBlock CreateInstanceBlock(INWN2Instance instance)
-		{			
-			string objectType = instance.ObjectType.ToString();
-			Image image = GetImage(objectType,instance.Template.ResRef.Value);
-			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
-			// TODO safety check:
-			ObjectBlock block = new ObjectBlock(image,instance,((INWN2Object)instance).Tag,"Instance",objectType,instance.Name);
-			return block;
+		{						
+			if (instance == null) throw new ArgumentNullException("instance");
+			
+			string resRef = instance.Template.ResRef.Value;
+			
+			Image image = GetImage(instance.ObjectType.ToString(),resRef);
+			if (image == null) image = GetImage("Placeholder","Instance");// TODO: String.Format("Instance_{0}",objectType));
+			
+			try {
+				string identifier = ((INWN2Object)instance).Tag;				
+				ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(identifier,instance.Name,instance.ObjectType));
+				return block;
+			}
+			catch (InvalidCastException e) {
+				throw new ApplicationException("Creation of a visual block to represent " + instance.Name + 
+				                               "failed. Could not cast to INWN2Object to retrieve tag.",e);
+			}
 		}
 		
 		
 		public ObjectBlock CreateInstanceBlock(List<INWN2Instance> instances)
-		{
-			// TODO safety check:
-			INWN2Instance instance = instances[0];
-			string objectType = instance.ObjectType.ToString();
-			Image image = GetImage(objectType,instance.Template.ResRef.Value);
-			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
-			ObjectBlock block = new ObjectBlock(image,instances,((INWN2Object)instance).Tag,"Instance",objectType,instances[0].Name);
-			return block;
+		{	
+			if (instances == null) throw new ArgumentNullException("instances");
+			
+			throw new NotImplementedException();
+			
+//			// TODO safety check:
+//			INWN2Instance instance = instances[0];
+//			string objectType = instance.ObjectType.ToString();
+//			Image image = GetImage(objectType,instance.Template.ResRef.Value);
+//			if (image == null) image = GetImage("Placeholder","Instance");//String.Format("Instance_{0}",objectType));
+//			ObjectBlock block = new ObjectBlock(image,instances,((INWN2Object)instance).Tag,"Instance",objectType,instances[0].Name);
+//			return block;
 		}
 		
 		
@@ -149,6 +160,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			string path = String.Format(pathFormat,type,name);
 			return GetImage(path);
+		}
+		
+		
+		protected ObjectBehaviour GetPlayerBlockBehaviour()
+		{
+			return new Player();
+		}
+		
+		
+		protected ObjectBehaviour GetModuleBlockBehaviour()
+		{
+			return new Module();
+		}
+		
+		
+		protected ObjectBehaviour GetAreaBlockBehaviour(string tag, string displayName)
+		{
+			return new Area(tag,displayName);
+		}
+		
+		
+		protected ObjectBehaviour GetInstanceBlockBehaviour(string tag, string displayName, NWN2ObjectType type)
+		{
+			return new Instance(tag,displayName,type);
+		}
+		
+		
+		protected ObjectBehaviour GetBlueprintBlockBehaviour()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
