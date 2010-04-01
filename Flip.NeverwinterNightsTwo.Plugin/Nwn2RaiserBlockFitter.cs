@@ -94,7 +94,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// which can raise events; false otherwise.</returns>
 		public static bool CanRaiseEvents(ObjectBlock block)
 		{	
-			return block.Type == "Module" || block.Type == "Area" || (block.Type == "Instance" && instanceEventRaisers.Contains(block.Subtype));
+			//HACK
+			return true;
+			
+			//TODO
+			//return block.Type == "Module" || block.Type == "Area" || (block.Type == "Instance" && instanceEventRaisers.Contains(block.Subtype));
 		}
 		
 		
@@ -105,20 +109,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns></returns>
 		public static Nwn2Type? GetNwn2Type(ObjectBlock block)
 		{	
-			if (block.Type == "Module") return Nwn2Type.Module;
+			//HACK		
+			return null;
 			
-			else if (block.Type == "Area") return Nwn2Type.Area;
-			
-			else if (block.Type == "Instance" && instanceEventRaisers.Contains(block.Subtype)) {
-				try {
-					return (Nwn2Type)Enum.Parse(typeof(Nwn2Type),block.Subtype,true);
-				}
-				catch (ArgumentException) {
-					return null;
-				}
-			}
-			
-			else return null;
+			//TODO	
+//			if (block.Type == "Module") return Nwn2Type.Module;
+//			
+//			else if (block.Type == "Area") return Nwn2Type.Area;
+//			
+//			else if (block.Type == "Instance" && instanceEventRaisers.Contains(block.Subtype)) {
+//				try {
+//					return (Nwn2Type)Enum.Parse(typeof(Nwn2Type),block.Subtype,true);
+//				}
+//				catch (ArgumentException) {
+//					return null;
+//				}
+//			}
+//			
+//			else return null;
 		}
 		
 		

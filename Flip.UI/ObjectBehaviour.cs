@@ -36,39 +36,8 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class ObjectBehaviour: DependencyObject, IDeepCopyable<ObjectBehaviour>
 	{
-		public abstract string GetCode();
-		public abstract string GetNaturalLanguage();		
-		public abstract ObjectBehaviour DeepCopy();
-	}
-	
-	
-	public class TempObjectBehaviour : ObjectBehaviour
-	{
-    	protected static DependencyProperty TypeProperty;
-    	protected static DependencyProperty SubtypeProperty;
     	protected static DependencyProperty IdentifierProperty;
-    	protected static DependencyProperty DisplayNameProperty;
-    	
-    	
-    	static TempObjectBehaviour()
-    	{
-    		TypeProperty = DependencyProperty.Register("Type",typeof(string),typeof(TempObjectBehaviour));
-    		SubtypeProperty = DependencyProperty.Register("Subtype",typeof(string),typeof(TempObjectBehaviour));
-    		IdentifierProperty = DependencyProperty.Register("Identifier",typeof(string),typeof(TempObjectBehaviour));
-    		DisplayNameProperty = DependencyProperty.Register("DisplayName",typeof(string),typeof(TempObjectBehaviour));
-    	}
-    	
-    	
-    	public string Type {
-    		get { return (string)base.GetValue(TypeProperty); }
-    		set { base.SetValue(TypeProperty,value); }
-    	}
-    	
-    	
-    	public string Subtype {
-    		get { return (string)base.GetValue(SubtypeProperty); }
-    		set { base.SetValue(SubtypeProperty,value); }
-    	}
+    	protected static DependencyProperty DisplayNameProperty;   
     	
     	
     	public string Identifier {
@@ -81,39 +50,28 @@ namespace Sussex.Flip.UI
     		get { return (string)base.GetValue(DisplayNameProperty); }
     		set { base.SetValue(DisplayNameProperty,value); }
     	}
-		
-		
-		public TempObjectBehaviour(string type, string subtype, string identifier, string displayName)
+    	
+    	
+    	static ObjectBehaviour()
+    	{
+    		IdentifierProperty = DependencyProperty.Register("Identifier",typeof(string),typeof(ObjectBehaviour));
+    		DisplayNameProperty = DependencyProperty.Register("DisplayName",typeof(string),typeof(ObjectBehaviour));
+    	}
+    	
+    	
+		public ObjectBehaviour(string identifier, string displayName)
 		{
-			Type = type;
-			Subtype = subtype;
+			if (identifier == null) throw new ArgumentNullException("identifier");
+			if (displayName == null) throw new ArgumentNullException("displayName");
+			
 			Identifier = identifier;
 			DisplayName = displayName;
 		}
-		
-		
-		public override string GetCode()
-		{
-			return "NO CODE";
-		}
-		
-		
-		public override string GetNaturalLanguage()
-		{
-			return "NO NATURAL LANGUAGE";
-		}
-		
-		
-		public override ObjectBehaviour DeepCopy()
-		{
-			return new TempObjectBehaviour(Type,Subtype,Identifier,DisplayName);
-		}
-		
-		
-		public override string ToString()
-		{
-			// TODO
-			return base.ToString();
-		}
+    	
+    	
+		public abstract string GetCode();
+		public abstract string GetNaturalLanguage();	
+		public abstract string GetDescriptionOfObjectType();
+		public abstract ObjectBehaviour DeepCopy();		
 	}
 }

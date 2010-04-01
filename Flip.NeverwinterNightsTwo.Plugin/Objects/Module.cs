@@ -20,31 +20,45 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 19/03/2010 at 13:13.
+ * This file added by Keiron Nicholson on 01/04/2010 at 13:26.
  */
 
 using System;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 {
-	public class SpineFitter : Fitter
-	{		
-		public SpineFitter() : base()
-		{
-			
+	/// <summary>
+	/// Description of Module.
+	/// </summary>
+	public class Module : ObjectBehaviour
+	{
+		public Module() : base(String.Empty,"module")
+		{						
 		}
 		
 		
-		public override bool Fits(Moveable moveable)
+		public override string GetCode()
 		{
-			return IsAction(moveable) || IsConditionalConstruct(moveable);
+			return "GetModule()";
 		}
 		
 		
-		public override string GetMoveableDescription()
+		public override string GetNaturalLanguage()
 		{
-			return "action or conditional";
+			return "the module";
+		}
+		
+		
+		public override ObjectBehaviour DeepCopy()
+		{
+			return new Module();
+		}
+		
+		
+		public override string GetDescriptionOfObjectType()
+		{
+			return "Nwn2.Module";
 		}
 	}
 }
-

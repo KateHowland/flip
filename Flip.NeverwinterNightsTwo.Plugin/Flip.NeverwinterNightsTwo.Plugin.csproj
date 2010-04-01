@@ -106,6 +106,10 @@
     <Compile Include="Nwn2TriggerControl.xaml.cs" />
     <Compile Include="NWScriptAttacher.cs" />
     <Compile Include="NWScriptTranslator.cs" />
+    <Compile Include="Objects\Area.cs" />
+    <Compile Include="Objects\Instance.cs" />
+    <Compile Include="Objects\Module.cs" />
+    <Compile Include="Objects\Player.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="ToolsetEventReporter.cs" />
@@ -135,5 +139,6 @@
     <Page Include="Nwn2TriggerControl.xaml" />
     <Folder Include="Actions" />
     <Folder Include="Conditions" />
+    <Folder Include="Objects" />
   </ItemGroup>
 </Project>

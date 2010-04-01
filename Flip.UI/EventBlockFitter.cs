@@ -40,8 +40,7 @@ namespace Sussex.Flip.UI
 		
 		public override bool Fits(Moveable moveable)
 		{
-			EventBlock block = moveable as EventBlock;
-			return block != null;
+			return IsEvent(moveable);
 		}
 		
 		

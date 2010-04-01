@@ -91,6 +91,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			CreateStatements();
 			CreateBlocks();
+			CreateBlueprints();
+			CreateInstances();
 			CreateEvents();
 		}
 		
@@ -124,12 +126,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void CreateBlocks()
 		{
-			manager.AddBag(OtherBagName);
-			
+			manager.AddBag(OtherBagName);			
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
-			CreateBlueprints();
-			CreateInstances();
 		}
 		
 		

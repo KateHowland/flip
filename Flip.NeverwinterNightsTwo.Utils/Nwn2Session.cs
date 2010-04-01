@@ -403,7 +403,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <remarks>This is a Factory Method.</remarks>
 		public AreaBase CreateAreaBase(NWN2GameArea nwn2area)
 		{
-			return new Area(nwn2area);
+			return new AreaFacade(nwn2area);
 		}
 		
 		
@@ -491,7 +491,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				throw new ArgumentException("The current module does not contain area '" + area.Name + "'.","area");
 			}
 				
-			Area a = new Area(area);
+			AreaFacade a = new AreaFacade(area);
 				
 			Microsoft.DirectX.Vector3 position = a.GetRandomPosition(true);
 				
