@@ -20,34 +20,25 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/02/2010 at 15:08.
+ * This file added by Keiron Nicholson on 01/04/2010 at 16:57.
  */
 
 using System;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 {
 	/// <summary>
-	/// Description of CreaturePlayerFitter.
+	/// Description of Nwn2ObjectBehaviour.
 	/// </summary>
-	public class CreaturePlayerFitter : Fitter
+	public abstract class Nwn2ObjectBehaviour : ObjectBehaviour
 	{
-		public override bool Fits(Moveable moveable)
-		{
-			ObjectBlock block = moveable as ObjectBlock;
-			
-			//HACK:
-			return true;
-			
-			// TODO:
-			//return block != null && block.Type == "Player" || (block.Type == "Instance" && block.Subtype == "Creature");
+		public Nwn2ObjectBehaviour(string identifier, string displayName) : base(identifier,displayName)
+		{			
 		}
 		
 		
-		public override string GetMoveableDescription()
-		{
-			return "creature";
-		}
+		public abstract Nwn2Type GetNwn2Type();
 	}
 }

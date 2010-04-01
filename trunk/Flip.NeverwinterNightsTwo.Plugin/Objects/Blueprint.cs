@@ -31,19 +31,19 @@ using NWN2Toolset.NWN2.Data.Templates;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 {
 	/// <summary>
-	/// Description of Instance.
+	/// Description of Blueprint.
 	/// </summary>
-	public class Instance : Nwn2ObjectBehaviour
-	{
+	public class Blueprint : Nwn2ObjectBehaviour
+	{		
 		protected NWN2ObjectType type;
 		
-				
-		public string Tag {
+		
+		public string ResRef {
 			get { return Identifier; }
 		}
 		
 		
-		public Instance(string tag, string displayName, NWN2ObjectType type) : base(tag,displayName)
+		public Blueprint(string resRef, string displayName, NWN2ObjectType type) : base(resRef,displayName)
 		{		
 			this.type = type;
 		}
@@ -51,38 +51,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override string GetCode()
 		{			
-			// MAP 3/28/2009
-			// Efficient search for finding an object of a given tag and type combination.
-			// nObjectType must be a proper OBJECT_TYPE const.
-			// Returns OBJECT_INVALID if no match is found.
-			// object GetObjectByTagAndType(string sTag, int nObjectType, int nTh);
+			/* Not clear on when you would actually use a blueprint in NWScript,
+			 * but in the only places I can find reference to it they seem to just
+			 * use the ResRef. */
 			
-			NWScriptObjectType? nwScriptType = NWScriptHelper.GetNWScriptConstant(type);
-			
-			if (nwScriptType == null) return "INVALID";				
-				
-			int nObjectType = (int)nwScriptType;
-			int nTh = 0; // currently assuming we are referring to only the first object found with a given tag
-			
-			return String.Format("GetObjectByTagAndType(\"{0}\",{1},{2})",Tag,nObjectType,nTh);
+			return String.Format("\"{0}\"",ResRef);
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return DisplayName;
+			return String.Format("blueprint {0}",DisplayName);
 		}
 		
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Instance(Identifier,DisplayName,type);
+			return new Blueprint(Identifier,DisplayName,type);
 		}
 		
 		
 		public override string GetDescriptionOfObjectType()
 		{
-			return String.Format(Nwn2Fitter.SubtypeFormat,Nwn2Fitter.InstanceDescription,type);
+			return String.Format(Nwn2Fitter.SubtypeFormat,Nwn2Fitter.BlueprintDescription,type);
 		}
 		
 		

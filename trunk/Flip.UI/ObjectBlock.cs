@@ -99,5 +99,19 @@ namespace Sussex.Flip.UI
 		{
 			return Behaviour.GetNaturalLanguage();
 		}
+		
+		
+		public string GetDescriptionOfObjectType()
+		{
+			return Behaviour.GetDescriptionOfObjectType();
+		}
+		
+		
+		public override string ToString()
+		{
+			// TODO:
+			// TEMP:
+			return GetDescriptionOfObjectType();
+		}
     }
 }

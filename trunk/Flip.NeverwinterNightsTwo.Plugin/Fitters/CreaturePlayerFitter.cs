@@ -20,31 +20,29 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 19/03/2010 at 13:13.
+ * This file added by Keiron Nicholson on 17/02/2010 at 15:08.
  */
 
 using System;
+using NWN2Toolset.NWN2.Data.Templates;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class SpineFitter : Fitter
-	{		
-		public SpineFitter() : base()
-		{
-			
-		}
-		
-		
+	/// <summary>
+	/// Description of CreaturePlayerFitter.
+	/// </summary>
+	public class CreaturePlayerFitter : Nwn2Fitter
+	{
 		public override bool Fits(Moveable moveable)
 		{
-			return IsAction(moveable) || IsConditionalConstruct(moveable);
+			return IsPlayer(moveable) || IsInstance(moveable,NWN2ObjectType.Creature);
 		}
 		
 		
 		public override string GetMoveableDescription()
 		{
-			return "an action or conditional";
+			return "a creature";
 		}
 	}
 }
-

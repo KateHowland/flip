@@ -24,6 +24,7 @@
  */
 
 using System;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
@@ -31,8 +32,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// <summary>
 	/// Description of Area.
 	/// </summary>
-	public class Area : ObjectBehaviour
+	public class Area : Nwn2ObjectBehaviour
 	{
+		public string Tag {
+			get { return Identifier; }
+		}
+		
+		
 		public Area(string tag, string displayName) : base(tag,displayName)
 		{		
 		}
@@ -65,7 +71,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override string GetDescriptionOfObjectType()
 		{
-			return "Nwn2.Area";
+			return Nwn2Fitter.AreaDescription;
+		}
+		
+		
+		public override Nwn2Type GetNwn2Type()
+		{
+			return Nwn2Type.Area;
 		}
 	}
 }
