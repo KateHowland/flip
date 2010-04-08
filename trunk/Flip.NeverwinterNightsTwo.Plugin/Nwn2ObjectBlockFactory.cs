@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using NWN2Toolset.NWN2.Data;
@@ -110,8 +111,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			// If neither is available, use a placeholder image:
 			if (image == null) image = GetImage("Placeholder","Blueprint");// TODO: String.Format("Blueprint_{0}",objectType));
-						
-			ObjectBlock block = new ObjectBlock(image,GetBlueprintBlockBehaviour(blueprintResRef,blueprint.Name,blueprint.ObjectType));
+													
+			string displayName = GetDisplayName(blueprint);
+				
+			if (displayName == String.Empty) displayName = blueprint.Name;
+				
+			ObjectBlock block = new ObjectBlock(image,GetBlueprintBlockBehaviour(blueprintResRef,displayName,blueprint.ObjectType));
 			return block;
 		}
 		
@@ -131,14 +136,70 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (image == null) image = GetImage("Placeholder","Instance");// TODO: String.Format("Instance_{0}",objectType));
 			
 			try {
-				string identifier = ((INWN2Object)instance).Tag;				
-				ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(identifier,instance.Name,instance.ObjectType));
+				string tag = ((INWN2Object)instance).Tag;		
+				
+				string displayName = GetDisplayName(instance);
+				
+				if (displayName == String.Empty) displayName = tag;
+				
+				ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType));
+				
 				return block;
 			}
 			catch (InvalidCastException e) {
 				throw new ApplicationException("Creation of a visual block to represent " + instance.Name + 
 				                               "failed. Could not cast to INWN2Object to retrieve tag.",e);
 			}
+		}
+		
+		
+		protected string GetDisplayName(INWN2Template template)
+		{
+			if (template == null) throw new ArgumentNullException("template");
+			
+			string displayName = null;
+				
+			if (template is NWN2CreatureTemplate) {
+				NWN2CreatureTemplate creature = (NWN2CreatureTemplate)template;
+				
+				string firstName = creature.FirstName.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage).Value;
+				string lastName = creature.LastName.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage).Value;
+				
+				if (String.IsNullOrEmpty(lastName)) {
+					displayName = firstName;
+				}
+				else {
+					displayName = String.Format("{0} {1}",firstName,lastName);
+				}
+			}
+			         
+			else {
+				// Everything else uses LocalizedName, but this isn't defined on a superclass.				
+				PropertyInfo property = template.GetType().GetProperty("LocalizedName",BindingFlags.Public | BindingFlags.Instance);
+				
+				if (property != null) {
+					object obj = property.GetValue(template,null);
+					
+					if (obj != null) {
+						displayName = obj.ToString();
+						
+						if (!String.IsNullOrEmpty(displayName)) {
+							
+							// Remove surrounding curly brackets from (almost all) doors:
+							if (displayName.StartsWith("{") && displayName.EndsWith("}")) {
+								displayName = displayName.Substring(1,displayName.Length-2);
+							}
+							// Remove surrounding quotes and commas from placed effects:
+							if (displayName.StartsWith("\"") && displayName.EndsWith("\", ")) {
+								displayName = displayName.Substring(1,displayName.Length-4);
+							}
+						}
+					}
+				}
+			}
+						
+			if (displayName != null) return displayName;
+			else return String.Empty;
 		}
 		
 		#endregion
@@ -161,7 +222,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns>An ObjectBehaviour representing the module.</returns>
 		protected ObjectBehaviour GetModuleBlockBehaviour()
 		{
-			return new Module();
+			return new Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.Module();
 		}
 		
 		
