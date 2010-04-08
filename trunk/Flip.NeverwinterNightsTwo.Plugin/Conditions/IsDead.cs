@@ -52,7 +52,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("GetIsDead({0});",args);
+			return String.Format("GetIsDead({0})",args);
 		}
 		
 		

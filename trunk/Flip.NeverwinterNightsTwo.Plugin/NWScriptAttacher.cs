@@ -91,11 +91,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new InvalidOperationException("No module is currently open in the toolset.");
 			}
 						
-			try {
-				string nwscript = translator.Translate(source);					
+			try {			
 				string name = GetUnusedScriptName(source.Name);
 					
-				NWN2GameScript script = session.AddScript(name,nwscript);
+				NWN2GameScript script = session.AddScript(name,source.Code);
 				
 				session.CompileScript(script);
 				
