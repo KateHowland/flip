@@ -106,6 +106,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement DisplayMessage()
+		{
+			return new Statement(new DisplayMessage(fitters));
+		}
+		
+		
 		public Statement IsDead()
 		{
 			return new Statement(new IsDead(fitters));
@@ -113,16 +119,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 			
 			
-		
-//		[ActionStatement("Picks up")]
-//		public Statement PicksUp()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("picks up");
-//			statement.AddParameter(new ObjectBlockSlot("item1",fitters.OnlyItems));
-//			return statement;
-//		}	
 //		
 //		
 //		[ActionStatement("Drops")]

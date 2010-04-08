@@ -54,7 +54,7 @@ namespace Sussex.Flip.UI
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
-			triggerBar.MouseDoubleClick += delegate { DisplayTranslatable(triggerBar); };
+			triggerBar.MouseDoubleClick += delegate { DisplayCodeAndNaturalLanguage(triggerBar); };
 		}
 		
 		
@@ -62,12 +62,12 @@ namespace Sussex.Flip.UI
 		{
 			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
 				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				DisplayTranslatable(moveable);
+				DisplayCodeAndNaturalLanguage(moveable);
 			}
 		}
 		
 		
-		protected void DisplayTranslatable(ITranslatable translatable)
+		protected void DisplayCodeAndNaturalLanguage(ITranslatable translatable)
 		{
 			if (translatable == null) return;
 			this.naturalLanguageTextBlock.Text = translatable.GetNaturalLanguage();
@@ -82,8 +82,10 @@ namespace Sussex.Flip.UI
 		
 		
 		protected void CompileAndAttach(object sender, RoutedEventArgs e)
-		{
-			FlipScript script = new FlipScript("...~~~...");
+		{			
+			string code = triggerBar.GetCode();
+			
+			FlipScript script = new FlipScript(code);			
 			
 			script.Name = "EmptyScript";
 			

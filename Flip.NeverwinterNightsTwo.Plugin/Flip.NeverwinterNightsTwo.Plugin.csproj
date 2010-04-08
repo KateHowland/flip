@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Attacks.cs" />
+    <Compile Include="Actions\DisplayMessage.cs" />
     <Compile Include="Actions\PicksUp.cs" />
     <Compile Include="Conditions\IsDead.cs" />
     <Compile Include="Fitters\AreaFitter.cs" />
