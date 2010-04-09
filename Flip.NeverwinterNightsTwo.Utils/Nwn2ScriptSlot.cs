@@ -191,5 +191,139 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 					return new List<string>(0);
 			}
 		}
+		
+		
+		private static ScriptSlotTuple GetTuple(string slotName, string displayName)
+		{
+			return new ScriptSlotTuple(slotName,displayName);
+		}
+		
+		
+		private static ScriptSlotTuple GetTuple(string slotName)
+		{
+			return GetTuple(slotName,slotName);
+		}
+		
+		
+		public static IList<ScriptSlotTuple> GetScriptSlotTuples(Nwn2Type type)
+		{
+			switch (type) {
+				case Nwn2Type.Area:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnClientEnterScript"),
+						GetTuple("OnEnterScript"),
+						GetTuple("OnExitScript"),
+						GetTuple("OnHeartbeat"),
+						GetTuple("OnUserDefined")
+					};
+					
+				case Nwn2Type.Creature:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnBlocked"),
+						GetTuple("OnConversation"),
+						GetTuple("OnDamaged"),
+						GetTuple("OnDeath"),
+						GetTuple("OnEndCombatRound"),
+						GetTuple("OnHeartbeat"),
+						GetTuple("OnInventoryDisturbed"),
+						GetTuple("OnPhysicalAttacked"),
+						GetTuple("OnRested"),
+						GetTuple("OnSpawnIn"),
+						GetTuple("OnSpellCastAt"),
+						GetTuple("OnUserDefined")
+					};
+			
+				case Nwn2Type.Door:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnClick"),
+						GetTuple("OnClosed"),
+						GetTuple("OnConversation"),
+						GetTuple("OnDamaged"),
+						GetTuple("OnDeath"),
+						GetTuple("OnDisarm"),
+						GetTuple("OnFailToOpen"),
+						GetTuple("OnHeartbeat"),
+						GetTuple("OnLock"),
+						GetTuple("OnMeleeAttacked"),
+						GetTuple("OnOpen"),
+						GetTuple("OnSpellCastAt"),
+						GetTuple("OnTrapTriggered"),
+						GetTuple("OnUnlock"),
+						GetTuple("OnUsed")
+					};
+					
+				case Nwn2Type.Encounter:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnEntered"),
+						GetTuple("OnExhausted"),
+						GetTuple("OnExit"),
+						GetTuple("OnHeartbeat"),
+						GetTuple("OnUserDefined")
+					};
+					
+				case Nwn2Type.Module:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnAcquireItem"),
+						GetTuple("OnActivateItem"),
+						GetTuple("OnClientEnter"),
+						GetTuple("OnClientLeave"),
+						GetTuple("OnChat"),
+						GetTuple("OnCutsceneAbort"),
+						GetTuple("OnHeartbeat"),
+						GetTuple("OnModuleLoad"),
+						GetTuple("OnModuleStart"),
+						GetTuple("OnPCLoaded"),
+						GetTuple("OnPlayerDeath"),
+						GetTuple("OnPlayerDying"),
+						GetTuple("OnPlayerEquipItem"),
+						GetTuple("OnPlayerLevelUp"),
+						GetTuple("OnPlayerRespawn"),
+						GetTuple("OnPlayerRest"),
+						GetTuple("OnPlayerUnequipItem"),
+						GetTuple("OnUnacquireItem"),
+						GetTuple("OnUserDefined")
+					};
+					
+				case Nwn2Type.Placeable:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnClosed"),
+						GetTuple("OnConversation"),
+						GetTuple("OnDamaged"),
+						GetTuple("OnDeath"),
+						GetTuple("OnDisarm"),
+						GetTuple("OnHeartbeat"),
+						GetTuple("OnInvDisturbed"),
+						GetTuple("OnLeftClick"),
+						GetTuple("OnLock"),
+						GetTuple("OnMeleeAttacked"),
+						GetTuple("OnOpen"),
+						GetTuple("OnSpellCastAt"),
+						GetTuple("OnTrapTriggered"),
+						GetTuple("OnUnlock"),
+						GetTuple("OnUsed"),
+						GetTuple("OnUserDefined")
+					};
+					
+				case Nwn2Type.Store:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnCloseStore"),
+						GetTuple("OnOpenStore")
+					};
+					
+				case Nwn2Type.Trigger:
+					return new List<ScriptSlotTuple>{ 
+						GetTuple("OnClick"),
+						GetTuple("OnDisarm"),
+						GetTuple("OnEnter"),
+						GetTuple("OnExit"),
+						GetTuple("OnHeartbeat"),
+						GetTuple("OnTrapTriggered"),
+						GetTuple("OnUserDefined")
+					};
+					
+				default:
+					return new List<ScriptSlotTuple>(0);
+			}
+		}
 	}
 }

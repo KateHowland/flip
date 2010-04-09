@@ -53,15 +53,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			List<EventBlock> eventBlocks = new List<EventBlock>(count);
 			
-			List<string> scriptSlots = new List<string>(count);
+			List<ScriptSlotTuple> slots = new List<ScriptSlotTuple>(count);
+			
 			foreach (Nwn2Type type in Enum.GetValues(typeof(Nwn2Type))) {
-				foreach (string slot in Nwn2ScriptSlot.GetScriptSlotNames(type)) {
-					if (!scriptSlots.Contains(slot)) scriptSlots.Add(slot);
-				}
+				
+				foreach (ScriptSlotTuple slot in Nwn2ScriptSlot.GetScriptSlotTuples(type)) {
+					if (!slots.Contains(slot)) slots.Add(slot);
+				}				
 			}
 			
-			foreach (string slot in scriptSlots) {
-				eventBlocks.Add(new EventBlock(slot));
+			foreach (ScriptSlotTuple slot in slots) {
+				EventBehaviour behaviour = new EventBehaviour(slot.SlotName,slot.DisplayName);
+				EventBlock block = new EventBlock(behaviour);
+				eventBlocks.Add(block);
 			}
 			
 			return eventBlocks;
