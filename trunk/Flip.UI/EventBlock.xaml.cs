@@ -19,26 +19,30 @@ namespace Sussex.Flip.UI
 
     public partial class EventBlock : Moveable
     {
-    	protected static DependencyProperty DisplayNameProperty;
-    	protected static DependencyProperty EventNameProperty;
+    	protected static DependencyProperty BehaviourProperty;
+    	
+    	
+    	public EventBehaviour Behaviour {
+    		get { return (EventBehaviour)base.GetValue(BehaviourProperty); }
+    		set { base.SetValue(BehaviourProperty,value); }
+    	}
     	
     	
     	public string DisplayName {
-    		get { return (string)base.GetValue(DisplayNameProperty); }
-    		set { base.SetValue(DisplayNameProperty,value); }
+    		get { return Behaviour.DisplayName; }
+    		set { Behaviour.DisplayName = value; }
     	}
     	
     	    	
     	public string EventName {
-    		get { return (string)base.GetValue(EventNameProperty); }
-    		set { base.SetValue(EventNameProperty,value); }
+    		get { return Behaviour.EventName; }
+    		set { Behaviour.EventName = value; }
     	}
     	
     	
     	static EventBlock()
     	{
-    		DisplayNameProperty = DependencyProperty.Register("DisplayName",typeof(string),typeof(EventBlock));
-    		EventNameProperty = DependencyProperty.Register("EventName",typeof(string),typeof(EventBlock));
+    		BehaviourProperty = DependencyProperty.Register("Behaviour",typeof(EventBehaviour),typeof(EventBlock));
     	}
     	
     	
@@ -52,15 +56,25 @@ namespace Sussex.Flip.UI
         	if (eventName == null) throw new ArgumentNullException("eventName");
         	if (displayName == null) throw new ArgumentNullException("displayName");
         	
-        	EventName = eventName;
-            DisplayName = displayName;
+        	Behaviour = new EventBehaviour(eventName,displayName);
+        	
+            InitializeComponent();
+        }
+        
+        
+        public EventBlock(EventBehaviour behaviour)
+        {
+        	if (behaviour == null) throw new ArgumentNullException("behaviour");
+        	
+        	Behaviour = behaviour;
+        	
             InitializeComponent();
         }
 
         
 		public override Moveable DeepCopy()
 		{
-			return new EventBlock(DisplayName);
+			return new EventBlock(Behaviour);
 		}
 		
 		

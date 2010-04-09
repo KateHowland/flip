@@ -75,21 +75,48 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         
 		public override string GetCode()
 		{			
-			System.Text.StringBuilder code = new System.Text.StringBuilder();
-			
-			code.Append(String.Format("when ({0}.{1}) do: ",raiserSlot.GetCode(),eventSlot.GetCode()));
-			
-			return code.ToString();
+			return String.Empty;
+		}
+		
+		
+		protected static Dictionary<string,string> naturalLanguageEventDescriptions;
+		protected static string keyFormat = "{0}.{1}";
+		
+		
+		static Nwn2TriggerControl()
+		{
+			 naturalLanguageEventDescriptions = new Dictionary<string,string>(81)
+			 {
+			 	{"Area.OnClientEnterScript","When the player (client) enters the area"},
+			 	{"Area.OnEnterScript","When the player enters the area"},
+			 	{"Area.OnExitScript","When the player exits the area"},
+			 	{"Area.OnHeartbeat","Every few seconds"},
+			 	{"Area.OnUserDefined","NATURAL LANGUAGE MISSING"}
+			 };
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{			
-			System.Text.StringBuilder code = new System.Text.StringBuilder();
+			string natural = null;
 			
-			code.Append(String.Format("When {0} is raised by {1}, this happens: ",eventSlot.GetNaturalLanguage(),raiserSlot.GetNaturalLanguage()));
+			string raiserName = raiserSlot.GetNaturalLanguage();
+			string eventName = eventSlot.GetNaturalLanguage();
 			
-			return code.ToString();
+			ObjectBlock block = raiserSlot.Contents as ObjectBlock;
+			
+			if (block != null && Nwn2Fitter.IsArea(block)) {
+				string key = String.Format(keyFormat,"Area",eventName);
+				if (naturalLanguageEventDescriptions.ContainsKey(key)) {
+					natural = naturalLanguageEventDescriptions[key];
+				}
+			}
+			
+			if (natural == null) {
+				natural = String.Format("When {0} is raised by {1}, this happens: ",eventName,raiserName);
+			}
+			
+			return natural;
 		}
     }
 }

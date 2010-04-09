@@ -100,23 +100,38 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (blueprint == null) throw new ArgumentNullException("blueprint");
 			
 			string objectTypeString = blueprint.ObjectType.ToString();
+			string blueprintResRef = blueprint.ResourceName.Value;	
+						
+			Image image;	
 			
-			// First try to retrieve an image of this particular blueprint:
-			string blueprintResRef = blueprint.ResourceName.Value;			
-			Image image = GetImage(objectTypeString,blueprintResRef);
+			// If this is an item, try to get its icon:
+			NWN2ItemTemplate item = blueprint as NWN2ItemTemplate;
+			if (item != null) {
+				image = GetImage(item);
+			}	
+			
+			// Otherwise, try to get an image representing this blueprint:
+			else {	
+				image = GetImage(objectTypeString,blueprintResRef);
+			}
 			
 			// Failing that, try to retrieve an image of the blueprint it derives from:
-			string baseResRef = blueprint.TemplateResRef.Value;
-			if (image == null) image = GetImage(objectTypeString,baseResRef);
+			if (image == null) {
+				string baseResRef = blueprint.TemplateResRef.Value;
+				image = GetImage(objectTypeString,baseResRef);
+			}
 			
 			// If neither is available, use a placeholder image:
-			if (image == null) image = GetImage("Placeholder","Blueprint");// TODO: String.Format("Blueprint_{0}",objectType));
+			if (image == null) {
+				image = GetImage("Placeholder","Blueprint");// TODO: String.Format("Blueprint_{0}",objectType));
+			}
 													
 			string displayName = GetDisplayName(blueprint);
 				
 			if (displayName == String.Empty) displayName = blueprint.Name;
 				
 			ObjectBlock block = new ObjectBlock(image,GetBlueprintBlockBehaviour(blueprintResRef,displayName,blueprint.ObjectType));
+			
 			return block;
 		}
 		
@@ -130,26 +145,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{						
 			if (instance == null) throw new ArgumentNullException("instance");
 			
-			string resRef = instance.Template.ResRef.Value;
+			Image image;
 			
-			Image image = GetImage(instance.ObjectType.ToString(),resRef);
-			if (image == null) image = GetImage("Placeholder","Instance");// TODO: String.Format("Instance_{0}",objectType));
+			NWN2ItemTemplate item = instance as NWN2ItemTemplate;
+			if (item != null) {
+				image = GetImage(item);
+			}
+			else {
+				string resRef = instance.Template.ResRef.Value;				
+				image = GetImage(instance.ObjectType.ToString(),resRef);
+			}
+						
+			if (image == null) {
+				image = GetImage("Placeholder","Instance");// TODO: String.Format("Instance_{0}",objectType));
+			}
 			
+			string tag;
 			try {
-				string tag = ((INWN2Object)instance).Tag;		
-				
-				string displayName = GetDisplayName(instance);
-				
-				if (displayName == String.Empty) displayName = tag;
-				
-				ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType));
-				
-				return block;
+				tag = ((INWN2Object)instance).Tag;
 			}
-			catch (InvalidCastException e) {
-				throw new ApplicationException("Creation of a visual block to represent " + instance.Name + 
-				                               "failed. Could not cast to INWN2Object to retrieve tag.",e);
+			catch (InvalidCastException) {
+				throw new ApplicationException("Failed to cast INWN2Instance to INWN2Object to retrieve tag for object block.");
 			}
+				
+			string displayName = GetDisplayName(instance);
+				
+			if (displayName == String.Empty) displayName = tag;
+				
+			ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType));
+				
+			return block;
 		}
 		
 		
@@ -307,6 +332,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			// of image resources.
 			string pathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
 			string path = String.Format(pathFormat,type,name);
+			return GetImage(path);
+		}
+		
+		
+		protected Image GetImage(NWN2ItemTemplate item)
+		{
+			if (item == null) throw new ArgumentNullException("item");
+			
+			// TODO:
+			// We should ultimately be using a .dll collection
+			// of image resources.
+			string pathFormat = @"C:\Flip\object pics\bmp icons\{0}.bmp";
+			string path = String.Format(pathFormat,item.Icon.ToString());
 			return GetImage(path);
 		}
 		

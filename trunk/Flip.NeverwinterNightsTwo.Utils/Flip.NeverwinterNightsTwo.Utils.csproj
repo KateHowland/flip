@@ -104,6 +104,7 @@
     <Compile Include="ResourceViewerClosedEventArgs.cs" />
     <Compile Include="SampleScriptProvider.cs" />
     <Compile Include="ScriptEventArgs.cs" />
+    <Compile Include="ScriptSlotTuple.cs" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>

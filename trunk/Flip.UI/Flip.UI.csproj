@@ -82,6 +82,7 @@
       <DependentUpon>DropZone.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EventBehaviour.cs" />
     <Compile Include="EventBlock.xaml.cs">
       <DependentUpon>EventBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
