@@ -10,6 +10,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NWN2Toolset.NWN2.Data.Templates;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -21,33 +24,38 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     {
     	protected ObjectBlockSlot raiserSlot;
     	protected EventBlockSlot eventSlot;
+    	protected EventDescriber describer;
     	
     	    	
 		public override ObjectBlock RaiserBlock {
-			get {
-				return raiserSlot.Contents as ObjectBlock;
-			}
-			set {
-				raiserSlot.Contents = value;
-			}
+			get { return raiserSlot.Contents as ObjectBlock; }
+			set { raiserSlot.Contents = value; }
 		}
     	
     	
 		public override EventBlock EventBlock {
-			get {
-				return eventSlot.Contents as EventBlock;
-			}
-			set {
-				eventSlot.Contents = value;
-			}
+			get { return eventSlot.Contents as EventBlock; }
+			set { eventSlot.Contents = value; }
+		}
+    	
+    	
+		public EventDescriber Describer {
+			get { return describer; }
+			set { describer = value; }
 		}
     	
     	
 		/// <summary>
 		/// Constructs a new <see cref="Nwn2TriggerControl"/> instance.
 		/// </summary>
-        public Nwn2TriggerControl()
+		/// <param name="describer">Used to describe the event specified on this
+		/// trigger control in natural language.</param>
+        public Nwn2TriggerControl(EventDescriber describer)
         {
+        	if (describer == null) throw new ArgumentNullException("describer");
+        	
+        	this.describer = describer;
+        	
         	raiserSlot = new ObjectBlockSlot("raiser",new Nwn2RaiserBlockFitter());
             raiserSlot.Padding = new Thickness(10);
             eventSlot = new EventBlockSlot(new Nwn2EventBlockFitter(raiserSlot));
@@ -58,6 +66,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
             
             mainPanel.Children.Add(raiserSlot);
             mainPanel.Children.Add(eventSlot);
+        }
+        
+        
+        public Nwn2TriggerControl() : this(new EventDescriber())
+        {        	
         }
         
 
@@ -77,24 +90,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{			
 			return String.Empty;
 		}
-		
-		
-		protected static Dictionary<string,string> naturalLanguageEventDescriptions;
-		protected static string keyFormat = "{0}.{1}";
-		
-		
-		static Nwn2TriggerControl()
-		{
-			 naturalLanguageEventDescriptions = new Dictionary<string,string>(81)
-			 {
-			 	{"Area.OnClientEnterScript","When the player (client) enters the area"},
-			 	{"Area.OnEnterScript","When the player enters the area"},
-			 	{"Area.OnExitScript","When the player exits the area"},
-			 	{"Area.OnHeartbeat","Every few seconds"},
-			 	{"Area.OnUserDefined","NATURAL LANGUAGE MISSING"}
-			 };
-		}
-		
+					
 		
 		public override string GetNaturalLanguage()
 		{			
@@ -104,11 +100,53 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string eventName = eventSlot.GetNaturalLanguage();
 			
 			ObjectBlock block = raiserSlot.Contents as ObjectBlock;
+			if (block == null || !(block.Behaviour is Nwn2ObjectBehaviour) || eventSlot.Contents == null) {
+				natural = "When some event is raised";
+			}
 			
-			if (block != null && Nwn2Fitter.IsArea(block)) {
-				string key = String.Format(keyFormat,"Area",eventName);
-				if (naturalLanguageEventDescriptions.ContainsKey(key)) {
-					natural = naturalLanguageEventDescriptions[key];
+			else {
+				Nwn2ObjectBehaviour behaviour = (Nwn2ObjectBehaviour)block.Behaviour;
+				
+				switch (behaviour.GetNwn2Type()) {
+						
+					case Nwn2Type.Area:
+						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular area";
+						natural = describer.GetAreaEventDescription(raiserName,eventName);
+						break;
+						
+					case Nwn2Type.Creature:
+						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular creature";
+						natural = describer.GetCreatureEventDescription(raiserName,eventName);
+						break;
+						
+					case Nwn2Type.Door:
+						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular door";
+						natural = describer.GetOpenableEventDescription(raiserName,eventName);
+						break;
+						
+					case Nwn2Type.Encounter:
+						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular encounter";
+						natural = describer.GetEncounterEventDescription(raiserName,eventName);
+						break;
+						
+					case Nwn2Type.Module:		
+						natural = describer.GetModuleEventDescription(eventName);
+						break;
+						
+					case Nwn2Type.Placeable:
+						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular placeable";
+						natural = describer.GetOpenableEventDescription(raiserName,eventName);
+						break;
+						
+					case Nwn2Type.Store:
+						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular store";
+						natural = describer.GetStoreEventDescription(raiserName,eventName);
+						break;
+						
+					case Nwn2Type.Trigger:
+						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular trigger";
+						natural = describer.GetTriggerEventDescription(raiserName,eventName);
+						break;					
 				}
 			}
 			

@@ -94,6 +94,7 @@
     <Compile Include="Actions\DisplayMessage.cs" />
     <Compile Include="Actions\PicksUp.cs" />
     <Compile Include="Conditions\IsDead.cs" />
+    <Compile Include="EventDescriber.cs" />
     <Compile Include="Fitters\AreaFitter.cs" />
     <Compile Include="Fitters\CreaturePlayerFitter.cs" />
     <Compile Include="Fitters\EventRaiserFitter.cs" />
