@@ -98,6 +98,12 @@ namespace Sussex.Flip.UI
 				MessageBox.Show(ex.ToString());
 			}
 		}
+		
+		
+		protected void RefreshBlueprints(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Not implemented.");
+		}
 			
 		
 		protected void CreateAdorner(object sender, DragEventArgs e)

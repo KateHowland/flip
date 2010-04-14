@@ -67,6 +67,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bag.xaml.cs">
+      <DependentUpon>Bag.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ComponentType.cs" />
     <Compile Include="ConditionalControl.cs" />
     <Compile Include="ConditionFitter.cs" />
@@ -165,6 +169,7 @@
   <ItemGroup>
     <Folder Include="images" />
     <Folder Include="Core" />
+    <Page Include="Bag.xaml" />
     <Page Include="ConditionSlot.xaml" />
     <Page Include="DropZone.xaml" />
     <Page Include="EventBlock.xaml" />

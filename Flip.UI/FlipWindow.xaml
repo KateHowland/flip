@@ -31,7 +31,7 @@
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="250"/>
+				<ColumnDefinition Width="270"/>
 			</Grid.ColumnDefinitions>			
 	
 			<Menu  
@@ -52,6 +52,10 @@
 					<MenuItem
 					Header="Compile and attach"
 					Click="CompileAndAttach"/>
+				
+					<MenuItem
+					Header="Refresh blueprints"
+					Click="RefreshBlueprints"/>
 				
 				</MenuItem>
 					

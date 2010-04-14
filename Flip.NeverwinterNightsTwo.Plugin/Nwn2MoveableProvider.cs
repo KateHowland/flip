@@ -27,7 +27,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 using NWN2Toolset.NWN2.Data.Blueprints;
+using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
+using NWN2Toolset.NWN2.Data.TypedCollections;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -168,9 +170,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			NWN2Toolset.NWN2.Data.NWN2GameArea activeArea = NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area;
+			
 			if (activeArea != null) {				
+				
 				foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
-					foreach (NWN2Toolset.NWN2.Data.Instances.INWN2Instance instance in activeArea.GetInstancesForObjectType(type)) {
+					
+					NWN2InstanceCollection instances = activeArea.GetInstancesForObjectType(type);
+					
+					if (instances == null) return;
+						
+					foreach (INWN2Instance instance in instances) {
 						ObjectBlock block = blocks.CreateInstanceBlock(instance);
 						manager.AddMoveable(String.Format(InstanceBagNamingFormat,type.ToString()),block);
 					}
