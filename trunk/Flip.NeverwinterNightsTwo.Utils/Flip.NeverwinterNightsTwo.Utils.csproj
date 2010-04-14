@@ -92,6 +92,8 @@
     <Compile Include="INwn2Session.cs" />
     <Compile Include="AreaFacade.cs" />
     <Compile Include="ClientNotifier.cs" />
+    <Compile Include="Nwn2Address.cs" />
+    <Compile Include="Nwn2AddressFactory.cs" />
     <Compile Include="Nwn2ScriptSlot.cs" />
     <Compile Include="Nwn2Session.cs" />
     <Compile Include="Nwn2SessionAdapter.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="ResourceViewerClosedEventArgs.cs" />
     <Compile Include="SampleScriptProvider.cs" />
     <Compile Include="ScriptEventArgs.cs" />
+    <Compile Include="Scripts.cs" />
     <Compile Include="ScriptSlotTuple.cs" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -35,17 +35,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class Instance : Nwn2ObjectBehaviour
 	{
-		protected NWN2ObjectType type;
+		protected NWN2ObjectType type;		
+		protected string areaTag;
 		
 				
 		public string Tag {
 			get { return Identifier; }
 		}
+				
+		public NWN2ObjectType Type {
+			get { return type; }
+		}
+		
+		public string AreaTag {
+			get { return areaTag; }
+		}
 		
 		
-		public Instance(string tag, string displayName, NWN2ObjectType type) : base(tag,displayName)
+		public Instance(string tag, string displayName, NWN2ObjectType type, string areaTag) : base(tag,displayName)
 		{		
 			this.type = type;
+			this.areaTag = areaTag;
 		}
 		
 		
@@ -76,7 +86,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Instance(Identifier,DisplayName,type);
+			return new Instance(Identifier,DisplayName,type,areaTag);
 		}
 		
 		

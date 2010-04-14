@@ -68,8 +68,9 @@ namespace Sussex.Flip.UI.Generic
 		/// module or level of that game.
 		/// </summary>
 		/// <param name="source">The Flip source to be compiled.</param>
-		/// <param name="eventName">The event to attach the source to. HACK.</param>
-		public override void Attach(FlipScript source, string eventName) //HACK
+		/// <param name="address">An address representing the location
+		/// to attach this script to.</param>
+		public override void Attach(FlipScript source, string address)
 		{			
 		}
 		

@@ -175,7 +175,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 			if (displayName == String.Empty) displayName = tag;
 				
-			ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType));
+			ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType,instance.Area.Tag));
 				
 			return block;
 		}
@@ -272,10 +272,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <param name="tag">The tag of the instance.</param>
 		/// <param name="displayName">The display name for this instance.</param>
 		/// <param name="type">The type of this instance.</param>
+		/// <param name="areaTag">The tag of the area containing this instance.</param>
 		/// <returns>An ObjectBehaviour representing a particular instance.</returns>
-		protected ObjectBehaviour GetInstanceBlockBehaviour(string tag, string displayName, NWN2ObjectType type)
+		protected ObjectBehaviour GetInstanceBlockBehaviour(string tag, string displayName, NWN2ObjectType type, string areaTag)
 		{
-			return new Instance(tag,displayName,type);
+			return new Instance(tag,displayName,type,areaTag);
 		}
 		
 				

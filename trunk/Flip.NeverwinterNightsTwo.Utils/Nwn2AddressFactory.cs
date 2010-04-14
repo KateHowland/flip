@@ -20,23 +20,39 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 22/03/2010 at 16:53.
+ * This file added by Keiron Nicholson on 14/04/2010 at 11:27.
  */
 
 using System;
-using System.Windows.Controls;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
 	/// <summary>
-	/// Description of TriggerControl.
+	/// Description of Nwn2AddressFactory.
 	/// </summary>
-	public abstract class TriggerControl : UserControl, ITranslatable
+	public sealed class Nwn2AddressFactory
 	{
-		public abstract ObjectBlock RaiserBlock { get; set; }
-		public abstract EventBlock EventBlock { get; set; }		
-		public abstract string GetCode();
-		public abstract string GetNaturalLanguage();
-		public abstract string GetAddress();
+		public Nwn2Address GetModuleAddress(string scriptSlot)
+		{
+			return new Nwn2Address(String.Format("Module{0}{1}",Nwn2Address.Separator,scriptSlot));
+		}
+		
+		
+		public Nwn2Address GetAreaAddress(string scriptSlot, string areaTag)
+		{
+			return new Nwn2Address(String.Format("Area{0}{1}{0}{2}",Nwn2Address.Separator,scriptSlot,areaTag));
+		}
+		
+		
+		public Nwn2Address GetInstanceAddress(string scriptSlot, string areaTag, Nwn2Type targetType, string instanceTag)
+		{
+			return GetInstanceAddress(scriptSlot,areaTag,targetType,instanceTag,-1);
+		}
+		
+		
+		public Nwn2Address GetInstanceAddress(string scriptSlot, string areaTag, Nwn2Type targetType, string instanceTag, int index)
+		{
+			return new Nwn2Address(String.Format("{3}{0}{1}{0}{2}{0}{4}{0}{5}",Nwn2Address.Separator,scriptSlot,areaTag,targetType,instanceTag,index));
+		}
 	}
 }
