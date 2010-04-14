@@ -20,23 +20,47 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 22/03/2010 at 16:53.
+ * This file added by Keiron Nicholson on 14/04/2010 at 09:49.
  */
 
 using System;
-using System.Windows.Controls;
+using System.Collections.Generic;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
 	/// <summary>
-	/// Description of TriggerControl.
+	/// Description of Scripts.
 	/// </summary>
-	public abstract class TriggerControl : UserControl, ITranslatable
+	public static class Scripts
 	{
-		public abstract ObjectBlock RaiserBlock { get; set; }
-		public abstract EventBlock EventBlock { get; set; }		
-		public abstract string GetCode();
-		public abstract string GetNaturalLanguage();
-		public abstract string GetAddress();
+		private static List<Nwn2Type> eventRaisers;
+			
+			
+		static Scripts()
+		{
+			eventRaisers = new List<Nwn2Type>
+			{
+				Nwn2Type.Module,
+				Nwn2Type.Area,
+				Nwn2Type.Creature,
+				Nwn2Type.Door,
+				Nwn2Type.Encounter,
+				Nwn2Type.Placeable,
+				Nwn2Type.Store,
+				Nwn2Type.Trigger,
+			};
+		}
+		
+		
+		public static List<Nwn2Type> GetEventRaisers()
+		{
+			return eventRaisers;
+		}
+		
+		
+		public static bool IsEventRaiser(Nwn2Type type)
+		{
+			return eventRaisers.Contains(type);
+		}
 	}
 }

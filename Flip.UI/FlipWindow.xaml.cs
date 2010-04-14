@@ -89,10 +89,10 @@ namespace Sussex.Flip.UI
 			
 			script.Name = "EmptyScript";
 			
-			string eventName = triggerBar.GetEvent();
+			string address = triggerBar.GetAddress();
 			
 			try {
-				attacher.Attach(script,eventName);
+				attacher.Attach(script,address);
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.ToString());

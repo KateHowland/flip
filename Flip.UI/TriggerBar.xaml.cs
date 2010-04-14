@@ -47,10 +47,9 @@ namespace Sussex.Flip.UI
         }
         
         
-        public string GetEvent()
+        public string GetAddress()
         {
-        	if (triggerControl.EventBlock == null) return null;
-        	else return triggerControl.EventBlock.EventName;
+        	return triggerControl.GetAddress();
         }
     	
         

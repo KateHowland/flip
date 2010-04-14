@@ -25,7 +25,10 @@
 
 using System;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.TypedCollections;
 using Sussex.Flip.Core;
+using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -78,12 +81,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// and attaches the results to a Neverwinter Nights 2 module.
 		/// </summary>
 		/// <param name="source">The Flip source to be compiled.</param>
-		/// <param name="eventName">The event to attach the source to. HACK.</param>
-		public override void Attach(FlipScript source, string eventName) //HACK
+		/// <param name="address">An address representing the location
+		/// to attach this script to.</param>
+		public override void Attach(FlipScript source, string address)
 		{
 			if (source == null) throw new ArgumentNullException("source");
-			if (eventName == null) throw new ArgumentNullException("eventName");//HACK
-			if (eventName == String.Empty) throw new ArgumentException("eventName must not be empty.","eventName");//HACK
+			if (address == null) throw new ArgumentNullException("address");
+			if (address == String.Empty) throw new ArgumentException("Must provide a valid address for attaching script.","address");
+			
 			if (!Nwn2ToolsetFunctions.ToolsetIsOpen()) throw new InvalidOperationException("Toolset must be open to attach scripts.");
 			
 			NWN2GameModule module = session.GetModule();
@@ -98,12 +103,65 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				session.CompileScript(script);
 				
-				// TODO:
-				// extract the slot and attaching object information from the script.
+				Nwn2Address nwn2Address = new Nwn2Address(address);
 				
-				// TODO:
-				// temp:
-				session.AttachScriptToModule(script,eventName);
+				if (!Scripts.IsEventRaiser(nwn2Address.TargetType)) {
+					throw new ArgumentException("Cannot attach scripts to a " + nwn2Address.TargetType + ".");
+				}
+								
+				if (nwn2Address.TargetType == Nwn2Type.Module) {
+					session.AttachScriptToModule(script,nwn2Address.TargetSlot);
+				}	
+				
+				else {					
+					NWN2GameArea area = session.GetArea(nwn2Address.AreaTag);
+					if (area == null) {
+						throw new ArgumentException("Area '" + nwn2Address.AreaTag + "' was not found in current module.","address");
+					}
+					
+					if (nwn2Address.TargetType == Nwn2Type.Area) {					
+						session.AttachScriptToArea(script,area,nwn2Address.TargetSlot);
+					}
+					
+					else {
+						NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
+						
+						NWN2InstanceCollection instances = session.GetObjectsByTag(area,nwn2ObjectType,nwn2Address.InstanceTag);
+						
+						if (instances.Count == 0) {
+							string error = String.Format("No objects of the given type ({0}) and tag ('{1}') were found in area '{2}'.",
+							                             nwn2Address.TargetType,
+							                             nwn2Address.InstanceTag,
+							                             nwn2Address.AreaTag);
+							throw new ArgumentException(error,"address");
+						}
+						
+						if (nwn2Address.UseIndex) {	
+							int count = instances.Count;
+							
+							if (nwn2Address.Index >= count) {
+								string error = String.Format("Found only {0} objects of the given type ({1}) and tag ('{2}') in area '{3}' - could not assign to index [{4}].",
+								                             count,
+								                             nwn2Address.TargetType,
+								                             nwn2Address.InstanceTag,
+								                             nwn2Address.AreaTag,
+								                             nwn2Address.Index);
+								throw new ArgumentException(error,"address");
+							}
+							
+							else {
+								INWN2Instance instance = instances[nwn2Address.Index];
+								session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+							}
+						}
+						
+						else {													
+							foreach (INWN2Instance instance in instances) {
+								session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+							}
+						}
+					}
+				}
 			}
 			catch (Exception e) {
 				throw new ApplicationException("Failed to translate and attach script.\n\n" + e.ToString(),e);

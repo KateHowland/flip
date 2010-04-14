@@ -25,6 +25,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	protected ObjectBlockSlot raiserSlot;
     	protected EventBlockSlot eventSlot;
     	protected EventDescriber describer;
+    	protected Nwn2AddressFactory addressFactory;
     	
     	    	
 		public override ObjectBlock RaiserBlock {
@@ -55,6 +56,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         	if (describer == null) throw new ArgumentNullException("describer");
         	
         	this.describer = describer;
+        	
+        	this.addressFactory = new Nwn2AddressFactory();
         	
         	raiserSlot = new ObjectBlockSlot("raiser",new Nwn2RaiserBlockFitter());
             raiserSlot.Padding = new Thickness(10);
@@ -155,6 +158,39 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			return natural;
+		}
+		
+		
+		public override string GetAddress()
+		{
+			if (EventBlock == null || RaiserBlock == null) return null;
+			
+			Nwn2Address address;
+			
+			if (Nwn2Fitter.IsModule(RaiserBlock)) {			
+				address = addressFactory.GetModuleAddress(EventBlock.EventName);
+			}
+			
+			else if (Nwn2Fitter.IsArea(RaiserBlock)) {			
+				string areaTag = RaiserBlock.Identifier;				
+				address = addressFactory.GetAreaAddress(EventBlock.EventName,areaTag);
+			}
+			
+			else if (Nwn2Fitter.IsInstance(RaiserBlock)) {
+				Instance instanceBehaviour = (Instance)RaiserBlock.Behaviour;
+				
+				string areaTag = instanceBehaviour.AreaTag;
+				Nwn2Type targetType = instanceBehaviour.GetNwn2Type();
+				string instanceTag = instanceBehaviour.Tag;
+				
+				address = addressFactory.GetInstanceAddress(EventBlock.EventName,areaTag,targetType,instanceTag);
+			}
+			
+			else {
+				address = null;
+			}
+			
+			return address.Value;
 		}
     }
 }
