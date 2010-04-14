@@ -25,7 +25,7 @@ namespace Sussex.Flip.UI
     	
     	static ObjectBlock()
     	{
-    		DefaultSize = new Size(55,65);    		
+    		DefaultSize = new Size(55,75);    		
     		DisplayImageProperty = DependencyProperty.Register("DisplayImage",typeof(Image),typeof(ObjectBlock));
     		BehaviourProperty = DependencyProperty.Register("Behaviour",typeof(ObjectBehaviour),typeof(ObjectBlock));
     	}
@@ -72,6 +72,9 @@ namespace Sussex.Flip.UI
             }
 
     		DisplayImage = image;
+    		
+    		DisplayImage.Stretch = Stretch.Fill;
+    		DisplayImage.StretchDirection = StretchDirection.Both;
     		
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;

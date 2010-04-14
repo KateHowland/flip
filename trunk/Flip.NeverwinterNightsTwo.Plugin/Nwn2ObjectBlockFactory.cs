@@ -331,6 +331,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns>An Image, or null if an exception was raised.</returns>
 		protected Image GetImage(string type, string name)
 		{
+			name = GetSimilar(type,name);
+			
 			// TODO:
 			// We should ultimately be using a .dll collection
 			// of image resources.
@@ -349,7 +351,59 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			// of image resources.
 			string pathFormat = @"C:\Flip\object pics\bmp icons\{0}.bmp";
 			string path = String.Format(pathFormat,item.Icon.ToString());
-			return GetImage(path);
+			Image image = GetImage(path);
+			
+			if (image == null) {
+				path = String.Format(pathFormat,"Item");
+				image = GetImage(path);
+			}
+			
+			return image;
+		}
+		
+		
+		protected string GetSimilar(string type, string name)
+		{
+			if (type == "Creature") {
+				if (name.StartsWith("c_elmwater")) return "c_elmwater";
+				if (name.StartsWith("c_elmfire")) return "c_elmfire";
+				if (name.StartsWith("c_elmearth")) return "c_elmearth";
+				if (name.StartsWith("c_elmair")) return "c_elmair";
+				
+				if (name.StartsWith("c_ancom_badger")) return "c_badger";
+				if (name.StartsWith("c_ancom_bear")) return "c_bear";
+				if (name.StartsWith("c_ancom_boar")) return "c_boar";
+				if (name.StartsWith("c_ancom_spider")) return "c_spider";
+				if (name.StartsWith("c_ancom_wolf")) return "c_wolf";
+				
+				if (name.StartsWith("c_fam_bat")) return "c_bat";
+				if (name.StartsWith("c_fam_beetle")) return "c_beetle";
+				if (name.StartsWith("c_fam_cat")) return "c_cat";
+				if (name.StartsWith("c_fam_pig")) return "c_pig";
+				if (name.StartsWith("c_fam_rabbit")) return "c_rabbit";
+				if (name.StartsWith("c_fam_rat")) return "c_rat";
+				if (name.StartsWith("c_fam_spider")) return "c_spider";
+				if (name.StartsWith("c_fam_weasel")) return "c_weasel";
+				
+				if (name.StartsWith("c_beetlestag")) return "c_beetle";
+				if (name.StartsWith("c_faction_pig")) return "c_pig";
+			}
+			
+			else if (type == "Door") {
+				return "plc_dt_doorsc2";
+			}		
+			
+			else if (type == "Placeholder") {
+				if (name == "Instance") return "ia_sacredvengeance";
+				if (name == "Blueprint") return "ia_sacredvengeance";
+			}
+			
+			else if (type == "Other") {
+				if (name == "Player") return "ig_hu_redknight";
+				if (name == "Module") return "ig_hu_grumbar";
+			}
+			
+			return name;
 		}
 		
 		#endregion

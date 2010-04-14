@@ -12,21 +12,25 @@
 			BorderThickness="0.5"
 			BorderBrush="SlateGray">
 		    	
-		    	<Grid>		    		
+		    	<Grid
+		    	Background="AntiqueWhite">	
+		    		
 		    	<Grid.RowDefinitions>
-		    		<RowDefinition/>
+		    		<RowDefinition Height="*"/>
 		    		<RowDefinition Height="10"/>
 		    		<RowDefinition Height="10"/>
 		    	</Grid.RowDefinitions>
 		    	<Grid.ColumnDefinitions>
-		    		<ColumnDefinition/>
+		    		<ColumnDefinition Width="*"/>
 		    	</Grid.ColumnDefinitions>
 			    	
 				    <Label    	
 		    		Grid.Row="0"
 				    Grid.Column="0"
 			    	Content="{Binding DisplayImage}"
-			    	Padding="0"
+			    	Padding="2"
+		    		VerticalAlignment="Stretch"
+		    		HorizontalAlignment="Stretch"
 			    	/>	    		
 		    	
 		    		<TextBlock
@@ -35,7 +39,9 @@
 		    		Text="{Binding Path=Behaviour.DisplayName}"
 		    		Background="AntiqueWhite"
 		    		Foreground="DarkBlue"
+		    		TextAlignment="Center"
 		    		FontSize="8"
+		    		Padding="1,0,1,0"
 		    		/>   		
 		    	
 		    		<TextBlock
@@ -44,7 +50,9 @@
 		    		Text="{Binding Path=Behaviour.Identifier}"
 		    		Background="AntiqueWhite"
 		    		Foreground="DarkRed"
+		    		TextAlignment="Center"
 		    		FontSize="8"
+		    		Padding="1,0,1,0"
 		    		/>
 		    	
 		    	</Grid>			
