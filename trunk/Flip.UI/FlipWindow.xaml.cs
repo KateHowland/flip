@@ -56,16 +56,15 @@ namespace Sussex.Flip.UI
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
-			triggerBar.MouseDoubleClick += delegate { DisplayCodeAndNaturalLanguage(triggerBar); };
+			
+			triggerBar.Changed += UpdateNaturalLanguage;
+			DisplayCodeAndNaturalLanguage(triggerBar);
 		}
 		
-		
-		protected void DisplayText(object sender, DragEventArgs e)
+
+		protected void UpdateNaturalLanguage(object sender, EventArgs e)
 		{
-			if (!e.Handled && e.Data.GetDataPresent(typeof(Moveable))) {
-				Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-				DisplayCodeAndNaturalLanguage(moveable);
-			}
+			DisplayCodeAndNaturalLanguage(triggerBar);
 		}
 		
 		

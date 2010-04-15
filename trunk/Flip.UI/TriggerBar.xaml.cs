@@ -24,6 +24,18 @@ namespace Sussex.Flip.UI
     	protected Spine spine;
     	
     	
+		public event EventHandler Changed;
+		
+		
+		protected virtual void OnChanged(EventArgs e)
+		{
+			EventHandler handler = Changed;
+			if (handler != null) {
+				handler(this,e);
+			}
+		}
+		
+    	
         public TriggerBar(TriggerControl triggerControl, Fitter fitter)
         {
         	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
@@ -44,6 +56,9 @@ namespace Sussex.Flip.UI
             
             this.triggerControl = triggerControl;
             triggerBarPanel.Children.Add(triggerControl);
+        	
+        	spine.Changed += delegate { OnChanged(new EventArgs()); };
+        	triggerControl.Changed += delegate { OnChanged(new EventArgs()); };
         }
         
         

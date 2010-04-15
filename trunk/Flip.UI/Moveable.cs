@@ -40,6 +40,18 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class Moveable : UserControl, IDeepCopyable<Moveable>, ITranslatable
 	{
+		public event EventHandler Changed;
+		
+		
+		protected virtual void OnChanged(EventArgs e)
+		{
+			EventHandler handler = Changed;
+			if (handler != null) {
+				handler(this,e);
+			}
+		}
+		
+		
 		public Moveable()
 		{
 			HorizontalAlignment = HorizontalAlignment.Center;

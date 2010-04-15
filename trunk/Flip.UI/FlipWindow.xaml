@@ -6,7 +6,6 @@
     Width="800"
     Height="600"
 	AllowDrop="False"
-	PreviewDragOver="DisplayText"
 	>	
 	
 	<Window.Resources>

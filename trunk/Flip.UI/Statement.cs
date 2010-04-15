@@ -86,6 +86,8 @@ namespace Sussex.Flip.UI
         			AddParameter(info.ParameterFitter);
         			break;
         	}
+        	
+        	OnChanged(new EventArgs());
         }
         
         
@@ -101,6 +103,10 @@ namespace Sussex.Flip.UI
         protected void AddParameter(ObjectBlockSlot parameter)
         {
         	if (parameter == null) throw new ArgumentNullException("parameter","Can't add a null parameter.");
+        	
+        	parameter.MoveableChanged += delegate { 
+        		OnChanged(new EventArgs()); 
+        	};
         	
         	mainPanel.Children.Add(parameter);
         }

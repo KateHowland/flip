@@ -226,6 +226,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 						GetTuple("OnEndCombatRound"),
 						GetTuple("OnHeartbeat"),
 						GetTuple("OnInventoryDisturbed"),
+						GetTuple("OnPerception"),
 						GetTuple("OnPhysicalAttacked"),
 						GetTuple("OnRested"),
 						GetTuple("OnSpawnIn"),
