@@ -15,6 +15,18 @@ namespace Sussex.Flip.UI
 
     public partial class Spine : UserControl, ITranslatable
     {
+		public event EventHandler Changed;
+		
+		
+		protected virtual void OnChanged(EventArgs e)
+		{
+			EventHandler handler = Changed;
+			if (handler != null) {
+				handler(this,e);
+			}
+		}
+		
+		
     	protected Duration animationTime;
     	protected Fitter fitter;
     	protected int minPegs = 1; // TODO settable but not below 1
@@ -100,6 +112,11 @@ namespace Sussex.Flip.UI
         		scale.BeginAnimation(ScaleTransform.ScaleYProperty,anim);
         	}
         	
+        	peg.Slot.Changed += delegate 
+        	{ 
+        		OnChanged(new EventArgs()); 
+        	};
+        	
         	return peg;
         }
 
@@ -153,7 +170,7 @@ namespace Sussex.Flip.UI
 			    	target = above;
 			    }
 			   	else {
-			       target = AddPeg(false,index);
+			    	target = AddPeg(false,index);
 			    }
 			        	
 				if (e.AllowedEffects == DragDropEffects.Copy) {
@@ -163,7 +180,10 @@ namespace Sussex.Flip.UI
 					moveable.Remove();
 					target.Slot.Contents = moveable;
 				}
+			    
+        		OnChanged(new EventArgs());
         	}
+        	
         	e.Handled = true;
         }
         
@@ -203,6 +223,8 @@ namespace Sussex.Flip.UI
         	else {
         		Pegs.Remove(peg);
         	}
+        	
+        	OnChanged(new EventArgs());
         }
         
         

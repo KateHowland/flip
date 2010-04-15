@@ -42,7 +42,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	
 		public EventDescriber Describer {
 			get { return describer; }
-			set { describer = value; }
+			set { 
+				if (describer != value) {
+					describer = value;
+					OnChanged(new EventArgs());
+				}
+			}
 		}
     	
     	
@@ -65,8 +70,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
             
             InitializeComponent();
             
-            raiserSlot.MoveableChanged += CheckEventFits;
+            raiserSlot.MoveableChanged += delegate 
+            {
+            	OnChanged(new EventArgs()); 
+            	CheckEventFits();
+            };
             
+            eventSlot.MoveableChanged += delegate 
+            { 
+            	OnChanged(new EventArgs()); 
+            };
+                        
             mainPanel.Children.Add(raiserSlot);
             mainPanel.Children.Add(eventSlot);
         }
@@ -81,10 +95,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         /// Check that the new event raiser is capable of raising the
         /// selected event, and if not, remove that event.
         /// </summary>
-        protected void CheckEventFits(object sender, MoveableEventArgs e)
+        protected void CheckEventFits()
         {
-           	if (eventSlot.Contents != null && !eventSlot.Fits(eventSlot.Contents)) {
-           		eventSlot.Contents = null;
+           	if (EventBlock != null && !eventSlot.Fits(EventBlock)) {
+           		EventBlock = null;
            	}
         }
         

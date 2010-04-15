@@ -29,6 +29,16 @@ namespace Sussex.Flip.UI
         	slot.Padding = new Thickness(10);
         	
         	spine = new Spine(new SpineFitter(),1,10);
+        	
+        	slot.Changed += delegate 
+        	{ 
+        		OnChanged(new EventArgs());
+        	};
+        	
+        	spine.Changed += delegate 
+        	{ 
+        		OnChanged(new EventArgs()); 
+        	};
             
             InitializeComponent();
             

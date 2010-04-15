@@ -33,25 +33,45 @@ namespace Sussex.Flip.UI
     	
     	public string Identifier {
     		get { return Behaviour.Identifier; }
-    		set { Behaviour.Identifier = value; }
+    		set { 
+    			if (Behaviour.Identifier != value) {
+    				Behaviour.Identifier = value;
+    				OnChanged(new EventArgs());
+    			}
+    		}
     	}
     	
     	
     	public string DisplayName {
     		get { return Behaviour.DisplayName; }
-    		set { Behaviour.DisplayName = value; }
+    		set { 
+    			if (Behaviour.DisplayName != value) {
+    				Behaviour.DisplayName = value;
+    				OnChanged(new EventArgs());
+    			}
+    		}
     	}
     	
     	
     	public Image DisplayImage {
     		get { return (Image)base.GetValue(DisplayImageProperty); }
-    		set { base.SetValue(DisplayImageProperty,value); }
+    		set { 
+    			if (DisplayImage != value) {
+    				base.SetValue(DisplayImageProperty,value);
+    				OnChanged(new EventArgs());
+    			}
+    		}
     	}
     	
     	
     	public ObjectBehaviour Behaviour {
     		get { return (ObjectBehaviour)base.GetValue(BehaviourProperty); }
-    		set { base.SetValue(BehaviourProperty,value); }
+    		set { 
+    			if (Behaviour != value) {
+    				base.SetValue(BehaviourProperty,value);
+    				OnChanged(new EventArgs());
+    			}
+    		}
     	}
     	
     	
@@ -78,8 +98,6 @@ namespace Sussex.Flip.UI
     		
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;
-            
-    		ToolTip = ToString();
         }
         
         

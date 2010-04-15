@@ -24,19 +24,34 @@ namespace Sussex.Flip.UI
     	
     	public EventBehaviour Behaviour {
     		get { return (EventBehaviour)base.GetValue(BehaviourProperty); }
-    		set { base.SetValue(BehaviourProperty,value); }
+    		set { 
+    			if (Behaviour != value) {
+    				base.SetValue(BehaviourProperty,value); 
+    				OnChanged(new EventArgs());
+    			}
+    		}
     	}
     	
     	
     	public string DisplayName {
     		get { return Behaviour.DisplayName; }
-    		set { Behaviour.DisplayName = value; }
+    		set { 
+    			if (Behaviour.DisplayName != value) {
+    				Behaviour.DisplayName = value;
+    				OnChanged(new EventArgs());
+    			}
+    		}
     	}
     	
-    	    	
+    	
     	public string EventName {
     		get { return Behaviour.EventName; }
-    		set { Behaviour.EventName = value; }
+    		set { 
+    			if (Behaviour.EventName != value) {
+    				Behaviour.EventName = value;
+    				OnChanged(new EventArgs());
+    			}
+    		}
     	}
     	
     	

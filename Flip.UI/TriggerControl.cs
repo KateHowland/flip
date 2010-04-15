@@ -33,6 +33,18 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class TriggerControl : UserControl, ITranslatable
 	{
+		public event EventHandler Changed;
+		
+		
+		protected virtual void OnChanged(EventArgs e)
+		{
+			EventHandler handler = Changed;
+			if (handler != null) {
+				handler(this,e);
+			}
+		}		
+		
+		
 		public abstract ObjectBlock RaiserBlock { get; set; }
 		public abstract EventBlock EventBlock { get; set; }		
 		public abstract string GetCode();

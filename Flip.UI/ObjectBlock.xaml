@@ -5,7 +5,9 @@
 	DataContext="{Binding RelativeSource={RelativeSource Self}}">
 	
 	<flipui:Moveable.Resources>
+		
 		<Image x:Key="defaultimg" Source="images/imagemissing.bmp"/>
+	
 	</flipui:Moveable.Resources>
 	
 		    <Border

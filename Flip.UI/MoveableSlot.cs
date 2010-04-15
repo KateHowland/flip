@@ -73,9 +73,25 @@ namespace Sussex.Flip.UI
     			return GetMoveable(); 
     		}
     		set { 
+    			if (Contents != null) {
+    				Contents.Changed -= changeTracker;
+    			}
+    			
     			SetMoveable(value); 
+    			
     			OnMoveableChanged(new MoveableEventArgs(value));
+    			
+    			if (Contents != null) {
+    				Contents.Changed += changeTracker;
+    			}
     		}
+    	}
+
+    	
+    	protected EventHandler changeTracker;
+    	void AnnounceChange(object sender, EventArgs e)
+    	{
+    		OnChanged(new EventArgs());
     	}
         
         
@@ -96,6 +112,17 @@ namespace Sussex.Flip.UI
 		protected virtual void OnMoveableChanged(MoveableEventArgs e)
 		{
 			EventHandler<MoveableEventArgs> handler = MoveableChanged;
+			if (handler != null) {
+				handler(this,e);
+			}
+		}
+		
+		
+    	public event EventHandler Changed;
+    	
+		protected virtual void OnChanged(EventArgs e)
+		{
+			EventHandler handler = Changed;
 			if (handler != null) {
 				handler(this,e);
 			}
@@ -122,12 +149,18 @@ namespace Sussex.Flip.UI
 		/// <param name="fitter">A fitter which decides whether a 
 		/// given Moveable can fit into this slot.</param>
         public MoveableSlot(Fitter fitter)
-        {            
+        {   
+        	if (fitter == null) throw new ArgumentNullException("fitter");
+        	
             this.fitter = fitter;
             
+        	changeTracker = new EventHandler(AnnounceChange);
+        	
             Drop += AcceptDrop;
             DragEnter += HandleDragEnter;
             DragLeave += HandleDragLeave;
+            
+            MoveableChanged += delegate { OnChanged(new EventArgs()); };
         }
         
         #endregion
