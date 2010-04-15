@@ -18,6 +18,7 @@ namespace Sussex.Flip.UI
 		protected TriggerBar triggerBar;
 		protected FlipAttacher attacher;		
 		protected MoveablesPanel mp;
+		protected MoveableProvider provider;
 		
 		
 		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, TriggerControl triggerControl)
@@ -27,6 +28,7 @@ namespace Sussex.Flip.UI
         	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
 			
 			this.attacher = attacher;
+			this.provider = provider;
 			
 			InitializeComponent();
 			
@@ -97,12 +99,6 @@ namespace Sussex.Flip.UI
 			catch (Exception ex) {
 				MessageBox.Show(ex.ToString());
 			}
-		}
-		
-		
-		protected void RefreshBlueprints(object sender, RoutedEventArgs e)
-		{
-			MessageBox.Show("Not implemented.");
 		}
 			
 		

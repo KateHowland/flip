@@ -46,8 +46,7 @@ namespace Sussex.Flip.UI
 		
 		protected virtual void CreateProgrammingConstructs(IMoveableManager manager)
 		{
-			manager.AddBag(ProgrammingConstructsBagName);
-			
+			manager.AddBag(ProgrammingConstructsBagName);			
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfControl());
 		}
 		
