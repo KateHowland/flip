@@ -58,5 +58,25 @@ namespace Sussex.Flip.UI
         public UIElementCollection Children {
         	get { return wrapPanel.Children; }
         }
+        
+        
+        public void Add(Moveable moveable)
+        {
+        	if (moveable == null) throw new ArgumentNullException("moveable");        	
+        	Children.Add(moveable);
+        }
+        
+        
+        public void Remove(Moveable moveable)
+        {
+        	if (moveable == null) throw new ArgumentNullException("moveable");     
+        	if (Children.Contains(moveable)) Children.Remove(moveable);
+        }
+        
+        
+        public void Empty()
+        {
+        	Children.Clear();
+        }
     }
 }

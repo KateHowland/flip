@@ -25,7 +25,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Media;
+using System.Windows.Threading;
+using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
@@ -92,10 +95,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			this.manager = manager;
 			
 			CreateStatements();
-			CreateBlocks();
+			CreateSpecialBlocks();
 			CreateBlueprints();
 			CreateInstances();
 			CreateEvents();
+			CreateAreas();
 		}
 		
 		
@@ -126,7 +130,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected void CreateBlocks()
+		protected void CreateSpecialBlocks()
 		{
 			manager.AddBag(OtherBagName);			
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
@@ -188,6 +192,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		protected void CreateAreas()
+		{
+			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
+			if (NWN2Toolset.NWN2ToolsetMainForm.App.Module == null) return;
+			
+			foreach (NWN2GameArea area in NWN2Toolset.NWN2ToolsetMainForm.App.Module.Areas.Values) {
+				ObjectBlock block = blocks.CreateAreaBlock(area);
+				manager.AddMoveable(OtherBagName,block);
+			}
+		}
+		
+		
 		protected void TrackToolsetChanges(ToolsetEventReporter reporter)
 		{			
 			if (!reporter.IsRunning) reporter.Start();
@@ -199,6 +215,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddMoveable(String.Format(InstanceBagNamingFormat,e.Instance.ObjectType.ToString()),block);
 			};
 			
+			// TODO:
+			//reporter.InstanceRemoved;
+			
 			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
 			{  
 				if (manager == null) return;
@@ -206,12 +225,66 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddMoveable(String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString()),block);
 			};
 			
-			reporter.AreaAdded += delegate(object sender, AreaEventArgs e)
+			// TODO:
+			//reporter.BlueprintRemoved;
+			
+			reporter.AreaOpened += delegate(object sender, AreaEventArgs e) 
+			{  
+				if (manager == null) return;	
+				
+				Thread thread = new Thread(new ParameterizedThreadStart(WaitForAreaToLoad));
+				thread.Start(e.Area);			
+			};
+			
+			reporter.ResourceViewerClosed += delegate(object sender, ResourceViewerClosedEventArgs e)
 			{  
 				if (manager == null) return;
-				ObjectBlock block = blocks.CreateAreaBlock(e.Area);
-				manager.AddMoveable(OtherBagName,block);
+				
+				System.Windows.Controls.UIElementCollection moveables = manager.GetMoveables(OtherBagName);
+				
+				foreach (Moveable moveable in moveables) {
+					
+					ObjectBlock block = moveable as ObjectBlock;
+					
+					// Assumes that there are no conversations or scripts with the same name as an
+					// area, but there's no immediately apparent way around this:
+					if (block != null && block.Identifier == e.ResourceName) {
+						manager.RemoveMoveable(OtherBagName,block);
+						return;
+					}
+				}
 			};
+		}
+		
+		
+		protected System.Windows.Controls.Label uiThreadAccess = new System.Windows.Controls.Label();
+		public void WaitForAreaToLoad(object area)
+		{
+			NWN2Toolset.NWN2.Data.NWN2GameArea nwn2Area = area as NWN2Toolset.NWN2.Data.NWN2GameArea;
+			if (nwn2Area == null) throw new ArgumentException("Parameter was not of type NWN2Toolset.NWN2.Data.NWN2GameArea.","area");
+			
+			int wait = 3000;
+			int interval = 100;
+			
+			while (wait >= 0 && nwn2Area.Tag == null) {
+				System.Threading.Thread.Sleep(interval);
+				wait -= interval;
+			}
+			
+			if (nwn2Area.Tag == null) {
+				throw new ApplicationException("The last-opened area took too long to load, and could not be shown as a Flip block.");
+			}
+			
+			Action action = new Action
+			(
+				delegate()
+				{
+					ObjectBlock block = blocks.CreateAreaBlock(nwn2Area);
+					manager.AddMoveable(OtherBagName,block);
+				}
+			);
+			
+			uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);
 		}
 	}
 }

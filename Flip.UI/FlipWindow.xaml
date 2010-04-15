@@ -53,10 +53,6 @@
 					Header="Compile and attach"
 					Click="CompileAndAttach"/>
 				
-					<MenuItem
-					Header="Refresh blueprints"
-					Click="RefreshBlueprints"/>
-				
 				</MenuItem>
 					
 				<MenuItem 

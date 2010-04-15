@@ -84,10 +84,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						
 			if (image == null) image = GetImage("Placeholder","Default");			
 			
-			string tag = area.Name;
-			string displayName = area.Name;
+			string tag = area.Tag;
+			string displayName = area.DisplayName.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage).Value;
+			if (String.IsNullOrEmpty(displayName)) {
+				displayName = tag;
+			}
 		
-			ObjectBlock block = new ObjectBlock(image,GetAreaBlockBehaviour(area.Tag,area.DisplayName.ToString()));
+			ObjectBlock block = new ObjectBlock(image,GetAreaBlockBehaviour(tag,displayName));
 						
 			return block;
 		}
