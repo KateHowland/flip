@@ -76,8 +76,7 @@ namespace Sussex.Flip.UI
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 						
 			code.AppendLine(String.Format("if {0},",slot.GetNaturalLanguage()));
-			code.AppendLine(spine.GetNaturalLanguage());			
-			code.Append(".");
+			code.AppendLine(spine.GetNaturalLanguage());
 			
 			return code.ToString();
 		}

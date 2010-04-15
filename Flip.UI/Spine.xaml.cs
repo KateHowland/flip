@@ -299,17 +299,14 @@ namespace Sussex.Flip.UI
 			for (int i = 0; i < filledPegs.Count; i++) {
 				Peg peg = (Peg)filledPegs[i];
 				
-				if (peg.Slot.Contents != null) {
+				bool last = (i == filledPegs.Count - 1);
 					
-					bool last = (i == filledPegs.Count - 1);
+				if (last && filledPegs.Count > 1) code.Append("and ");
 					
-					if (last && filledPegs.Count > 1) code.Append("and ");
+				code.Append(peg.Slot.GetNaturalLanguage());
 					
-					code.Append(peg.Slot.GetNaturalLanguage());
-					
-					if (last) code.Append(".");
-					else code.Append(", ");
-				}
+				if (last) code.Append(".");
+				else code.Append(", ");
 			}
 			
 			return code.ToString();
