@@ -61,20 +61,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override string GetCode()
 		{			
-			// MAP 3/28/2009
-			// Efficient search for finding an object of a given tag and type combination.
-			// nObjectType must be a proper OBJECT_TYPE const.
-			// Returns OBJECT_INVALID if no match is found.
-			// object GetObjectByTagAndType(string sTag, int nObjectType, int nTh);
+			// Previous used GetObjectByTagAndType(), but this function appears to be broken.
 			
-			NWScriptObjectType? nwScriptType = NWScriptHelper.GetNWScriptConstant(type);
+			// Get the nNth object with the specified tag.
+			// - sTag
+			// - nNth: the nth object with this tag may be requested
+			// * Returns OBJECT_INVALID if the object cannot be found.
+			// Note: The module cannot be retrieved by GetObjectByTag(), use GetModule() instead.
+			//object GetObjectByTag(string sTag, int nNth=0);
 			
-			if (nwScriptType == null) return "INVALID";				
-				
-			int nObjectType = (int)nwScriptType;
 			int nTh = 0; // currently assuming we are referring to only the first object found with a given tag
 			
-			return String.Format("GetObjectByTagAndType(\"{0}\",{1},{2})",Tag,nObjectType,nTh);
+			return String.Format("GetObjectByTag(\"{0}\",{1})",Tag,nTh);
 		}
 		
 		

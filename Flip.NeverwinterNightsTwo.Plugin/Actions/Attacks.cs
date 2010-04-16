@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Sussex.Flip.Utils;
 using Sussex.Flip.UI;
 
@@ -55,10 +56,40 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("AssignCommand({0}, ActionAttack({1}));",args);
+			/* 
+			 * Become hostile if you're attacking the player - otherwise, maintain your faction.
+			 * 
+			 * This results in:
+			 * Player attacks Defender - player attacks defender, who goes hostile
+			 * Player attacks Hostile - player attacks hostile
+			 * Commoner/Defender attacks Player - commoner/defender goes hostile and attacks player
+			 * Hostile attacks Player - hostile attacks player
+			 * Commoner attacks Commoner - commoner attacks commoner, but stops quickly. Both maintain their faction.
+			 * Hostile attacks Hostile - hostile attacks hostile, but stops quickly. Both maintain their faction.
+			 */
+			
+			string attacker = args[0];
+			string attackee = args[1];
+			
+			int changeToHostileFaction;
+			if (attackee == Behaviours.Player.GetPlayer) {
+				changeToHostileFaction = 1;
+			}
+			else {
+				changeToHostileFaction = 0;
+			}
+			
+			StringBuilder code = new StringBuilder();
+			
+			if (changeToHostileFaction == 1) {
+				code.AppendLine(String.Format("ChangeToStandardFaction({0},0);",attacker));
+			}
+			code.AppendLine(String.Format("AssignCommand({0},ActionAttack({1},FALSE));",attacker,attackee));	
+			
+			return code.ToString();
 		}
 		
-		
+
 		public override string GetNaturalLanguage(params string[] args)
 		{
 			if (args.Length != parameterCount) {
@@ -66,6 +97,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			return String.Format("{0} attacks {1}",args);
+		}
+		
+		
+		// TODO:
+		// consider adding to superclass, using as tooltip/documentation
+		public string GetNotes()
+		{
+			return "Anything that attacks the player will become Hostile, and stay that way. Anything that " +
+				"attacks anything else will keep its faction. Note that an attacker of the same faction as its " +
+				"target will get bored of attacking quickly. Simply assigning 'attack' multiple times doesn't currently " +
+				"do anything to improve this. Using a (yet to be implemented) While loop might.";
 		}
 		
 		

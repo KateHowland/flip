@@ -66,12 +66,14 @@ namespace Sussex.Flip.UI
         {
         	return triggerControl.GetAddress();
         }
-    	
-        
+
+
 		public string GetCode()
 		{
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 			
+			code.AppendLine("#include \"ginc_param_const\"");
+			code.AppendLine("#include \"ginc_actions\"");
 			code.AppendLine("void main()");
 			code.AppendLine("{");
 			code.AppendLine(spine.GetCode());
