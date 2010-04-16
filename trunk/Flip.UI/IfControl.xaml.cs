@@ -16,11 +16,25 @@ namespace Sussex.Flip.UI
     /// <summary>
     /// Interaction logic for IfControl.xaml
     /// </summary>
-
     public partial class IfControl : ConditionalControl
     {
     	protected ConditionSlot slot;
     	protected Spine spine;
+    	
+    	
+    	public Statement Condition {
+    		get { return slot.Contents as Statement; }
+    		set { 
+    			if (value.StatementType != StatementType.Condition) {
+    				throw new ArgumentException("Statement must have StatementType.Condition to be assigned as the condition of a ConditionalControl.");
+    			}
+    			slot.Contents = value;
+    		}
+    	}
+    	
+    	
+    	// TODO
+    	// Consequences
     	
     	
         public IfControl()
@@ -73,12 +87,7 @@ namespace Sussex.Flip.UI
         
 		public override string GetNaturalLanguage()
 		{
-			System.Text.StringBuilder code = new System.Text.StringBuilder();
-						
-			code.AppendLine(String.Format("if {0},",slot.GetNaturalLanguage()));
-			code.AppendLine(spine.GetNaturalLanguage());
-			
-			return code.ToString();
+			return String.Format("if {0}, {1}",slot.GetNaturalLanguage(),spine.GetNaturalLanguage());
 		}
     }
 }
