@@ -97,5 +97,13 @@ namespace Sussex.Flip.UI
 			Bag bag = bags[bagName];
 			return bag.Children;
 		}
+		
+		
+		public List<string> GetBags()
+		{
+			List<string> bagNames = new List<string>(bags.Count);
+			foreach (string key in bags.Keys) bagNames.Add(key);
+			return bagNames;
+		}
 	}
 }

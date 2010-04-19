@@ -33,6 +33,7 @@ using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
+using NWN2Toolset.NWN2.Views;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -46,7 +47,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Nwn2ObjectBlockFactory blocks;
 		protected Nwn2StatementFactory statements;
 		protected Nwn2EventBlockFactory events;
-		protected IMoveableManager manager; // only set on Populate() call
 		protected static string[] nwn2Types;
 			
 		
@@ -77,7 +77,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, 
+		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks,
 		                            Nwn2StatementFactory statements, 
 		                            Nwn2EventBlockFactory events, 
 		                            ToolsetEventReporter reporter) : this(blocks,statements,events)
@@ -88,26 +88,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected override void CreateMoveables(IMoveableManager manager)
+		protected override void CreateBags()
 		{
-			if (manager == null) throw new ArgumentNullException("manager");
+			manager.AddBag(ActionsBagName);
+			manager.AddBag(ConditionsBagName);
+			manager.AddBag(EventsBagName);
+			manager.AddBag(OtherBagName);	
 			
-			this.manager = manager;
-			
-			CreateStatements();
-			CreateSpecialBlocks();
-			CreateBlueprints();
-			CreateInstances();
-			CreateEvents();
-			CreateAreas();
+			foreach (string nwn2Type in nwn2Types) {
+				manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
+				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
+			}				
 		}
 		
 		
+		protected override void PopulateBags()
+		{
+			CreateStatements();
+			CreateSpecialBlocks();
+			CreateBlueprints();
+			CreateInstancesFromOpenAreas();
+			CreateEvents();
+			CreateAreas();
+		}
+				
+		
 		protected void CreateStatements()
 		{	
-			manager.AddBag(ActionsBagName);
-			manager.AddBag(ConditionsBagName);
-			
 			List<Statement> s,a,c;
 			statements.GetStatements(out s, out a, out c);
 			
@@ -131,17 +138,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		protected void CreateSpecialBlocks()
-		{
-			manager.AddBag(OtherBagName);			
+		{		
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
 		}
 		
 		
 		protected void CreateEvents()
-		{
-			manager.AddBag(EventsBagName);
-			
+		{			
 			foreach (EventBlock eventBlock in events.GetEvents()) {
 				manager.AddMoveable(EventsBagName,eventBlock);
 			}
@@ -150,10 +154,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void CreateBlueprints()
 		{
-			foreach (string nwn2Type in nwn2Types) {
-				manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
-			}		
-			
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {				
@@ -165,28 +165,41 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected void CreateInstances()
+		protected void CreateInstancesFromOpenAreas()
 		{
-			foreach (string nwn2Type in nwn2Types) {
-				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
-			}	
-			
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
-			NWN2Toolset.NWN2.Data.NWN2GameArea activeArea = NWN2Toolset.NWN2ToolsetMainForm.App.AreaContents.Area;
+			foreach (NWN2AreaViewer viewer in NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers()) {
+				if (viewer.Area != null) {
+					CreateInstancesFromArea(viewer.Area);
+				}
+			}
+		}
+		
+		
+		protected void CreateInstancesFromArea(NWN2GameArea area)
+		{
+			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
-			if (activeArea != null) {				
+			if (area == null) {
+				throw new ArgumentNullException("area");
+			}
+			if (!NWN2Toolset.NWN2ToolsetMainForm.App.Module.Areas.Contains(area)) {
+				throw new ArgumentException("Given area is not part of this module.","area");
+			}
+			if (!area.Loaded) {
+				throw new ArgumentException("Area must be open in the toolset to create instances from it.","area");
+			}
 				
-				foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
 					
-					NWN2InstanceCollection instances = activeArea.GetInstancesForObjectType(type);
+				NWN2InstanceCollection instances = area.GetInstancesForObjectType(type);
+				
+				if (instances == null) return;
 					
-					if (instances == null) return;
-						
-					foreach (INWN2Instance instance in instances) {
-						ObjectBlock block = blocks.CreateInstanceBlock(instance);
-						manager.AddMoveable(String.Format(InstanceBagNamingFormat,type.ToString()),block);
-					}
+				foreach (INWN2Instance instance in instances) {
+					ObjectBlock block = blocks.CreateInstanceBlock(instance);
+					manager.AddMoveable(String.Format(InstanceBagNamingFormat,type.ToString()),block);
 				}
 			}
 		}

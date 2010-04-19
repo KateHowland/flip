@@ -99,6 +99,13 @@ namespace Sussex.Flip.UI
 				MessageBox.Show(ex.ToString());
 			}
 		}
+		
+		
+		protected void RefreshBlocks(object sender, RoutedEventArgs e)
+		{
+			provider.Refresh(mp);
+			MessageBox.Show("Refreshed.");
+		}
 			
 		
 		protected void CreateAdorner(object sender, DragEventArgs e)

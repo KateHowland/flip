@@ -35,23 +35,53 @@ namespace Sussex.Flip.UI
 		protected const string ProgrammingConstructsBagName = "Programming Constructs";
 		
 		
+		protected IMoveableManager manager;
+		
+		
 		public void Populate(IMoveableManager manager)
 		{
-			if (manager == null) throw new ArgumentNullException("manager");
+			if (manager == null) throw new ArgumentNullException("manager");			
+			this.manager = manager;
 			
-			CreateProgrammingConstructs(manager);
-			CreateMoveables(manager);
+			CreateProgrammingBlocks();
+			CreateBags();
+			PopulateBags();
 		}
 		
 		
-		protected virtual void CreateProgrammingConstructs(IMoveableManager manager)
+		public void Refresh(IMoveableManager manager)
 		{
-			manager.AddBag(ProgrammingConstructsBagName);			
+			if (manager == null) throw new ArgumentNullException("manager");			
+			this.manager = manager;
+			
+			EmptyBags();
+			PopulateBags();
+		}
+		
+		
+		protected void EmptyBags()
+		{
+			if (manager == null) throw new InvalidOperationException("Need an IMoveableManager to work with.");
+			
+			foreach (string bag in manager.GetBags()) {
+				if (bag != ProgrammingConstructsBagName) {
+					manager.EmptyBag(bag);
+				}
+			}
+		}
+		
+		
+		protected virtual void CreateProgrammingBlocks()
+		{
+			if (manager == null) throw new InvalidOperationException("Need an IMoveableManager to work with.");
+			
+			manager.AddBag(ProgrammingConstructsBagName);
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfControl());
 		}
 		
 		
-		protected abstract void CreateMoveables(IMoveableManager manager);
+		protected abstract void CreateBags();
+		protected abstract void PopulateBags();
 	}
 }
 
