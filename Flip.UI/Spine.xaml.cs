@@ -13,7 +13,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for Spine.xaml
     /// </summary>
 
-    public partial class Spine : UserControl, ITranslatable
+    public partial class Spine : UserControl, ITranslatable, IDeepCopyable<Spine>
     {
 		public event EventHandler Changed;
 		
@@ -36,6 +36,17 @@ namespace Sussex.Flip.UI
 			get { return fitter; }
 			set { fitter = value; }
 		}
+        
+        
+        public double Extends {
+        	get { return extension.Height.Value; }
+        	set { extension.Height = new GridLength(value); }
+        }
+        
+        
+        public UIElementCollection Pegs {
+        	get { return pegsPanel.Children; }
+        }
         
         
     	public Spine() : this(new SpineFitter())
@@ -64,8 +75,9 @@ namespace Sussex.Flip.UI
     		}
         	
         	MouseDoubleClick += delegate 
-        	{    			
-    			Shrink(true);
+        	{    		
+        		MessageBox.Show(Pegs.Count.ToString() + " pegs.");
+    			//Shrink(true);
         	};
     	}
     	    	
@@ -256,17 +268,6 @@ namespace Sussex.Flip.UI
         }
         
         
-        public double Extends {
-        	get { return extension.Height.Value; }
-        	set { extension.Height = new GridLength(value); }
-        }
-        
-        
-        public UIElementCollection Pegs {
-        	get { return pegsPanel.Children; }
-        }
-        
-        
         protected List<Peg> GetFilledPegs()
         {
         	List<Peg> filled = new List<Peg>();
@@ -310,6 +311,24 @@ namespace Sussex.Flip.UI
 			}
 			
 			return code.ToString();
+		}
+		
+		
+		public Spine DeepCopy()
+		{
+			Spine copy = new Spine(fitter,Pegs.Count,Extends);
+			
+			for (int i = 0; i < Pegs.Count; i++) {
+				Peg origPeg = (Peg)Pegs[i];
+				Peg copyPeg = (Peg)copy.Pegs[i];
+					
+				Moveable moveable = origPeg.Slot.Contents;
+				if (moveable != null) {
+					copyPeg.Slot.Contents = moveable.DeepCopy();
+				}
+			}
+			
+			return copy;
 		}
     }
 }

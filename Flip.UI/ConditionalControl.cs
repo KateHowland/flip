@@ -31,6 +31,19 @@ namespace Sussex.Flip.UI
 	/// Description of ConditionalControl.
 	/// </summary>
 	public abstract class ConditionalControl : Moveable
-	{
+	{		
+		/// <summary>
+		/// The condition which must be met for the consequences to result.
+		/// </summary>
+		public abstract Statement Condition { get; set; }
+		
+		// TODO:
+		// need to set consequences but should probably replace
+		// this with a better assignment than the spine directly
+		
+		/// <summary>
+		/// The actions to be taken if the condition is met.
+		/// </summary>
+		public abstract Spine Consequences { get; set; }
 	}
 }

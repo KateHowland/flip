@@ -22,10 +22,12 @@ namespace Sussex.Flip.UI
     	protected Spine spine;
     	
     	
-    	public Statement Condition {
-    		get { return slot.Contents as Statement; }
-    		set { 
-    			if (value.StatementType != StatementType.Condition) {
+    	public override Statement Condition {
+    		get { 
+    			return slot.Contents as Statement; 
+    		}
+    		set {     			
+    			if (value != null && value.StatementType != StatementType.Condition) {
     				throw new ArgumentException("Statement must have StatementType.Condition to be assigned as the condition of a ConditionalControl.");
     			}
     			slot.Contents = value;
@@ -33,8 +35,29 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-    	// TODO
-    	// Consequences
+		public override Spine Consequences {
+			get {
+				return spine;
+			}
+    		set {
+    			if (value == null) {
+    				throw new ArgumentNullException("value");
+    			}    			
+    			
+    			grid.Children.Remove(spine);
+    			
+    			spine = value;
+        	
+	        	spine.Changed += delegate 
+	        	{ 
+	        		OnChanged(new EventArgs()); 
+	        	};
+	        	
+	            Grid.SetRow(spine,3);
+	            Grid.SetColumn(spine,0);
+            	grid.Children.Add(spine);
+    		}
+		}
     	
     	
         public IfControl()
@@ -67,8 +90,15 @@ namespace Sussex.Flip.UI
 
         
 		public override Moveable DeepCopy()
-		{
+		{	
 			IfControl copy = new IfControl();
+			
+			if (Condition != null) {
+				copy.Condition = (Statement)Condition.DeepCopy();
+			}
+			
+			copy.Consequences = Consequences.DeepCopy();
+			
 			return copy;
 		}
     	

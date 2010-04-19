@@ -20,6 +20,7 @@
 	<Border
 	BorderThickness="2"
 	BorderBrush="Black">
+		
 		<Grid
 		x:Name="grid"
 		Background="MediumSeaGreen">
@@ -47,6 +48,7 @@
 			Style="{StaticResource textBlockStyle}"/>
 		
 		</Grid>
+	
 	</Border>	
 
 </flipui:ConditionalControl>
