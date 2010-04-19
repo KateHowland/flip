@@ -52,7 +52,7 @@ namespace Sussex.Flip.UI
     		stops.Add(new GradientStop(Colors.Red,1.5));
     		conditionBrush = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
     	}
-        
+    	
         
         public Statement(StatementBehaviour behaviour)
         {
@@ -125,7 +125,8 @@ namespace Sussex.Flip.UI
         	if (text == null) throw new ArgumentNullException("text","Can't add a label with null text.");
         	
         	StatementLabel label = new StatementLabel(text,GetBrush());
-        	mainPanel.Children.Add(label);
+        	
+        	AddLabel(label);
         }
         
         

@@ -36,7 +36,8 @@ namespace Sussex.Flip.UI
             	typeof(EventBlock),
             	typeof(ObjectBlock),
             	typeof(Statement),
-            	typeof(IfControl)
+            	typeof(IfControl),
+            	typeof(IfElseControl)
             };           
             
             

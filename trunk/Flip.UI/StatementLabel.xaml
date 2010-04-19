@@ -9,16 +9,7 @@
 	HorizontalAlignment="Center">
 		
     	<TextBlock
-    	x:Name="textBlock"
-    	FontFamily="Helvetica"
-    	FontSize="16"
-    	Foreground="Black"
-    	Padding="10"
-    	Width="80"
-    	TextAlignment="Center"
-    	HorizontalAlignment="Center"
-    	VerticalAlignment="Center"
-    	/>
+    	x:Name="textBlock"/>
 	
     </Border>
 
