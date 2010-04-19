@@ -77,6 +77,7 @@ namespace Sussex.Flip.UI
 			
 			manager.AddBag(ProgrammingConstructsBagName);
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfControl());
+			manager.AddMoveable(ProgrammingConstructsBagName,new IfElseControl());
 		}
 		
 		
@@ -84,8 +85,3 @@ namespace Sussex.Flip.UI
 		protected abstract void PopulateBags();
 	}
 }
-
-
-
-
-
