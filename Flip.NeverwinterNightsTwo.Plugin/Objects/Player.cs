@@ -34,7 +34,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class Player : Nwn2ObjectBehaviour
 	{
-		public const string GetPlayer = "GetFirstPC()";
+		public const string NWScript_GetPlayer = "GetFirstPC()";
 		
 		
 		public Player() : base(String.Empty,"player")
@@ -44,7 +44,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override string GetCode()
 		{
-			return GetPlayer;
+			return NWScript_GetPlayer;
 		}
 		
 		

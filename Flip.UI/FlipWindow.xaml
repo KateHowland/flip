@@ -52,6 +52,10 @@
 					Header="Compile and attach"
 					Click="CompileAndAttach"/>
 				
+					<MenuItem
+					Header="Refresh blocks"
+					Click="RefreshBlocks"/>
+				
 				</MenuItem>
 					
 				<MenuItem 
