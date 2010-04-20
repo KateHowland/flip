@@ -26,6 +26,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	protected EventBlockSlot eventSlot;
     	protected EventDescriber describer;
     	protected Nwn2AddressFactory addressFactory;
+		
+		
+		/// <summary>
+		/// Check whether this Flip component has all essential fields filled in,
+		/// including those belonging to subcomponents, such that it can generate valid code.
+		/// </summary>
+		/// <returns>True if all essential fields have been given values; false otherwise.</returns>
+		/// <remarks>Note that this method makes no attempt to judge whether the values
+		/// are valid in their slots, only that those slots have been filled.</remarks>
+		public override bool IsComplete { 
+			get { 
+				return raiserSlot.IsComplete && eventSlot.IsComplete;
+			}
+		}		
     	
     	    	
 		public override ObjectBlock RaiserBlock {

@@ -39,5 +39,14 @@ namespace Sussex.Flip.UI
 		// Good enough for now.
 		string GetCode();
 		string GetNaturalLanguage();
+		
+		/// <summary>
+		/// Check whether this Flip component has all essential fields filled in,
+		/// including those belonging to subcomponents, such that it can generate valid code.
+		/// </summary>
+		/// <returns>True if all essential fields have been given values; false otherwise.</returns>
+		/// <remarks>Note that this method makes no attempt to judge whether the values
+		/// are valid in their slots, only that those slots have been filled.</remarks>
+		bool IsComplete { get; }
 	}
 }
