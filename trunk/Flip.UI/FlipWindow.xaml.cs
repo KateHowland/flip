@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +18,7 @@ namespace Sussex.Flip.UI
 	{
 		protected TriggerBar triggerBar;
 		protected FlipAttacher attacher;		
-		protected MoveablesPanel mp;
+		protected MoveablesPanel blockBox;
 		protected MoveableProvider provider;
 		
 		
@@ -32,15 +33,14 @@ namespace Sussex.Flip.UI
 			
 			InitializeComponent();
 			
-			mp = new MoveablesPanel();
-			mp.Name = "moveablesPanel";
-			Grid.SetRow(mp,1);
-			Grid.SetColumn(mp,1);
-			mp.PreviewDrop += ReturnMoveableToBox;
+			blockBox = new MoveablesPanel();
+			Grid.SetRow(blockBox,1);
+			Grid.SetColumn(blockBox,1);
+			blockBox.PreviewDrop += ReturnMoveableToBox;
 			
-			provider.Populate(mp);
+			provider.Populate(blockBox);
 				
-			mainGrid.Children.Add(mp);
+			mainGrid.Children.Add(blockBox);
 						
 			mainCanvas.Drop += DroppedOnCanvas;
 			MouseDown += GetDragSource;
@@ -110,7 +110,7 @@ namespace Sussex.Flip.UI
 		
 		protected void RefreshBlocks(object sender, RoutedEventArgs e)
 		{
-			provider.Refresh(mp);
+			provider.Refresh(blockBox);
 			MessageBox.Show("Refreshed.");
 		}
 			
@@ -161,7 +161,7 @@ namespace Sussex.Flip.UI
 	    			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
 	    			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
 	    				    				
-	    				DragDropEffects effects = IsInBlockBox(dragging) ? DragDropEffects.Copy : DragDropEffects.Move;
+	    				DragDropEffects effects = blockBox.HasMoveable(dragging) ? DragDropEffects.Copy : DragDropEffects.Move;
 	    				DataObject dataObject = new DataObject(typeof(Moveable),dragging);
 	    				DragDrop.DoDragDrop(dragging,dataObject,effects);
 	    				
@@ -248,23 +248,12 @@ namespace Sussex.Flip.UI
 			if (!e.Handled) {
 				if (e.Data.GetDataPresent(typeof(Moveable))) {
 					Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-					if (!IsInBlockBox(moveable)) {
+					if (!blockBox.HasMoveable(moveable)) {
 						moveable.Remove();
 					}
 					e.Handled = true;
 				}
 			}
-		}
-		
-		// TODO:
-		// move into MoveablesPanel or IMoveableManager
-		public bool IsInBlockBox(Moveable moveable)
-		{
-			FrameworkElement element = moveable.Parent as FrameworkElement;
-			while (element != null && element != mp) {
-				element = element.Parent as FrameworkElement;
-			}
-			return element == mp;
 		}
 		
 		
