@@ -63,7 +63,7 @@ namespace Sussex.Flip.UI
         
         public void Add(Moveable moveable)
         {
-        	if (moveable == null) throw new ArgumentNullException("moveable");        	
+        	if (moveable == null) throw new ArgumentNullException("moveable");     	
         	Children.Add(moveable);
         }
         

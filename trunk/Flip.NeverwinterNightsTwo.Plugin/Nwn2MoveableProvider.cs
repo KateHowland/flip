@@ -225,7 +225,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			reporter.InstanceAdded += delegate(object sender, InstanceEventArgs e) 
 			{  	
-				if (manager == null) return;
+				if (manager == null) {
+					return;
+				}
 				ObjectBlock block = blocks.CreateInstanceBlock(e.Instance,e.Area);
 				manager.AddMoveable(String.Format(InstanceBagNamingFormat,e.Instance.ObjectType.ToString()),block);
 			};

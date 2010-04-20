@@ -24,11 +24,15 @@
  */
 
 using System;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Media;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
+using Sussex.Flip.Core;
 using Sussex.Flip.UI;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -63,6 +67,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// Manages the service provided by Nwn2SessionAdapter.
 		/// </summary>
 		protected ServiceController service;
+		
+		/// <summary>
+		/// The main Flip application window.
+		/// </summary>
+		protected FlipWindow window; 
 		
 		#endregion
 		
@@ -131,6 +140,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			preferences = new object();
 			service = new ServiceController();
+			window = null;
 		}
 			
 		#endregion
@@ -194,21 +204,46 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected void LaunchFlip()
+		/// <summary>
+		/// Construct a new instance of FlipWindow, and forbid it from closing fully.
+		/// </summary>
+		protected void InitialiseFlip()
 		{
-			Sussex.Flip.Core.FlipTranslator translator = new NWScriptTranslator();
-			Sussex.Flip.Core.FlipAttacher attacher = new NWScriptAttacher(translator,new Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Nwn2Session());
-							
+			FlipTranslator translator = new NWScriptTranslator();
+			Nwn2Session session = new Nwn2Session();
+			FlipAttacher attacher = new NWScriptAttacher(translator,session);
+								
 			Nwn2Fitters fitters = new Nwn2Fitters();			
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);			
 			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
 			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory();
-			
-			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,new ToolsetEventReporter());
+				
+			ToolsetEventReporter reporter = new ToolsetEventReporter();
+			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,reporter);
 			Nwn2TriggerControl trigger = new Nwn2TriggerControl();
-			
-			FlipWindow window = new FlipWindow(attacher,provider,trigger);			
-			window.Show();
+				
+			window = new FlipWindow(attacher,provider,trigger);			
+				
+			window.Closing += delegate(object sender, CancelEventArgs e) 
+			{  
+				e.Cancel = true;
+				window.Visibility = Visibility.Hidden;
+			};
+		}
+				
+		
+		/// <summary>
+		/// Launch the Flip application.
+		/// </summary>
+		public void LaunchFlip()
+		{
+			if (window == null) {
+				InitialiseFlip();
+				window.Show();
+			}			
+			else {
+				window.Visibility = Visibility.Visible;
+			}
 		}
 		
 		
