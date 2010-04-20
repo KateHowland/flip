@@ -78,6 +78,8 @@ namespace Sussex.Flip.UI
 			manager.AddBag(ProgrammingConstructsBagName);
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfControl());
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfElseControl());
+			manager.AddMoveable(ProgrammingConstructsBagName,new WhileControl());
+			manager.AddMoveable(ProgrammingConstructsBagName,new DoWhileControl());
 		}
 		
 		
