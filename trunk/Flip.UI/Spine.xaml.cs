@@ -76,8 +76,7 @@ namespace Sussex.Flip.UI
         	
         	MouseDoubleClick += delegate 
         	{    		
-        		MessageBox.Show(Pegs.Count.ToString() + " pegs.");
-    			//Shrink(true);
+    			Shrink(true);
         	};
     	}
     	    	
@@ -283,7 +282,7 @@ namespace Sussex.Flip.UI
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 			foreach (Peg peg in Pegs) {
 				if (peg.Slot.Contents != null) {
-					code.AppendLine(String.Format("\t{0}",peg.Slot.Contents.GetCode()));
+					code.AppendLine(String.Format("{0}",peg.Slot.Contents.GetCode()));
 				}
 			}
 			return code.ToString();
