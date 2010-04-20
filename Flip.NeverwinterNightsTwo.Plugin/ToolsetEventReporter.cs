@@ -405,8 +405,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected void InstanceRemovedFromCollection(OEICollectionWithEvents cList, int index, object value)
 		{
 			INWN2Instance ins = (INWN2Instance)value;
-			NWN2GameArea area = (NWN2GameArea)cList.Tag;
 			
+			try {
+				foreach (NWN2GameArea a in NWN2Toolset.NWN2ToolsetMainForm.App.Module.Areas.Values) {
+					foreach (NWN2InstanceCollection collection in a.AllInstances) {
+						if (collection == cList) {
+							OnInstanceRemoved(cList,new InstanceEventArgs(ins,a));
+							return;
+						}
+					}
+				}				
+			}
+			catch (Exception) {}
+				
+			// Always null when the instance has been removed:
+			NWN2GameArea area = (NWN2GameArea)cList.Tag;			
 			OnInstanceRemoved(cList,new InstanceEventArgs(ins,area));
 		}
 

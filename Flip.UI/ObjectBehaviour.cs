@@ -34,7 +34,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of ObjectBehaviour.
 	/// </summary>
-	public abstract class ObjectBehaviour: DependencyObject, IDeepCopyable<ObjectBehaviour>
+	public abstract class ObjectBehaviour: DependencyObject, IDeepCopyable<ObjectBehaviour>, IEquatable<ObjectBehaviour>
 	{
     	protected static DependencyProperty IdentifierProperty;
     	protected static DependencyProperty DisplayNameProperty;   
@@ -73,5 +73,11 @@ namespace Sussex.Flip.UI
 		public abstract string GetNaturalLanguage();	
 		public abstract string GetDescriptionOfObjectType();
 		public abstract ObjectBehaviour DeepCopy();		
+		
+		
+		public virtual bool Equals(ObjectBehaviour other)
+		{
+			return other != null && other.GetType() == this.GetType() && other.Identifier == this.Identifier && other.DisplayName == this.DisplayName;
+		}
 	}
 }

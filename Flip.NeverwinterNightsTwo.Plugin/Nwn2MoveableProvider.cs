@@ -26,6 +26,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using NWN2Toolset.NWN2.Data;
@@ -198,7 +200,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (instances == null) return;
 					
 				foreach (INWN2Instance instance in instances) {
-					ObjectBlock block = blocks.CreateInstanceBlock(instance);
+					ObjectBlock block = blocks.CreateInstanceBlock(instance,area);
 					manager.AddMoveable(String.Format(InstanceBagNamingFormat,type.ToString()),block);
 				}
 			}
@@ -224,13 +226,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			reporter.InstanceAdded += delegate(object sender, InstanceEventArgs e) 
 			{  	
 				if (manager == null) return;
-				ObjectBlock block = blocks.CreateInstanceBlock(e.Instance);
+				ObjectBlock block = blocks.CreateInstanceBlock(e.Instance,e.Area);
 				manager.AddMoveable(String.Format(InstanceBagNamingFormat,e.Instance.ObjectType.ToString()),block);
 			};
 			
-			// TODO:
-			//reporter.InstanceRemoved;
-			
+			reporter.InstanceRemoved += delegate(object sender, InstanceEventArgs e) 
+			{  
+				if (manager == null || e.Instance == null) return;
+				string bag = String.Format(InstanceBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Instance.ObjectType));
+				
+				try {
+					UIElementCollection collection = manager.GetMoveables(bag);
+					
+					ObjectBlock lost = blocks.CreateInstanceBlock(e.Instance,e.Area);
+					
+					foreach (ObjectBlock block in collection) {
+						if (block.Equals(lost)) {
+							manager.RemoveMoveable(bag,block);
+							return;
+						}
+					}
+				}
+				catch (Exception ex) {
+					System.Windows.MessageBox.Show(ex.ToString());
+				}
+			};
+						
 			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
 			{  
 				if (manager == null) return;
@@ -238,14 +259,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddMoveable(String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString()),block);
 			};
 			
-			// TODO:
-			//reporter.BlueprintRemoved;
+			reporter.BlueprintRemoved += delegate(object sender, BlueprintEventArgs e) 
+			{  
+				if (manager == null || e.Blueprint == null) return;
+				string bag = String.Format(BlueprintBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Blueprint.ObjectType));
+				
+				try {
+					UIElementCollection collection = manager.GetMoveables(bag);
+					
+					ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
+					
+					foreach (ObjectBlock block in collection) {
+						if (block.Equals(lost)) {
+							manager.RemoveMoveable(bag,block);
+							return;
+						}
+					}
+				}
+				catch (Exception ex) {
+					System.Windows.MessageBox.Show(ex.ToString());
+				}
+			};
 			
 			reporter.AreaOpened += delegate(object sender, AreaEventArgs e) 
 			{  
 				if (manager == null) return;	
 				
-				Thread thread = new Thread(new ParameterizedThreadStart(WaitForAreaToLoad));
+				Thread thread = new Thread(new ParameterizedThreadStart(CreateBlockWhenAreaIsReady));
 				thread.Start(e.Area);			
 			};
 			
@@ -271,7 +311,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		protected System.Windows.Controls.Label uiThreadAccess = new System.Windows.Controls.Label();
-		public void WaitForAreaToLoad(object area)
+		public void CreateBlockWhenAreaIsReady(object area)
 		{
 			NWN2Toolset.NWN2.Data.NWN2GameArea nwn2Area = area as NWN2Toolset.NWN2.Data.NWN2GameArea;
 			if (nwn2Area == null) throw new ArgumentException("Parameter was not of type NWN2Toolset.NWN2.Data.NWN2GameArea.","area");

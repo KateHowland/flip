@@ -98,5 +98,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		{
 			return Nwn2ScriptSlot.GetNwn2Type(type);
 		}
+		
+		
+		public override bool Equals(ObjectBehaviour other)
+		{	
+			if (!base.Equals(other)) return false;
+						
+			Instance i = other as Instance;
+			
+			return i != null && i.areaTag == this.areaTag;
+		}
 	}
 }

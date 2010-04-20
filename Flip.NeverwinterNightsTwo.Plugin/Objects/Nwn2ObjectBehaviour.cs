@@ -39,6 +39,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public abstract Nwn2Type GetNwn2Type();
+		public abstract Nwn2Type GetNwn2Type();	
+		
+		
+		public override bool Equals(ObjectBehaviour other)
+		{
+			if (!base.Equals(other)) return false;
+			
+			Nwn2ObjectBehaviour compare = other as Nwn2ObjectBehaviour;
+			
+			return compare != null && compare.GetNwn2Type() == this.GetNwn2Type();
+		}
 	}
 }
