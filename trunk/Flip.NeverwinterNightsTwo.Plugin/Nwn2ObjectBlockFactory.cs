@@ -146,8 +146,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// Creates an ObjectBlock representing a given instance.
 		/// </summary>
 		/// <param name="instance">The instance to represent.</param>
+		/// <param name="instance">The area holding this instance.</param>
 		/// <returns>An ObjectBlock representing the given instance.</returns>
-		public ObjectBlock CreateInstanceBlock(INWN2Instance instance)
+		/// <remarks>The Area property of an instance is sometimes null, even if
+		/// the area has not actually been disposed. For this reason, CreateInstanceBlock
+		/// has an overload which allows you to pass in the holding area directly.</remarks>
+		public ObjectBlock CreateInstanceBlock(INWN2Instance instance, NWN2GameArea area)
 		{						
 			if (instance == null) throw new ArgumentNullException("instance");
 			
@@ -177,10 +181,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string displayName = GetDisplayName(instance);
 				
 			if (displayName == String.Empty) displayName = tag;
-				
-			ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType,instance.Area.Tag));
+			
+			string areaTag;
+			if (area != null) {
+				areaTag = area.Tag;
+			}
+			else if (instance.Area != null) {
+				areaTag = instance.Area.Tag;
+			}
+			else {
+				areaTag = String.Empty;
+			}
+			
+			ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType,areaTag));
 				
 			return block;
+		}
+		
+		
+		/// <summary>
+		/// Creates an ObjectBlock representing a given instance.
+		/// </summary>
+		/// <param name="instance">The instance to represent.</param>
+		/// <returns>An ObjectBlock representing the given instance.</returns>
+		/// <remarks>The Area property of an instance is sometimes null, even if
+		/// the area has not actually been disposed. For this reason, CreateInstanceBlock
+		/// has an overload which allows you to pass in the holding area directly.</remarks>
+		public ObjectBlock CreateInstanceBlock(INWN2Instance instance)
+		{						
+			if (instance == null) throw new ArgumentNullException("instance");			
+			return CreateInstanceBlock(instance,instance.Area);
 		}
 		
 		

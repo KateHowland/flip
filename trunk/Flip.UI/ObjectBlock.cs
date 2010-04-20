@@ -16,7 +16,7 @@ namespace Sussex.Flip.UI
     /// <summary>
     /// Interaction logic for ObjectBlock.xaml
     /// </summary>
-    public partial class ObjectBlock : Moveable
+    public partial class ObjectBlock : Moveable, IEquatable<ObjectBlock>
     {
     	public static readonly Size DefaultSize;    	
     	protected static DependencyProperty DisplayImageProperty;
@@ -145,6 +145,12 @@ namespace Sussex.Flip.UI
 			// TODO:
 			// TEMP:
 			return GetDescriptionOfObjectType();
+		}
+		
+    	
+		public bool Equals(ObjectBlock other)
+		{
+			return other != null && other.Behaviour.Equals(this.Behaviour);
 		}
     }
 }
