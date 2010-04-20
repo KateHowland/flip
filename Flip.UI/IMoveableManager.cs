@@ -23,5 +23,7 @@ namespace Sussex.Flip.UI
 		void EmptyBag(string bagName);
 		UIElementCollection GetMoveables(string bagName);
 		List<string> GetBags();
+		bool HasMoveable(Moveable moveable);
+		bool HasMoveable(Moveable moveable, string bagName);
 	}
 }

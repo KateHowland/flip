@@ -105,5 +105,23 @@ namespace Sussex.Flip.UI
 			foreach (string key in bags.Keys) bagNames.Add(key);
 			return bagNames;
 		}
+		
+		
+		public bool HasMoveable(Moveable moveable)
+		{
+			foreach (string bagName in GetBags()) {
+				if (HasMoveable(moveable,bagName)) return true;
+			}
+			return false;
+		}
+		
+		
+		public bool HasMoveable(Moveable moveable, string bagName)
+		{
+			if (moveable == null) throw new ArgumentNullException("moveable");
+			
+			UIElementCollection moveables = GetMoveables(bagName);
+			return moveables.Contains(moveable);
+		}
 	}
 }
