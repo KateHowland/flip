@@ -30,6 +30,23 @@ namespace Sussex.Flip.UI
     	protected Duration animationTime;
     	protected Fitter fitter;
     	protected int minPegs = 1; // TODO settable but not below 1
+		
+		
+		/// <summary>
+		/// Check whether this Flip component has all essential fields filled in,
+		/// including those belonging to subcomponents, such that it can generate valid code.
+		/// </summary>
+		/// <returns>True if all essential fields have been given values; false otherwise.</returns>
+		/// <remarks>Note that this method makes no attempt to judge whether the values
+		/// are valid in their slots, only that those slots have been filled.</remarks>
+		public bool IsComplete { 
+			get { 
+				foreach (Peg peg in GetFilledPegs()) {
+					if (!peg.Slot.IsComplete) return false;
+				}
+				return true;
+			}
+		}		
 
     	
 		public Fitter Fitter {

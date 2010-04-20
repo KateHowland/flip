@@ -58,6 +58,20 @@ namespace Sussex.Flip.UI
             	grid.Children.Add(spine);
     		}
 		}
+		
+		
+		/// <summary>
+		/// Check whether this Flip component has all essential fields filled in,
+		/// including those belonging to subcomponents, such that it can generate valid code.
+		/// </summary>
+		/// <returns>True if all essential fields have been given values; false otherwise.</returns>
+		/// <remarks>Note that this method makes no attempt to judge whether the values
+		/// are valid in their slots, only that those slots have been filled.</remarks>
+		public override bool IsComplete { 
+			get { 
+				return Condition != null && Condition.IsComplete && Consequences.IsComplete;
+			}
+		}		
     	
     	
         public IfControl()

@@ -113,5 +113,6 @@ namespace Sussex.Flip.UI
 		public abstract Moveable DeepCopy();
 		public abstract string GetCode();
 		public abstract string GetNaturalLanguage();
+		public abstract bool IsComplete { get; }
 	}
 }

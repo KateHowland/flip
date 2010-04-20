@@ -47,6 +47,7 @@ namespace Sussex.Flip.UI
 		
 		public abstract ObjectBlock RaiserBlock { get; set; }
 		public abstract EventBlock EventBlock { get; set; }		
+		public abstract bool IsComplete { get; }
 		public abstract string GetCode();
 		public abstract string GetNaturalLanguage();
 		public abstract string GetAddress();

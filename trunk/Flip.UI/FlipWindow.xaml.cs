@@ -49,7 +49,7 @@ namespace Sussex.Flip.UI
 			PreviewDragEnter += CreateAdorner;
 			PreviewDragOver += UpdateAdorner;			
 			PreviewDragLeave += DestroyAdorner;			
-			PreviewDrop += DestroyAdorner;
+			PreviewDrop += DestroyAdorner;			
 			
 			Fitter spineFitter = new SpineFitter();
 			triggerBar = new TriggerBar(triggerControl,spineFitter);
@@ -72,7 +72,7 @@ namespace Sussex.Flip.UI
 		{
 			if (translatable == null) return;
 			this.naturalLanguageTextBlock.Text = translatable.GetNaturalLanguage();
-			this.targetCodeTextBlock.Text = translatable.GetCode();			
+			this.targetCodeTextBlock.Text = (translatable.IsComplete ? "Complete." : "Incomplete.") + "\n\n" + translatable.GetCode();
 		}
 		
 		
@@ -84,6 +84,13 @@ namespace Sussex.Flip.UI
 		
 		protected void CompileAndAttach(object sender, RoutedEventArgs e)
 		{			
+			if (!triggerBar.IsComplete) {
+				MessageBox.Show("Your script isn't complete! Make sure you've filled in the trigger, and " +
+				                "filled in all the gaps of any actions, conditions or other blocks you've attached " +
+				                "to your script before trying to compile.");
+				return;
+			}
+			
 			string code = triggerBar.GetCode();
 			
 			FlipScript script = new FlipScript(code);			

@@ -86,7 +86,21 @@ namespace Sussex.Flip.UI
     			}
     		}
     	}
+				
 
+		/// <summary>
+		/// Check whether this Flip component has all essential fields filled in,
+		/// including those belonging to subcomponents, such that it can generate valid code.
+		/// </summary>
+		/// <returns>True if all essential fields have been given values; false otherwise.</returns>
+		/// <remarks>Note that this method makes no attempt to judge whether the values
+		/// are valid in their slots, only that those slots have been filled.</remarks>
+		public virtual bool IsComplete { 
+			get { 
+				return Contents != null && Contents.IsComplete;
+			}
+		}	
+		
     	
     	protected EventHandler changeTracker;
     	void AnnounceChange(object sender, EventArgs e)
