@@ -56,6 +56,14 @@
 					Header="Refresh blocks"
 					Click="RefreshBlocks"/>
 				
+					<MenuItem
+					Header="Save trigger"
+					Click="SaveTrigger"/>
+				
+					<MenuItem
+					Header="Open trigger"
+					Click="OpenTrigger"/>
+				
 				</MenuItem>
 					
 				<MenuItem 

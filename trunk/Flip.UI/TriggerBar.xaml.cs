@@ -24,6 +24,15 @@ namespace Sussex.Flip.UI
     	protected Spine spine;
     	
     	
+		public TriggerControl TriggerControl {
+			get { return triggerControl; }
+		}
+    	
+		public Spine Spine {
+			get { return spine; }
+		}
+    	
+    	
 		public event EventHandler Changed;
 		
 		

@@ -24,9 +24,11 @@
  */
 
 using System;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml.Serialization;
 using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
@@ -34,18 +36,22 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of ObjectBehaviour.
 	/// </summary>
+	[Serializable]
+	[XmlRoot("theobjectbehaviour")]
 	public abstract class ObjectBehaviour: DependencyObject, IDeepCopyable<ObjectBehaviour>, IEquatable<ObjectBehaviour>
 	{
     	protected static DependencyProperty IdentifierProperty;
     	protected static DependencyProperty DisplayNameProperty;   
     	
     	
+    	[XmlElement("theidentifier")]
     	public string Identifier {
     		get { return (string)base.GetValue(IdentifierProperty); }
     		set { base.SetValue(IdentifierProperty,value); }
     	}
     	
     	
+    	[XmlElement("theDisplayName")]
     	public string DisplayName {
     		get { return (string)base.GetValue(DisplayNameProperty); }
     		set { base.SetValue(DisplayNameProperty,value); }
@@ -56,6 +62,11 @@ namespace Sussex.Flip.UI
     	{
     		IdentifierProperty = DependencyProperty.Register("Identifier",typeof(string),typeof(ObjectBehaviour));
     		DisplayNameProperty = DependencyProperty.Register("DisplayName",typeof(string),typeof(ObjectBehaviour));
+    	}
+    	
+    	
+    	protected ObjectBehaviour() : this(String.Empty,String.Empty)
+    	{    		
     	}
     	
     	
@@ -78,6 +89,33 @@ namespace Sussex.Flip.UI
 		public virtual bool Equals(ObjectBehaviour other)
 		{
 			return other != null && other.GetType() == this.GetType() && other.Identifier == this.Identifier && other.DisplayName == this.DisplayName;
+		}
+	}
+	
+	
+	public class DefaultObjectBehaviour : ObjectBehaviour
+	{
+		public override string GetCode()
+		{
+			return String.Empty;			
+		}
+		
+		
+		public override string GetNaturalLanguage()
+		{
+			return String.Empty;			
+		}
+		
+		
+		public override string GetDescriptionOfObjectType()
+		{
+			return String.Empty;
+		}
+		
+		
+		public override ObjectBehaviour DeepCopy()
+		{
+			return new DefaultObjectBehaviour();
 		}
 	}
 }
