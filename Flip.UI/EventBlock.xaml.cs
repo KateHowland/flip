@@ -11,13 +11,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
+
 namespace Sussex.Flip.UI
 {
     /// <summary>
     /// Interaction logic for EventBlock.xaml
     /// </summary>
 
-    public partial class EventBlock : Moveable
+    public partial class EventBlock : Moveable, ISerializable
     {
     	protected static DependencyProperty BehaviourProperty;
 		
@@ -73,6 +76,11 @@ namespace Sussex.Flip.UI
     	}
     	
     	
+    	protected EventBlock() : this(String.Empty)
+    	{    		
+    	}
+    	
+    	
     	public EventBlock(string eventName) : this(eventName,eventName)
         {
         }
@@ -114,6 +122,12 @@ namespace Sussex.Flip.UI
 		public override string GetNaturalLanguage()
 		{
 			return DisplayName;
+		}
+		
+    	
+		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("Behaviour",Behaviour,typeof(EventBehaviour));
 		}
     }
 }

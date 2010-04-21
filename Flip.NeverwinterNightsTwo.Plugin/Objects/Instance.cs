@@ -41,14 +41,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 				
 		public string Tag {
 			get { return Identifier; }
+			set { Identifier = value; }
 		}
 				
 		public NWN2ObjectType Type {
 			get { return type; }
+			set { type = value; }
 		}
 		
 		public string AreaTag {
 			get { return areaTag; }
+			set { areaTag = value; }
+		}
+		
+		
+		protected Instance() : this(string.Empty,string.Empty,NWN2ObjectType.Light,string.Empty)
+		{			
 		}
 		
 		

@@ -36,6 +36,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	{
 		public string Tag {
 			get { return Identifier; }
+			set { Identifier = value; }
+		}
+		
+		
+		protected Area() : this(string.Empty,string.Empty)
+		{			
 		}
 		
 		

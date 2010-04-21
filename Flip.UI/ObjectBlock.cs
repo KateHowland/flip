@@ -85,6 +85,11 @@ namespace Sussex.Flip.UI
     			}
     		}
     	}
+		
+		
+		protected ObjectBlock() : this(null,new DefaultObjectBehaviour())
+		{			
+		}
     	
     	
         public ObjectBlock(Image image, ObjectBehaviour behaviour)

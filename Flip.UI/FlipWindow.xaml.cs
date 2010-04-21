@@ -59,6 +59,46 @@ namespace Sussex.Flip.UI
 			
 			triggerBar.Changed += UpdateNaturalLanguage;
 			DisplayCodeAndNaturalLanguage(triggerBar);
+			
+			
+			string title = "*******Temp********";
+			blockBox.AddBag(title);
+		}
+		
+		
+		Sussex.Flip.Utils.Serialiser serialiser = new Sussex.Flip.Utils.Serialiser();
+		string raiserPath = @"C:\Flip\raiser.txt";
+		string eventPath = @"C:\Flip\event.txt";
+		
+		protected void SaveTrigger(object sender, RoutedEventArgs e)
+		{
+			ObjectBlock raiser = triggerBar.TriggerControl.RaiserBlock;
+			EventBlock eventBlock = triggerBar.TriggerControl.EventBlock;
+			
+			if (raiser != null && eventBlock != null) {	
+				serialiser.Serialise(raiserPath,raiser.Behaviour);
+				serialiser.Serialise(eventPath,eventBlock.Behaviour);				
+			}
+				
+			else {				
+				MessageBox.Show("Trigger incomplete.");					
+			}
+		}
+		
+		
+		protected void OpenTrigger(object sender, RoutedEventArgs e)
+		{
+			ObjectBlock raiser = provider.GetMoveableFromSerialised(raiserPath) as ObjectBlock;
+			EventBlock eventBlock = provider.GetMoveableFromSerialised(eventPath) as EventBlock;
+			
+			if (raiser != null && eventBlock != null) {	
+				triggerBar.TriggerControl.RaiserBlock = raiser;
+				triggerBar.TriggerControl.EventBlock = eventBlock;
+			}
+				
+			else {				
+				MessageBox.Show("Trigger could not be loaded.");					
+			}
 		}
 		
 
@@ -112,8 +152,8 @@ namespace Sussex.Flip.UI
 		{
 			provider.Refresh(blockBox);
 			MessageBox.Show("Refreshed.");
-		}
-			
+		}	
+		
 		
 		protected void CreateAdorner(object sender, DragEventArgs e)
 		{

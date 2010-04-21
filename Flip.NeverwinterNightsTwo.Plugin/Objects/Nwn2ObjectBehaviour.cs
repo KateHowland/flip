@@ -34,6 +34,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public abstract class Nwn2ObjectBehaviour : ObjectBehaviour
 	{
+		protected Nwn2ObjectBehaviour() : this(string.Empty,string.Empty)
+		{			
+		}
+		
+		
 		public Nwn2ObjectBehaviour(string identifier, string displayName) : base(identifier,displayName)
 		{			
 		}

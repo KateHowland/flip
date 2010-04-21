@@ -29,6 +29,10 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Sussex.Flip.Utils;
 
+
+using System.Xml.Serialization;
+using System.Runtime.Serialization;
+
 namespace Sussex.Flip.UI
 {
 	/// <summary>
@@ -59,6 +63,11 @@ namespace Sussex.Flip.UI
     	}
     	
     	
+    	protected EventBehaviour() : this(string.Empty,string.Empty)
+    	{    		
+    	}
+    	
+    	
 		public EventBehaviour(string name, string displayName)
 		{
 			if (name == null) throw new ArgumentNullException("name");
@@ -78,6 +87,12 @@ namespace Sussex.Flip.UI
 		public virtual EventBehaviour DeepCopy()
 		{
 			return new EventBehaviour(EventName,DisplayName);
+		}
+		
+		
+		public override string ToString()
+		{
+			return "EventBehaviour (" + EventName + ", " + DisplayName + ")";
 		}
 	}
 }

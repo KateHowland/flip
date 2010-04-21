@@ -36,8 +36,10 @@ using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using NWN2Toolset.NWN2.Views;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -340,6 +342,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			);
 			
 			uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);
+		}
+		
+		
+		public override Moveable GetMoveableFromSerialised(string path)
+		{
+			Serialiser serialiser = new Serialiser();
+			
+			foreach (Type t in new Type[] { typeof(Area), typeof(Blueprint), typeof(Instance), typeof(Module), typeof(Player) }) {
+				
+				if (serialiser.CanDeserialise(path,t)) {
+					ObjectBehaviour behaviour = (ObjectBehaviour)serialiser.Deserialise(path,t);
+					ObjectBlock block = new ObjectBlock(null,behaviour);
+					return block;
+				}
+				
+			}
+			
+			if (serialiser.CanDeserialise(path,typeof(EventBehaviour))) {				
+				
+				EventBehaviour behaviour = (EventBehaviour)serialiser.Deserialise(path,typeof(EventBehaviour));		
+				EventBlock block = new EventBlock(behaviour);
+				return block;
+				
+			}
+			
+			return null;
 		}
 	}
 }

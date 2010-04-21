@@ -40,6 +40,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public string ResRef {
 			get { return Identifier; }
+			set { Identifier = value; }
+		}
+		
+		
+		protected Blueprint() : this(string.Empty,string.Empty,NWN2ObjectType.Light)
+		{			
 		}
 		
 		

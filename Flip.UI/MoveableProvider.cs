@@ -85,5 +85,8 @@ namespace Sussex.Flip.UI
 		
 		protected abstract void CreateBags();
 		protected abstract void PopulateBags();
+		
+		
+		public abstract Moveable GetMoveableFromSerialised(string path);
 	}
 }
