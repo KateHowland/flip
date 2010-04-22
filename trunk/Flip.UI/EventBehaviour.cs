@@ -24,21 +24,21 @@
  */
 
 using System;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Sussex.Flip.Utils;
-
-
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Runtime.Serialization;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
 	/// Description of EventBehaviour.
 	/// </summary>
-	public class EventBehaviour: DependencyObject, IDeepCopyable<EventBehaviour>
+	public class EventBehaviour: DependencyObject, IDeepCopyable<EventBehaviour>, IXmlSerializable
 	{
     	protected static DependencyProperty EventNameProperty;
     	protected static DependencyProperty DisplayNameProperty;   
@@ -93,6 +93,29 @@ namespace Sussex.Flip.UI
 		public override string ToString()
 		{
 			return "EventBehaviour (" + EventName + ", " + DisplayName + ")";
+		}
+		
+		
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public void ReadXml(XmlReader reader)
+		{
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "EventBehaviour") {
+				EventName = reader["EventName"];
+				DisplayName = reader["DisplayName"];				
+				reader.Read();
+			}
+		}
+		
+		
+		public void WriteXml(XmlWriter writer)
+		{
+			writer.WriteAttributeString("EventName",EventName);
+			writer.WriteAttributeString("DisplayName",DisplayName);
 		}
 	}
 }

@@ -20,76 +20,36 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 01/04/2010 at 13:20.
+ * This file added by Keiron Nicholson on 22/04/2010 at 12:16.
  */
 
 using System;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
-using Sussex.Flip.UI;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
+namespace Sussex.Flip.UI
 {
-	/// <summary>
-	/// Description of Player.
-	/// </summary>
-	public class Player : Nwn2ObjectBehaviour
+	public class DefaultObjectBehaviour : ObjectBehaviour
 	{
-		public const string NWScript_GetPlayer = "GetFirstPC()";
-		
-		
-		public Player() : base(String.Empty,"player")
-		{						
-		}
-		
-		
-		public override Nwn2Type Nwn2Type {
-			get {
-				return Nwn2Type.Player;
-			}
-		}
-		
-		
 		public override string GetCode()
 		{
-			return NWScript_GetPlayer;
+			return String.Empty;			
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return "the player";
-		}
-		
-		
-		public override ObjectBehaviour DeepCopy()
-		{
-			return new Player();
+			return String.Empty;			
 		}
 		
 		
 		public override string GetDescriptionOfObjectType()
 		{
-			return Nwn2Fitter.PlayerDescription;
+			return String.Empty;
 		}
 		
 		
-		public override void ReadXml(XmlReader reader)
+		public override ObjectBehaviour DeepCopy()
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Player") {
-				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];	
-				reader.Read();
-			}
-		}
-		
-		
-		public override void WriteXml(XmlWriter writer)
-		{
-			writer.WriteAttributeString("Identifier",Identifier);
-			writer.WriteAttributeString("DisplayName",DisplayName);
+			return new DefaultObjectBehaviour();
 		}
 	}
 }

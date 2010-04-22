@@ -24,6 +24,9 @@
  */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -34,19 +37,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class Area : Nwn2ObjectBehaviour
 	{
+		protected bool isExterior;
+		
+		
+		public override Nwn2Type Nwn2Type {
+			get {
+				return Nwn2Type.Area;
+			}
+		}
+		
+		
 		public string Tag {
 			get { return Identifier; }
 			set { Identifier = value; }
 		}
 		
 		
-		protected Area() : this(string.Empty,string.Empty)
+		public bool IsExterior {
+			get { return isExterior; }
+			set { isExterior = value; }
+		}
+				
+		
+		protected Area() : this(string.Empty,string.Empty,true)
 		{			
 		}
 		
 		
-		public Area(string tag, string displayName) : base(tag,displayName)
+		public Area(string tag, string displayName, bool isExterior) : base(tag,displayName)
 		{		
+			this.isExterior = isExterior;
 		}
 		
 		
@@ -71,7 +91,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Area(Identifier,DisplayName);
+			return new Area(Identifier,DisplayName,IsExterior);
 		}
 		
 		
@@ -81,9 +101,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public override Nwn2Type GetNwn2Type()
+		public override void ReadXml(XmlReader reader)
 		{
-			return Nwn2Type.Area;
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Area") {
+				Identifier = reader["Identifier"];
+				DisplayName = reader["DisplayName"];
+				isExterior = Boolean.Parse(reader["IsExterior"]);
+				reader.Read();
+			}
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			writer.WriteAttributeString("Identifier",Identifier);
+			writer.WriteAttributeString("DisplayName",DisplayName);
+			writer.WriteAttributeString("IsExterior",isExterior.ToString());
 		}
 	}
 }

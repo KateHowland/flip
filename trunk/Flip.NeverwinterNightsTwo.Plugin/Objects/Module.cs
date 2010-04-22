@@ -24,6 +24,9 @@
  */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -37,6 +40,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		public Module() : base(String.Empty,"module")
 		{						
 		}
+		
+		
+		public override Nwn2Type Nwn2Type {
+			get {
+				return Nwn2Type.Module;
+			}
+		}		
 		
 		
 		public override string GetCode()
@@ -63,9 +73,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public override Nwn2Type GetNwn2Type()
+		public override void ReadXml(XmlReader reader)
 		{
-			return Nwn2Type.Module;
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Module") {
+				Identifier = reader["Identifier"];
+				DisplayName = reader["DisplayName"];	
+				reader.Read();
+			}
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			writer.WriteAttributeString("Identifier",Identifier);
+			writer.WriteAttributeString("DisplayName",DisplayName);
 		}
 	}
 }

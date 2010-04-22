@@ -24,6 +24,9 @@
  */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -44,7 +47,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public abstract Nwn2Type GetNwn2Type();	
+		public abstract Nwn2Type Nwn2Type { get; }
 		
 		
 		public override bool Equals(ObjectBehaviour other)
@@ -53,7 +56,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 			
 			Nwn2ObjectBehaviour compare = other as Nwn2ObjectBehaviour;
 			
-			return compare != null && compare.GetNwn2Type() == this.GetNwn2Type();
+			return compare != null && compare.Nwn2Type == this.Nwn2Type;
 		}
 	}
 }

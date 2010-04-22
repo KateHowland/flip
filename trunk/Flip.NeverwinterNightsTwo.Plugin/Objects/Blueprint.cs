@@ -24,6 +24,9 @@
  */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using NWN2Toolset.NWN2.Data.Templates;
@@ -35,7 +38,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class Blueprint : Nwn2ObjectBehaviour
 	{		
-		protected NWN2ObjectType type;
+		protected Nwn2Type type;
+		
+		
+		public override Nwn2Type Nwn2Type {
+			get { return type; }
+		}
 		
 		
 		public string ResRef {
@@ -49,9 +57,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public Blueprint(string resRef, string displayName, NWN2ObjectType type) : base(resRef,displayName)
+		public Blueprint(string resRef, string displayName, Nwn2Type type) : base(resRef,displayName)
 		{		
 			this.type = type;
+		}
+		
+		
+		public Blueprint(string resRef, string displayName, NWN2ObjectType type) : this(resRef,displayName,Nwn2ScriptSlot.GetNwn2Type(type))
+		{		
 		}
 		
 		
@@ -73,7 +86,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Blueprint(Identifier,DisplayName,type);
+			return new Blueprint(Identifier,DisplayName,Nwn2ScriptSlot.GetObjectType(type).Value);
 		}
 		
 		
@@ -83,9 +96,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public override Nwn2Type GetNwn2Type()
+		public override void ReadXml(XmlReader reader)
 		{
-			return Nwn2ScriptSlot.GetNwn2Type(type);
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Blueprint") {
+				Identifier = reader["Identifier"];
+				DisplayName = reader["DisplayName"];	
+				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),reader["Nwn2Type"]);
+				reader.Read();
+			}
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			writer.WriteAttributeString("Identifier",Identifier);
+			writer.WriteAttributeString("DisplayName",DisplayName);
+			writer.WriteAttributeString("Nwn2Type",type.ToString());
 		}
 	}
 }

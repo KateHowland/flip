@@ -64,7 +64,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				return null;
 			}
 			else {
-				return behaviour.GetNwn2Type();
+				return behaviour.Nwn2Type;
 			}
 		}
 		
