@@ -20,7 +20,7 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 01/04/2010 at 13:38.
+ * This file added by Keiron Nicholson on 01/04/2010 at 13:26.
  */
 
 using System;
@@ -33,80 +33,51 @@ using Sussex.Flip.UI;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 {
 	/// <summary>
-	/// Description of Area.
+	/// Description of Module.
 	/// </summary>
-	public class Area : Nwn2ObjectBehaviour
+	public class ModuleBehaviour : Nwn2ObjectBehaviour
 	{
-		protected bool isExterior;
+		public ModuleBehaviour() : base(String.Empty,"module")
+		{						
+		}
 		
 		
 		public override Nwn2Type Nwn2Type {
 			get {
-				return Nwn2Type.Area;
+				return Nwn2Type.Module;
 			}
-		}
-		
-		
-		public string Tag {
-			get { return Identifier; }
-			set { Identifier = value; }
-		}
-		
-		
-		public bool IsExterior {
-			get { return isExterior; }
-			set { isExterior = value; }
-		}
-				
-		
-		protected Area() : this(string.Empty,string.Empty,true)
-		{			
-		}
-		
-		
-		public Area(string tag, string displayName, bool isExterior) : base(tag,displayName)
-		{		
-			this.isExterior = isExterior;
-		}
+		}		
 		
 		
 		public override string GetCode()
 		{
-			/* Does not appear possible to retrieve an area object in a single
-			 * line of code. You can iterate through areas, and presumably
-			 * retrieve a tag from the area object (which is just class 'object')
-			 * in order to identify one, but that's too complex for GetCode().
-			 * Currently no reason to believe this will be needed, as specific
-			 * area blocks will simply be used for attaching events. */
-			
-			return String.Empty;
+			return "GetModule()";
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return DisplayName;
+			return "the module";
 		}
 		
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Area(Identifier,DisplayName,IsExterior);
+			return new ModuleBehaviour();
 		}
 		
 		
 		public override string GetDescriptionOfObjectType()
 		{
-			return Nwn2Fitter.AreaDescription;
+			return Nwn2Fitter.ModuleDescription;
 		}
 		
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Area") {
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ModuleBehaviour") {
 				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];
-				isExterior = Boolean.Parse(reader["IsExterior"]);
+				DisplayName = reader["DisplayName"];	
 				reader.Read();
 			}
 		}
@@ -116,7 +87,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		{
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteAttributeString("IsExterior",isExterior.ToString());
 		}
 	}
 }

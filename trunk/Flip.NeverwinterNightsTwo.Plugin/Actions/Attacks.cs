@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string attackee = args[1];
 			
 			int changeToHostileFaction;
-			if (attackee == Behaviours.Player.NWScript_GetPlayer) {
+			if (attackee == Behaviours.PlayerBehaviour.NWScript_GetPlayer) {
 				changeToHostileFaction = 1;
 			}
 			else {

@@ -20,88 +20,93 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 01/04/2010 at 13:50.
+ * This file added by Keiron Nicholson on 01/04/2010 at 13:38.
  */
 
 using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
-using NWN2Toolset.NWN2.Data.Templates;
+using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 {
 	/// <summary>
-	/// Description of Blueprint.
+	/// Description of Area.
 	/// </summary>
-	public class Blueprint : Nwn2ObjectBehaviour
-	{		
-		protected Nwn2Type type;
+	public class AreaBehaviour : Nwn2ObjectBehaviour
+	{
+		protected bool isExterior;
 		
 		
 		public override Nwn2Type Nwn2Type {
-			get { return type; }
+			get {
+				return Nwn2Type.Area;
+			}
 		}
 		
 		
-		public string ResRef {
+		public string Tag {
 			get { return Identifier; }
 			set { Identifier = value; }
 		}
 		
 		
-		protected Blueprint() : this(string.Empty,string.Empty,NWN2ObjectType.Light)
+		public bool IsExterior {
+			get { return isExterior; }
+			set { isExterior = value; }
+		}
+				
+		
+		protected AreaBehaviour() : this(string.Empty,string.Empty,true)
 		{			
 		}
 		
 		
-		public Blueprint(string resRef, string displayName, Nwn2Type type) : base(resRef,displayName)
+		public AreaBehaviour(string tag, string displayName, bool isExterior) : base(tag,displayName)
 		{		
-			this.type = type;
-		}
-		
-		
-		public Blueprint(string resRef, string displayName, NWN2ObjectType type) : this(resRef,displayName,Nwn2ScriptSlot.GetNwn2Type(type))
-		{		
+			this.isExterior = isExterior;
 		}
 		
 		
 		public override string GetCode()
-		{			
-			/* Not clear on when you would actually use a blueprint in NWScript,
-			 * but in the only places I can find reference to it they seem to just
-			 * use the ResRef. */
+		{
+			/* Does not appear possible to retrieve an area object in a single
+			 * line of code. You can iterate through areas, and presumably
+			 * retrieve a tag from the area object (which is just class 'object')
+			 * in order to identify one, but that's too complex for GetCode().
+			 * Currently no reason to believe this will be needed, as specific
+			 * area blocks will simply be used for attaching events. */
 			
-			return String.Format("\"{0}\"",ResRef);
+			return String.Empty;
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return String.Format("blueprint {0}",DisplayName);
+			return DisplayName;
 		}
 		
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Blueprint(Identifier,DisplayName,Nwn2ScriptSlot.GetObjectType(type).Value);
+			return new AreaBehaviour(Identifier,DisplayName,IsExterior);
 		}
 		
 		
 		public override string GetDescriptionOfObjectType()
 		{
-			return String.Format(Nwn2Fitter.SubtypeFormat,Nwn2Fitter.BlueprintDescription,type);
+			return Nwn2Fitter.AreaDescription;
 		}
 		
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Blueprint") {
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "AreaBehaviour") {
 				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];	
-				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),reader["Nwn2Type"]);
+				DisplayName = reader["DisplayName"];
+				isExterior = Boolean.Parse(reader["IsExterior"]);
 				reader.Read();
 			}
 		}
@@ -111,7 +116,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		{
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteAttributeString("Nwn2Type",type.ToString());
+			writer.WriteAttributeString("IsExterior",isExterior.ToString());
+		}
+		
+		
+		public override string ToString()
+		{
+			return String.Format("Area ({0}, DisplayName:'{1}', Tag: {2})",(isExterior ? "Exterior" : "Interior"),DisplayName,Tag);
 		}
 	}
 }

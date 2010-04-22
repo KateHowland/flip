@@ -205,7 +205,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			else if (Nwn2Fitter.IsInstance(RaiserBlock)) {
-				Instance instanceBehaviour = (Instance)RaiserBlock.Behaviour;
+				InstanceBehaviour instanceBehaviour = (InstanceBehaviour)RaiserBlock.Behaviour;
 				
 				string areaTag = instanceBehaviour.AreaTag;
 				Nwn2Type targetType = instanceBehaviour.Nwn2Type;
