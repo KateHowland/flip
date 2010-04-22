@@ -35,12 +35,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// <summary>
 	/// Description of Player.
 	/// </summary>
-	public class Player : Nwn2ObjectBehaviour
+	public class PlayerBehaviour : Nwn2ObjectBehaviour
 	{
 		public const string NWScript_GetPlayer = "GetFirstPC()";
 		
 		
-		public Player() : base(String.Empty,"player")
+		public PlayerBehaviour() : base(String.Empty,"player")
 		{						
 		}
 		
@@ -66,7 +66,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Player();
+			return new PlayerBehaviour();
 		}
 		
 		
@@ -78,7 +78,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Player") {
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "PlayerBehaviour") {
 				Identifier = reader["Identifier"];
 				DisplayName = reader["DisplayName"];	
 				reader.Read();

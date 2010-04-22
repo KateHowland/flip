@@ -114,12 +114,12 @@
     <Compile Include="Nwn2TriggerControl.xaml.cs" />
     <Compile Include="NWScriptAttacher.cs" />
     <Compile Include="NWScriptTranslator.cs" />
-    <Compile Include="Objects\Area.cs" />
-    <Compile Include="Objects\Blueprint.cs" />
-    <Compile Include="Objects\Instance.cs" />
-    <Compile Include="Objects\Module.cs" />
+    <Compile Include="Objects\AreaBehaviour.cs" />
+    <Compile Include="Objects\BlueprintBehaviour.cs" />
+    <Compile Include="Objects\InstanceBehaviour.cs" />
+    <Compile Include="Objects\ModuleBehaviour.cs" />
     <Compile Include="Objects\Nwn2ObjectBehaviour.cs" />
-    <Compile Include="Objects\Player.cs" />
+    <Compile Include="Objects\PlayerBehaviour.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="ToolsetEventReporter.cs" />

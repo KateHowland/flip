@@ -351,30 +351,30 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{			
 			if (path == null) throw new ArgumentNullException("path");
 			
-			if (serialiser.CanDeserialise(path,typeof(Area))) {				
-				Area behaviour = (Area)serialiser.Deserialise(path,typeof(Area));
+			if (serialiser.CanDeserialise(path,typeof(AreaBehaviour))) {				
+				AreaBehaviour behaviour = (AreaBehaviour)serialiser.Deserialise(path,typeof(AreaBehaviour));
 				ObjectBlock block = blocks.CreateAreaBlock(behaviour);
 				return block;				
 			}
 			
-//			else if (serialiser.CanDeserialise(path,typeof(Blueprint))) {				
-//				Blueprint behaviour = (Blueprint)serialiser.Deserialise(path,typeof(Blueprint));
-//				ObjectBlock block = blocks.CreateBlueprintBlock(behaviour);
-//				return block;				
-//			}
-//			
-//			else if (serialiser.CanDeserialise(path,typeof(Instance))) {				
-//				Instance behaviour = (Instance)serialiser.Deserialise(path,typeof(Instance));
-//				ObjectBlock block = blocks.CreateInstanceBlock(behaviour);
-//				return block;				
-//			}
+			else if (serialiser.CanDeserialise(path,typeof(BlueprintBehaviour))) {				
+				BlueprintBehaviour behaviour = (BlueprintBehaviour)serialiser.Deserialise(path,typeof(BlueprintBehaviour));
+				ObjectBlock block = blocks.CreateBlueprintBlock(behaviour);
+				return block;				
+			}
 			
-			if (serialiser.CanDeserialise(path,typeof(Module))) {			
+			else if (serialiser.CanDeserialise(path,typeof(InstanceBehaviour))) {				
+				InstanceBehaviour behaviour = (InstanceBehaviour)serialiser.Deserialise(path,typeof(InstanceBehaviour));
+				ObjectBlock block = blocks.CreateInstanceBlock(behaviour);
+				return block;				
+			}
+			
+			if (serialiser.CanDeserialise(path,typeof(ModuleBehaviour))) {			
 				ObjectBlock block = blocks.CreateModuleBlock();
 				return block;				
 			}
 			
-			else if (serialiser.CanDeserialise(path,typeof(Player))) {		
+			else if (serialiser.CanDeserialise(path,typeof(PlayerBehaviour))) {		
 				ObjectBlock block = blocks.CreatePlayerBlock();
 				return block;				
 			}

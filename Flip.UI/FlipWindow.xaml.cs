@@ -60,13 +60,11 @@ namespace Sussex.Flip.UI
 			triggerBar.Changed += UpdateNaturalLanguage;
 			DisplayCodeAndNaturalLanguage(triggerBar);
 			
-			
-			string title = "*******Temp********";
-			blockBox.AddBag(title);
+			serialiser = new Sussex.Flip.Utils.Serialiser();
 		}
 		
 		
-		Sussex.Flip.Utils.Serialiser serialiser = new Sussex.Flip.Utils.Serialiser();
+		Sussex.Flip.Utils.Serialiser serialiser;
 		string raiserPath = @"C:\Flip\raiser.txt";
 		string eventPath = @"C:\Flip\event.txt";
 		

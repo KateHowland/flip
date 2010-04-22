@@ -32,6 +32,7 @@ using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -52,7 +53,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Image image = GetImage("Other","Player");
 			if (image == null) image = GetImage("Placeholder","Default");
 			
-			return new ObjectBlock(image,GetPlayerBlockBehaviour());
+			return new ObjectBlock(image,new PlayerBehaviour());
 		}
 		
 		
@@ -65,7 +66,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Image image = GetImage("Other","Module");
 			if (image == null) image = GetImage("Placeholder","Default");
 			
-			return new ObjectBlock(image,GetModuleBlockBehaviour());
+			return new ObjectBlock(image,new ModuleBehaviour());
 		}
 		
 		
@@ -78,7 +79,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (area == null) throw new ArgumentNullException("area");
 			
-			Area behaviour = CreateAreaBehaviour(area);
+			AreaBehaviour behaviour = CreateAreaBehaviour(area);
 			
 			ObjectBlock block = CreateAreaBlock(behaviour);
 			
@@ -86,7 +87,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public Area CreateAreaBehaviour(NWN2GameArea area)
+		public AreaBehaviour CreateAreaBehaviour(NWN2GameArea area)
 		{
 			if (area == null) throw new ArgumentNullException("area");
 			
@@ -96,7 +97,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				displayName = tag;
 			}
 		
-			return new Area(tag,displayName,area.HasTerrain);
+			return new AreaBehaviour(tag,displayName,area.HasTerrain);
 		}
 		
 		
@@ -106,7 +107,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <param name="area">An object representing the behaviour of
 		/// and information about the ObjectBlock which is to be created.</param>
 		/// <returns>An ObjectBlock representing the given area.</returns>
-		public ObjectBlock CreateAreaBlock(Area area)
+		public ObjectBlock CreateAreaBlock(AreaBehaviour area)
 		{
 			if (area == null) throw new ArgumentNullException("area");
 			
@@ -121,88 +122,110 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			return block;
 		}
 		
-				
-		/// <summary>
-		/// Creates an ObjectBlock representing a given blueprint.
-		/// </summary>
-		/// <param name="blueprint">The blueprint to represent.</param>
-		/// <returns>An ObjectBlock representing the given blueprint.</returns>
+			
 		public ObjectBlock CreateBlueprintBlock(INWN2Blueprint blueprint)
-		{			
+		{
 			if (blueprint == null) throw new ArgumentNullException("blueprint");
 			
-			string objectTypeString = blueprint.ObjectType.ToString();
-			string blueprintResRef = blueprint.ResourceName.Value;	
-						
-			Image image;	
+			BlueprintBehaviour behaviour = CreateBlueprintBehaviour(blueprint);
 			
-			// If this is an item, try to get its icon:
-			NWN2ItemTemplate item = blueprint as NWN2ItemTemplate;
-			if (item != null) {
-				image = GetImage(item);
-			}	
-			
-			// Otherwise, try to get an image representing this blueprint:
-			else {	
-				image = GetImage(objectTypeString,blueprintResRef);
-			}
-			
-			// Failing that, try to retrieve an image of the blueprint it derives from:
-			if (image == null) {
-				string baseResRef = blueprint.TemplateResRef.Value;
-				image = GetImage(objectTypeString,baseResRef);
-			}
-			
-			// If neither is available, use a placeholder image:
-			if (image == null) {
-				image = GetImage("Placeholder","Blueprint");// TODO: String.Format("Blueprint_{0}",objectType));
-			}
-													
-			string displayName = GetDisplayName(blueprint);
-				
-			if (displayName == String.Empty) displayName = blueprint.Name;
-				
-			ObjectBlock block = new ObjectBlock(image,GetBlueprintBlockBehaviour(blueprintResRef,displayName,blueprint.ObjectType));
+			ObjectBlock block = CreateBlueprintBlock(behaviour);
 			
 			return block;
 		}
 		
 		
-		/// <summary>
-		/// Creates an ObjectBlock representing a given instance.
-		/// </summary>
-		/// <param name="instance">The instance to represent.</param>
-		/// <param name="instance">The area holding this instance.</param>
-		/// <returns>An ObjectBlock representing the given instance.</returns>
-		/// <remarks>The Area property of an instance is sometimes null, even if
-		/// the area has not actually been disposed. For this reason, CreateInstanceBlock
-		/// has an overload which allows you to pass in the holding area directly.</remarks>
-		public ObjectBlock CreateInstanceBlock(INWN2Instance instance, NWN2GameArea area)
-		{						
-			if (instance == null) throw new ArgumentNullException("instance");
+		public BlueprintBehaviour CreateBlueprintBehaviour(INWN2Blueprint blueprint)
+		{
+			if (blueprint == null) throw new ArgumentNullException("blueprint");
 			
-			Image image;
+			string objectTypeString = blueprint.ObjectType.ToString();
+			string resRef = blueprint.ResourceName.Value;	
+			string baseResRef = blueprint.TemplateResRef.Value;
+																		
+			string displayName = GetDisplayName(blueprint);				
+			if (displayName == String.Empty) {
+				displayName = blueprint.Name;
+			}
 			
-			NWN2ItemTemplate item = instance as NWN2ItemTemplate;
-			if (item != null) {
-				image = GetImage(item);
+			string icon;
+			if (blueprint is NWN2ItemTemplate) {
+				icon = ((NWN2ItemTemplate)blueprint).Icon.ToString();
 			}
 			else {
-				string resRef = instance.Template.ResRef.Value;				
-				image = GetImage(instance.ObjectType.ToString(),resRef);
+				icon = String.Empty;
 			}
+				
+			return new BlueprintBehaviour(resRef,displayName,baseResRef,icon,blueprint.ObjectType);
+		}
+		
+		
+		public ObjectBlock CreateBlueprintBlock(BlueprintBehaviour behaviour)
+		{
+			if (behaviour == null) throw new ArgumentNullException("behaviour");
 						
-			if (image == null) {
-				image = GetImage("Placeholder","Instance");// TODO: String.Format("Instance_{0}",objectType));
+			string objectType = behaviour.Nwn2Type.ToString();
+			
+			Image image;
+						
+			// If this has an icon, use that:
+			if (!String.IsNullOrEmpty(behaviour.IconName)) {
+				image = GetIconImage(behaviour.IconName);
 			}
 			
-			string tag;
-			try {
-				tag = ((INWN2Object)instance).Tag;
+			// Otherwise, try to get an image representing this blueprint:
+			else {	
+				image = GetImage(objectType,behaviour.ResRef);
 			}
-			catch (InvalidCastException) {
-				throw new ApplicationException("Failed to cast INWN2Instance to INWN2Object to retrieve tag for object block.");
+			
+			// Failing that, try to retrieve an image of the blueprint it derives from:
+			if (image == null) {
+				image = GetImage(objectType,behaviour.BaseResRef);
 			}
+			
+			// If neither is available, use a placeholder image:
+			if (image == null) {
+				if (behaviour.Nwn2Type == Nwn2Type.Item) {
+					image = GetImage("Placeholder","Item");
+				}
+				else {
+					image = GetImage("Placeholder","Blueprint");
+				}
+			}
+				
+			return new ObjectBlock(image,behaviour);
+		}
+		
+			
+		public ObjectBlock CreateInstanceBlock(INWN2Instance instance)
+		{
+			if (instance == null) throw new ArgumentNullException("instance");
+			
+			InstanceBehaviour behaviour = CreateInstanceBehaviour(instance);
+			
+			ObjectBlock block = CreateInstanceBlock(behaviour);
+			
+			return block;
+		}
+		
+			
+		public ObjectBlock CreateInstanceBlock(INWN2Instance instance, NWN2GameArea area)
+		{
+			if (instance == null) throw new ArgumentNullException("instance");
+			
+			InstanceBehaviour behaviour = CreateInstanceBehaviour(instance,area);
+			
+			ObjectBlock block = CreateInstanceBlock(behaviour);
+			
+			return block;
+		}
+		
+		
+		public InstanceBehaviour CreateInstanceBehaviour(INWN2Instance instance, NWN2GameArea area)
+		{
+			if (instance == null) throw new ArgumentNullException("instance");
+			
+			string tag = ((INWN2Object)instance).Tag;
 				
 			string displayName = GetDisplayName(instance);
 				
@@ -219,25 +242,69 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				areaTag = String.Empty;
 			}
 			
-			ObjectBlock block = new ObjectBlock(image,GetInstanceBlockBehaviour(tag,displayName,instance.ObjectType,areaTag));
-				
-			return block;
+			string resRef = instance.Template.ResRef.Value;
+						
+			string icon;
+			if (instance is NWN2ItemInstance) {
+				icon = ((NWN2ItemInstance)instance).Icon.ToString();
+			}
+			else {
+				icon = String.Empty;
+			}
+			
+			return new InstanceBehaviour(tag,displayName,instance.ObjectType,areaTag,resRef,icon);
 		}
 		
 		
-		/// <summary>
-		/// Creates an ObjectBlock representing a given instance.
-		/// </summary>
-		/// <param name="instance">The instance to represent.</param>
-		/// <returns>An ObjectBlock representing the given instance.</returns>
-		/// <remarks>The Area property of an instance is sometimes null, even if
-		/// the area has not actually been disposed. For this reason, CreateInstanceBlock
-		/// has an overload which allows you to pass in the holding area directly.</remarks>
-		public ObjectBlock CreateInstanceBlock(INWN2Instance instance)
+		public InstanceBehaviour CreateInstanceBehaviour(INWN2Instance instance)
 		{						
-			if (instance == null) throw new ArgumentNullException("instance");			
-			return CreateInstanceBlock(instance,instance.Area);
+			if (instance == null) throw new ArgumentNullException("instance");	
+			
+			return CreateInstanceBehaviour(instance,instance.Area);
 		}
+		
+		
+		public ObjectBlock CreateInstanceBlock(InstanceBehaviour behaviour)
+		{						
+			if (behaviour == null) throw new ArgumentNullException("behaviour");
+			
+			string objectType = behaviour.Nwn2Type.ToString();
+			
+			Image image;
+						
+			// If this has an icon, use that:
+			if (!String.IsNullOrEmpty(behaviour.IconName)) {
+				image = GetIconImage(behaviour.IconName);
+			}
+			
+			// Otherwise, try to get an image representing this instance's template:
+			else {	
+				image = GetImage(objectType,behaviour.ResRef);
+			}
+			
+			// If neither is available, use a placeholder image:
+			if (image == null) {
+				if (behaviour.Nwn2Type == Nwn2Type.Item) {
+					image = GetImage("Placeholder","Item");
+				}
+				else {
+					image = GetImage("Placeholder","Instance");
+				}
+			}
+			
+			return new ObjectBlock(image,behaviour);
+		}
+		
+		
+//		/ <summary>
+//		/ Creates an ObjectBlock representing a given instance.
+//		/ </summary>
+//		/ <param name="instance">The instance to represent.</param>
+//		/ <param name="instance">The area holding this instance.</param>
+//		/ <returns>An ObjectBlock representing the given instance.</returns>
+//		/ <remarks>The Area property of an instance is sometimes null, even if
+//		/ the area has not actually been disposed. For this reason, CreateInstanceBlock
+//		/ has an overload which allows you to pass in the holding area directly.</remarks>
 		
 		
 		protected string GetDisplayName(INWN2Template template)
@@ -291,56 +358,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		#endregion
 		
-		#region Behaviours
-		
-		/// <summary>
-		/// Gets an ObjectBehaviour representing the player.
-		/// </summary>
-		/// <returns>An ObjectBehaviour representing the player.</returns>
-		protected ObjectBehaviour GetPlayerBlockBehaviour()
-		{
-			return new Player();
-		}
-		
-		
-		/// <summary>
-		/// Gets an ObjectBehaviour representing the module.
-		/// </summary>
-		/// <returns>An ObjectBehaviour representing the module.</returns>
-		protected ObjectBehaviour GetModuleBlockBehaviour()
-		{
-			return new Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.Module();
-		}
-		
-		
-		/// <summary>
-		/// Gets an ObjectBehaviour representing a particular instance.
-		/// </summary>
-		/// <param name="tag">The tag of the instance.</param>
-		/// <param name="displayName">The display name for this instance.</param>
-		/// <param name="type">The type of this instance.</param>
-		/// <param name="areaTag">The tag of the area containing this instance.</param>
-		/// <returns>An ObjectBehaviour representing a particular instance.</returns>
-		protected ObjectBehaviour GetInstanceBlockBehaviour(string tag, string displayName, NWN2ObjectType type, string areaTag)
-		{
-			return new Instance(tag,displayName,type,areaTag);
-		}
-		
-				
-		/// <summary>
-		/// Gets an ObjectBehaviour representing a particular blueprint.
-		/// </summary>
-		/// <param name="tag">The tag of the blueprint.</param>
-		/// <param name="displayName">The display name for this blueprint.</param>
-		/// <param name="type">The type of this blueprint.</param>
-		/// <returns>An ObjectBehaviour representing a particular blueprint.</returns>
-		protected ObjectBehaviour GetBlueprintBlockBehaviour(string resRef, string displayName, NWN2ObjectType type)
-		{
-			return new Blueprint(resRef,displayName,type);
-		}
-		
-		#endregion
-		
 		#region Images
 		
 		/// <summary>
@@ -389,21 +406,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		protected Image GetImage(NWN2ItemTemplate item)
+		protected Image GetIconImage(string icon)
 		{
-			if (item == null) throw new ArgumentNullException("item");
+			if (icon == null) throw new ArgumentNullException("icon");
+			if (icon == String.Empty) throw new ArgumentException("Must provide an icon name.","icon");
 			
 			// TODO:
 			// We should ultimately be using a .dll collection
 			// of image resources.
 			string pathFormat = @"C:\Flip\object pics\bmp icons\{0}.bmp";
-			string path = String.Format(pathFormat,item.Icon.ToString());
+			string path = String.Format(pathFormat,icon);
 			Image image = GetImage(path);
-			
-			if (image == null) {
-				path = String.Format(pathFormat,"Item");
-				image = GetImage(path);
-			}
 			
 			return image;
 		}

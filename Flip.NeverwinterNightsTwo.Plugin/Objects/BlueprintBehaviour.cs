@@ -34,98 +34,91 @@ using NWN2Toolset.NWN2.Data.Templates;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 {
 	/// <summary>
-	/// Description of Instance.
+	/// Description of Blueprint.
 	/// </summary>
-	public class Instance : Nwn2ObjectBehaviour
-	{
-		protected Nwn2Type type;		
-		protected string areaTag;
+	public class BlueprintBehaviour : Nwn2ObjectBehaviour
+	{		
+		protected string baseResRef;	
+		protected string iconName;
+		protected Nwn2Type type;
+		
+		
+		public string ResRef {
+			get { return Identifier; }
+			set { Identifier = value; }
+		}
+		
+		
+		public string BaseResRef {
+			get { return baseResRef; }
+			set { baseResRef = value; }
+		}
+		
+		
+		public string IconName {
+			get { return iconName; }
+			set { iconName = value; }
+		}
 		
 		
 		public override Nwn2Type Nwn2Type {
 			get { return type; }
 		}
-				
-		public string Tag {
-			get { return Identifier; }
-			set { Identifier = value; }
-		}
-		
-		public string AreaTag {
-			get { return areaTag; }
-			set { areaTag = value; }
-		}
 		
 		
-		protected Instance() : this(string.Empty,string.Empty,NWN2ObjectType.Light,string.Empty)
+		protected BlueprintBehaviour() : this(string.Empty,string.Empty,string.Empty,string.Empty,NWN2ObjectType.Light)
 		{			
 		}
 		
 		
-		public Instance(string tag, string displayName, Nwn2Type type, string areaTag) : base(tag,displayName)
+		public BlueprintBehaviour(string resRef, string displayName, string baseResRef, string iconName, Nwn2Type type) : base(resRef,displayName)
 		{		
+			this.baseResRef = baseResRef;
 			this.type = type;
-			this.areaTag = areaTag;
 		}
 		
 		
-		public Instance(string tag, string displayName, NWN2ObjectType type, string areaTag) : this(tag,displayName,Nwn2ScriptSlot.GetNwn2Type(type),areaTag)
+		public BlueprintBehaviour(string resRef, string displayName, string baseResRef, string iconName, NWN2ObjectType type) : this(resRef,displayName,baseResRef,iconName,Nwn2ScriptSlot.GetNwn2Type(type))
 		{		
 		}
 		
 		
 		public override string GetCode()
 		{			
-			// Previous used GetObjectByTagAndType(), but this function appears to be broken.
+			/* Not clear on when you would actually use a blueprint in NWScript,
+			 * but in the only places I can find reference to it they seem to just
+			 * use the ResRef. */
 			
-			// Get the nNth object with the specified tag.
-			// - sTag
-			// - nNth: the nth object with this tag may be requested
-			// * Returns OBJECT_INVALID if the object cannot be found.
-			// Note: The module cannot be retrieved by GetObjectByTag(), use GetModule() instead.
-			//object GetObjectByTag(string sTag, int nNth=0);
-			
-			int nTh = 0; // currently assuming we are referring to only the first object found with a given tag
-			
-			return String.Format("GetObjectByTag(\"{0}\",{1})",Tag,nTh);
+			return String.Format("\"{0}\"",ResRef);
 		}
 		
 		
 		public override string GetNaturalLanguage()
 		{
-			return DisplayName;
+			return String.Format("blueprint {0}",DisplayName);
 		}
 		
 		
 		public override ObjectBehaviour DeepCopy()
 		{
-			return new Instance(Identifier,DisplayName,type,areaTag);
+			return new BlueprintBehaviour(Identifier,DisplayName,IconName,BaseResRef,type);
 		}
 		
 		
 		public override string GetDescriptionOfObjectType()
 		{
-			return String.Format(Nwn2Fitter.SubtypeFormat,Nwn2Fitter.InstanceDescription,type);
-		}
-		
-		
-		public override bool Equals(ObjectBehaviour other)
-		{	
-			if (!base.Equals(other)) return false;
-						
-			Instance i = other as Instance;
-			
-			return i != null && i.areaTag == this.areaTag;
+			return String.Format(Nwn2Fitter.SubtypeFormat,Nwn2Fitter.BlueprintDescription,type);
 		}
 		
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Instance") {
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "BlueprintBehaviour") {
 				Identifier = reader["Identifier"];
 				DisplayName = reader["DisplayName"];	
 				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),reader["Nwn2Type"]);
-				AreaTag = reader["AreaTag"];				
+				BaseResRef = reader["BaseResRef"];
+				IconName = reader["IconName"];
 				reader.Read();
 			}
 		}
@@ -136,7 +129,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
 			writer.WriteAttributeString("Nwn2Type",type.ToString());
-			writer.WriteAttributeString("AreaTag",AreaTag);
+			writer.WriteAttributeString("BaseResRef",BaseResRef);
+			writer.WriteAttributeString("IconName",IconName);
 		}
 	}
 }
