@@ -28,6 +28,8 @@ using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using Sussex.Flip.Utils;
 
@@ -36,22 +38,18 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of ObjectBehaviour.
 	/// </summary>
-	[Serializable]
-	[XmlRoot("theobjectbehaviour")]
-	public abstract class ObjectBehaviour: DependencyObject, IDeepCopyable<ObjectBehaviour>, IEquatable<ObjectBehaviour>
+	public abstract class ObjectBehaviour: DependencyObject, IDeepCopyable<ObjectBehaviour>, IEquatable<ObjectBehaviour>, IXmlSerializable
 	{
     	protected static DependencyProperty IdentifierProperty;
     	protected static DependencyProperty DisplayNameProperty;   
     	
     	
-    	[XmlElement("theidentifier")]
     	public string Identifier {
     		get { return (string)base.GetValue(IdentifierProperty); }
     		set { base.SetValue(IdentifierProperty,value); }
     	}
     	
     	
-    	[XmlElement("theDisplayName")]
     	public string DisplayName {
     		get { return (string)base.GetValue(DisplayNameProperty); }
     		set { base.SetValue(DisplayNameProperty,value); }
@@ -90,32 +88,28 @@ namespace Sussex.Flip.UI
 		{
 			return other != null && other.GetType() == this.GetType() && other.Identifier == this.Identifier && other.DisplayName == this.DisplayName;
 		}
-	}
-	
-	
-	public class DefaultObjectBehaviour : ObjectBehaviour
-	{
-		public override string GetCode()
+		
+		
+		public virtual XmlSchema GetSchema()
 		{
-			return String.Empty;			
+			return null;
 		}
 		
 		
-		public override string GetNaturalLanguage()
+		public virtual void ReadXml(XmlReader reader)
 		{
-			return String.Empty;			
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ObjectBehaviour") {
+				Identifier = reader["Identifier"];
+				DisplayName = reader["DisplayName"];				
+				reader.Read();
+			}
 		}
 		
 		
-		public override string GetDescriptionOfObjectType()
+		public virtual void WriteXml(XmlWriter writer)
 		{
-			return String.Empty;
-		}
-		
-		
-		public override ObjectBehaviour DeepCopy()
-		{
-			return new DefaultObjectBehaviour();
+			writer.WriteAttributeString("Identifier",Identifier);
+			writer.WriteAttributeString("DisplayName",DisplayName);
 		}
 	}
 }

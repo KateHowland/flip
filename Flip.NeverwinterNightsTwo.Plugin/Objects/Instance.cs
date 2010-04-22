@@ -24,6 +24,9 @@
  */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using NWN2Toolset.NWN2.Data.Templates;
@@ -35,18 +38,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class Instance : Nwn2ObjectBehaviour
 	{
-		protected NWN2ObjectType type;		
+		protected Nwn2Type type;		
 		protected string areaTag;
 		
+		
+		public override Nwn2Type Nwn2Type {
+			get { return type; }
+		}
 				
 		public string Tag {
 			get { return Identifier; }
 			set { Identifier = value; }
-		}
-				
-		public NWN2ObjectType Type {
-			get { return type; }
-			set { type = value; }
 		}
 		
 		public string AreaTag {
@@ -60,10 +62,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public Instance(string tag, string displayName, NWN2ObjectType type, string areaTag) : base(tag,displayName)
+		public Instance(string tag, string displayName, Nwn2Type type, string areaTag) : base(tag,displayName)
 		{		
 			this.type = type;
 			this.areaTag = areaTag;
+		}
+		
+		
+		public Instance(string tag, string displayName, NWN2ObjectType type, string areaTag) : this(tag,displayName,Nwn2ScriptSlot.GetNwn2Type(type),areaTag)
+		{		
 		}
 		
 		
@@ -102,12 +109,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public override Nwn2Type GetNwn2Type()
-		{
-			return Nwn2ScriptSlot.GetNwn2Type(type);
-		}
-		
-		
 		public override bool Equals(ObjectBehaviour other)
 		{	
 			if (!base.Equals(other)) return false;
@@ -115,6 +116,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 			Instance i = other as Instance;
 			
 			return i != null && i.areaTag == this.areaTag;
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Instance") {
+				Identifier = reader["Identifier"];
+				DisplayName = reader["DisplayName"];	
+				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),reader["Nwn2Type"]);
+				AreaTag = reader["AreaTag"];				
+				reader.Read();
+			}
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			writer.WriteAttributeString("Identifier",Identifier);
+			writer.WriteAttributeString("DisplayName",DisplayName);
+			writer.WriteAttributeString("Nwn2Type",type.ToString());
+			writer.WriteAttributeString("AreaTag",AreaTag);
 		}
 	}
 }

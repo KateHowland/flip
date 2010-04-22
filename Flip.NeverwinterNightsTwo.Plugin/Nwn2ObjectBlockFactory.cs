@@ -78,11 +78,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (area == null) throw new ArgumentNullException("area");
 			
-			Image image;
-			if (area.HasTerrain) image = GetImage("Other","Area_Exterior");
-			else image = GetImage("Other","Area_Interior");
-						
-			if (image == null) image = GetImage("Placeholder","Default");			
+			Area behaviour = CreateAreaBehaviour(area);
+			
+			ObjectBlock block = CreateAreaBlock(behaviour);
+			
+			return block;
+		}
+		
+		
+		public Area CreateAreaBehaviour(NWN2GameArea area)
+		{
+			if (area == null) throw new ArgumentNullException("area");
 			
 			string tag = area.Tag;
 			string displayName = area.DisplayName.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage).Value;
@@ -90,7 +96,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				displayName = tag;
 			}
 		
-			ObjectBlock block = new ObjectBlock(image,GetAreaBlockBehaviour(tag,displayName));
+			return new Area(tag,displayName,area.HasTerrain);
+		}
+		
+		
+		/// <summary>
+		/// Creates an ObjectBlock representing a given area.
+		/// </summary>
+		/// <param name="area">An object representing the behaviour of
+		/// and information about the ObjectBlock which is to be created.</param>
+		/// <returns>An ObjectBlock representing the given area.</returns>
+		public ObjectBlock CreateAreaBlock(Area area)
+		{
+			if (area == null) throw new ArgumentNullException("area");
+			
+			Image image;
+			if (area.IsExterior) image = GetImage("Other","Area_Exterior");
+			else image = GetImage("Other","Area_Interior");
+						
+			if (image == null) image = GetImage("Placeholder","Default");
+		
+			ObjectBlock block = new ObjectBlock(image,area);
 						
 			return block;
 		}
@@ -284,18 +310,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected ObjectBehaviour GetModuleBlockBehaviour()
 		{
 			return new Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.Module();
-		}
-		
-		
-		/// <summary>
-		/// Gets an ObjectBehaviour representing a particular area.
-		/// </summary>
-		/// <param name="tag">The tag of the area.</param>
-		/// <param name="displayName">The display name for this area.</param>
-		/// <returns>An ObjectBehaviour representing a particular area.</returns>
-		protected ObjectBehaviour GetAreaBlockBehaviour(string tag, string displayName)
-		{
-			return new Area(tag,displayName);
 		}
 		
 		

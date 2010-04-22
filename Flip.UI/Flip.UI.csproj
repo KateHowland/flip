@@ -82,6 +82,7 @@
     <Compile Include="Core\FlipScript.cs" />
     <Compile Include="Core\FlipTranslator.cs" />
     <Compile Include="Core\GameInformation.cs" />
+    <Compile Include="DefaultObjectBehaviour.cs" />
     <Compile Include="DoWhileControl.xaml.cs">
       <DependentUpon>DoWhileControl.xaml</DependentUpon>
       <SubType>Code</SubType>

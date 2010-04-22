@@ -343,31 +343,51 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);
 		}
+				
 		
+		Serialiser serialiser = new Serialiser();	
 		
 		public override Moveable GetMoveableFromSerialised(string path)
-		{
-			Serialiser serialiser = new Serialiser();
+		{			
+			if (path == null) throw new ArgumentNullException("path");
 			
-			foreach (Type t in new Type[] { typeof(Area), typeof(Blueprint), typeof(Instance), typeof(Module), typeof(Player) }) {
-				
-				if (serialiser.CanDeserialise(path,t)) {
-					ObjectBehaviour behaviour = (ObjectBehaviour)serialiser.Deserialise(path,t);
-					ObjectBlock block = new ObjectBlock(null,behaviour);
-					return block;
-				}
-				
+			if (serialiser.CanDeserialise(path,typeof(Area))) {				
+				Area behaviour = (Area)serialiser.Deserialise(path,typeof(Area));
+				ObjectBlock block = blocks.CreateAreaBlock(behaviour);
+				return block;				
 			}
 			
-			if (serialiser.CanDeserialise(path,typeof(EventBehaviour))) {				
-				
-				EventBehaviour behaviour = (EventBehaviour)serialiser.Deserialise(path,typeof(EventBehaviour));		
-				EventBlock block = new EventBlock(behaviour);
-				return block;
-				
+//			else if (serialiser.CanDeserialise(path,typeof(Blueprint))) {				
+//				Blueprint behaviour = (Blueprint)serialiser.Deserialise(path,typeof(Blueprint));
+//				ObjectBlock block = blocks.CreateBlueprintBlock(behaviour);
+//				return block;				
+//			}
+//			
+//			else if (serialiser.CanDeserialise(path,typeof(Instance))) {				
+//				Instance behaviour = (Instance)serialiser.Deserialise(path,typeof(Instance));
+//				ObjectBlock block = blocks.CreateInstanceBlock(behaviour);
+//				return block;				
+//			}
+			
+			if (serialiser.CanDeserialise(path,typeof(Module))) {			
+				ObjectBlock block = blocks.CreateModuleBlock();
+				return block;				
 			}
 			
-			return null;
+			else if (serialiser.CanDeserialise(path,typeof(Player))) {		
+				ObjectBlock block = blocks.CreatePlayerBlock();
+				return block;				
+			}
+			
+//			else if (serialiser.CanDeserialise(path,typeof(EventBehaviour))) {			
+//				EventBehaviour behaviour = (EventBehaviour)serialiser.Deserialise(path,typeof(EventBehaviour));
+//				EventBlock block = blocks.CreateEventBlock(behaviour);
+//				return block;				
+//			}
+			
+			else {
+				throw new ArgumentException("Could not deserialise the target to a known type.","path");
+			}
 		}
 	}
 }

@@ -88,16 +88,15 @@ namespace Sussex.Flip.UI
 		
 		protected void OpenTrigger(object sender, RoutedEventArgs e)
 		{
-			ObjectBlock raiser = provider.GetMoveableFromSerialised(raiserPath) as ObjectBlock;
-			EventBlock eventBlock = provider.GetMoveableFromSerialised(eventPath) as EventBlock;
-			
-			if (raiser != null && eventBlock != null) {	
-				triggerBar.TriggerControl.RaiserBlock = raiser;
-				triggerBar.TriggerControl.EventBlock = eventBlock;
+			EventBehaviour eb = serialiser.Deserialise(eventPath,typeof(EventBehaviour)) as EventBehaviour;
+			if (eb != null) {
+				EventBlock block = new EventBlock(eb);
+				triggerBar.TriggerControl.EventBlock = block;
 			}
-				
-			else {				
-				MessageBox.Show("Trigger could not be loaded.");					
+			
+			ObjectBlock raiser = provider.GetMoveableFromSerialised(raiserPath) as ObjectBlock;
+			if (raiser != null) {
+				triggerBar.TriggerControl.RaiserBlock = raiser;
 			}
 		}
 		

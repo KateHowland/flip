@@ -138,7 +138,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			else {
 				Nwn2ObjectBehaviour behaviour = (Nwn2ObjectBehaviour)block.Behaviour;
 				
-				switch (behaviour.GetNwn2Type()) {
+				switch (behaviour.Nwn2Type) {
 						
 					case Nwn2Type.Area:
 						if (String.IsNullOrEmpty(raiserName)) raiserName = "a particular area";
@@ -208,7 +208,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				Instance instanceBehaviour = (Instance)RaiserBlock.Behaviour;
 				
 				string areaTag = instanceBehaviour.AreaTag;
-				Nwn2Type targetType = instanceBehaviour.GetNwn2Type();
+				Nwn2Type targetType = instanceBehaviour.Nwn2Type;
 				string instanceTag = instanceBehaviour.Tag;
 				
 				address = addressFactory.GetInstanceAddress(EventBlock.EventName,areaTag,targetType,instanceTag);
