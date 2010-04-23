@@ -10,6 +10,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
@@ -224,6 +227,24 @@ namespace Sussex.Flip.UI
 			}
 			
 			return behaviour.GetNaturalLanguage(args);
+		}
+			
+		
+		public override XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+			throw new NotImplementedException();
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			throw new NotImplementedException();
 		}
     }
 }

@@ -66,7 +66,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		protected BlueprintBehaviour() : this(string.Empty,string.Empty,string.Empty,string.Empty,NWN2ObjectType.Light)
+		public BlueprintBehaviour() : this(string.Empty,string.Empty,string.Empty,string.Empty,NWN2ObjectType.Light)
 		{			
 		}
 		
@@ -126,11 +126,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void WriteXml(XmlWriter writer)
 		{
+			writer.WriteStartElement("BlueprintBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
 			writer.WriteAttributeString("Nwn2Type",type.ToString());
 			writer.WriteAttributeString("BaseResRef",BaseResRef);
 			writer.WriteAttributeString("IconName",IconName);
+			writer.WriteEndElement();
 		}
 	}
 }

@@ -10,8 +10,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
 using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
@@ -128,6 +129,24 @@ namespace Sussex.Flip.UI
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("Behaviour",Behaviour,typeof(EventBehaviour));
+		}
+			
+		
+		public override XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+			//throw new NotImplementedException();
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			if (Behaviour != null) Behaviour.WriteXml(writer);
 		}
     }
 }

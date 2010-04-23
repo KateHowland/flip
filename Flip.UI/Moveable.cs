@@ -31,6 +31,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
@@ -38,7 +40,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of Moveable.
 	/// </summary>
-	public abstract class Moveable : UserControl, IDeepCopyable<Moveable>, ITranslatable
+	public abstract class Moveable : UserControl, IDeepCopyable<Moveable>, ITranslatable, IXmlSerializable
 	{
 		public event EventHandler Changed;
 		
@@ -113,6 +115,9 @@ namespace Sussex.Flip.UI
 		public abstract Moveable DeepCopy();
 		public abstract string GetCode();
 		public abstract string GetNaturalLanguage();
-		public abstract bool IsComplete { get; }
+		public abstract bool IsComplete { get; }		
+		public abstract XmlSchema GetSchema();
+		public abstract void ReadXml(XmlReader reader);
+		public abstract void WriteXml(XmlWriter writer);
 	}
 }

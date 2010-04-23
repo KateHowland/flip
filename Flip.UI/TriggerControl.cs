@@ -25,13 +25,16 @@
 
 using System;
 using System.Windows.Controls;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
 	/// Description of TriggerControl.
 	/// </summary>
-	public abstract class TriggerControl : UserControl, ITranslatable
+	public abstract class TriggerControl : UserControl, ITranslatable, IXmlSerializable
 	{
 		public event EventHandler Changed;
 		
@@ -51,5 +54,8 @@ namespace Sussex.Flip.UI
 		public abstract string GetCode();
 		public abstract string GetNaturalLanguage();
 		public abstract string GetAddress();
+		public abstract XmlSchema GetSchema();
+		public abstract void ReadXml(XmlReader reader);
+		public abstract void WriteXml(XmlWriter writer);
 	}
 }

@@ -59,7 +59,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 				
 		
-		protected AreaBehaviour() : this(string.Empty,string.Empty,true)
+		public AreaBehaviour() : this(string.Empty,string.Empty,true)
 		{			
 		}
 		
@@ -114,9 +114,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void WriteXml(XmlWriter writer)
 		{
+			writer.WriteStartElement("AreaBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
 			writer.WriteAttributeString("IsExterior",isExterior.ToString());
+			writer.WriteEndElement();
 		}
 		
 		

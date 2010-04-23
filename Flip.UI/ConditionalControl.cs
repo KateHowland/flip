@@ -28,6 +28,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
@@ -75,5 +78,23 @@ namespace Sussex.Flip.UI
 		/// The actions to be taken if the condition is met.
 		/// </summary>
 		public abstract Spine Consequences { get; set; }
+			
+		
+		public override XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+			throw new NotImplementedException();
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
