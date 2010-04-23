@@ -88,5 +88,6 @@ namespace Sussex.Flip.UI
 		
 		
 		public abstract Moveable GetMoveableFromSerialised(string path);
+		public abstract void GetTriggerFromSerialised(TriggerControl triggerControl, string path);
 	}
 }

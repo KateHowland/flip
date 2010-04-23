@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
@@ -147,15 +142,56 @@ namespace Sussex.Flip.UI
 		
 		public override string ToString()
 		{
-			// TODO:
-			// TEMP:
-			return GetDescriptionOfObjectType();
+			return String.Format("Block ({0})",Behaviour);
 		}
 		
     	
 		public bool Equals(ObjectBlock other)
 		{
 			return other != null && other.Behaviour.Equals(this.Behaviour);
+		}		
+		
+			
+		public override XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+//			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ObjectBlock") {
+//				
+//				if (reader.ReadToDescendant("Behaviour")) {
+//					
+//					if (reader.Read() && reader.LocalName.EndsWith("Behaviour")) {
+//						
+//						reader.ReadContentAs(typeof(Obje
+//						
+//					}
+//					
+////						// This doesn't work because we want to replace our current ObjectBehaviour
+////						// (which is a DefaultObjectBehaviour) with a new one, not set fields
+////						// on the current one
+////						Behaviour.ReadXml(reader);
+//				}
+//				
+//				else {
+//					MessageBox.Show("Couldn't find behaviour.");
+//				}
+//				
+//				reader.Read();
+//			}
+//			
+//			else {
+//				MessageBox.Show("No object block.");
+//			}
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			if (Behaviour != null) Behaviour.WriteXml(writer);
 		}
     }
 }

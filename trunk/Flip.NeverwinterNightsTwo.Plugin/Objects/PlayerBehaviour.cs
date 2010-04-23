@@ -88,8 +88,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void WriteXml(XmlWriter writer)
 		{
+			writer.WriteStartElement("PlayerBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
+			writer.WriteEndElement();
 		}
 	}
 }

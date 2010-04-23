@@ -63,7 +63,10 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-    	protected EventBehaviour() : this(string.Empty,string.Empty)
+    	/// <summary>
+    	/// Parameterless constructor for deserialisation.
+    	/// </summary>
+    	public EventBehaviour() : this(string.Empty,string.Empty)
     	{    		
     	}
     	
@@ -114,8 +117,10 @@ namespace Sussex.Flip.UI
 		
 		public void WriteXml(XmlWriter writer)
 		{
+			writer.WriteStartElement("EventBehaviour");
 			writer.WriteAttributeString("EventName",EventName);
 			writer.WriteAttributeString("DisplayName",DisplayName);
+			writer.WriteEndElement();
 		}
 	}
 }

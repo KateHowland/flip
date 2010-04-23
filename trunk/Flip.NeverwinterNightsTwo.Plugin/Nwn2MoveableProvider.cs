@@ -379,6 +379,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				return block;				
 			}
 			
+			else if (serialiser.CanDeserialise(path,typeof(ObjectBlock))) {
+				
+				
+				ObjectBlock block = (ObjectBlock)serialiser.Deserialise(path,typeof(ObjectBlock));				
+				return block;
+			}
+			
 //			else if (serialiser.CanDeserialise(path,typeof(EventBehaviour))) {			
 //				EventBehaviour behaviour = (EventBehaviour)serialiser.Deserialise(path,typeof(EventBehaviour));
 //				EventBlock block = blocks.CreateEventBlock(behaviour);
@@ -387,6 +394,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			else {
 				throw new ArgumentException("Could not deserialise the target to a known type.","path");
+			}
+		}
+		
+		
+		public override void GetTriggerFromSerialised(TriggerControl triggerControl, string path)
+		{
+			if (triggerControl == null) throw new ArgumentNullException("triggerControl");
+			if (path == null) throw new ArgumentNullException("path");
+			
+			Nwn2TriggerControl tc = serialiser.Deserialise(path,typeof(Nwn2TriggerControl)) as Nwn2TriggerControl;
+			
+			//HACK:
+			if (tc.RaiserBlock != null) {
+				triggerControl.RaiserBlock = (ObjectBlock)tc.RaiserBlock.DeepCopy();
+			}
+			
+			if (tc.EventBlock != null) {
+				triggerControl.EventBlock = (EventBlock)tc.EventBlock.DeepCopy();
 			}
 		}
 	}

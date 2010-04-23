@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using NWN2Toolset.NWN2.Data.Templates;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
@@ -219,6 +212,80 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			return address.Value;
+		}
+		
+		
+		public override XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{		
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Nwn2TriggerControl") {
+				
+				if (reader.ReadToDescendant("EventRaiser")) {
+					
+					if (reader.Read() && reader.LocalName.EndsWith("Behaviour")) {
+						
+						Type[] types = new Type[] { 
+							typeof(AreaBehaviour),
+							typeof(BlueprintBehaviour), 
+							typeof(InstanceBehaviour),
+							typeof(ModuleBehaviour),
+							typeof(PlayerBehaviour)
+						};
+						
+						foreach (Type type in types) {
+							
+							if (type.Name == reader.LocalName) {
+								
+								ObjectBehaviour behaviour = (ObjectBehaviour)Assembly.GetExecutingAssembly().CreateInstance(type.FullName);
+								
+								System.Diagnostics.Debug.Assert(behaviour != null,"Behaviour was null.");
+																
+								behaviour.ReadXml(reader);
+								
+								// HACK (this will eventually live somewhere other than TriggerControl, 
+								// so we'll be able to access the existing object block factory):
+								
+								RaiserBlock = new Nwn2ObjectBlockFactory().CreateBlock(behaviour);
+								
+							}
+							
+						}
+						
+					}
+					
+				}
+				
+				if (reader.ReadToFollowing("Event")) {
+					
+					if (reader.Read() && reader.LocalName == "EventBehaviour") {
+						
+						EventBehaviour eb = new EventBehaviour();
+						eb.ReadXml(reader);
+						EventBlock = new EventBlock(eb);
+						
+					}
+					
+				}
+				
+				reader.Read();
+			}
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			writer.WriteStartElement("EventRaiser");
+			if (RaiserBlock != null) RaiserBlock.WriteXml(writer);
+			writer.WriteEndElement();
+			
+			writer.WriteStartElement("Event");
+			if (EventBlock != null) EventBlock.WriteXml(writer);
+			writer.WriteEndElement();
 		}
     }
 }

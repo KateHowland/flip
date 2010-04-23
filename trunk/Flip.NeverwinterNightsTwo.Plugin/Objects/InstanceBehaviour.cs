@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		protected InstanceBehaviour() : this(string.Empty,string.Empty,NWN2ObjectType.Light,string.Empty,string.Empty,string.Empty)
+		public InstanceBehaviour() : this(string.Empty,string.Empty,NWN2ObjectType.Light,string.Empty,string.Empty,string.Empty)
 		{			
 		}
 		
@@ -135,6 +135,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
+		public override string ToString()
+		{
+			return String.Format("{0}, {1}, {2}, {3}, {4}",Tag,DisplayName,ResRef,AreaTag,IconName);
+		}
+		
+		
 		public override void ReadXml(XmlReader reader)
 		{
 			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "InstanceBehaviour") {
@@ -146,17 +152,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 				IconName = reader["IconName"];				
 				reader.Read();
 			}
+			else {
+				System.Windows.MessageBox.Show("Couldnt read INstanceBeahviour");
+			}
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
+			writer.WriteStartElement("InstanceBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
 			writer.WriteAttributeString("Nwn2Type",type.ToString());
 			writer.WriteAttributeString("AreaTag",AreaTag);
 			writer.WriteAttributeString("ResRef",ResRef);
 			writer.WriteAttributeString("IconName",IconName);
+			writer.WriteEndElement();
 		}
 	}
 }

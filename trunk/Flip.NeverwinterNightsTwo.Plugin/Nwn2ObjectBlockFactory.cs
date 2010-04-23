@@ -296,6 +296,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public ObjectBlock CreateBlock(ObjectBehaviour behaviour)
+		{
+			if (behaviour == null) throw new ArgumentNullException("behaviour");
+			
+			if (behaviour is AreaBehaviour) return CreateAreaBlock((AreaBehaviour)behaviour);
+			
+			if (behaviour is BlueprintBehaviour) return CreateBlueprintBlock((BlueprintBehaviour)behaviour);
+							
+			if (behaviour is InstanceBehaviour) return CreateInstanceBlock((InstanceBehaviour)behaviour);
+			
+			if (behaviour is ModuleBehaviour) return CreateModuleBlock();
+			
+			if (behaviour is PlayerBehaviour) return CreatePlayerBlock();
+			
+			throw new ArgumentException("Passed behaviour was not of a type that can be processed by this factory.","behaviour");
+		}
+		
+		
 //		/ <summary>
 //		/ Creates an ObjectBlock representing a given instance.
 //		/ </summary>

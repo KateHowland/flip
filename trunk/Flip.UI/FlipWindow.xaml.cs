@@ -65,36 +65,26 @@ namespace Sussex.Flip.UI
 		
 		
 		Sussex.Flip.Utils.Serialiser serialiser;
-		string raiserPath = @"C:\Flip\raiser.txt";
-		string eventPath = @"C:\Flip\event.txt";
+		string triggerPath = @"C:\Flip\trigger.txt";
 		
 		protected void SaveTrigger(object sender, RoutedEventArgs e)
 		{
-			ObjectBlock raiser = triggerBar.TriggerControl.RaiserBlock;
-			EventBlock eventBlock = triggerBar.TriggerControl.EventBlock;
-			
-			if (raiser != null && eventBlock != null) {	
-				serialiser.Serialise(raiserPath,raiser.Behaviour);
-				serialiser.Serialise(eventPath,eventBlock.Behaviour);				
+			try {
+				serialiser.Serialise(triggerPath,triggerBar.TriggerControl);
 			}
-				
-			else {				
-				MessageBox.Show("Trigger incomplete.");					
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
 			}
 		}
 		
 		
 		protected void OpenTrigger(object sender, RoutedEventArgs e)
 		{
-			EventBehaviour eb = serialiser.Deserialise(eventPath,typeof(EventBehaviour)) as EventBehaviour;
-			if (eb != null) {
-				EventBlock block = new EventBlock(eb);
-				triggerBar.TriggerControl.EventBlock = block;
+			try {
+				provider.GetTriggerFromSerialised(triggerBar.TriggerControl,triggerPath);
 			}
-			
-			ObjectBlock raiser = provider.GetMoveableFromSerialised(raiserPath) as ObjectBlock;
-			if (raiser != null) {
-				triggerBar.TriggerControl.RaiserBlock = raiser;
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
 			}
 		}
 		
