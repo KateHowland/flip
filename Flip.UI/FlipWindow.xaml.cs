@@ -65,12 +65,23 @@ namespace Sussex.Flip.UI
 		
 		
 		Sussex.Flip.Utils.Serialiser serialiser;
-		string triggerPath = @"C:\Flip\trigger.txt";
+		string scriptPath = @"C:\Flip\script.txt";				
 		
-		protected void SaveTrigger(object sender, RoutedEventArgs e)
+		protected void OpenScript(object sender, RoutedEventArgs e)
 		{
 			try {
-				serialiser.Serialise(triggerPath,triggerBar.TriggerControl);
+				OpenScript(scriptPath);
+			}
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
+			}
+		}		
+				
+		
+		protected void SaveScript(object sender, RoutedEventArgs e)
+		{
+			try {
+				SaveScript(scriptPath);
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
@@ -78,14 +89,48 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void OpenTrigger(object sender, RoutedEventArgs e)
+		public void OpenScript(string path)
 		{
-			try {
-				provider.GetTriggerFromSerialised(triggerBar.TriggerControl,triggerPath);
+			if (path == null) throw new ArgumentNullException("path");
+			
+			ScriptInformation script = provider.GetScriptFromSerialised(scriptPath);
+			OpenScript(script);
+		}
+		
+		
+		public void OpenScript(ScriptInformation script)
+		{
+			if (script == null) throw new ArgumentNullException("script");
+				
+			// TODO:
+			// do properly.. either don't deserialise the full controls, or do
+			// and completely replace the ones that automatically appear on screen
+			// HACK:
+			if (script.EventRaiser != null) {
+				triggerBar.TriggerControl.RaiserBlock = (ObjectBlock)script.EventRaiser.DeepCopy();
 			}
-			catch (Exception x) {
-				MessageBox.Show(x.ToString());
+			if (script.EventName != null) {
+				triggerBar.TriggerControl.EventBlock = (EventBlock)script.EventName.DeepCopy();
 			}
+			if (script.Spine != null) {
+				// TODO
+			}
+		}
+		
+		
+		public void SaveScript(string path)
+		{
+			ScriptInformation script = triggerBar.GetScript();
+			SaveScript(script,path);
+		}
+		
+		
+		public void SaveScript(ScriptInformation script, string path)
+		{
+			if (script == null) throw new ArgumentNullException("script");
+			if (path == null) throw new ArgumentNullException("path");
+			
+			provider.WriteScriptToFile(script,path);
 		}
 		
 

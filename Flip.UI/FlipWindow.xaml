@@ -57,12 +57,12 @@
 					Click="RefreshBlocks"/>
 				
 					<MenuItem
-					Header="Save trigger"
-					Click="SaveTrigger"/>
+					Header="Save script"
+					Click="SaveScript"/>
 				
 					<MenuItem
-					Header="Open trigger"
-					Click="OpenTrigger"/>
+					Header="Open script"
+					Click="OpenScript"/>
 				
 				</MenuItem>
 					

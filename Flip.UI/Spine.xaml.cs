@@ -5,6 +5,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
@@ -13,7 +16,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for Spine.xaml
     /// </summary>
 
-    public partial class Spine : UserControl, ITranslatable, IDeepCopyable<Spine>
+    public partial class Spine : UserControl, ITranslatable, IDeepCopyable<Spine>, IXmlSerializable
     {
 		public event EventHandler Changed;
 		
@@ -345,6 +348,38 @@ namespace Sussex.Flip.UI
 			}
 			
 			return copy;
+		}
+		
+    	
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+    	
+		public void ReadXml(XmlReader reader)
+		{		
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Spine") {
+				
+				if (reader.ReadToDescendant("Pegs")) {
+					
+					
+				}
+				
+				reader.Read();
+			}
+		}
+		
+    	
+		public void WriteXml(XmlWriter writer)
+		{
+			writer.WriteStartElement("Pegs");
+			
+			foreach (Peg peg in Pegs) {
+				peg.WriteXml(writer);
+			}
+			
+			writer.WriteEndElement();
 		}
     }
 }
