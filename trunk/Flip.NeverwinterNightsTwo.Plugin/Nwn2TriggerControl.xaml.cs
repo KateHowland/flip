@@ -182,6 +182,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public override string ToString()
+		{
+			return GetNaturalLanguage();
+		}
+		
+		
 		public override string GetAddress()
 		{
 			if (EventBlock == null || RaiserBlock == null) return null;
@@ -223,11 +229,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override void ReadXml(XmlReader reader)
 		{		
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Nwn2TriggerControl") {
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Trigger") {
 				
 				if (reader.ReadToDescendant("EventRaiser")) {
-					
-					if (reader.Read() && reader.LocalName.EndsWith("Behaviour")) {
+										
+					// HACK:
+					if (reader.Read() && reader.Read() && reader.LocalName.EndsWith("Behaviour")) {
 						
 						Type[] types = new Type[] { 
 							typeof(AreaBehaviour),
@@ -242,8 +249,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							if (type.Name == reader.LocalName) {
 								
 								ObjectBehaviour behaviour = (ObjectBehaviour)Assembly.GetExecutingAssembly().CreateInstance(type.FullName);
-								
-								System.Diagnostics.Debug.Assert(behaviour != null,"Behaviour was null.");
 																
 								behaviour.ReadXml(reader);
 								
@@ -251,7 +256,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								// so we'll be able to access the existing object block factory):
 								
 								RaiserBlock = new Nwn2ObjectBlockFactory().CreateBlock(behaviour);
-								
 							}
 							
 						}
@@ -260,10 +264,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					
 				}
 				
-				if (reader.ReadToFollowing("Event")) {
+				if (reader.ReadToFollowing("EventName")) {
 					
-					if (reader.Read() && reader.LocalName == "EventBehaviour") {
-						
+					if (reader.ReadToDescendant("EventBehaviour")) {
+												
 						EventBehaviour eb = new EventBehaviour();
 						eb.ReadXml(reader);
 						EventBlock = new EventBlock(eb);

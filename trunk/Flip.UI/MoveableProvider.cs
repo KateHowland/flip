@@ -87,7 +87,7 @@ namespace Sussex.Flip.UI
 		protected abstract void PopulateBags();
 		
 		
-		public abstract Moveable GetMoveableFromSerialised(string path);
-		public abstract void GetTriggerFromSerialised(TriggerControl triggerControl, string path);
+		public abstract ScriptInformation GetScriptFromSerialised(string path);
+		public abstract void WriteScriptToFile(ScriptInformation script, string path);
 	}
 }

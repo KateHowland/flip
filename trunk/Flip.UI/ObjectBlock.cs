@@ -160,32 +160,6 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-//			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ObjectBlock") {
-//				
-//				if (reader.ReadToDescendant("Behaviour")) {
-//					
-//					if (reader.Read() && reader.LocalName.EndsWith("Behaviour")) {
-//						
-//						reader.ReadContentAs(typeof(Obje
-//						
-//					}
-//					
-////						// This doesn't work because we want to replace our current ObjectBehaviour
-////						// (which is a DefaultObjectBehaviour) with a new one, not set fields
-////						// on the current one
-////						Behaviour.ReadXml(reader);
-//				}
-//				
-//				else {
-//					MessageBox.Show("Couldn't find behaviour.");
-//				}
-//				
-//				reader.Read();
-//			}
-//			
-//			else {
-//				MessageBox.Show("No object block.");
-//			}
 		}
 		
 		

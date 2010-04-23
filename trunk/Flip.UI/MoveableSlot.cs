@@ -27,6 +27,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Schema;
 using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
@@ -296,6 +298,24 @@ namespace Sussex.Flip.UI
 		{
 			if (Contents == null) return fitter.GetMoveableDescription();
 			else return Contents.GetNaturalLanguage();
+		}
+		
+    	
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+    	
+		public void ReadXml(XmlReader reader)
+		{
+			throw new NotImplementedException();
+		}
+		
+    	
+		public void WriteXml(XmlWriter writer)
+		{
+			if (Contents != null) Contents.WriteXml(writer);
 		}
 		
 		#endregion

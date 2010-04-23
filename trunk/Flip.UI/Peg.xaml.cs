@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Media.Effects;
-using Sussex.Flip.Utils;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace Sussex.Flip.UI
 {
@@ -52,5 +42,23 @@ namespace Sussex.Flip.UI
             Grid.SetColumn(slot,1);
             mainGrid.Children.Add(slot);
         }  
+		
+    	
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+    	
+		public void ReadXml(XmlReader reader)
+		{
+			throw new NotImplementedException();
+		}
+		
+    	
+		public void WriteXml(XmlWriter writer)
+		{
+			slot.WriteXml(writer);
+		}
     }
 }

@@ -30,6 +30,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
@@ -347,71 +350,72 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		Serialiser serialiser = new Serialiser();	
 		
-		public override Moveable GetMoveableFromSerialised(string path)
-		{			
+		public override ScriptInformation GetScriptFromSerialised(string path)
+		{
 			if (path == null) throw new ArgumentNullException("path");
 			
-			if (serialiser.CanDeserialise(path,typeof(AreaBehaviour))) {				
-				AreaBehaviour behaviour = (AreaBehaviour)serialiser.Deserialise(path,typeof(AreaBehaviour));
-				ObjectBlock block = blocks.CreateAreaBlock(behaviour);
-				return block;				
-			}
-			
-			else if (serialiser.CanDeserialise(path,typeof(BlueprintBehaviour))) {				
-				BlueprintBehaviour behaviour = (BlueprintBehaviour)serialiser.Deserialise(path,typeof(BlueprintBehaviour));
-				ObjectBlock block = blocks.CreateBlueprintBlock(behaviour);
-				return block;				
-			}
-			
-			else if (serialiser.CanDeserialise(path,typeof(InstanceBehaviour))) {				
-				InstanceBehaviour behaviour = (InstanceBehaviour)serialiser.Deserialise(path,typeof(InstanceBehaviour));
-				ObjectBlock block = blocks.CreateInstanceBlock(behaviour);
-				return block;				
-			}
-			
-			if (serialiser.CanDeserialise(path,typeof(ModuleBehaviour))) {			
-				ObjectBlock block = blocks.CreateModuleBlock();
-				return block;				
-			}
-			
-			else if (serialiser.CanDeserialise(path,typeof(PlayerBehaviour))) {		
-				ObjectBlock block = blocks.CreatePlayerBlock();
-				return block;				
-			}
-			
-			else if (serialiser.CanDeserialise(path,typeof(ObjectBlock))) {
+			XmlReader reader = new XmlTextReader(path);
 				
+			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ScriptInformation") {
+					
+				Nwn2TriggerControl tc = new Nwn2TriggerControl();
+				Spine spine = new Spine();
 				
-				ObjectBlock block = (ObjectBlock)serialiser.Deserialise(path,typeof(ObjectBlock));				
-				return block;
-			}
+				if (reader.ReadToDescendant("Trigger")) {
+					tc.ReadXml(reader);
+				}
+				if (reader.ReadToFollowing("Spine")) {
+					spine.ReadXml(reader);
+				}
 			
-//			else if (serialiser.CanDeserialise(path,typeof(EventBehaviour))) {			
-//				EventBehaviour behaviour = (EventBehaviour)serialiser.Deserialise(path,typeof(EventBehaviour));
-//				EventBlock block = blocks.CreateEventBlock(behaviour);
-//				return block;				
-//			}
+				ScriptInformation script = new ScriptInformation(tc.RaiserBlock,tc.EventBlock,spine);
+							
+				return script;
+			}
 			
 			else {
-				throw new ArgumentException("Could not deserialise the target to a known type.","path");
+				throw new ArgumentException("Could not read file at " + path + ".");
 			}
 		}
 		
 		
-		public override void GetTriggerFromSerialised(TriggerControl triggerControl, string path)
+		public override void WriteScriptToFile(ScriptInformation script, string path)
 		{
-			if (triggerControl == null) throw new ArgumentNullException("triggerControl");
+			if (script == null) throw new ArgumentNullException("script");
 			if (path == null) throw new ArgumentNullException("path");
 			
-			Nwn2TriggerControl tc = serialiser.Deserialise(path,typeof(Nwn2TriggerControl)) as Nwn2TriggerControl;
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.CloseOutput = true;
+			settings.Indent = true;
+			settings.NewLineOnAttributes = false;
 			
-			//HACK:
-			if (tc.RaiserBlock != null) {
-				triggerControl.RaiserBlock = (ObjectBlock)tc.RaiserBlock.DeepCopy();
-			}
+			using (XmlWriter writer = XmlWriter.Create(path,settings)) {
 			
-			if (tc.EventBlock != null) {
-				triggerControl.EventBlock = (EventBlock)tc.EventBlock.DeepCopy();
+				writer.WriteStartDocument();
+			
+				writer.WriteStartElement("ScriptInformation");
+				
+				writer.WriteStartElement("Trigger");	
+				
+				writer.WriteStartElement("EventRaiser");
+				if (script.EventRaiser != null) script.EventRaiser.WriteXml(writer);
+				writer.WriteEndElement();
+					
+				writer.WriteStartElement("EventName");
+				if (script.EventName != null) script.EventName.WriteXml(writer);
+				writer.WriteEndElement();
+					
+				writer.WriteEndElement();
+				
+				writer.WriteStartElement("Spine");
+				if (script.Spine != null) script.Spine.WriteXml(writer);
+				writer.WriteEndElement();
+			
+				writer.WriteEndElement();
+				
+				writer.WriteEndDocument();
+				
+				writer.Flush();
 			}
 		}
 	}
