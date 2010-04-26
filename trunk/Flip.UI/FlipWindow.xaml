@@ -64,6 +64,10 @@
 					Header="Open script"
 					Click="OpenScript"/>
 				
+					<MenuItem
+					Header="Clear"
+					Click="Clear"/>
+				
 				</MenuItem>
 					
 				<MenuItem 

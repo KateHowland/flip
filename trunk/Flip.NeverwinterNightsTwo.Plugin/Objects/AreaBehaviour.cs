@@ -38,7 +38,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	public class AreaBehaviour : Nwn2ObjectBehaviour
 	{
 		protected bool isExterior;
+		protected static string behaviourType;
+			
+			
+		static AreaBehaviour()
+		{
+			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.AreaBehaviour";
+		}
 		
+		
+    	public override string BehaviourType { 
+			get { return behaviourType; }
+		}
+    	
 		
 		public override Nwn2Type Nwn2Type {
 			get {
@@ -103,22 +115,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "AreaBehaviour") {
-				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];
-				isExterior = Boolean.Parse(reader["IsExterior"]);
-				reader.Read();
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) {
+				throw new FormatException("Behaviour should not have a child.");
 			}
+			
+			Identifier = reader["Identifier"];
+			DisplayName = reader["DisplayName"];	
+			bool exterior;
+			if (Boolean.TryParse(reader["IsExterior"], out exterior)) {
+				IsExterior = exterior;
+			}			                     
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("AreaBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteAttributeString("IsExterior",isExterior.ToString());
-			writer.WriteEndElement();
+			writer.WriteAttributeString("IsExterior",XmlConvert.ToString(isExterior));
 		}
 		
 		

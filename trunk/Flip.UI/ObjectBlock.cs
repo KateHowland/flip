@@ -82,7 +82,10 @@ namespace Sussex.Flip.UI
     	}
 		
 		
-		protected ObjectBlock() : this(null,new DefaultObjectBehaviour())
+		/// <summary>
+		/// Parameterless constructor for deserialisation.
+		/// </summary>
+		public ObjectBlock() : this(null,new DefaultObjectBehaviour())
 		{			
 		}
     	
@@ -158,14 +161,30 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		public static BehaviourFactory behaviourFactory = null;
 		public override void ReadXml(XmlReader reader)
 		{
+			reader.MoveToContent();			
+			
+			if (reader.IsEmptyElement || !reader.ReadToDescendant("Behaviour")) {
+				throw new FormatException("ObjectBlock does not specify a Behaviour, and could not be deserialised.");
+			}
+			
+			Behaviour = behaviourFactory.GetObjectBehaviour(reader);
+			reader.ReadEndElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			if (Behaviour != null) Behaviour.WriteXml(writer);
+			if (Behaviour == null) {
+				throw new InvalidOperationException("The ObjectBlock being serialised has a null Behaviour property.");
+			}
+			
+			writer.WriteStartElement("Behaviour");
+			writer.WriteAttributeString("Type",Behaviour.BehaviourType);
+			Behaviour.WriteXml(writer);
+			writer.WriteEndElement();
 		}
     }
 }

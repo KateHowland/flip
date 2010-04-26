@@ -41,6 +41,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		protected string baseResRef;	
 		protected string iconName;
 		protected Nwn2Type type;
+		protected static string behaviourType;
+			
+			
+		static BlueprintBehaviour()
+		{
+			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.BlueprintBehaviour";
+		}
+		
+		
+    	public override string BehaviourType { 
+			get { return behaviourType; }
+		}
 		
 		
 		public string ResRef {
@@ -113,26 +125,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "BlueprintBehaviour") {
-				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];	
-				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),reader["Nwn2Type"]);
-				BaseResRef = reader["BaseResRef"];
-				IconName = reader["IconName"];
-				reader.Read();
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) {
+				throw new FormatException("Behaviour should not have a child.");
 			}
+			
+			Identifier = reader["Identifier"];
+			DisplayName = reader["DisplayName"];
+			BaseResRef = reader["BaseResRef"];
+			IconName = reader["IconName"];
+			
+			string nwn2TypeString = reader["Nwn2Type"];
+			if (!String.IsNullOrEmpty(nwn2TypeString) && Nwn2ScriptSlot.Nwn2TypeNames.Contains(nwn2TypeString)) {
+				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),nwn2TypeString);
+			}		            
+			
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("BlueprintBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteAttributeString("Nwn2Type",type.ToString());
+			writer.WriteAttributeString("Nwn2Type",Enum.GetName(typeof(Nwn2Type),type));
 			writer.WriteAttributeString("BaseResRef",BaseResRef);
 			writer.WriteAttributeString("IconName",IconName);
-			writer.WriteEndElement();
 		}
 	}
 }

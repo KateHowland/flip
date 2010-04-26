@@ -52,13 +52,28 @@ namespace Sussex.Flip.UI
     	
 		public void ReadXml(XmlReader reader)
 		{
-			throw new NotImplementedException();
+			reader.MoveToContent();
+			
+			if (reader.IsEmptyElement) {
+				reader.ReadStartElement();
+			}
+			
+			else {
+				if (!reader.ReadToDescendant("PegSlot")) {
+					throw new FormatException("Peg does not define a PegSlot.");
+				}
+				
+				Slot.ReadXml(reader);				
+				reader.ReadEndElement();
+			}
 		}
 		
     	
 		public void WriteXml(XmlWriter writer)
 		{
+			writer.WriteStartElement("PegSlot");
 			slot.WriteXml(writer);
+			writer.WriteEndElement();
 		}
     }
 }

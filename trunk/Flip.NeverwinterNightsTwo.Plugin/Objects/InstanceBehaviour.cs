@@ -42,6 +42,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		protected string iconName;
 		protected Nwn2Type type;		
 		protected string areaTag;
+		protected static string behaviourType;
+			
+			
+		static InstanceBehaviour()
+		{
+			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour";
+		}
+		
+		
+    	public override string BehaviourType { 
+			get { return behaviourType; }
+		}
 		
 		
 		public override Nwn2Type Nwn2Type {
@@ -143,31 +155,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "InstanceBehaviour") {
-				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];	
-				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),reader["Nwn2Type"]);
-				AreaTag = reader["AreaTag"];				
-				ResRef = reader["ResRef"];					
-				IconName = reader["IconName"];				
-				reader.Read();
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) {
+				throw new FormatException("Behaviour should not have a child.");
 			}
-			else {
-				System.Windows.MessageBox.Show("Couldnt read INstanceBeahviour");
-			}
+			
+			Identifier = reader["Identifier"];
+			DisplayName = reader["DisplayName"];
+			ResRef = reader["ResRef"];
+			IconName = reader["IconName"];
+			AreaTag = reader["AreaTag"];
+			
+			string nwn2TypeString = reader["Nwn2Type"];
+			if (!String.IsNullOrEmpty(nwn2TypeString) && Nwn2ScriptSlot.Nwn2TypeNames.Contains(nwn2TypeString)) {
+				type = (Nwn2Type)Enum.Parse(typeof(Nwn2Type),nwn2TypeString);
+			}            
+			
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("InstanceBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteAttributeString("Nwn2Type",type.ToString());
+			writer.WriteAttributeString("Nwn2Type",Enum.GetName(typeof(Nwn2Type),type));
 			writer.WriteAttributeString("AreaTag",AreaTag);
 			writer.WriteAttributeString("ResRef",ResRef);
 			writer.WriteAttributeString("IconName",IconName);
-			writer.WriteEndElement();
 		}
 	}
 }

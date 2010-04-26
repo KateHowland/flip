@@ -40,6 +40,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		public const string NWScript_GetPlayer = "GetFirstPC()";
 		
 		
+		protected static string behaviourType;
+			
+				
+    	public override string BehaviourType { 
+			get { return behaviourType; }
+		}
+			
+		
+		static PlayerBehaviour()
+		{
+			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.PlayerBehaviour";
+		}
+		
+		
 		public PlayerBehaviour() : base(String.Empty,"player")
 		{						
 		}
@@ -78,20 +92,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "PlayerBehaviour") {
-				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];	
-				reader.Read();
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) {
+				throw new FormatException("Behaviour should not have a child.");
 			}
+			
+			Identifier = reader["Identifier"];
+			DisplayName = reader["DisplayName"];				                     
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("PlayerBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteEndElement();
 		}
 	}
 }
