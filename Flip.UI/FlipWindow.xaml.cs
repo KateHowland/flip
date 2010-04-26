@@ -22,8 +22,15 @@ namespace Sussex.Flip.UI
 		protected MoveableProvider provider;
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, TriggerControl triggerControl)
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, TriggerControl triggerControl, BehaviourFactory behaviourFactory) // HACK
 		{
+			// HACK:
+			if (behaviourFactory == null) throw new ArgumentNullException("behaviourFactory");
+			ObjectBlock.behaviourFactory = behaviourFactory;
+			
+			
+			
+			
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
         	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
@@ -185,6 +192,23 @@ namespace Sussex.Flip.UI
 			provider.Refresh(blockBox);
 			MessageBox.Show("Refreshed.");
 		}	
+		
+		
+		protected void Clear(object sender, RoutedEventArgs e)
+		{
+			triggerBar.TriggerControl.EventBlock = null;
+			triggerBar.TriggerControl.RaiserBlock = null;
+			triggerBar.Spine.Clear();
+			
+			List<Moveable> moveables = new List<Moveable>(mainCanvas.Children.Count);
+			foreach (UIElement element in mainCanvas.Children) {
+				Moveable moveable = element as Moveable;
+				if (moveable != null) moveables.Add(moveable);
+			}
+			foreach (Moveable moveable in moveables) {
+				mainCanvas.Children.Remove(moveable);
+			}
+		}
 		
 		
 		protected void CreateAdorner(object sender, DragEventArgs e)

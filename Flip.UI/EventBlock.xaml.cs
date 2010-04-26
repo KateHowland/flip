@@ -77,7 +77,7 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-    	protected EventBlock() : this(String.Empty)
+    	public EventBlock() : this(String.Empty)
     	{    		
     	}
     	
@@ -140,13 +140,29 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			//throw new NotImplementedException();
+			reader.MoveToContent();
+			
+			if (reader.IsEmptyElement || !reader.ReadToDescendant("Behaviour")) {
+				throw new FormatException("EventBlock does not specify a Behaviour, and could not be deserialised.");
+			}
+			
+			EventBehaviour behaviour = new EventBehaviour();
+			behaviour.ReadXml(reader);
+			Behaviour = behaviour;
+			
+			reader.ReadEndElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			if (Behaviour != null) Behaviour.WriteXml(writer);
+			if (Behaviour == null) {
+				throw new InvalidOperationException("The EventBlock being serialised has a null Behaviour property.");
+			}
+			
+			writer.WriteStartElement("Behaviour");
+			Behaviour.WriteXml(writer);
+			writer.WriteEndElement();
 		}
     }
 }

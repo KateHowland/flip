@@ -30,7 +30,7 @@ namespace Sussex.Flip.UI.Generic
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events);			
 			Nwn2TriggerControl trigger = new Nwn2TriggerControl();
 			
-			FlipWindow window = new FlipWindow(attacher,provider,trigger);
+			FlipWindow window = new FlipWindow(attacher,provider,trigger,new Nwn2BehaviourFactory());
 			
 			window.Show();
 		}

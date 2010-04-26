@@ -309,13 +309,66 @@ namespace Sussex.Flip.UI
     	
 		public void ReadXml(XmlReader reader)
 		{
-			throw new NotImplementedException();
+			bool setPlaceholderContents;
+			
+			reader.MoveToContent();
+			
+			if (reader.IsEmptyElement) {
+				reader.ReadStartElement();
+				setPlaceholderContents = false;
+			}
+			
+			else {
+				if (!reader.ReadToDescendant("Contents")) {
+					throw new FormatException("MoveableSlot does not define Contents.");
+				}
+				
+				if (reader.IsEmptyElement) {
+					reader.ReadStartElement();
+					setPlaceholderContents = false;
+				}
+				
+				else {
+					if (!reader.ReadToFollowing("Contents")) throw new Exception ("Fail");
+					reader.Read();
+					setPlaceholderContents = true;
+				}
+				
+//				// TODO:
+//				// This is just skipping to the end of this bit of the XML,
+//				// and needs to be replaced with actually reading the Contents.
+//				if (reader.IsEmptyElement) {
+//					reader.ReadStartElement(); // read all of Contents and move on
+//					MessageBox.Show("Empty contents.");
+//				}
+//				else {
+//					reader.ReadStartElement();
+//					if (!reader.ReadToFollowing("Contents")) throw new Exception("durr");
+//					// TODO:
+//					// Put in placeholder contents.
+//					IfControl ifcontrol = new IfControl();
+//					Contents = ifcontrol;
+//					reader.ReadEndElement();
+//				}
+				
+				// TODO:
+				// Read slot contents.
+				//throw new NotImplementedException();
+				reader.ReadEndElement();
+			}
+			
+			if (setPlaceholderContents) {
+				IfControl ifc = new IfControl();
+				Contents = ifc;
+			}
 		}
 		
     	
 		public void WriteXml(XmlWriter writer)
 		{
+			writer.WriteStartElement("Contents");
 			if (Contents != null) Contents.WriteXml(writer);
+			writer.WriteEndElement();
 		}
 		
 		#endregion

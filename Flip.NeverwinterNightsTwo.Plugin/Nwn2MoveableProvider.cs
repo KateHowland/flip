@@ -350,32 +350,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		Serialiser serialiser = new Serialiser();	
 		
+		
 		public override ScriptInformation GetScriptFromSerialised(string path)
 		{
 			if (path == null) throw new ArgumentNullException("path");
 			
 			XmlReader reader = new XmlTextReader(path);
-				
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ScriptInformation") {
-					
-				Nwn2TriggerControl tc = new Nwn2TriggerControl();
-				Spine spine = new Spine();
-				
-				if (reader.ReadToDescendant("Trigger")) {
-					tc.ReadXml(reader);
-				}
-				if (reader.ReadToFollowing("Spine")) {
-					spine.ReadXml(reader);
-				}
+						
+			reader.MoveToContent();
 			
-				ScriptInformation script = new ScriptInformation(tc.RaiserBlock,tc.EventBlock,spine);
-							
-				return script;
+			if (reader.LocalName != "ScriptInformation") {
+				throw new FormatException("Not a valid script file.");
 			}
 			
-			else {
-				throw new ArgumentException("Could not read file at " + path + ".");
+			if (reader.IsEmptyElement) {
+				throw new FormatException("Not a valid script file.");				
 			}
+			
+			reader.ReadStartElement();
+			
+			Nwn2TriggerControl trigger = new Nwn2TriggerControl();			
+			trigger.ReadXml(reader);
+			reader.MoveToContent();
+			
+			Spine spine = new Spine();
+			spine.ReadXml(reader);
+			
+			ScriptInformation script = new ScriptInformation(trigger.RaiserBlock,trigger.EventBlock,spine);
+			
+			return script;
 		}
 		
 		

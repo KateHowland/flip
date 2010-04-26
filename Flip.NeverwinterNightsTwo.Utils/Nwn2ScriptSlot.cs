@@ -34,6 +34,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// </summary>
 	public static class Nwn2ScriptSlot
 	{
+		private static List<string> nwn2TypeNames;
+		
+		static Nwn2ScriptSlot()
+		{		
+			nwn2TypeNames = new List<string>(Enum.GetNames(typeof(Nwn2Type)));
+		}
+		
+		
+		public static List<string> Nwn2TypeNames {
+			get { return nwn2TypeNames; }
+		}
+		
+		
 		/// <summary>
 		/// Gets a list of script slot names that are defined on a game
 		/// object of the given type.

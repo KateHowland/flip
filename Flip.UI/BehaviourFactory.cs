@@ -20,50 +20,19 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 22/04/2010 at 12:16.
+ * This file added by Keiron Nicholson on 26/04/2010 at 11:39.
  */
 
 using System;
+using System.Xml;
 
 namespace Sussex.Flip.UI
 {
-	public class DefaultObjectBehaviour : ObjectBehaviour
+	/// <summary>
+	/// Description of BehaviourFactory.
+	/// </summary>
+	public abstract class BehaviourFactory
 	{
-		protected static string behaviourType;
-			
-			
-		static DefaultObjectBehaviour()
-		{
-			behaviourType = "Sussex.Flip.UI.DefaultObjectBehaviour";
-		}
-		
-		
-    	public override string BehaviourType { 
-			get { return behaviourType; }
-		}
-    	
-    	
-		public override string GetCode()
-		{
-			return String.Empty;			
-		}
-		
-		
-		public override string GetNaturalLanguage()
-		{
-			return String.Empty;			
-		}
-		
-		
-		public override string GetDescriptionOfObjectType()
-		{
-			return String.Empty;
-		}
-		
-		
-		public override ObjectBehaviour DeepCopy()
-		{
-			return new DefaultObjectBehaviour();
-		}
+		public abstract ObjectBehaviour GetObjectBehaviour(XmlReader reader);
 	}
 }

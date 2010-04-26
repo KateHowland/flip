@@ -106,6 +106,7 @@
     <Compile Include="Fitters\Nwn2RaiserBlockFitter.cs" />
     <Compile Include="Fitters\PlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
+    <Compile Include="Nwn2BehaviourFactory.cs" />
     <Compile Include="Nwn2EventBlockFactory.cs" />
     <Compile Include="Nwn2StatementBehaviour.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />

@@ -350,6 +350,16 @@ namespace Sussex.Flip.UI
 			return copy;
 		}
 		
+		
+		public void Clear()
+		{
+			foreach (Peg peg in Pegs) {
+				if (peg.Slot.Contents != null) {
+					peg.Slot.Contents = null;
+				}
+			}
+		}
+		
     	
 		public XmlSchema GetSchema()
 		{
@@ -359,14 +369,25 @@ namespace Sussex.Flip.UI
     	
 		public void ReadXml(XmlReader reader)
 		{		
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Spine") {
-				
-				if (reader.ReadToDescendant("Pegs")) {
-					
-					
+			reader.MoveToContent();
+			
+			if (reader.IsEmptyElement) {
+				reader.ReadStartElement();
+			}
+						
+			else {
+								
+				if (!reader.ReadToDescendant("Pegs")) {
+					throw new FormatException("Spine does not define a Pegs collection.");
 				}
 				
-				reader.Read();
+				if (reader.ReadToDescendant("Peg")) {						
+					do {
+						Peg peg = AddPeg();
+						peg.ReadXml(reader);
+					}
+					while (reader.ReadToNextSibling("Peg"));
+				}
 			}
 		}
 		
@@ -376,7 +397,9 @@ namespace Sussex.Flip.UI
 			writer.WriteStartElement("Pegs");
 			
 			foreach (Peg peg in Pegs) {
+				writer.WriteStartElement("Peg");
 				peg.WriteXml(writer);
+				writer.WriteEndElement();
 			}
 			
 			writer.WriteEndElement();

@@ -222,7 +222,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,reporter);
 			Nwn2TriggerControl trigger = new Nwn2TriggerControl();
 				
-			window = new FlipWindow(attacher,provider,trigger);			
+			window = new FlipWindow(attacher,provider,trigger,new Nwn2BehaviourFactory());			
 				
 			window.Closing += delegate(object sender, CancelEventArgs e) 
 			{  

@@ -107,20 +107,22 @@ namespace Sussex.Flip.UI
 		
 		public void ReadXml(XmlReader reader)
 		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "EventBehaviour") {
-				EventName = reader["EventName"];
-				DisplayName = reader["DisplayName"];				
-				reader.Read();
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) {
+				throw new FormatException("Behaviour should not have a child.");
 			}
+			
+			EventName = reader["EventName"];
+			DisplayName = reader["DisplayName"];						                     
+			reader.ReadStartElement();
 		}
 		
 		
 		public void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("EventBehaviour");
 			writer.WriteAttributeString("EventName",EventName);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteEndElement();
 		}
 	}
 }

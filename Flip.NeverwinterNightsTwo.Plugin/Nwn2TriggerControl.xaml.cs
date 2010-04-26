@@ -229,55 +229,45 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override void ReadXml(XmlReader reader)
 		{		
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Trigger") {
-				
-				if (reader.ReadToDescendant("EventRaiser")) {
-										
-					// HACK:
-					if (reader.Read() && reader.Read() && reader.LocalName.EndsWith("Behaviour")) {
-						
-						Type[] types = new Type[] { 
-							typeof(AreaBehaviour),
-							typeof(BlueprintBehaviour), 
-							typeof(InstanceBehaviour),
-							typeof(ModuleBehaviour),
-							typeof(PlayerBehaviour)
-						};
-						
-						foreach (Type type in types) {
-							
-							if (type.Name == reader.LocalName) {
-								
-								ObjectBehaviour behaviour = (ObjectBehaviour)Assembly.GetExecutingAssembly().CreateInstance(type.FullName);
-																
-								behaviour.ReadXml(reader);
-								
-								// HACK (this will eventually live somewhere other than TriggerControl, 
-								// so we'll be able to access the existing object block factory):
-								
-								RaiserBlock = new Nwn2ObjectBlockFactory().CreateBlock(behaviour);
-							}
-							
-						}
-						
-					}
-					
-				}
-				
-				if (reader.ReadToFollowing("EventName")) {
-					
-					if (reader.ReadToDescendant("EventBehaviour")) {
-												
-						EventBehaviour eb = new EventBehaviour();
-						eb.ReadXml(reader);
-						EventBlock = new EventBlock(eb);
-						
-					}
-					
-				}
-				
-				reader.Read();
+			reader.MoveToContent();
+			
+			if (reader.IsEmptyElement) {
+				reader.ReadStartElement();
 			}
+			
+			else {
+				
+				if (!reader.ReadToDescendant("EventRaiser")) {
+					throw new FormatException("EventRaiser information was missing.");
+				}
+				
+				RaiserBlock = ReadEventRaiserFromXml(reader);
+				
+				if (!reader.ReadToNextSibling("EventName")) {
+					throw new FormatException("EventName information was missing.");
+				}
+				
+				EventBlock = ReadEventNameFromXml(reader);
+				
+				reader.MoveToContent();
+				reader.ReadEndElement();
+			}
+		}
+		
+		
+		protected ObjectBlock ReadEventRaiserFromXml(XmlReader reader)
+		{
+			ObjectBlock block = new ObjectBlock();
+			block.ReadXml(reader);
+			return block;
+		}
+		
+		
+		protected EventBlock ReadEventNameFromXml(XmlReader reader)
+		{
+			EventBlock block = new EventBlock();
+			block.ReadXml(reader);
+			return block;
 		}
 		
 		
@@ -287,7 +277,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (RaiserBlock != null) RaiserBlock.WriteXml(writer);
 			writer.WriteEndElement();
 			
-			writer.WriteStartElement("Event");
+			writer.WriteStartElement("EventName");
 			if (EventBlock != null) EventBlock.WriteXml(writer);
 			writer.WriteEndElement();
 		}

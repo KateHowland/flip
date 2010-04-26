@@ -37,8 +37,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class ModuleBehaviour : Nwn2ObjectBehaviour
 	{
+		protected static string behaviourType;
+			
+			
+		static ModuleBehaviour()
+		{
+			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.ModuleBehaviour";
+		}
+		
+		
 		public ModuleBehaviour() : base(String.Empty,"module")
 		{						
+		}
+		
+		
+    	public override string BehaviourType { 
+			get { return behaviourType; }
 		}
 		
 		
@@ -74,21 +88,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		
 		public override void ReadXml(XmlReader reader)
-		{
-			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ModuleBehaviour") {
-				Identifier = reader["Identifier"];
-				DisplayName = reader["DisplayName"];	
-				reader.Read();
+		{			
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) {
+				throw new FormatException("Behaviour should not have a child.");
 			}
+			
+			Identifier = reader["Identifier"];
+			DisplayName = reader["DisplayName"];				                     
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("ModuleBehaviour");
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
-			writer.WriteEndElement();
 		}
 	}
 }

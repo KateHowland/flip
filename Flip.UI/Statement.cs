@@ -244,7 +244,7 @@ namespace Sussex.Flip.UI
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			throw new NotImplementedException();
+			writer.WriteElementString("SomeStatement",String.Empty);
 		}
     }
 }
