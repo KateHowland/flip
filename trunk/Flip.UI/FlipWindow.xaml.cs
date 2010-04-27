@@ -113,11 +113,11 @@ namespace Sussex.Flip.UI
 			// do properly.. either don't deserialise the full controls, or do
 			// and completely replace the ones that automatically appear on screen
 			// HACK:
-			if (script.EventRaiser != null) {
-				triggerBar.TriggerControl.RaiserBlock = (ObjectBlock)script.EventRaiser.DeepCopy();
+			if (script.Trigger.RaiserBlock != null) {
+				triggerBar.TriggerControl.RaiserBlock = (ObjectBlock)script.Trigger.RaiserBlock.DeepCopy();
 			}
-			if (script.EventName != null) {
-				triggerBar.TriggerControl.EventBlock = (EventBlock)script.EventName.DeepCopy();
+			if (script.Trigger.EventBlock != null) {
+				triggerBar.TriggerControl.EventBlock = (EventBlock)script.Trigger.EventBlock.DeepCopy();
 			}
 			if (script.Spine != null) {
 				// TODO

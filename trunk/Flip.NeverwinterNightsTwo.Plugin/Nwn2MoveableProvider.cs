@@ -376,7 +376,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Spine spine = new Spine();
 			spine.ReadXml(reader);
 			
-			ScriptInformation script = new ScriptInformation(trigger.RaiserBlock,trigger.EventBlock,spine);
+			ScriptInformation script = new ScriptInformation(trigger,spine);
 			
 			return script;
 		}
@@ -398,16 +398,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 				writer.WriteStartElement("ScriptInformation");
 				
-				writer.WriteStartElement("Trigger");	
-				
-				writer.WriteStartElement("EventRaiser");
-				if (script.EventRaiser != null) script.EventRaiser.WriteXml(writer);
-				writer.WriteEndElement();
-					
-				writer.WriteStartElement("EventName");
-				if (script.EventName != null) script.EventName.WriteXml(writer);
-				writer.WriteEndElement();
-					
+				writer.WriteStartElement("Trigger");
+				if (script.Trigger != null) script.Trigger.WriteXml(writer);
 				writer.WriteEndElement();
 				
 				writer.WriteStartElement("Spine");

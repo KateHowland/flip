@@ -110,7 +110,7 @@ namespace Sussex.Flip.UI
 		
 		public ScriptInformation GetScript()
 		{
-			ScriptInformation script = new ScriptInformation(triggerControl.RaiserBlock,triggerControl.EventBlock,spine);
+			ScriptInformation script = new ScriptInformation(triggerControl,spine);
 			return script;
 		}
     }
