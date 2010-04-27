@@ -32,16 +32,12 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public class ScriptInformation
 	{
-		protected ObjectBlock eventRaiser;		
-		protected EventBlock eventName;			
+		protected TriggerControl trigger;			
 		protected Spine spine;
 		
-		public ObjectBlock EventRaiser {
-			get { return eventRaiser; }
-		}
 		
-		public EventBlock EventName {
-			get { return eventName; }
+		public TriggerControl Trigger {
+			get { return trigger; }
 		}
 		
 		public Spine Spine {
@@ -49,15 +45,14 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public ScriptInformation() : this(null,null,null)
+		public ScriptInformation() : this(null,null)
 		{
 		}
 		
 		
-		public ScriptInformation(ObjectBlock eventRaiser, EventBlock eventName, Spine spine)
+		public ScriptInformation(TriggerControl trigger, Spine spine)
 		{
-			this.eventRaiser = eventRaiser;
-			this.eventName = eventName;
+			this.trigger = trigger;
 			this.spine = spine;
 		}
 	}

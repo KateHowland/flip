@@ -233,6 +233,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			if (reader.IsEmptyElement) {
 				reader.ReadStartElement();
+				RaiserBlock = null;
+				EventBlock = null;
 			}
 			
 			else {
@@ -241,44 +243,64 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					throw new FormatException("EventRaiser information was missing.");
 				}
 				
-				RaiserBlock = ReadEventRaiserFromXml(reader);
+				if (reader.IsEmptyElement) {
+					reader.ReadStartElement();
+					RaiserBlock = null;
+				}
 				
-				if (!reader.ReadToNextSibling("EventName")) {
+				else {
+					if (!reader.ReadToDescendant("ObjectBlock")) {
+						throw new FormatException("EventRaiser is non-empty, but no ObjectBlock is defined.");
+					}
+					ObjectBlock block = new ObjectBlock();
+					block.ReadXml(reader);
+					RaiserBlock = block;
+					reader.ReadEndElement(); // should be reading end element of EventRaiser
+				}
+				
+				reader.MoveToContent();
+				
+				if (reader.LocalName != "EventName") {
 					throw new FormatException("EventName information was missing.");
 				}
 				
-				EventBlock = ReadEventNameFromXml(reader);
+				if (reader.IsEmptyElement) {
+					reader.ReadStartElement();
+					EventBlock = null;
+				}
+				
+				else {
+					if (!reader.ReadToDescendant("EventBlock")) {
+						throw new FormatException("EventRaiser is non-empty, but no EventBlock is defined.");
+					}
+					EventBlock block = new EventBlock();
+					block.ReadXml(reader);
+					EventBlock = block;
+					reader.ReadEndElement(); // should be reading end element of EventName
+				}
 				
 				reader.MoveToContent();
 				reader.ReadEndElement();
 			}
 		}
-		
-		
-		protected ObjectBlock ReadEventRaiserFromXml(XmlReader reader)
-		{
-			ObjectBlock block = new ObjectBlock();
-			block.ReadXml(reader);
-			return block;
-		}
-		
-		
-		protected EventBlock ReadEventNameFromXml(XmlReader reader)
-		{
-			EventBlock block = new EventBlock();
-			block.ReadXml(reader);
-			return block;
-		}
-		
+				
 		
 		public override void WriteXml(XmlWriter writer)
 		{
 			writer.WriteStartElement("EventRaiser");
-			if (RaiserBlock != null) RaiserBlock.WriteXml(writer);
+			if (RaiserBlock != null) {
+				writer.WriteStartElement("ObjectBlock");
+				RaiserBlock.WriteXml(writer);
+				writer.WriteEndElement();
+			}
 			writer.WriteEndElement();
 			
 			writer.WriteStartElement("EventName");
-			if (EventBlock != null) EventBlock.WriteXml(writer);
+			if (EventBlock != null) {
+				writer.WriteStartElement("EventBlock");
+				EventBlock.WriteXml(writer);
+				writer.WriteEndElement();
+			}
 			writer.WriteEndElement();
 		}
     }
