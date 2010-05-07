@@ -26,10 +26,18 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Windows;
 using NWN2Toolset;
+using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Views;
+using Crownwood.DotNetMagic.Common;
+using Crownwood.DotNetMagic.Controls;
 using Crownwood.DotNetMagic.Docking;
+using GlacialComponents.Controls.GlacialTreeList;
+using OEIShared.Utils;
 using VisualHint.SmartPropertyGrid;
+using winforms = System.Windows.Forms;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -134,7 +142,87 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <remarks>This method currently does nothing.</remarks>
 		public void ModifyUI()
 		{
+			FieldInfo[] fields = typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+			foreach (FieldInfo field in fields) {	
+				/*
+				 * Track when resource viewers are opening or closing.
+				 */
+				if (field.FieldType == typeof(TabbedGroups)) {
+					TabbedGroups tg = (TabbedGroups)field.GetValue(NWN2ToolsetMainForm.App);					
+					CollectionChange opened = new CollectionChange(ViewerOpened);					
+					tg.ActiveLeaf.TabPages.Inserted += opened;
+					
+					// ActiveLeaf is disposed whenever all viewers are closed, so attach handlers again:
+					tg.ActiveLeafChanged += delegate
+					{  
+						tg.ActiveLeaf.TabPages.Inserted += opened;
+					};
+				}
+			}
+		}
+		
+		
+		/// <summary>
+		/// Notifies the client that a resource viewer has been opened.
+		/// </summary>
+		protected void ViewerOpened(int index, object value)
+		{
+			TabPage page = (TabPage)value;
+			NWN2ConversationViewer viewer = page.Control as NWN2ConversationViewer;
+			if (viewer == null) return;		
 			
+			try {
+				GlacialTreeList tree = (GlacialTreeList)viewer.Controls["panelResults"].Controls["treeListResults"];
+				if (tree == null) throw new ApplicationException("Couldn't find GlacialTreeList.");
+								
+				winforms.MenuItem item = new winforms.MenuItem("Attach to script");
+				
+				item.Click += delegate 
+				{  
+					if (tree.SelectedNodes.Count == 0) {
+						MessageBox.Show("Select a line of dialogue first.");
+					}
+					
+					else if (tree.SelectedNodes.Count > 1) {
+						MessageBox.Show("Select only one line of dialogue.");						
+					}
+					
+					else {
+						GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
+												
+						NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
+						
+						if (connector == null) {
+							MessageBox.Show("You can't attach scripts to the root. Select a line of dialogue instead.");
+						}
+						
+						else {
+							Guid guid = connector.Line.LineGuid;
+							string text = connector.Text.GetSafeString(BWLanguages.CurrentLanguage).Value;
+							string conversation = ((NWN2GameConversation)viewer.ViewedResource).Name;
+							
+							MessageBox.Show("To do... Tell Flip to attach script to...\nConversation: " + conversation +
+							                "\nLine: " + text + "\nID: " + guid);
+							
+							// Conversations[conversation].GetLineFromGUID(guid);
+						
+							/*
+							 * Next up.
+							 * 
+							 * 1. Tell Flip to attach script to the given source.
+							 * 2. Give Flip some way of representing that trigger.
+							 * 3. Give Flip some way of saving and reconstructing that trigger.
+							 * 4. Implement AttachScriptToConversation(string conversation, Guid lineID).
+							 */
+						}
+					}
+				};
+				
+				tree.ContextMenu.MenuItems.Add(item);
+			}
+			catch (Exception x) {
+				MessageBox.Show("Error when trying to integrate Flip with conversation editor.",x.ToString());
+			}		
 		}
 		
 		
