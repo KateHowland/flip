@@ -9,15 +9,27 @@
 			</ControlTemplate>
 		</TabItem.Template>
 	
-		<ScrollViewer
-		Focusable="False"
-		VerticalScrollBarVisibility="Auto">
-		
-			<WrapPanel
-			x:Name="wrapPanel"
-			AllowDrop="True"
-			Background="DarkSlateBlue"/>
-		
-		</ScrollViewer>
+		<Grid>
+	
+			<ScrollViewer
+			Focusable="False"
+			VerticalScrollBarVisibility="Auto">
+			
+				<WrapPanel
+				x:Name="wrapPanel"
+				AllowDrop="True"
+				Background="DarkSlateBlue"/>
+			
+			</ScrollViewer>
+	
+<!--			<TextBlock
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			Text="There's nothing here."
+			FontSize="24"
+			Foreground="Silver"
+			Background="Transparent"/>-->
+			
+		</Grid>	
 
 </TabItem>
