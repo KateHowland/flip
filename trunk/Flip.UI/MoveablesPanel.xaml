@@ -3,13 +3,47 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
 	
-    <Grid>	
+	<UserControl.Resources>
 		
-		<TabControl 
-		Name="tabs"
-		Grid.Row="0"
-		Grid.Column="1"/>
+		<ControlTemplate 
+		x:Key="radioButtonControlTemplate"	
+		TargetType="RadioButton">
+		
+			<StackPanel
+			DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+			
+				<TextBlock
+				Text="{Binding Path=Content}" 
+				Background="Transparent"
+				Foreground="White"
+				FontSize="14"
+				FontWeight="Bold"
+				Padding="5"/>
+			
+			</StackPanel>
+		
+		</ControlTemplate>
 	
-    </Grid>
+		<Style TargetType="RadioButton">
+			<Setter Property="Template" Value="{StaticResource radioButtonControlTemplate}"/>
+		</Style>
+	
+	</UserControl.Resources>
+	
+    <DockPanel
+	Background="DarkBlue">
+		
+    	<WrapPanel
+    	Name="bagButtons"
+    	DockPanel.Dock="Top"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center"
+    	Margin="7"/>
+    	
+		<TabControl
+		Name="tabs"
+    	DockPanel.Dock="Bottom"/>
+	
+    </DockPanel>
 
 </UserControl>

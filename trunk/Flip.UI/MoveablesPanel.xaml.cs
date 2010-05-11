@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -18,7 +19,15 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public partial class MoveablesPanel : UserControl, IMoveableManager
 	{
+		private static OuterGlowBitmapEffect highlight;
 		protected Dictionary<string,Bag> bags;
+		
+		
+		static MoveablesPanel()
+		{
+			highlight = new OuterGlowBitmapEffect();
+			highlight.GlowColor = Colors.HotPink;
+		}
 
 
 		public MoveablesPanel()
@@ -41,8 +50,37 @@ namespace Sussex.Flip.UI
 			
 			Bag bag = new Bag(bagName);
 			bags.Add(bagName,bag);
-
 			tabs.Items.Add(bag);
+			
+			RadioButton radioButton = new RadioButton();
+			radioButton.GroupName = "bagSelectionGroup";
+			radioButton.Content = bagName;
+			radioButton.Checked += delegate 
+			{  
+				tabs.SelectedItem = bag;
+				radioButton.BitmapEffect = highlight;
+			};
+			radioButton.Unchecked += delegate 
+			{  
+				radioButton.BitmapEffect = null;
+			};
+			bagButtons.Children.Add(radioButton);
+		}
+		
+		
+		public void DisplayBag(string bagName)
+		{
+			if (bagName == null) throw new ArgumentNullException("bagName"); 
+			if (!bags.ContainsKey(bagName)) throw new ArgumentException("No bag named '" + bagName + "' exists.", "bag"); 
+
+			foreach (RadioButton radioButton in bagButtons.Children) {
+				if (radioButton.Content as string == bagName) {
+					radioButton.IsChecked = true;
+					return;
+				}
+			}
+			
+			throw new ApplicationException("No radio button found for bag '" + bagName + "'.");
 		}
 
 
@@ -86,6 +124,16 @@ namespace Sussex.Flip.UI
 			Bag bag = bags[bagName];
 			bags.Remove(bagName);
 			tabs.Items.Remove(bag);
+			
+			RadioButton removing = null;
+			foreach (RadioButton radioButton in bagButtons.Children) {
+				if (radioButton.Content as string == bagName) {
+					removing = radioButton;
+					break;
+				}
+			}
+			
+			if (removing != null) bagButtons.Children.Remove(removing);
 		}
 		
 		

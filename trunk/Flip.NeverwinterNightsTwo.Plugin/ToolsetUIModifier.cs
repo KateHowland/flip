@@ -211,8 +211,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							 * 
 							 * 1. Tell Flip to attach script to the given source.
 							 * 2. Give Flip some way of representing that trigger.
-							 * 3. Give Flip some way of saving and reconstructing that trigger.
-							 * 4. Implement AttachScriptToConversation(string conversation, Guid lineID).
+							 * 3. Implement AttachScriptToConversation(string conversation, Guid lineID).
 							 */
 						}
 					}
