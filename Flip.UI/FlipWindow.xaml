@@ -3,9 +3,12 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
 	Title="Flip" 
-    Width="800"
-    Height="600"
+    MinWidth="1200"
+    MinHeight="900"
+    Width="1200"
+    Height="900"
 	AllowDrop="False"
+	Icon="images/chicken.bmp"
 	>	
 	
 	<Window.Resources>
@@ -23,10 +26,13 @@
 	<AdornerDecorator>	
 		
 		<Grid
-		Name="mainGrid">
+		Name="mainGrid"
+		Background="{StaticResource skyBrush}">
+			
 			<Grid.RowDefinitions>
 				<RowDefinition Height="20"/>
 				<RowDefinition/>
+				<RowDefinition Height="200"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
@@ -76,56 +82,34 @@
 				
 			</Menu>
 				
+			<Border
+			x:Name="nlBorder"
+			Grid.Row="2"
+			Grid.Column="0"
+			BorderThickness="3"
+			BorderBrush="Black"
+			Margin="10">
+				
+				<TextBlock
+				x:Name="nlTextBlock"
+				Background="Ivory"
+				Foreground="Maroon"
+				PreviewDrop="Dropped"
+				FontSize="24"
+				FontFamily="Comic Sans"
+				Padding="10"
+				TextWrapping="Wrap"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"/>
+			
+			</Border>
+			
 			<Canvas	
-			Name="mainCanvas"
+			Name="mainCanvas"	
 			Grid.Row="1"
-			Grid.Column="0" 
-			Background="{StaticResource skyBrush}"
-			AllowDrop="True">
-			
-				<Border
-				BorderThickness="3"
-				BorderBrush="Black"
-				Canvas.Right="30"
-				Canvas.Bottom="30"
-				Width="350"
-				Height="200">
-				
-					<TextBlock
-					x:Name="targetCodeTextBlock"
-					Background="Ivory"
-					Foreground="DarkSlateBlue"
-					PreviewDrop="Dropped"
-					FontSize="12"
-					Padding="10"
-					TextWrapping="Wrap"
-					VerticalAlignment="Stretch"
-					HorizontalAlignment="Stretch"/>
-				
-				</Border>
-			
-				<Border
-				BorderThickness="3"
-				BorderBrush="Black"
-				Canvas.Right="395"
-				Canvas.Bottom="30"
-				Width="350"
-				Height="200">
-				
-					<TextBlock
-					x:Name="naturalLanguageTextBlock"
-					Background="Ivory"
-					Foreground="Maroon"
-					PreviewDrop="Dropped"
-					FontSize="12"
-					Padding="10"
-					TextWrapping="Wrap"
-					VerticalAlignment="Stretch"
-					HorizontalAlignment="Stretch"/>
-				
-				</Border>
-			
-			</Canvas>
+			Grid.Column="0"
+			Background="Transparent"
+			AllowDrop="True"/>
 		
 		</Grid>
 	

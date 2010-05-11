@@ -43,6 +43,7 @@ namespace Sussex.Flip.UI
 			blockBox = new MoveablesPanel();
 			Grid.SetRow(blockBox,1);
 			Grid.SetColumn(blockBox,1);
+			Grid.SetRowSpan(blockBox,2);
 			blockBox.PreviewDrop += ReturnMoveableToBox;
 			
 			provider.Populate(blockBox);
@@ -150,8 +151,9 @@ namespace Sussex.Flip.UI
 		protected void DisplayCodeAndNaturalLanguage(ITranslatable translatable)
 		{
 			if (translatable == null) return;
-			this.naturalLanguageTextBlock.Text = translatable.GetNaturalLanguage();
-			this.targetCodeTextBlock.Text = (translatable.IsComplete ? "Complete." : "Incomplete.") + "\n\n" + translatable.GetCode();
+			this.nlTextBlock.Text = translatable.GetNaturalLanguage();
+			
+			//this.targetCodeTextBlock.Text = (translatable.IsComplete ? "Complete." : "Incomplete.") + "\n\n" + translatable.GetCode();			
 		}
 		
 		

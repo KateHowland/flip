@@ -180,6 +180,7 @@
     <Resource Include="images\imagemissing.bmp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="images\chicken.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images" />

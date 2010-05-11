@@ -42,7 +42,8 @@
     	
 		<TabControl
 		Name="tabs"
-    	DockPanel.Dock="Bottom"/>
+    	DockPanel.Dock="Bottom"
+    	BorderThickness="0"/>
 	
     </DockPanel>
 
