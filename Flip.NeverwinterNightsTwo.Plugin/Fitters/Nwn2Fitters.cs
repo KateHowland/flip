@@ -130,7 +130,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			onlyStores = new InstanceFitter(NWN2ObjectType.Store,"a store");
 			onlyTriggers = new InstanceFitter(NWN2ObjectType.Trigger,"a trigger");
 			onlyWaypoints = new InstanceFitter(NWN2ObjectType.Waypoint,"a waypoint");
-			onlyDoorsOrPlaceables = new InstanceFitter(new List<NWN2ObjectType>{NWN2ObjectType.Door,NWN2ObjectType.Placeable},"something which can be opened");
+			onlyDoorsOrPlaceables = new InstanceFitter(new List<NWN2ObjectType>{NWN2ObjectType.Door,NWN2ObjectType.Placeable},"something");
 			
 			onlyPlayers = new PlayerFitter();
 			onlyAreas = new AreaFitter();
