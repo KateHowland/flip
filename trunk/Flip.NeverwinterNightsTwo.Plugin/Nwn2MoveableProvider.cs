@@ -59,7 +59,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected const string ActionsBagName = "Actions";
 		protected const string ConditionsBagName = "Conditions";
-		protected const string OtherBagName = "Other";
+		protected const string OtherBagName = "Special";
 		protected const string EventsBagName = "Events";
 		protected const string BlueprintBagNamingFormat = "{0} blueprints";
 		protected const string InstanceBagNamingFormat = "{0}s";
@@ -107,7 +107,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}
 			
-			manager.DisplayBag(ActionsBagName);
+			manager.DisplayBag(OtherBagName);
 		}
 		
 		
@@ -150,6 +150,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{		
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
+			manager.AddMoveable(OtherBagName,new NumberBlock());
 		}
 		
 		

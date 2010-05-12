@@ -39,7 +39,7 @@ namespace Sussex.Flip.UI
 		/// are valid in their slots, only that those slots have been filled.</remarks>
 		public override bool IsComplete { 
 			get { 
-				foreach (ObjectBlockSlot slot in GetSlots()) {
+				foreach (BlockSlot slot in GetSlots()) {
 					if (!slot.IsComplete) return false;
 				}
 				return true;
@@ -115,16 +115,16 @@ namespace Sussex.Flip.UI
         {        	
         	if (fitter == null) throw new ArgumentNullException("fitter","Can't add a parameter without providing a fitter.");
         	
-        	ObjectBlockSlot parameter = new ObjectBlockSlot(fitter);
+        	BlockSlot parameter = new BlockSlot(fitter);
         	AddParameter(parameter);
         }
 
         
-        protected void AddParameter(ObjectBlockSlot parameter)
+        protected void AddParameter(BlockSlot parameter)
         {
         	if (parameter == null) throw new ArgumentNullException("parameter","Can't add a null parameter.");
         	
-        	parameter.MoveableChanged += delegate { 
+        	parameter.Changed += delegate { 
         		OnChanged(new EventArgs()); 
         	};
         	
@@ -173,27 +173,28 @@ namespace Sussex.Flip.UI
 		{
 			Statement copy = new Statement(behaviour.DeepCopy());
 			
-			List<ObjectBlockSlot> slots = GetSlots();
-			List<ObjectBlockSlot> copySlots = copy.GetSlots();
-				
+			List<BlockSlot> slots = GetSlots();
+			List<BlockSlot> copySlots = copy.GetSlots();
+			
 			if (slots.Count != copySlots.Count) 
-				throw new ApplicationException("Statement.DeepCopy() returned a copy with a different number of slots.");
+				throw new ApplicationException(String.Format("Statement.DeepCopy() returned a copy with the wrong number of slots (expected {0} but found {1}.",
+				                                             slots.Count,copySlots.Count));
 				
 			for (int i = 0; i < slots.Count; i++) {
 				Moveable contents = slots[i].Contents;
 				if (contents != null) copySlots[i].Contents = contents.DeepCopy();
 				else copySlots[i].Contents = null;
 			}
-			
+						
 			return copy;
 		}
 		
 		
-		public List<ObjectBlockSlot> GetSlots()
+		public List<BlockSlot> GetSlots()
 		{
-			List<ObjectBlockSlot> slots = new List<ObjectBlockSlot>(2);
+			List<BlockSlot> slots = new List<BlockSlot>(2);
 			foreach (UIElement element in mainPanel.Children) {
-				ObjectBlockSlot slot = element as ObjectBlockSlot;
+				BlockSlot slot = element as BlockSlot;
 				if (slot != null) slots.Add(slot);
 			}
 			return slots;
@@ -204,10 +205,10 @@ namespace Sussex.Flip.UI
 		{
 			if (behaviour == null) return "BEHAVIOUR_MISSING";
 			
-			List<ObjectBlockSlot> slots = GetSlots();
+			List<BlockSlot> slots = GetSlots();
 			string[] args = new string[slots.Count];
 			
-			foreach (ObjectBlockSlot slot in slots) {
+			foreach (BlockSlot slot in slots) {
 				args[slots.IndexOf(slot)] = slot.GetCode();
 			}
 			
@@ -219,10 +220,10 @@ namespace Sussex.Flip.UI
 		{
 			if (behaviour == null) return "BEHAVIOUR_MISSING";
 			
-			List<ObjectBlockSlot> slots = GetSlots();
+			List<BlockSlot> slots = GetSlots();
 			string[] args = new string[slots.Count];
 			
-			foreach (ObjectBlockSlot slot in slots) {
+			foreach (BlockSlot slot in slots) {
 				args[slots.IndexOf(slot)] = slot.GetNaturalLanguage();
 			}
 			

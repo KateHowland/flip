@@ -15,7 +15,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     /// </summary>
     public partial class Nwn2TriggerControl : TriggerControl
     {
-    	protected ObjectBlockSlot raiserSlot;
+    	protected BlockSlot raiserSlot;
     	protected EventBlockSlot eventSlot;
     	protected EventDescriber describer;
     	protected Nwn2AddressFactory addressFactory;
@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         	
         	this.addressFactory = new Nwn2AddressFactory();
         	
-        	raiserSlot = new ObjectBlockSlot("raiser",new Nwn2RaiserBlockFitter());
+        	raiserSlot = new BlockSlot("raiser",new Nwn2RaiserBlockFitter());
             raiserSlot.Padding = new Thickness(10);
             eventSlot = new EventBlockSlot(new Nwn2EventBlockFitter(raiserSlot));
             

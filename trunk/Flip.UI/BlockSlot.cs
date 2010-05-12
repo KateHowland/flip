@@ -18,7 +18,7 @@ namespace Sussex.Flip.UI
     /// <summary>
     /// A slot which TODO
     /// </summary>
-    public partial class ObjectBlockSlot : MoveableSlot
+    public partial class BlockSlot : MoveableSlot
     {
     	#region Fields
     	
@@ -39,7 +39,7 @@ namespace Sussex.Flip.UI
     	/// <summary>
     	/// Initialises thicknesses.
     	/// </summary>
-    	static ObjectBlockSlot()
+    	static BlockSlot()
     	{
     		thin = new Thickness(0.5);
     		thick = new Thickness(1.0);
@@ -47,12 +47,12 @@ namespace Sussex.Flip.UI
     	
 
 		/// <summary>
-		/// Constructs a new <see cref="ObjectBlockSlot"/> instance.
+		/// Constructs a new <see cref="BlockSlot"/> instance.
 		/// </summary>
 		/// <param name="slotName">The name of this slot.</param>
 		/// <param name="fitter">A fitter which decides whether a 
 		/// given Moveable can fit into this slot.</param>
-    	public ObjectBlockSlot(string slotName, Fitter fitter) : this(fitter)
+    	public BlockSlot(string slotName, Fitter fitter) : this(fitter)
     	{
     		// Not sure if I'm going to use slot names or not, so here's
     		// a dummy constructor for all the instances I'm already
@@ -61,11 +61,11 @@ namespace Sussex.Flip.UI
     	
     			
     	/// <summary>
-		/// Constructs a new <see cref="ObjectBlockSlot"/> instance.
+		/// Constructs a new <see cref="BlockSlot"/> instance.
 		/// </summary>
 		/// <param name="fitter">A fitter which decides whether a 
 		/// given Moveable can fit into this slot.</param>
-    	public ObjectBlockSlot(Fitter fitter) : base(fitter)
+    	public BlockSlot(Fitter fitter) : base(fitter)
         {
             InitializeComponent();            
             
@@ -106,6 +106,7 @@ namespace Sussex.Flip.UI
         /// </summary>
         protected override void SetDropAppearance()
         {
+        	border.Background = Brushes.LightGray;
         	border.BorderBrush = dropBrush;
         	border.BorderThickness = thick;        	
         }
@@ -117,6 +118,7 @@ namespace Sussex.Flip.UI
         /// </summary>
         protected override void SetNoDropAppearance()
 		{
+        	border.Background = Brushes.LightGray;
         	border.BorderBrush = noDropBrush;
         	border.BorderThickness = thin;   
 		}
@@ -127,8 +129,16 @@ namespace Sussex.Flip.UI
         /// </summary>
         protected override void SetDefaultAppearance()
         {
-        	border.BorderBrush = defaultBrush;
-        	border.BorderThickness = thin;        	
+        	if (Contents == null) {
+	        	border.Background = Brushes.LightGray;
+	        	border.BorderBrush = defaultBrush;
+        	}
+        	else {
+        		border.Background = Brushes.Transparent;
+        		border.BorderBrush = Brushes.Transparent;
+        	}
+        	
+	        border.BorderThickness = thin;
         }
         
         
@@ -138,7 +148,7 @@ namespace Sussex.Flip.UI
 		/// <returns>A deep copy of this instance.</returns>        
         public override MoveableSlot DeepCopy()
         {
-        	return new ObjectBlockSlot(fitter);
+        	return new BlockSlot(fitter);
         }
         
         #endregion

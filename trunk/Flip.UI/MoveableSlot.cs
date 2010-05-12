@@ -83,6 +83,8 @@ namespace Sussex.Flip.UI
     			
     			OnMoveableChanged(new MoveableEventArgs(value));
     			
+    			SetDefaultAppearance();
+    			
     			if (Contents != null) {
     				Contents.Changed += changeTracker;
     			}
