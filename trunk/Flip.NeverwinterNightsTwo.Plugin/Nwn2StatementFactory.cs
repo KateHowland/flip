@@ -115,6 +115,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement GiveGold()
 		{
 			return new Statement(new GiveGold(fitters));
+		}		
+		
+		
+		public Statement TakeGold()
+		{
+			return new Statement(new TakeGold(fitters));
+		}
+		
+		
+		public Statement GiveXP()
+		{
+			return new Statement(new GiveXP(fitters));
 		}
 		
 		

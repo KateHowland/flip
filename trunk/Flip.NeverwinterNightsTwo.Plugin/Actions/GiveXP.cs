@@ -20,9 +20,9 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 12/05/2010 at 10:50.
+ * This file added by Keiron Nicholson on 12/05/2010 at 18:23.
  */
-
+ 
 using System;
 using System.Collections.Generic;
 using Sussex.Flip.Utils;
@@ -30,15 +30,12 @@ using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class GiveGold : Nwn2StatementBehaviour
+	public class GiveXP : Nwn2StatementBehaviour
 	{	
-		// Give nGP gold to oCreature.
-		// bDisplayFeedback - if set to FALSE, will not display the feedback string
-		//  in the player's chatlog.
-		//void GiveGoldToCreature(object oCreature, int nGP, int bDisplayFeedback=TRUE );
+		// Gives nXpAmount to oCreature.
+		// void GiveXPToCreature(object oCreature, int nXpAmount);
 		
-		
-		public GiveGold(Nwn2Fitters fitters) : base(fitters)
+		public GiveXP(Nwn2Fitters fitters) : base(fitters)
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -46,7 +43,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent("give"),
 				new StatementComponent(fitters.OnlyNumbers),
-				new StatementComponent("gold to"),
+				new StatementComponent("XP to"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers)
 			};
 		}
@@ -58,7 +55,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}			
 			
-			return String.Format("GiveGoldToCreature({1},{0},TRUE);",args);
+			return String.Format("GiveXPToCreature({1},{0});",args);
 		}
 		
 		
@@ -69,15 +66,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			if (args[0] == "some number") args[0] = "some number of";
-			
-			if (args[1] == "1") return String.Format("{1} gains 1 gold coin.",args);			
-			else return String.Format("{1} gains {0} gold coins",args);
+									
+			if (args[1] == "1") return String.Format("{1} loses 1 experience point",args);			
+			else return String.Format("{1} loses {0} experience points",args);
 		}
 		
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new GiveGold(fitters);
+			return new GiveXP(fitters);
 		}
 	}
 }

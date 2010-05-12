@@ -20,7 +20,7 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 12/05/2010 at 10:50.
+ * This file added by Keiron Nicholson on 12/05/2010 at 18:19.
  */
 
 using System;
@@ -30,23 +30,25 @@ using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class GiveGold : Nwn2StatementBehaviour
+	public class TakeGold : Nwn2StatementBehaviour
 	{	
-		// Give nGP gold to oCreature.
-		// bDisplayFeedback - if set to FALSE, will not display the feedback string
-		//  in the player's chatlog.
-		//void GiveGoldToCreature(object oCreature, int nGP, int bDisplayFeedback=TRUE );
+		// Take nAmount of gold from oCreatureToTakeFrom.
+		// - nAmount
+		// - oCreatureToTakeFrom: If this is not a valid creature, nothing will happen.
+		// - bDestroy: If this is TRUE, the caller will not get the gold.  Instead, the
+		//   gold will be destroyed and will vanish from the game.
+		// - bDisplayFeedback: If set to FALSE, none of the normal chat messages will be sent.
+		// void TakeGoldFromCreature(int nAmount, object oCreatureToTakeFrom, int bDestroy=FALSE, int bDisplayFeedback=TRUE);
 		
-		
-		public GiveGold(Nwn2Fitters fitters) : base(fitters)
+		public TakeGold(Nwn2Fitters fitters) : base(fitters)
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
 			components = new List<StatementComponent>(4) 
 			{ 
-				new StatementComponent("give"),
+				new StatementComponent("take"),
 				new StatementComponent(fitters.OnlyNumbers),
-				new StatementComponent("gold to"),
+				new StatementComponent("gold from"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers)
 			};
 		}
@@ -58,7 +60,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}			
 			
-			return String.Format("GiveGoldToCreature({1},{0},TRUE);",args);
+			return String.Format("TakeGoldFromCreature({0},{1},TRUE,TRUE);",args);
 		}
 		
 		
@@ -69,15 +71,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			if (args[0] == "some number") args[0] = "some number of";
-			
-			if (args[1] == "1") return String.Format("{1} gains 1 gold coin.",args);			
-			else return String.Format("{1} gains {0} gold coins",args);
+						
+			if (args[1] == "1") return String.Format("{1} loses 1 gold coin.",args);			
+			else return String.Format("{1} loses {0} gold coins",args);
 		}
 		
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new GiveGold(fitters);
+			return new TakeGold(fitters);
 		}
 	}
 }
