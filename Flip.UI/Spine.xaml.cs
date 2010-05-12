@@ -93,11 +93,6 @@ namespace Sussex.Flip.UI
     		for (int i = 0; i < pegs; i++) {
     			AddPeg();
     		}
-        	
-        	MouseDoubleClick += delegate 
-        	{    		
-    			Shrink(true);
-        	};
     	}
     	    	
     	
@@ -320,12 +315,14 @@ namespace Sussex.Flip.UI
 				Peg peg = (Peg)filledPegs[i];
 				
 				bool last = (i == filledPegs.Count - 1);
+				bool penultimate = (i == filledPegs.Count - 2);
 					
 				if (last && filledPegs.Count > 1) code.Append("and ");
 					
 				code.Append(peg.Slot.GetNaturalLanguage());
 					
 				if (last) code.Append(".");
+				else if (penultimate) code.Append(" ");
 				else code.Append(", ");
 			}
 			

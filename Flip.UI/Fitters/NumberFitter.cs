@@ -20,62 +20,30 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 22/03/2010 at 09:37.
+ * This file added by Keiron Nicholson on 12/05/2010 at 11:01.
  */
 
 using System;
-using System.Collections.Generic;
-using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
-using Sussex.Flip.UI;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo
+namespace Sussex.Flip.UI
 {
-	/// <summary>
-	/// Description of EventBlockFitter.
-	/// </summary>
-	public class Nwn2EventBlockFitter : Nwn2Fitter
+	public class NumberFitter : Fitter
 	{		
-		protected BlockSlot raiserSlot = null;
-		
-		
-		public Nwn2EventBlockFitter(BlockSlot raiserSlot) : base()
-		{
-			this.raiserSlot = raiserSlot;
+		public NumberFitter() : base()
+		{			
 		}
 		
 		
-		protected ObjectBlock GetRaiserBlock()
-		{
-			if (raiserSlot == null) return null;
-			
-			else return raiserSlot.Contents as ObjectBlock;
-		}
-		
-		
-		/// <summary>
-		/// TODO
-		/// </summary>
-		/// <param name="moveable"></param>
-		/// <returns></returns>
 		public override bool Fits(Moveable moveable)
 		{
-			EventBlock block = moveable as EventBlock;		
-			if (block == null) return false;
-			
-			ObjectBlock raiserBlock = GetRaiserBlock();
-			if (raiserBlock == null) {
-				return true; // fit any event if no event raiser is specified
-			}
-			
-			IList<string> validEvents = Nwn2RaiserBlockFitter.GetEvents(raiserBlock);
-				
-			return validEvents.Contains(block.EventName);
+			return IsNumber(moveable);
 		}
 		
 		
 		public override string GetMoveableDescription()
 		{
-			return "an event";
+			return "some number";
 		}
 	}
 }
+

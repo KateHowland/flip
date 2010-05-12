@@ -72,9 +72,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BehaviourFactory.cs" />
+    <Compile Include="ChangeNumberDialog.xaml.cs">
+      <DependentUpon>ChangeNumberDialog.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ComponentType.cs" />
     <Compile Include="ConditionalControl.cs" />
-    <Compile Include="ConditionFitter.cs" />
     <Compile Include="ConditionSlot.xaml.cs">
       <DependentUpon>ConditionSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -97,7 +100,11 @@
       <DependentUpon>EventBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EventBlockFitter.cs" />
+    <Compile Include="Fitters\ConditionFitter.cs" />
+    <Compile Include="Fitters\EventBlockFitter.cs" />
+    <Compile Include="Fitters\Fitter.cs" />
+    <Compile Include="Fitters\NumberFitter.cs" />
+    <Compile Include="Fitters\SpineFitter.cs" />
     <Compile Include="FlipWindow.xaml.cs">
       <DependentUpon>FlipWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -120,13 +127,16 @@
       <DependentUpon>MoveablesPanel.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NumberBlock.xaml.cs">
+      <DependentUpon>NumberBlock.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ObjectBehaviour.cs" />
-    <Compile Include="ObjectBlockSlot.cs" />
+    <Compile Include="BlockSlot.cs" />
     <Compile Include="Peg.xaml.cs">
       <DependentUpon>Peg.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Fitter.cs" />
     <Compile Include="PegSlot.xaml.cs">
       <DependentUpon>PegSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -148,7 +158,6 @@
       <SubType>Code</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="SpineFitter.cs" />
     <Compile Include="StatementBehaviour.cs" />
     <Compile Include="StatementComponent.cs" />
     <Compile Include="StatementLabel.xaml.cs">
@@ -185,7 +194,9 @@
   <ItemGroup>
     <Folder Include="images" />
     <Folder Include="Core" />
+    <Folder Include="Fitters" />
     <Page Include="Bag.xaml" />
+    <Page Include="ChangeNumberDialog.xaml" />
     <Page Include="ConditionSlot.xaml" />
     <Page Include="DoWhileControl.xaml" />
     <Page Include="DropZone.xaml" />
@@ -194,7 +205,8 @@
     <Page Include="IfControl.xaml" />
     <Page Include="IfElseControl.xaml" />
     <Page Include="MoveablesPanel.xaml" />
-    <Page Include="ObjectBlockSlot.xaml" />
+    <Page Include="NumberBlock.xaml" />
+    <Page Include="BlockSlot.xaml" />
     <Page Include="Peg.xaml" />
     <Page Include="PegSlot.xaml" />
     <Page Include="Spine.xaml" />
