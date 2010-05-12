@@ -130,6 +130,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement Lock()
+		{
+			return new Statement(new Lock(fitters));
+		}
+		
+		
+		public Statement Unlock()
+		{
+			return new Statement(new Unlock(fitters));
+		}
+		
+		
 		public Statement IsDead()
 		{
 			return new Statement(new IsDead(fitters));
