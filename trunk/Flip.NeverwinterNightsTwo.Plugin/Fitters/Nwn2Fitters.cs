@@ -51,7 +51,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Fitter onlyDoorsOrPlaceables;		
 		protected Fitter onlyInstances;		
 		protected Fitter onlyEventRaisers;	
-		protected Fitter onlyNumbers;		
+		protected Fitter onlyNumbers;	
+		protected Fitter onlyStrings;
 		
 		#endregion
 		
@@ -117,6 +118,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			get { return onlyNumbers; }
 		}
 		
+		public Fitter OnlyStrings {
+			get { return onlyStrings; }
+		}
+		
 		#endregion
 		
 		#region Constructors
@@ -140,6 +145,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			onlyEventRaisers = new EventRaiserFitter();
 			
 			onlyNumbers = new NumberFitter();
+			onlyStrings = new StringFitter();
 		}
 		
 		#endregion

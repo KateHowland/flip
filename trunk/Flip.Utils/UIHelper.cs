@@ -79,5 +79,15 @@ namespace Sussex.Flip.Utils
 			//if it's not a ContentElement/FrameworkElement, rely on VisualTreeHelper
 			return VisualTreeHelper.GetParent(child);
 		}
+		
+		
+		public static string Truncate(string str, uint length)
+		{
+			if (String.IsNullOrEmpty(str)) return String.Empty;
+			
+			if (str.Length <= length) return str;
+                                
+			return String.Format("{0}...",str.Substring(0,(int)length-1));
+		}
 	}
 }

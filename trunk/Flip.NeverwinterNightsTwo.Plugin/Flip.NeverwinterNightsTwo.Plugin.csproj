@@ -96,12 +96,19 @@
   <ItemGroup>
     <Compile Include="Actions\Attacks.cs" />
     <Compile Include="Actions\DisplayMessage.cs" />
+    <Compile Include="Actions\EndGame.cs" />
     <Compile Include="Actions\GiveGold.cs" />
     <Compile Include="Actions\GiveXP.cs" />
+    <Compile Include="Actions\JumpsTo.cs" />
     <Compile Include="Actions\Lock.cs" />
+    <Compile Include="Actions\OpenStore.cs" />
     <Compile Include="Actions\PicksUp.cs" />
+    <Compile Include="Actions\RunsTo.cs" />
     <Compile Include="Actions\TakeGold.cs" />
     <Compile Include="Actions\Unlock.cs" />
+    <Compile Include="Actions\WalksTo.cs" />
+    <Compile Include="Conditions\HasEquippedItem.cs" />
+    <Compile Include="Conditions\OwnsItem.cs" />
     <Compile Include="Conditions\IsDead.cs" />
     <Compile Include="EventDescriber.cs" />
     <Compile Include="Fitters\AreaFitter.cs" />
@@ -139,6 +146,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
     </EmbeddedResource>
+    <Resource Include="flip_functions.NSS" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Utils\Flip.NeverwinterNightsTwo.Utils.csproj">

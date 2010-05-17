@@ -76,6 +76,10 @@
       <DependentUpon>ChangeNumberDialog.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ChangeStringDialog.xaml.cs">
+      <DependentUpon>ChangeStringDialog.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ComponentType.cs" />
     <Compile Include="ConditionalControl.cs" />
     <Compile Include="ConditionSlot.xaml.cs">
@@ -105,6 +109,7 @@
     <Compile Include="Fitters\Fitter.cs" />
     <Compile Include="Fitters\NumberFitter.cs" />
     <Compile Include="Fitters\SpineFitter.cs" />
+    <Compile Include="Fitters\StringFitter.cs" />
     <Compile Include="FlipWindow.xaml.cs">
       <DependentUpon>FlipWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -165,6 +170,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StatementType.cs" />
+    <Compile Include="StringBlock.xaml.cs">
+      <DependentUpon>StringBlock.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TextShorteningConverter.cs" />
     <Compile Include="TriggerBar.xaml.cs">
       <DependentUpon>TriggerBar.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -197,6 +207,7 @@
     <Folder Include="Fitters" />
     <Page Include="Bag.xaml" />
     <Page Include="ChangeNumberDialog.xaml" />
+    <Page Include="ChangeStringDialog.xaml" />
     <Page Include="ConditionSlot.xaml" />
     <Page Include="DoWhileControl.xaml" />
     <Page Include="DropZone.xaml" />
@@ -211,6 +222,7 @@
     <Page Include="PegSlot.xaml" />
     <Page Include="Spine.xaml" />
     <Page Include="StatementLabel.xaml" />
+    <Page Include="StringBlock.xaml" />
     <Page Include="TriggerBar.xaml" />
     <Page Include="EventBlockSlot.xaml" />
     <Page Include="WhileControl.xaml" />

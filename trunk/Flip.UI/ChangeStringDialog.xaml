@@ -1,0 +1,77 @@
+<Window x:Class="Sussex.Flip.UI.ChangeStringDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Change string" 
+    Height="205" 
+    Width="350"
+	ResizeMode="NoResize"
+	WindowStartupLocation="CenterScreen"
+	Icon="images/chicken.bmp"
+    >
+	
+	<Window.Resources>
+		
+		<Style TargetType="Button">
+		
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Padding" Value="5"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="Width" Value="70"/>
+			<Setter Property="HorizontalAlignment" Value="Right"/>
+		
+		</Style>
+		
+		<LinearGradientBrush 
+		x:Key="backBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Pink"/>
+				<GradientStop Offset="1" Color="Orange"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+	</Window.Resources>	
+	
+    <StackPanel
+	Background="{StaticResource backBrush}"
+	Orientation="Vertical">
+    	
+    	<TextBlock
+    	Text="New string:"
+    	FontSize="17"
+    	Margin="4"
+    	FontWeight="Bold"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center"/>
+        
+		<TextBox
+		Name="valueTextBox"
+		Height="90"
+		Width="300"
+		FontSize="16"
+		Margin="4"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center"
+    	TextAlignment="Center"
+    	TextWrapping="Wrap"/>
+    	
+    	<StackPanel 
+    	Orientation="Horizontal"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center">
+    		
+	    	<Button
+	    	Content="OK"
+	    	Click="AcceptChange"
+    		Margin="5,5,0,5"/>
+	    	    	
+	    	<Button
+	    	Content="Cancel"
+	    	Click="CancelChange"/>   
+    	
+    	</StackPanel>
+	
+    </StackPanel>
+
+</Window>

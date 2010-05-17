@@ -150,7 +150,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{		
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
-			manager.AddMoveable(OtherBagName,new NumberBlock());
+			manager.AddMoveable(OtherBagName,new NumberBlock(0));
+			manager.AddMoveable(OtherBagName,new StringBlock());
 		}
 		
 		

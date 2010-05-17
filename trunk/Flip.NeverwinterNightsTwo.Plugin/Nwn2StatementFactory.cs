@@ -142,10 +142,60 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement EndGame()
+		{
+			return new Statement(new EndGame(fitters));
+		}
+		
+		
+		public Statement JumpsTo()
+		{
+			return new Statement(new JumpsTo(fitters));
+		}
+		
+		
+		public Statement WalksTo()
+		{
+			return new Statement(new WalksTo(fitters));
+		}
+		
+		
+		public Statement RunsTo()
+		{
+			return new Statement(new RunsTo(fitters));
+		}
+		
+		
+		public Statement OpenStore()
+		{
+			return new Statement(new OpenStore(fitters));
+		}
+		
+		
 		public Statement IsDead()
 		{
 			return new Statement(new IsDead(fitters));
 		}
+		
+		
+		public Statement OwnsItem()
+		{
+			return new Statement(new OwnsItem(fitters));
+		}
+		
+		
+		// TODO:
+		// Won't work until code is put in to automatically include
+		// flip_functions.nss in any module.
+		// (Or some more clever way of doing this.. either the
+		// Statement could name the functions it needs, or
+		// the function collections it needs, or it could specify
+		// the function it needs itself (in code), and it would
+		// be appended to the start of the file.
+//		public Statement HasEquippedItem()
+//		{
+//			return new Statement(new HasEquippedItem(fitters));
+//		}
 		
 			
 			
