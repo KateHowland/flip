@@ -32,39 +32,38 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	public class DisplayMessage : Nwn2StatementBehaviour
 	{	
-//RWT-OEI 01/05/06
-//This script function displays a message box popup on the client of the
-//player passed in as the first parameter.
-//////
-// oPC           - The player object of the player to show this message box to
-// nMessageStrRef- The STRREF for the Message Box message.
-// sMessage      - The text to display in the message box. Overrides anything
-//               - indicated by the nMessageStrRef
-// sOkCB         - The callback script to call if the user clicks OK, defaults
-//               - to none. The script name MUST start with 'gui'
-// sCancelCB     - The callback script to call if the user clicks Cancel, defaults
-//               - to none. The script name MUST start with 'gui'
-// bShowCancel   - If TRUE, Cancel Button will appear on the message box.
-// sScreenName   - The GUI SCREEN NAME to use in place of the default message box.
-//               - The default is SCREEN_MESSAGEBOX_DEFAULT
-// nOkStrRef     - The STRREF to display in the OK button, defaults to OK
-// sOkString     - The string to show in the OK button. Overrides anything that
-//               - nOkStrRef indicates if it is not an empty string
-// nCancelStrRef - The STRREF to dispaly in the Cancel button, defaults to Cancel.
-// sCancelString - The string to display in the Cancel button. Overrides anything
-//               - that nCancelStrRef indicates if it is anything besides empty string
-//void DisplayMessageBox( object oPC, int nMessageStrRef..................
-		
-		protected string message = "Here is my message.";
+		//RWT-OEI 01/05/06
+		//This script function displays a message box popup on the client of the
+		//player passed in as the first parameter.
+		//////
+		// oPC           - The player object of the player to show this message box to
+		// nMessageStrRef- The STRREF for the Message Box message.
+		// sMessage      - The text to display in the message box. Overrides anything
+		//               - indicated by the nMessageStrRef
+		// sOkCB         - The callback script to call if the user clicks OK, defaults
+		//               - to none. The script name MUST start with 'gui'
+		// sCancelCB     - The callback script to call if the user clicks Cancel, defaults
+		//               - to none. The script name MUST start with 'gui'
+		// bShowCancel   - If TRUE, Cancel Button will appear on the message box.
+		// sScreenName   - The GUI SCREEN NAME to use in place of the default message box.
+		//               - The default is SCREEN_MESSAGEBOX_DEFAULT
+		// nOkStrRef     - The STRREF to display in the OK button, defaults to OK
+		// sOkString     - The string to show in the OK button. Overrides anything that
+		//               - nOkStrRef indicates if it is not an empty string
+		// nCancelStrRef - The STRREF to dispaly in the Cancel button, defaults to Cancel.
+		// sCancelString - The string to display in the Cancel button. Overrides anything
+		//               - that nCancelStrRef indicates if it is anything besides empty string
+		//void DisplayMessageBox( object oPC, int nMessageStrRef..................
 		
 		
 		public DisplayMessage(Nwn2Fitters fitters) : base(fitters)
 		{
 			statementType = StatementType.Action;
-			parameterCount = 0;
+			parameterCount = 1;
 			components = new List<StatementComponent>(1) 
 			{ 
-				new StatementComponent("display"),
+				new StatementComponent("display message"),
+				new StatementComponent(fitters.OnlyStrings)
 			};
 		}
 		
@@ -75,7 +74,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}			
 			
-			return String.Format("DisplayMessageBox(GetFirstPC(),0,\"" + message + "\");");
+			return String.Format("DisplayMessageBox(GetFirstPC(),0,{0});",args);
 		}
 		
 		
@@ -85,7 +84,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("a message pops up (\"{0}\")",message);
+			if (args[0] == fitters.OnlyStrings.GetMoveableDescription()) return "a message pops up";
+			else return String.Format("a message pops up ({0})",args);
 		}
 		
 		

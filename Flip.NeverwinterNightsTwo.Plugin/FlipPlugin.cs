@@ -25,9 +25,11 @@
 
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using NWN2Toolset;
+using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
 using Sussex.Flip.Core;
@@ -157,6 +159,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			service.Start();
 			
+			ProvideSpecialFunctionsScriptFile();
+			
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
 			
@@ -189,6 +193,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			launchFlip.Activate += delegate { LaunchFlip(); };
 			
 			pluginMenuItem.Items.Add(launchFlip);
+		}
+		
+		
+		protected void ProvideSpecialFunctionsScriptFile()
+		{
+//			System.Reflection.Assembly a = System.Reflection.Assembly.GetExecutingAssembly();
+//        
+//			a.GetType().
+//			
+//			
+//            // get a list of resource names from the manifest
+//            FileStream[] files = a.GetFiles(true);
+//            
+//            foreach (FileStream file in files) MessageBox.Show(file.Name);
+//
+//			DirectoryInfo directory = new DirectoryInfo(NWN2ResourceManager.Instance.OverrideDirectory.DirectoryName);
+//			if (directory.GetFiles("flip_functions.nss",SearchOption.TopDirectoryOnly).Length == 0) {
+//				File.Copy("flip_functions.nss",Path.Combine(directory.FullName,"flip_functions.nss"));
+//			}
 		}
 		
 		

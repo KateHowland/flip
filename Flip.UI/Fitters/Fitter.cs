@@ -123,5 +123,17 @@ namespace Sussex.Flip.UI
 			NumberBlock numberBlock = moveable as NumberBlock;
 			return numberBlock != null;
 		}
+		
+		
+		/// <summary>
+		/// Gets whether a given Moveable represents a string value or variable.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is a string; false otherwise.</returns>
+		public static bool IsString(Moveable moveable)
+		{
+			StringBlock stringBlock = moveable as StringBlock;
+			return stringBlock != null;
+		}
 	}
 }

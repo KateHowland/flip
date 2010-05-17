@@ -213,6 +213,12 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		protected void ViewCode(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show(triggerBar.GetCode());
+		}
+		
+		
 		protected void CreateAdorner(object sender, DragEventArgs e)
 		{
 			Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));

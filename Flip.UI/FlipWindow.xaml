@@ -74,6 +74,10 @@
 					Header="Clear"
 					Click="Clear"/>
 				
+					<MenuItem
+					Header="View code"
+					Click="ViewCode"/>
+				
 				</MenuItem>
 					
 				<MenuItem 
