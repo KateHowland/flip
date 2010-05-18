@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (args[0] == "some number") args[0] = "some number of";
 			
 			if (args[1] == "1") return String.Format("{1} gains 1 gold coin.",args);			
-			else return String.Format("{1} gains {0} gold coins",args);
+			else return String.Format("{1} gets {0} gold coins",args);
 		}
 		
 		

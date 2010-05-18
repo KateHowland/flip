@@ -37,9 +37,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			statementType = StatementType.Condition;
 			parameterCount = 2;
-			components = new List<StatementComponent>(4) 
+			components = new List<StatementComponent>(3) 
 			{ 
-				new StatementComponent("if"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
 				new StatementComponent("owns"),
 				new StatementComponent(fitters.OnlyItems)

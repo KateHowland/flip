@@ -184,6 +184,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement BecomesCommoner()
+		{
+			return new Statement(new BecomesCommoner(fitters));
+		}
+		
+		
+		public Statement BecomesDefender()
+		{
+			return new Statement(new BecomesDefender(fitters));
+		}
+		
+		
+		public Statement BecomesHostile()
+		{
+			return new Statement(new BecomesHostile(fitters));
+		}
+		
+		
+		public Statement MakeHenchman()
+		{
+			return new Statement(new MakeHenchman(fitters));
+		}
+		
+		
+		public Statement UnmakeHenchman()
+		{
+			return new Statement(new UnmakeHenchman(fitters));
+		}
+		
+		
 		// TODO:
 		// Won't work until code is put in to automatically include
 		// flip_functions.nss in any module.
@@ -197,144 +227,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 //			return new Statement(new HasEquippedItem(fitters));
 //		}
 		
-			
-			
-//		
-//		
-//		[ActionStatement("Drops")]
-//		public Statement Drops()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("drops");
-//			statement.AddParameter(new ObjectBlockSlot("item1",fitters.OnlyItems));
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Equips")]
-//		public Statement Equips()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("equips");
-//			statement.AddParameter(new ObjectBlockSlot("item1",fitters.OnlyItems));
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Unequips")]
-//		public Statement Unequips()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("unequips");
-//			statement.AddParameter(new ObjectBlockSlot("item1",fitters.OnlyItems));
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Grows")]
-//		public Statement Grows()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreatures));
-//			statement.AddLabel("grows");
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Shrinks")]
-//		public Statement Shrinks()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreatures));
-//			statement.AddLabel("shrinks");
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Opens")]
-//		public Statement Opens()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("opens");
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Closes")]
-//		public Statement Closes()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("closes");
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Locks")]
-//		public Statement Locks()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("locks");
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Unlocks")]
-//		public Statement Unlocks()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("unlocks");
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Gets XP")]
-//		public Statement GetsXP()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("player1",fitters.OnlyPlayers));
-//			statement.AddLabel("gets XP");
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Walks")]
-//		public Statement Walks()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("walks");
-//			statement.AddParameter(new ObjectBlockSlot("instance1",fitters.OnlyInstances));
-//			return statement;
-//		}	
-//		
-//		
-//		[ActionStatement("Runs")]
-//		public Statement Runs()
-//		{			
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("runs");
-//			statement.AddParameter(new ObjectBlockSlot("instance1",fitters.OnlyInstances));
-//			return statement;
-//		}
-//		
-//		
-//		[ActionStatement("Teleports")]
-//		public Statement Teleports()
-//		{
-//			Statement statement = new ActionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("teleports");
-//			statement.AddParameter(new ObjectBlockSlot("instance1",fitters.OnlyInstances));
-//			return statement;
-//		}
+		
 		
 		#endregion
 		
