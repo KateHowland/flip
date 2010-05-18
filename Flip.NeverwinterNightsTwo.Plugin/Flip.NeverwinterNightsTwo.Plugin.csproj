@@ -98,6 +98,7 @@
     <Compile Include="Actions\BecomesCommoner.cs" />
     <Compile Include="Actions\BecomesDefender.cs" />
     <Compile Include="Actions\BecomesHostile.cs" />
+    <Compile Include="Actions\SetTimeToNoon.cs" />
     <Compile Include="Actions\DisplayMessage.cs" />
     <Compile Include="Actions\EndGame.cs" />
     <Compile Include="Actions\GiveGold.cs" />
@@ -107,12 +108,17 @@
     <Compile Include="Actions\Kill.cs" />
     <Compile Include="Actions\Lock.cs" />
     <Compile Include="Actions\MakeHenchman.cs" />
+    <Compile Include="Actions\SetTimeToMidnight.cs" />
     <Compile Include="Actions\OpenStore.cs" />
+    <Compile Include="Actions\Pause.cs" />
     <Compile Include="Actions\PicksUp.cs" />
     <Compile Include="Actions\RunsTo.cs" />
+    <Compile Include="Actions\SetTimeToSunrise.cs" />
+    <Compile Include="Actions\SetTimeToSunset.cs" />
     <Compile Include="Actions\TakeGold.cs" />
     <Compile Include="Actions\Unlock.cs" />
     <Compile Include="Actions\UnmakeHenchman.cs" />
+    <Compile Include="Actions\Unpause.cs" />
     <Compile Include="Actions\WalksTo.cs" />
     <Compile Include="Conditions\HasEquippedItem.cs" />
     <Compile Include="Conditions\OwnsItem.cs" />

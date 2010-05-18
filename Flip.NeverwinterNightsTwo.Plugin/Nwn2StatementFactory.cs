@@ -226,6 +226,42 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement Pause()
+		{
+			return new Statement(new Pause(fitters));
+		}
+		
+		
+		public Statement Unpause()
+		{
+			return new Statement(new Unpause(fitters));
+		}
+		
+		
+		public Statement SetTimeToNoon()
+		{
+			return new Statement(new SetTimeToNoon(fitters));
+		}
+		
+		
+		public Statement SetTimeToMidnight()
+		{
+			return new Statement(new SetTimeToMidnight(fitters));
+		}
+		
+		
+		public Statement SetTimeToSunrise()
+		{
+			return new Statement(new SetTimeToSunrise(fitters));
+		}
+		
+		
+		public Statement SetTimeToSunset()
+		{
+			return new Statement(new SetTimeToSunset(fitters));
+		}
+		
+		
 		// TODO:
 		// Won't work until code is put in to automatically include
 		// flip_functions.nss in any module.
