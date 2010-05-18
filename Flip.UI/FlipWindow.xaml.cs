@@ -265,7 +265,16 @@ namespace Sussex.Flip.UI
 	    			    (Math.Abs(moved.X) > SystemParameters.MinimumHorizontalDragDistance ||
 	    			     Math.Abs(moved.Y) > SystemParameters.MinimumVerticalDragDistance)) {
 	    				    				
-	    				DragDropEffects effects = blockBox.HasMoveable(dragging) ? DragDropEffects.Copy : DragDropEffects.Move;
+	    				DragDropEffects effects;
+	    				
+	    				// Shift-drag to copy a Moveable instead of moving it:
+	    				if (blockBox.HasMoveable(dragging) || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) {
+	    					effects = DragDropEffects.Copy;
+	    				}
+	    				else {
+	    					effects = DragDropEffects.Move;
+	    				}
+	    				
 	    				DataObject dataObject = new DataObject(typeof(Moveable),dragging);
 	    				DragDrop.DoDragDrop(dragging,dataObject,effects);
 	    				
@@ -345,7 +354,7 @@ namespace Sussex.Flip.UI
 				}
 			}
 		}
-
+		
 
 		protected void ReturnMoveableToBox(object sender, DragEventArgs e)
 		{

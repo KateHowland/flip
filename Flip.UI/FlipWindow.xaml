@@ -77,7 +77,7 @@
 					<MenuItem
 					Header="View code"
 					Click="ViewCode"/>
-				
+								
 				</MenuItem>
 					
 				<MenuItem 

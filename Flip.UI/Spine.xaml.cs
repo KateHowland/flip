@@ -184,8 +184,12 @@ namespace Sussex.Flip.UI
 			    // If a moveable has been dropped just above or below
 			    // itself, do nothing. Otherwise, try to use an empty
 			    // peg, or create a new peg if there isn't one:
-			    if ((above != null && above.Slot.Contents == moveable) ||
-			        (below != null && below.Slot.Contents == moveable)) {
+			    
+			    bool pointlessMove = 
+			    	e.AllowedEffects == DragDropEffects.Move &&
+			    	((above != null && above.Slot.Contents == moveable) || (below != null && below.Slot.Contents == moveable));
+			    
+			    if (pointlessMove) {
 			    	e.Handled = true;
 			     	return;
 			    }			        	

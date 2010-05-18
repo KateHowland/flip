@@ -188,6 +188,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (behaviour.Nwn2Type == Nwn2Type.Item) {
 					image = GetImage("Placeholder","Item");
 				}
+				else if (behaviour.Nwn2Type == Nwn2Type.Waypoint) {
+					image = GetImage("Placeholder","Waypoint");
+				}
 				else {
 					image = GetImage("Placeholder","Blueprint");
 				}
@@ -286,6 +289,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (image == null) {
 				if (behaviour.Nwn2Type == Nwn2Type.Item) {
 					image = GetImage("Placeholder","Item");
+				}
+				else if (behaviour.Nwn2Type == Nwn2Type.Waypoint) {
+					image = GetImage("Placeholder","Waypoint");
 				}
 				else {
 					image = GetImage("Placeholder","Instance");
