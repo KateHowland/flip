@@ -30,8 +30,8 @@ namespace Sussex.Flip.UI
     	
     	
     	public Brush BackgroundBrush {
-    		get { return textBlock.Background.Clone(); }
-    		set { textBlock.Background = value; }
+    		get { return border.Background.Clone(); }
+    		set { border.Background = value; }
     	}
     	
     	
@@ -40,11 +40,14 @@ namespace Sussex.Flip.UI
             resourceDictionary = new ResourceDictionary();
             
             Style style = new Style(typeof(TextBlock));
-            style.Setters.Add(new Setter(TextBlock.FontSizeProperty,16.0));
+            style.Setters.Add(new Setter(TextBlock.FontSizeProperty,12.0));
+            style.Setters.Add(new Setter(TextBlock.FontWeightProperty,FontWeights.Bold));
             style.Setters.Add(new Setter(TextBlock.FontFamilyProperty,new FontFamily("Helvetica")));
             style.Setters.Add(new Setter(TextBlock.ForegroundProperty,Brushes.Black));
             style.Setters.Add(new Setter(TextBlock.WidthProperty,80.0));
-            style.Setters.Add(new Setter(TextBlock.PaddingProperty,new Thickness(10)));
+            //style.Setters.Add(new Setter(TextBlock.HeightProperty,40.0));
+            //style.Setters.Add(new Setter(TextBlock.PaddingProperty,new Thickness(10)));
+            style.Setters.Add(new Setter(TextBlock.TextWrappingProperty,TextWrapping.Wrap));
             style.Setters.Add(new Setter(TextBlock.HorizontalAlignmentProperty,HorizontalAlignment.Center));
             style.Setters.Add(new Setter(TextBlock.VerticalAlignmentProperty,VerticalAlignment.Center));
             style.Setters.Add(new Setter(TextBlock.TextAlignmentProperty,TextAlignment.Center));

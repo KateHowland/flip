@@ -107,7 +107,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}
 			
-			manager.DisplayBag(OtherBagName);
+			manager.DisplayBag(ActionsBagName);
 		}
 		
 		

@@ -68,7 +68,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (args[0] == "some number") args[0] = "some number of";
 									
 			if (args[1] == "1") return String.Format("{1} loses 1 experience point",args);			
-			else return String.Format("{1} loses {0} experience points",args);
+			else return String.Format("{1} gets {0} experience points",args);
 		}
 		
 		

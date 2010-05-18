@@ -20,30 +20,41 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/05/2010 at 12:20.
+ * This file added by Keiron Nicholson on 18/05/2010 at 10:49.
  */
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Sussex.Flip.Utils;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class JumpsTo : Nwn2StatementBehaviour
+	public class BecomesDefender : Nwn2StatementBehaviour
 	{	
-		// Jump to an object ID, or as near to it as possible.
-		// void ActionJumpToObject(object oToJumpTo, int bWalkStraightLineToPoint=TRUE);
+		// requires: #include "NW_I0_GENERIC"
 		
-		public JumpsTo(Nwn2Fitters fitters) : base(fitters)
+		// Make oCreatureToChange join one of the standard factions.
+		// ** This will only work on an NPC **
+		// - nStandardFaction: STANDARD_FACTION_*
+		// void ChangeToStandardFaction(object oCreatureToChange, int nStandardFaction);
+		
+		// AssignCommand(oTarget, DetermineCombatRound());
+		
+		//int STANDARD_FACTION_HOSTILE  = 0;
+		//int STANDARD_FACTION_COMMONER = 1;
+		//int STANDARD_FACTION_MERCHANT = 2;
+		//int STANDARD_FACTION_DEFENDER = 3;
+		
+		public BecomesDefender(Nwn2Fitters fitters) : base(fitters)
 		{
 			statementType = StatementType.Action;
-			parameterCount = 2;
-			components = new List<StatementComponent>(3) 
+			parameterCount = 1;
+			components = new List<StatementComponent>(2) 
 			{ 
-				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("teleports to"),
-				new StatementComponent(fitters.OnlyInstances)
+				new StatementComponent(fitters.OnlyCreatures),
+				new StatementComponent("becomes defender")
 			};
 		}
 		
@@ -54,7 +65,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}	
 			
-			return String.Format("AssignCommand({0},ActionJumpToObject({1},TRUE));",args);
+			StringBuilder code = new StringBuilder();
+			code.AppendLine(String.Format("ChangeToStandardFaction({0},STANDARD_FACTION_DEFENDER);",args));
+			code.AppendLine(String.Format("AssignCommand({0},DetermineCombatRound());",args));
+			return code.ToString();
 		}
 		
 		
@@ -64,14 +78,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[1] == "something") return String.Format("{0} instantly teleports to some location",args);
-			else return String.Format("{0} instantly teleports to the location of {1}",args);
+			return String.Format("{0} joins the Defender faction",args);
 		}
 		
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new JumpsTo(fitters);
+			return new BecomesDefender(fitters);
 		}
 	}
 }

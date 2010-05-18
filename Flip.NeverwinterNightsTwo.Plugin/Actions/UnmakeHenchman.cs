@@ -20,7 +20,7 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/05/2010 at 12:20.
+ * This file added by Keiron Nicholson on 18/05/2010 at 11:02.
  */
 
 using System;
@@ -30,20 +30,26 @@ using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class JumpsTo : Nwn2StatementBehaviour
+	public class UnmakeHenchman : Nwn2StatementBehaviour
 	{	
-		// Jump to an object ID, or as near to it as possible.
-		// void ActionJumpToObject(object oToJumpTo, int bWalkStraightLineToPoint=TRUE);
+		// requires: #include "ginc_henchman"
 		
-		public JumpsTo(Nwn2Fitters fitters) : base(fitters)
+		// Wrapper function for RemoveHenchman(). Supports added functionality of HenchmanAdd()
+		// Parameters:
+		//		-oHench is no longer a Henchman of oMaster
+		// Return value:
+		//		1 on success, 0 on failure
+		// int HenchmanRemove(object oMaster, object oHench)
+		
+		public UnmakeHenchman(Nwn2Fitters fitters) : base(fitters)
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
 			components = new List<StatementComponent>(3) 
 			{ 
+				new StatementComponent(fitters.OnlyCreatures),
+				new StatementComponent("stops protecting"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("teleports to"),
-				new StatementComponent(fitters.OnlyInstances)
 			};
 		}
 		
@@ -54,7 +60,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}	
 			
-			return String.Format("AssignCommand({0},ActionJumpToObject({1},TRUE));",args);
+			return String.Format("HenchmanRemove({1},{0});",args);
 		}
 		
 		
@@ -64,14 +70,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[1] == "something") return String.Format("{0} instantly teleports to some location",args);
-			else return String.Format("{0} instantly teleports to the location of {1}",args);
+			return String.Format("{0} stops following and protecting {1}",args);
 		}
 		
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new JumpsTo(fitters);
+			return new UnmakeHenchman(fitters);
 		}
 	}
 }

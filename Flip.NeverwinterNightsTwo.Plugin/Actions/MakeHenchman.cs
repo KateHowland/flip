@@ -20,7 +20,7 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/05/2010 at 12:20.
+ * This file added by Keiron Nicholson on 18/05/2010 at 10:58.
  */
 
 using System;
@@ -30,20 +30,27 @@ using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class JumpsTo : Nwn2StatementBehaviour
+	public class MakeHenchman : Nwn2StatementBehaviour
 	{	
-		// Jump to an object ID, or as near to it as possible.
-		// void ActionJumpToObject(object oToJumpTo, int bWalkStraightLineToPoint=TRUE);
+		// requires: #include "ginc_henchman"
 		
-		public JumpsTo(Nwn2Fitters fitters) : base(fitters)
+		// Wrapper function for AddHenchman that adds some extra functionality.
+		// oHench is added as a henchman of oMaster.
+		//  - bForce - if set, this will temporarily up the max henchman to allow the henchman in the party (is immediately set back to what it was).
+		//  - bOverrideBehavior - if set, oHench's event handling scripts will be replaced with some stock henchman ones to get some easy default henchman behavior
+		// Return Value: 1 on success, 0 on error
+		// notes - returns 0 if there is no room in party to add henchman, though this is not technically an error
+		// int HenchmanAdd(object oMaster, object oHench, int bForce=0, int bOverrideBehavior=0)
+		
+		public MakeHenchman(Nwn2Fitters fitters) : base(fitters)
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
 			components = new List<StatementComponent>(3) 
 			{ 
+				new StatementComponent(fitters.OnlyCreatures),
+				new StatementComponent("becomes protector of"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("teleports to"),
-				new StatementComponent(fitters.OnlyInstances)
 			};
 		}
 		
@@ -54,7 +61,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}	
 			
-			return String.Format("AssignCommand({0},ActionJumpToObject({1},TRUE));",args);
+			// Existing event-handler scripts will be overridden.
+			// TODO There should be some kind of warning about this.
+			return String.Format("HenchmanAdd({1},{0},1,1);",args);
 		}
 		
 		
@@ -64,14 +73,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[1] == "something") return String.Format("{0} instantly teleports to some location",args);
-			else return String.Format("{0} instantly teleports to the location of {1}",args);
+			return String.Format("{0} starts to follow and protect {1}",args);
 		}
 		
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new JumpsTo(fitters);
+			return new MakeHenchman(fitters);
 		}
 	}
 }
