@@ -102,7 +102,9 @@
     <Compile Include="Actions\EndGame.cs" />
     <Compile Include="Actions\GiveGold.cs" />
     <Compile Include="Actions\GiveXP.cs" />
+    <Compile Include="Actions\Heal.cs" />
     <Compile Include="Actions\JumpsTo.cs" />
+    <Compile Include="Actions\Kill.cs" />
     <Compile Include="Actions\Lock.cs" />
     <Compile Include="Actions\MakeHenchman.cs" />
     <Compile Include="Actions\OpenStore.cs" />

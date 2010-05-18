@@ -214,6 +214,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement Kill()
+		{
+			return new Statement(new Kill(fitters));
+		}
+		
+		
+		public Statement Heal()
+		{
+			return new Statement(new Heal(fitters));
+		}
+		
+		
 		// TODO:
 		// Won't work until code is put in to automatically include
 		// flip_functions.nss in any module.
