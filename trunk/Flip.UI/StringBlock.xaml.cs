@@ -54,6 +54,11 @@ namespace Sussex.Flip.UI
     	public StringBlock() : this(String.Empty,40)
         {
         }
+    	
+    	
+    	public StringBlock(string value) : this(value,40)
+    	{    		
+    	}
 
     	
     	public StringBlock(string value, uint displayLength)

@@ -64,8 +64,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[1] == "something") return String.Format("{0} instantly teleports to some location",args);
-			else return String.Format("{0} instantly teleports to the location of {1}",args);
+			if (args[1] == "something") return String.Format("{0} teleports to some location",args);
+			else return String.Format("{0} teleports to the location of {1}",args);
 		}
 		
 		

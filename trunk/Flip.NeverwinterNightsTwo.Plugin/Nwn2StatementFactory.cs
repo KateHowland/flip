@@ -268,6 +268,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement AreaTransition()
+		{
+			return new Statement(new AreaTransition(fitters));
+		}
+		
+		
 		// TODO:
 		// Won't work until code is put in to automatically include
 		// flip_functions.nss in any module.

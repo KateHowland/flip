@@ -171,5 +171,13 @@ namespace Sussex.Flip.UI
 			UIElementCollection moveables = GetMoveables(bagName);
 			return moveables.Contains(moveable);
 		}
+		
+		
+		public bool HasBag(string bag)
+		{
+			if (bag == null) throw new ArgumentNullException("bag");
+			
+			return GetBags().Contains(bag);
+		}
 	}
 }

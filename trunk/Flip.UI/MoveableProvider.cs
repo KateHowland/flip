@@ -32,7 +32,7 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class MoveableProvider
 	{
-		protected const string ProgrammingConstructsBagName = "Programming Constructs";
+		protected const string ProgrammingConstructsBagName = "Control";
 		
 		
 		protected IMoveableManager manager;
