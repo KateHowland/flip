@@ -49,6 +49,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Fitter onlyModules;		
 		protected Fitter onlyCreaturesOrPlayers;		
 		protected Fitter onlyDoorsOrPlaceables;		
+		protected Fitter onlyDestroyableObjects;		
 		protected Fitter onlyInstances;		
 		protected Fitter onlyEventRaisers;	
 		protected Fitter onlyNumbers;	
@@ -106,6 +107,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			get { return onlyDoorsOrPlaceables; }
 		}
 		
+		public Fitter OnlyDestroyableObjects {
+			get { return onlyDestroyableObjects; }
+		}
+		
 		public Fitter OnlyInstances {
 			get { return onlyInstances; }
 		}
@@ -136,6 +141,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			onlyTriggers = new InstanceFitter(NWN2ObjectType.Trigger,"a trigger");
 			onlyWaypoints = new InstanceFitter(NWN2ObjectType.Waypoint,"a waypoint");
 			onlyDoorsOrPlaceables = new InstanceFitter(new List<NWN2ObjectType>{NWN2ObjectType.Door,NWN2ObjectType.Placeable},"something");
+			onlyDestroyableObjects = new InstanceFitter(new List<NWN2ObjectType>{
+			                                            	NWN2ObjectType.Creature,
+			                                            	NWN2ObjectType.Door,
+			                                            	NWN2ObjectType.Item,
+			                                            	NWN2ObjectType.Light,
+			                                            	NWN2ObjectType.Placeable,
+			                                            	NWN2ObjectType.PlacedEffect,
+			                                            	NWN2ObjectType.Trigger},
+			                                            	"something");
 			
 			onlyPlayers = new PlayerFitter();
 			onlyAreas = new AreaFitter();
