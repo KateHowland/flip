@@ -54,7 +54,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Nwn2ObjectBlockFactory blocks;
 		protected Nwn2StatementFactory statements;
 		protected Nwn2EventBlockFactory events;
-		protected static string[] nwn2Types;
+		protected static string[] nwn2BlockTypes;
 			
 		
 		protected const string ActionsBagName = "Actions";
@@ -67,7 +67,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		static Nwn2MoveableProvider()
 		{
-			nwn2Types = Enum.GetNames(typeof(NWN2ObjectType));
+			// Excludes StaticCamera, Environment, Tree, Prefab as you'll never want to use these instances.
+			nwn2BlockTypes = new string[] { "Creature", 
+											"Door", 
+											"Encounter", 
+											"Item", 
+											"Light", 
+											"Placeable", 
+											"PlacedEffect",
+											"Sound", 
+											"Store", 
+											"Trigger", 
+											"Waypoint"
+			};
 		}
 		
 		
@@ -102,7 +114,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddBag(EventsBagName);
 			manager.AddBag(OtherBagName);	
 			
-			foreach (string nwn2Type in nwn2Types) {
+			foreach (string nwn2Type in nwn2BlockTypes) {
 				//manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}
@@ -151,7 +163,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
 			manager.AddMoveable(OtherBagName,new NumberBlock(0));
-			manager.AddMoveable(OtherBagName,new StringBlock());
+			manager.AddMoveable(OtherBagName,new StringBlock("click 'change' to edit this Word Block"));
 		}
 		
 		
@@ -167,10 +179,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
-			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {				
+			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+								
+				string bag = String.Format(BlueprintBagNamingFormat,type.ToString());
+				if (!manager.HasBag(bag)) continue;
+				
 				foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
 					ObjectBlock block = blocks.CreateBlueprintBlock(blueprint);
-					manager.AddMoveable(String.Format(BlueprintBagNamingFormat,type.ToString()),block);
+					manager.AddMoveable(bag,block);
 				}
 			}
 		}
@@ -204,13 +220,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
 					
+				string bag = String.Format(InstanceBagNamingFormat,type.ToString());
+				if (!manager.HasBag(bag)) continue;
+				
 				NWN2InstanceCollection instances = area.GetInstancesForObjectType(type);
 				
 				if (instances == null) return;
 					
 				foreach (INWN2Instance instance in instances) {
 					ObjectBlock block = blocks.CreateInstanceBlock(instance,area);
-					manager.AddMoveable(String.Format(InstanceBagNamingFormat,type.ToString()),block);
+					manager.AddMoveable(bag,block);
 				}
 			}
 		}
@@ -234,17 +253,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			reporter.InstanceAdded += delegate(object sender, InstanceEventArgs e) 
 			{  	
-				if (manager == null) {
-					return;
-				}
+				if (manager == null) return;
+				
+				string bag = String.Format(InstanceBagNamingFormat,e.Instance.ObjectType.ToString());
+				if (!manager.HasBag(bag)) return;
+				
 				ObjectBlock block = blocks.CreateInstanceBlock(e.Instance,e.Area);
-				manager.AddMoveable(String.Format(InstanceBagNamingFormat,e.Instance.ObjectType.ToString()),block);
+				manager.AddMoveable(bag,block);
 			};
 			
 			reporter.InstanceRemoved += delegate(object sender, InstanceEventArgs e) 
 			{  
 				if (manager == null || e.Instance == null) return;
-				string bag = String.Format(InstanceBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Instance.ObjectType));
+				
+				string bag = String.Format(InstanceBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Instance.ObjectType));				
+				if (!manager.HasBag(bag)) return;
 				
 				try {
 					UIElementCollection collection = manager.GetMoveables(bag);

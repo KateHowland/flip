@@ -26,5 +26,6 @@ namespace Sussex.Flip.UI
 		List<string> GetBags();
 		bool HasMoveable(Moveable moveable);
 		bool HasMoveable(Moveable moveable, string bagName);
+		bool HasBag(string bag);
 	}
 }
