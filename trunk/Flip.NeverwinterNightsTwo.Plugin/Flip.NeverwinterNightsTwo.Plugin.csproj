@@ -123,6 +123,7 @@
     <Compile Include="Actions\Unpause.cs" />
     <Compile Include="Actions\WalksTo.cs" />
     <Compile Include="Conditions\HasEquippedItem.cs" />
+    <Compile Include="Conditions\HasGold.cs" />
     <Compile Include="Conditions\OwnsItem.cs" />
     <Compile Include="Conditions\IsDead.cs" />
     <Compile Include="EventDescriber.cs" />

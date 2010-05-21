@@ -20,7 +20,7 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/05/2010 at 11:51.
+ * This file added by Keiron Nicholson on 21/05/2010 at 17:28.
  */
 
 using System;
@@ -29,20 +29,21 @@ using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class HasEquippedItem : Nwn2StatementBehaviour
+	public class HasGold : Nwn2StatementBehaviour
 	{	
-		// Requires flip_functions.ncs
-		// int CreatureHasItemEquipped(object oCreature, object oItem)
+		// Get the amount of gold possessed by oTarget.
+		// int GetGold(object oTarget=OBJECT_SELF);
 				
-		public HasEquippedItem(Nwn2Fitters fitters) : base(fitters)
+		public HasGold(Nwn2Fitters fitters) : base(fitters)
 		{
 			statementType = StatementType.Condition;
 			parameterCount = 2;
-			components = new List<StatementComponent>(3) 
+			components = new List<StatementComponent>(4) 
 			{ 
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("has equipped"),
-				new StatementComponent(fitters.OnlyItems)
+				new StatementComponent("has at least"),
+				new StatementComponent(fitters.OnlyNumbers),
+				new StatementComponent("gold")
 			};
 		}
 		
@@ -53,7 +54,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("CreatureHasItemEquipped({0},{1})",args);
+			return String.Format("GetGold({0}) >= {1}",args);
 		}
 		
 		
@@ -63,13 +64,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("{0} currently has {1} equipped",args);
+			if (args[0] == "some number") args[0] = "some number of";
+			
+			return String.Format("{0} currently owns at least {1} gold pieces",args);
 		}
 		
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new HasEquippedItem(fitters);
+			return new HasGold(fitters);
 		}
 	}
 }
