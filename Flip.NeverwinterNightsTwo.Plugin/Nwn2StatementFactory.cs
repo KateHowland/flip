@@ -280,6 +280,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement IsNear()
+		{
+			return new Statement(new IsNear(fitters));
+		}
+		
+		
 		// TODO:
 		// Won't work until code is put in to automatically include
 		// flip_functions.nss in any module.
