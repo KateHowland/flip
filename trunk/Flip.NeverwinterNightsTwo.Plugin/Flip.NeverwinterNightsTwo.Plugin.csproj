@@ -159,12 +159,18 @@
     <Compile Include="ToolsetEventReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolsetUIModifier.cs" />
+    <Compile Include="Triggers\AreaEntered.cs" />
     <Compile Include="Triggers\CreatureDies.cs" />
+    <Compile Include="Triggers\DoorOrPlaceableIsLocked.cs" />
+    <Compile Include="Triggers\DoorOrPlaceableIsUnlocked.cs" />
     <Compile Include="Triggers\NullTrigger.xaml.cs">
       <DependentUpon>NullTrigger.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Triggers\Nwn2TriggerFactory.cs" />
+    <Compile Include="Triggers\PlaceableUsed.cs" />
+    <Compile Include="Triggers\TriggerEntered.cs" />
+    <Compile Include="Triggers\TriggerExited.cs" />
     <EmbeddedResource Include="Licence.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LogicalName>licence</LogicalName>
