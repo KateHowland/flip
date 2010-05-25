@@ -11,12 +11,17 @@ namespace Sussex.Flip.UI
 
     public partial class TriggerBar : UserControl, ITranslatable
     {
-    	protected TriggerControl triggerControl;
+    	protected TriggerSlot triggerSlot;
     	protected Spine spine;
     	
     	
+    	// TODO:
+    	// needs to track changes, both when trigger is changed and when the contents of that trigger change
 		public TriggerControl TriggerControl {
-			get { return triggerControl; }
+			get { return triggerSlot.Contents as TriggerControl; }
+			set { 
+				triggerSlot.Contents = value; 
+			}
 		}
     	
 		public Spine Spine {
@@ -45,21 +50,25 @@ namespace Sussex.Flip.UI
 		/// are valid in their slots, only that those slots have been filled.</remarks>
 		public bool IsComplete { 
 			get { 
-				return triggerControl.IsComplete && spine.IsComplete;
+				return triggerSlot.IsComplete && spine.IsComplete;
 			}
 		}	
 		
     	
-        public TriggerBar(TriggerControl triggerControl, Fitter fitter)
+        public TriggerBar(TriggerControl initialTrigger, Fitter fitter)
         {
-        	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
+        	if (initialTrigger == null) throw new ArgumentNullException("triggerControl");
         	
         	spine = new Spine(fitter,3);
         	Grid.SetRow(spine,0);
         	Grid.SetColumn(spine,0);
         	spine.Margin = new Thickness(14,0,0,0);
         	
+        	triggerSlot = new TriggerSlot(new TriggerFitter());
+        	
             InitializeComponent();
+            
+            triggerBarPanel.Children.Add(triggerSlot);
             
             spine.Extends = border.Height + 20;        	
         	Grid.SetZIndex(spine,1);
@@ -68,17 +77,15 @@ namespace Sussex.Flip.UI
             
             Effect = new DropShadowEffect();
             
-            this.triggerControl = triggerControl;
-            triggerBarPanel.Children.Add(triggerControl);
-        	
         	spine.Changed += delegate { OnChanged(new EventArgs()); };
-        	triggerControl.Changed += delegate { OnChanged(new EventArgs()); };
+        	
+            TriggerControl = initialTrigger;
         }
         
         
         public string GetAddress()
         {
-        	return triggerControl.GetAddress();
+        	return triggerSlot.GetAddress();
         }
 
 
@@ -105,7 +112,7 @@ namespace Sussex.Flip.UI
 		{
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 			
-			code.AppendLine(triggerControl.GetNaturalLanguage());
+			code.AppendLine(triggerSlot.GetNaturalLanguage());
 			code.AppendLine(spine.GetNaturalLanguage());
 			
 			return code.ToString();
@@ -114,7 +121,7 @@ namespace Sussex.Flip.UI
 		
 		public ScriptInformation GetScript()
 		{
-			ScriptInformation script = new ScriptInformation(triggerControl,spine);
+			ScriptInformation script = new ScriptInformation(TriggerControl,spine);
 			return script;
 		}
     }

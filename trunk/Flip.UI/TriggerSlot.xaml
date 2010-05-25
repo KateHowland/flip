@@ -1,0 +1,13 @@
+<flipui:MoveableSlot x:Class="Sussex.Flip.UI.TriggerSlot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
+	
+    <Border
+	x:Name="border"
+	Height="80"
+	Width="400"
+    BorderThickness="3"
+	Background="Pink"/>
+	
+</flipui:MoveableSlot>

@@ -20,23 +20,34 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 22/03/2010 at 16:53.
+ * This file added by Keiron Nicholson on 25/05/2010 at 14:43.
  */
-
+ 
 using System;
-using System.Windows.Controls;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
-	/// Description of TriggerControl.
+	/// Description of TriggerFitter.
 	/// </summary>
-	public abstract class TriggerControl : Moveable
-	{
-		public abstract string GetAddress();
-		public abstract void Clear();
+	public class TriggerFitter : Fitter
+	{		
+		public TriggerFitter() : base()
+		{
+			
+		}
+		
+		
+		public override bool Fits(Moveable moveable)
+		{
+			return IsTrigger(moveable);
+		}
+		
+		
+		public override string GetMoveableDescription()
+		{
+			return "some event";
+		}
 	}
 }
+

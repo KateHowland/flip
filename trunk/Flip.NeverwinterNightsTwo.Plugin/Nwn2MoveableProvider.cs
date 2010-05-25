@@ -39,6 +39,7 @@ using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using NWN2Toolset.NWN2.Views;
+using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
@@ -54,13 +55,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Nwn2ObjectBlockFactory blocks;
 		protected Nwn2StatementFactory statements;
 		protected Nwn2EventBlockFactory events;
+		protected Nwn2TriggerFactory triggers;
 		protected static string[] nwn2BlockTypes;
 			
 		
 		protected const string ActionsBagName = "Actions";
 		protected const string ConditionsBagName = "Conditions";
 		protected const string OtherBagName = "Special";
-		protected const string EventsBagName = "Events";
+		protected const string EventsBagName = "old Events";
+		protected const string TriggersBagName = "Events";
 		protected const string BlueprintBagNamingFormat = "{0} blueprints";
 		protected const string InstanceBagNamingFormat = "{0}s";
 		
@@ -83,23 +86,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, Nwn2StatementFactory statements, Nwn2EventBlockFactory events)
+		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, Nwn2StatementFactory statements, Nwn2EventBlockFactory events, Nwn2TriggerFactory triggers)
 		{
 			if (blocks == null) throw new ArgumentNullException("blocks");	
 			if (statements == null) throw new ArgumentNullException("statements");	
 			if (events == null) throw new ArgumentNullException("events");	
+			if (triggers == null) throw new ArgumentNullException("triggers");	
 			
 			this.blocks = blocks;
 			this.statements = statements;
 			this.events = events;
+			this.triggers = triggers;
 			this.manager = null;
 		}
 		
 		
 		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks,
 		                            Nwn2StatementFactory statements, 
-		                            Nwn2EventBlockFactory events, 
-		                            ToolsetEventReporter reporter) : this(blocks,statements,events)
+		                            Nwn2EventBlockFactory events,
+		                            Nwn2TriggerFactory triggers,
+		                            ToolsetEventReporter reporter) : this(blocks,statements,events,triggers)
 		{
 			if (reporter != null) {
 				TrackToolsetChanges(reporter);
@@ -112,6 +118,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddBag(ActionsBagName);
 			manager.AddBag(ConditionsBagName);
 			manager.AddBag(EventsBagName);
+			manager.AddBag(TriggersBagName);
 			manager.AddBag(OtherBagName);	
 			
 			foreach (string nwn2Type in nwn2BlockTypes) {
@@ -119,7 +126,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}
 			
-			manager.DisplayBag(ActionsBagName);
+			manager.DisplayBag(TriggersBagName);
 		}
 		
 		
@@ -130,6 +137,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			//CreateBlueprints();
 			CreateInstancesFromOpenAreas();
 			CreateEvents();
+			CreateTriggers();
 			CreateAreas();
 		}
 				
@@ -171,6 +179,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{			
 			foreach (EventBlock eventBlock in events.GetEvents()) {
 				manager.AddMoveable(EventsBagName,eventBlock);
+			}
+		}
+		
+		
+		protected void CreateTriggers()
+		{
+			foreach (TriggerControl trigger in triggers.GetTriggers()) {
+				manager.AddMoveable(TriggersBagName,trigger);
 			}
 		}
 		
@@ -244,6 +260,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				ObjectBlock block = blocks.CreateAreaBlock(area);
 				manager.AddMoveable(OtherBagName,block);
 			}
+		}
+		
+		
+		public override TriggerControl GetDefaultTrigger()
+		{
+			return triggers.GetDefaultTrigger();
 		}
 		
 		
@@ -396,16 +418,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			reader.ReadStartElement();
 			
-			Nwn2TriggerControl trigger = new Nwn2TriggerControl();			
-			trigger.ReadXml(reader);
-			reader.MoveToContent();
+//			Nwn2SlotTrigger trigger = new Nwn2SlotTrigger();			
+//			trigger.ReadXml(reader);
+//			reader.MoveToContent();
+//			
+//			Spine spine = new Spine();
+//			spine.ReadXml(reader);
+//			
+//			ScriptInformation script = new ScriptInformation(trigger,spine);
 			
-			Spine spine = new Spine();
-			spine.ReadXml(reader);
-			
-			ScriptInformation script = new ScriptInformation(trigger,spine);
-			
-			return script;
+			return null;//script;
 		}
 		
 		
