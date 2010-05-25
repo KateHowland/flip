@@ -110,6 +110,7 @@
     <Compile Include="Fitters\NumberFitter.cs" />
     <Compile Include="Fitters\SpineFitter.cs" />
     <Compile Include="Fitters\StringFitter.cs" />
+    <Compile Include="Fitters\TriggerFitter.cs" />
     <Compile Include="FlipWindow.xaml.cs">
       <DependentUpon>FlipWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -184,6 +185,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TriggerControl.cs" />
+    <Compile Include="TriggerSlot.xaml.cs">
+      <DependentUpon>TriggerSlot.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="WhileControl.xaml.cs">
       <DependentUpon>WhileControl.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -225,6 +230,7 @@
     <Page Include="StringBlock.xaml" />
     <Page Include="TriggerBar.xaml" />
     <Page Include="EventBlockSlot.xaml" />
+    <Page Include="TriggerSlot.xaml" />
     <Page Include="WhileControl.xaml" />
     <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
       <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>

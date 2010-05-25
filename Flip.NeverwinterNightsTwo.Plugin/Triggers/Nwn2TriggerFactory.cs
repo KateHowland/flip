@@ -20,23 +20,39 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 22/03/2010 at 16:53.
+ * This file added by Keiron Nicholson on 24/05/2010 at 12:45.
  */
 
 using System;
-using System.Windows.Controls;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
+using System.Collections.Generic;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of TriggerControl.
+	/// Description of Nwn2TriggerFactory.
 	/// </summary>
-	public abstract class TriggerControl : Moveable
+	public class Nwn2TriggerFactory
 	{
-		public abstract string GetAddress();
-		public abstract void Clear();
+		protected Nwn2Fitters fitters;
+		
+		
+		public Nwn2TriggerFactory(Nwn2Fitters fitters)
+		{
+			if (fitters == null) throw new ArgumentNullException("fitters");
+			this.fitters = fitters;
+		}
+		
+		
+		public List<TriggerControl> GetTriggers()
+		{
+			return new List<TriggerControl> { new NullTrigger(), new CreatureDies(fitters.OnlyCreatures) };
+		}
+		
+		
+		public TriggerControl GetDefaultTrigger()
+		{
+			return new NullTrigger();
+		}
 	}
 }

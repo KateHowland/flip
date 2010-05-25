@@ -135,5 +135,17 @@ namespace Sussex.Flip.UI
 			StringBlock stringBlock = moveable as StringBlock;
 			return stringBlock != null;
 		}
+		
+		
+		/// <summary>
+		/// Gets whether a given Moveable represents a trigger.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is a trigger; false otherwise.</returns>
+		public static bool IsTrigger(Moveable moveable)
+		{
+			TriggerControl triggerControl = moveable as TriggerControl;
+			return triggerControl != null;
+		}
 	}
 }

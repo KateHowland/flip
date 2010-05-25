@@ -34,7 +34,8 @@
 		BorderBrush="Black"
 		CornerRadius="0,10,10,40"
 		Background="{StaticResource yellowGradient}"
-		Grid.ZIndex="2">
+		Grid.ZIndex="2"
+		>
 		
 	    	<StackPanel
 			Name="triggerBarPanel"

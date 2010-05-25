@@ -22,7 +22,7 @@ namespace Sussex.Flip.UI
 		protected MoveableProvider provider;
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, TriggerControl triggerControl, BehaviourFactory behaviourFactory) // HACK
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, BehaviourFactory behaviourFactory) // HACK
 		{
 			// HACK:
 			if (behaviourFactory == null) throw new ArgumentNullException("behaviourFactory");
@@ -33,7 +33,6 @@ namespace Sussex.Flip.UI
 			
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
-        	if (triggerControl == null) throw new ArgumentNullException("triggerControl");
 			
 			this.attacher = attacher;
 			this.provider = provider;
@@ -60,7 +59,8 @@ namespace Sussex.Flip.UI
 			PreviewDrop += DestroyAdorner;			
 			
 			Fitter spineFitter = new SpineFitter();
-			triggerBar = new TriggerBar(triggerControl,spineFitter);
+						
+			triggerBar = new TriggerBar(provider.GetDefaultTrigger(),spineFitter);
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
@@ -110,19 +110,19 @@ namespace Sussex.Flip.UI
 		{
 			if (script == null) throw new ArgumentNullException("script");
 				
-			// TODO:
-			// do properly.. either don't deserialise the full controls, or do
-			// and completely replace the ones that automatically appear on screen
-			// HACK:
-			if (script.Trigger.RaiserBlock != null) {
-				triggerBar.TriggerControl.RaiserBlock = (ObjectBlock)script.Trigger.RaiserBlock.DeepCopy();
-			}
-			if (script.Trigger.EventBlock != null) {
-				triggerBar.TriggerControl.EventBlock = (EventBlock)script.Trigger.EventBlock.DeepCopy();
-			}
-			if (script.Spine != null) {
-				// TODO
-			}
+//			// TODO:
+//			// do properly.. either don't deserialise the full controls, or do
+//			// and completely replace the ones that automatically appear on screen
+//			// HACK:
+//			if (script.Trigger.RaiserBlock != null) {
+//				triggerBar.TriggerControl.RaiserBlock = (ObjectBlock)script.Trigger.RaiserBlock.DeepCopy();
+//			}
+//			if (script.Trigger.EventBlock != null) {
+//				triggerBar.TriggerControl.EventBlock = (EventBlock)script.Trigger.EventBlock.DeepCopy();
+//			}
+//			if (script.Spine != null) {
+//				// TODO
+//			}
 		}
 		
 		
@@ -198,8 +198,7 @@ namespace Sussex.Flip.UI
 		
 		protected void Clear(object sender, RoutedEventArgs e)
 		{
-			triggerBar.TriggerControl.EventBlock = null;
-			triggerBar.TriggerControl.RaiserBlock = null;
+			triggerBar.TriggerControl.Clear();
 			triggerBar.Spine.Clear();
 			
 			List<Moveable> moveables = new List<Moveable>(mainCanvas.Children.Count);

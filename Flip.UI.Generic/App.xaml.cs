@@ -23,14 +23,14 @@ namespace Sussex.Flip.UI.Generic
 			FlipAttacher attacher = new FakeAttacher(translator);			
 			
 			Nwn2Fitters fitters = new Nwn2Fitters();
-			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);			
+			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);	
+			Nwn2TriggerFactory triggers = new Nwn2TriggerFactory(fitters);		
 			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
 			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory();
 			
-			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events);			
-			Nwn2TriggerControl trigger = new Nwn2TriggerControl();
+			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,triggers);
 			
-			FlipWindow window = new FlipWindow(attacher,provider,trigger,new Nwn2BehaviourFactory());
+			FlipWindow window = new FlipWindow(attacher,provider,new Nwn2BehaviourFactory());
 			
 			window.Show();
 		}
