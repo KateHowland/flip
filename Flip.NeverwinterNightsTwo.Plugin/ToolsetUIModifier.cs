@@ -48,7 +48,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	public class ToolsetUIModifier
 	{				
 		#region Fields
-		
+				
 		/// <summary>
 		/// Controls access to toolset panels.
 		/// </summary>
@@ -94,6 +94,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// </summary>
 		protected bool allowScriptAccess = true;
 		
+		/// <summary>
+		/// The delegate signature of a method to be called when a particular
+		/// line of conversation is to be used as the trigger for a script.
+		/// </summary>
+		/// <param name="line">The line of dialogue to use as a trigger.</param>
+		/// <param name="conversation">The conversation this line of dialogue is part of.</param>
+		public delegate void ProvideTriggerDelegate(NWN2ConversationConnector line, NWN2GameConversation conversation);
+		
+		/// <summary>
+		/// The method to call when a line of conversation is to be used as a trigger
+		/// for a script.
+		/// </summary>
+		protected ProvideTriggerDelegate useDialogueAsTriggerDelegate = null;
+		
 		#endregion
 		
 		#region Properties
@@ -122,8 +136,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <summary>
 		/// Constructs a new <see cref="ToolsetUIModifier"/> instance.
 		/// </summary>
-		public ToolsetUIModifier()
+		/// <param name="useDialogueAsTriggerDelegate">A delegate which will be invoked when 
+		/// the user tries to use a line of dialogue in the conversation editor as the trigger 
+		/// to fire a script.</param>
+		public ToolsetUIModifier(ProvideTriggerDelegate useDialogueAsTriggerDelegate)
 		{			
+			if (useDialogueAsTriggerDelegate == null) throw new ArgumentNullException("useDialogueAsTriggerDelegate");
+			this.useDialogueAsTriggerDelegate = useDialogueAsTriggerDelegate;
+			
 			FindFields();
 			
 			floatingGridHandler = new DockingManager.ContentHandler(HideScriptSlotsOnFloatingGrid);
@@ -175,10 +195,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				GlacialTreeList tree = (GlacialTreeList)viewer.Controls["panelResults"].Controls["treeListResults"];
 				if (tree == null) throw new ApplicationException("Couldn't find GlacialTreeList.");
 								
-				winforms.MenuItem item = new winforms.MenuItem("Attach to script");
+				winforms.MenuItem item = new winforms.MenuItem("Add Flip script");
 				
-				item.Click += delegate 
-				{  
+				item.Click += delegate
+				{
 					if (tree.SelectedNodes.Count == 0) {
 						MessageBox.Show("Select a line of dialogue first.");
 					}
@@ -197,14 +217,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						}
 						
 						else {
-							Guid guid = connector.Line.LineGuid;
-							string text = connector.Text.GetSafeString(BWLanguages.CurrentLanguage).Value;
-							string conversation = ((NWN2GameConversation)viewer.ViewedResource).Name;
 							
-							MessageBox.Show("To do... Tell Flip to attach script to...\nConversation: " + conversation +
-							                "\nLine: " + text + "\nID: " + guid);
+							useDialogueAsTriggerDelegate.Invoke(connector,viewer.Conversation);
+							
+//							Guid guid = connector.Line.LineGuid;
+//							string text = connector.Text.GetSafeString(BWLanguages.CurrentLanguage).Value;
+//							string conversation = ((NWN2GameConversation)viewer.ViewedResource).Name;
+//							
+//							MessageBox.Show("To do... Tell Flip to attach script to...\nConversation: " + conversation +
+//							                "\nLine: " + text + "\nID: " + guid);
 							
 							// Conversations[conversation].GetLineFromGUID(guid);
+							
+							
 						
 							/*
 							 * Next up.
