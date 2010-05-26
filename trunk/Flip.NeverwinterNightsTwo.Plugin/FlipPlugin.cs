@@ -29,6 +29,8 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using NWN2Toolset;
+using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
@@ -75,6 +77,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// The main Flip application window.
 		/// </summary>
 		protected FlipWindow window; 
+		
+		/// <summary>
+		/// A factory which provides instances of TriggerControl.
+		/// </summary>
+		protected Nwn2TriggerFactory triggers;
 		
 		#endregion
 		
@@ -150,6 +157,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		#region Methods
 		
+		public void UseConversationLineAsTrigger(NWN2ConversationConnector line, NWN2GameConversation conversation)
+		{
+			if (window == null) throw new InvalidOperationException("Flip is not currently open.");
+			if (line == null) throw new ArgumentNullException("line");
+			if (conversation == null) throw new ArgumentNullException("conversation");
+			if (!conversation.AllConnectors.Contains(line)) throw new ArgumentException("Line is not a part of the given conversation.","line");
+			
+			TriggerControl trigger = triggers.GetTrigger(line,conversation);
+			
+			window.SetTrigger(trigger);
+		}
+		
+		
 		/// <summary>
 		/// Performs setup operations.
 		/// Called by the toolset when it is started.
@@ -165,7 +185,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
 			
-			ToolsetUIModifier UI = new ToolsetUIModifier();
+			InitialiseFlip();			
+			
+			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger));
 			UI.ModifyUI();
 			
 			TD.SandBar.MenuButtonItem scriptAccessMenuItem = new TD.SandBar.MenuButtonItem("Enable script access");
@@ -237,9 +259,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Nwn2Session session = new Nwn2Session();
 			FlipAttacher attacher = new NWScriptAttacher(translator,session);
 								
-			Nwn2Fitters fitters = new Nwn2Fitters();			
+			Nwn2Fitters fitters = new Nwn2Fitters();		
+			
+			triggers = new Nwn2TriggerFactory(fitters);
+			
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);
-			Nwn2TriggerFactory triggers = new Nwn2TriggerFactory(fitters);			
 			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
 			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory();
 				
@@ -262,13 +286,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// </summary>
 		public void LaunchFlip()
 		{
-			if (window == null) {
-				InitialiseFlip();
-				window.Show();
-			}			
-			else {
-				window.Visibility = Visibility.Visible;
-			}
+			if (window == null) InitialiseFlip();
+			
+			if (!window.ShowActivated) window.Show();
+			
+			else window.Visibility = Visibility.Visible;
+			
+//			if (window == null) {
+//				InitialiseFlip();
+//				window.Show();
+//			}			
+//			else {
+//				window.Visibility = Visibility.Visible;
+//			}
 		}
 		
 		

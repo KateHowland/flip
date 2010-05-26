@@ -26,6 +26,8 @@
 using System;
 using System.Collections.Generic;
 using Sussex.Flip.UI;
+using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.ConversationData;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -68,6 +70,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public TriggerControl GetDefaultTrigger()
 		{
 			return new NullTrigger();
+		}
+		
+		
+		public TriggerControl GetTrigger(NWN2ConversationConnector line, NWN2GameConversation conversation)
+		{
+			return new DialogueWasSpoken(line,conversation);
 		}
 	}
 }

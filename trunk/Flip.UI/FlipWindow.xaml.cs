@@ -141,6 +141,14 @@ namespace Sussex.Flip.UI
 			provider.WriteScriptToFile(script,path);
 		}
 		
+		
+		public void SetTrigger(TriggerControl trigger)
+		{
+			if (trigger == null) throw new ArgumentNullException("trigger");
+			
+			triggerBar.TriggerControl = trigger;
+		}
+		
 
 		protected void UpdateNaturalLanguage(object sender, EventArgs e)
 		{
