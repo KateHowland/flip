@@ -20,54 +20,54 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 24/05/2010 at 12:45.
+ * This file added by Keiron Nicholson on 26/05/2010 at 13:45.
  */
 
 using System;
-using System.Collections.Generic;
+using System.Xml;
 using Sussex.Flip.UI;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of Nwn2TriggerFactory.
+	/// Description of ModuleHeartbeat.
 	/// </summary>
-	public class Nwn2TriggerFactory
+	public class ModuleHeartbeat : Nwn2ParameterlessTrigger
 	{
-		protected Nwn2Fitters fitters;
+		public ModuleHeartbeat() : base("Every six seconds")			
+		{ 
+		}
+					
 		
-		
-		public Nwn2TriggerFactory(Nwn2Fitters fitters)
+		public override string GetNaturalLanguage()
 		{
-			if (fitters == null) throw new ArgumentNullException("fitters");
-			this.fitters = fitters;
+			return "Every six seconds";
 		}
 		
 		
-		public List<TriggerControl> GetTriggers()
+		public override string GetAddress()
 		{
-			return new List<TriggerControl> { 
-				new NullTrigger(),
-				new CreatureDies(fitters.OnlyCreatures),
-				new DoorOrPlaceableIsLocked(fitters.OnlyDoorsOrPlaceables),
-				new DoorOrPlaceableIsUnlocked(fitters.OnlyDoorsOrPlaceables),
-				new PlaceableUsed(fitters.OnlyPlaceables),
-				new TriggerEntered(fitters.OnlyTriggers),
-				new TriggerExited(fitters.OnlyTriggers),
-				new AreaEntered(fitters.OnlyAreas),
-				new ItemAcquired(),
-				new ItemUnacquired(),
-				new ItemActivated(),
-				new ModuleHeartbeat(),
-				new ModuleStarted(),
-				new PlayerRespawned()
-			};
+			return addressFactory.GetModuleAddress("OnHeartbeat").Value;
 		}
 		
 		
-		public TriggerControl GetDefaultTrigger()
+		public override void ReadXml(XmlReader reader)
 		{
-			return new NullTrigger();
+			throw new NotImplementedException();
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			throw new NotImplementedException();
+		}
+		
+		
+		public override Moveable DeepCopy()
+		{
+			return new ModuleHeartbeat();
 		}
 	}
 }

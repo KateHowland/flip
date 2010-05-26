@@ -145,7 +145,6 @@
     <Compile Include="Nwn2StatementFactory.cs" />
     <Compile Include="Nwn2ObjectBlockFactory.cs" />
     <Compile Include="Nwn2MoveableProvider.cs" />
-    <Compile Include="Nwn2SlotTrigger.cs" />
     <Compile Include="NWScriptAttacher.cs" />
     <Compile Include="NWScriptTranslator.cs" />
     <Compile Include="Objects\AreaBehaviour.cs" />
@@ -161,14 +160,26 @@
     <Compile Include="ToolsetUIModifier.cs" />
     <Compile Include="Triggers\AreaEntered.cs" />
     <Compile Include="Triggers\CreatureDies.cs" />
+    <Compile Include="Triggers\DialogueWasSpoken.cs" />
     <Compile Include="Triggers\DoorOrPlaceableIsLocked.cs" />
     <Compile Include="Triggers\DoorOrPlaceableIsUnlocked.cs" />
+    <Compile Include="Triggers\ItemAcquired.cs" />
+    <Compile Include="Triggers\ItemActivated.cs" />
+    <Compile Include="Triggers\ItemUnacquired.cs" />
+    <Compile Include="Triggers\ModuleHeartbeat.cs" />
+    <Compile Include="Triggers\ModuleStarted.cs" />
     <Compile Include="Triggers\NullTrigger.xaml.cs">
       <DependentUpon>NullTrigger.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Triggers\Nwn2ParameterlessTrigger.xaml.cs">
+      <DependentUpon>Nwn2ParameterlessTrigger.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Triggers\Nwn2SlotTrigger.cs" />
     <Compile Include="Triggers\Nwn2TriggerFactory.cs" />
     <Compile Include="Triggers\PlaceableUsed.cs" />
+    <Compile Include="Triggers\PlayerRespawned.cs" />
     <Compile Include="Triggers\TriggerEntered.cs" />
     <Compile Include="Triggers\TriggerExited.cs" />
     <EmbeddedResource Include="Licence.txt">
@@ -193,8 +204,9 @@
       <Name>Flip.Utils</Name>
       <Private>False</Private>
     </ProjectReference>
-    <Page Include="Nwn2SlotTrigger.xaml" />
     <Page Include="Triggers\NullTrigger.xaml" />
+    <Page Include="Triggers\Nwn2ParameterlessTrigger.xaml" />
+    <Page Include="Triggers\Nwn2SlotTrigger.xaml" />
     <Folder Include="Actions" />
     <Folder Include="Conditions" />
     <Folder Include="Fitters" />
