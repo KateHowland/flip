@@ -52,6 +52,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class Nwn2MoveableProvider : MoveableProvider
 	{
+		protected bool loadBlueprints = true;
 		protected Nwn2ObjectBlockFactory blocks;
 		protected Nwn2StatementFactory statements;
 		protected Nwn2TriggerFactory triggers;
@@ -116,7 +117,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddBag(OtherBagName);	
 			
 			foreach (string nwn2Type in nwn2BlockTypes) {
-				//manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
+				if (loadBlueprints) manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}
 			
@@ -128,7 +129,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			CreateStatements();
 			CreateSpecialBlocks();
-			//CreateBlueprints();
+			if (loadBlueprints) CreateBlueprints();
 			CreateInstancesFromOpenAreas();
 			CreateTriggers();
 			CreateAreas();
@@ -298,34 +299,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 			};
 						
-//			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
-//			{  
-//				if (manager == null) return;
-//				ObjectBlock block = blocks.CreateBlueprintBlock(e.Blueprint);
-//				manager.AddMoveable(String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString()),block);
-//			};
-//			
-//			reporter.BlueprintRemoved += delegate(object sender, BlueprintEventArgs e) 
-//			{  
-//				if (manager == null || e.Blueprint == null) return;
-//				string bag = String.Format(BlueprintBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Blueprint.ObjectType));
-//				
-//				try {
-//					UIElementCollection collection = manager.GetMoveables(bag);
-//					
-//					ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
-//					
-//					foreach (ObjectBlock block in collection) {
-//						if (block.Equals(lost)) {
-//							manager.RemoveMoveable(bag,block);
-//							return;
-//						}
-//					}
-//				}
-//				catch (Exception ex) {
-//					System.Windows.MessageBox.Show(ex.ToString());
-//				}
-//			};
+			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
+			{  
+				if (manager == null || !loadBlueprints) return;
+				ObjectBlock block = blocks.CreateBlueprintBlock(e.Blueprint);
+				manager.AddMoveable(String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString()),block);
+			};
+			
+			reporter.BlueprintRemoved += delegate(object sender, BlueprintEventArgs e) 
+			{  
+				if (manager == null || !loadBlueprints || e.Blueprint == null) return;
+				string bag = String.Format(BlueprintBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Blueprint.ObjectType));
+				
+				try {
+					UIElementCollection collection = manager.GetMoveables(bag);
+					
+					ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
+					
+					foreach (ObjectBlock block in collection) {
+						if (block.Equals(lost)) {
+							manager.RemoveMoveable(bag,block);
+							return;
+						}
+					}
+				}
+				catch (Exception ex) {
+					System.Windows.MessageBox.Show(ex.ToString());
+				}
+			};
 			
 			reporter.AreaOpened += delegate(object sender, AreaEventArgs e) 
 			{  

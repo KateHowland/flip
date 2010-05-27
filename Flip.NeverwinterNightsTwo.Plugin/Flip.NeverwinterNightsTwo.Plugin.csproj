@@ -137,6 +137,7 @@
     <Compile Include="Fitters\Nwn2Fitters.cs" />
     <Compile Include="Fitters\PlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
+    <Compile Include="Integration\NarrativeThreadsHelper.cs" />
     <Compile Include="Nwn2BehaviourFactory.cs" />
     <Compile Include="Nwn2StatementBehaviour.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />
@@ -207,6 +208,7 @@
     <Folder Include="Actions" />
     <Folder Include="Conditions" />
     <Folder Include="Fitters" />
+    <Folder Include="Integration" />
     <Folder Include="Triggers" />
     <Folder Include="Objects" />
   </ItemGroup>

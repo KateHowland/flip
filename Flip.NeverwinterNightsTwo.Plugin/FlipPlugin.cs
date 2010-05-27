@@ -183,15 +183,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Startup(INWN2PluginHost cHost)
 		{
+			// Start providing useful NWN2 functions as a service to the test suite (obsolete):
 			service.Start();
 			
+			// Ensure flip_functions.nss is in the Override directory of NWN2 - otherwise scripts won't compile:
 			ProvideSpecialFunctionsScriptFile();
 			
-			pluginMenuItem = cHost.GetMenuForPlugin(this);
-			pluginMenuItem.Activate += PluginActivated;
-			
+			// Modify the user interface:
 			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger));
 			UI.ModifyUI();
+			
+			// Set up plugin menu items:
+			pluginMenuItem = cHost.GetMenuForPlugin(this);
+			pluginMenuItem.Activate += PluginActivated;
 			
 			TD.SandBar.MenuButtonItem scriptAccessMenuItem = new TD.SandBar.MenuButtonItem("Enable script access");
 			scriptAccessMenuItem.Checked = UI.AllowScriptAccess;
