@@ -54,7 +54,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{
 		protected Nwn2ObjectBlockFactory blocks;
 		protected Nwn2StatementFactory statements;
-		protected Nwn2EventBlockFactory events;
 		protected Nwn2TriggerFactory triggers;
 		protected static string[] nwn2BlockTypes;
 			
@@ -62,7 +61,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected const string ActionsBagName = "Actions";
 		protected const string ConditionsBagName = "Conditions";
 		protected const string OtherBagName = "Special";
-		protected const string EventsBagName = "old Events";
 		protected const string TriggersBagName = "Events";
 		protected const string BlueprintBagNamingFormat = "{0} blueprints";
 		protected const string InstanceBagNamingFormat = "{0}s";
@@ -86,16 +84,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, Nwn2StatementFactory statements, Nwn2EventBlockFactory events, Nwn2TriggerFactory triggers)
+		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks, Nwn2StatementFactory statements, Nwn2TriggerFactory triggers)
 		{
 			if (blocks == null) throw new ArgumentNullException("blocks");	
 			if (statements == null) throw new ArgumentNullException("statements");	
-			if (events == null) throw new ArgumentNullException("events");	
 			if (triggers == null) throw new ArgumentNullException("triggers");	
 			
 			this.blocks = blocks;
 			this.statements = statements;
-			this.events = events;
 			this.triggers = triggers;
 			this.manager = null;
 		}
@@ -103,9 +99,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public Nwn2MoveableProvider(Nwn2ObjectBlockFactory blocks,
 		                            Nwn2StatementFactory statements, 
-		                            Nwn2EventBlockFactory events,
 		                            Nwn2TriggerFactory triggers,
-		                            ToolsetEventReporter reporter) : this(blocks,statements,events,triggers)
+		                            ToolsetEventReporter reporter) : this(blocks,statements,triggers)
 		{
 			if (reporter != null) {
 				TrackToolsetChanges(reporter);
@@ -117,7 +112,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			manager.AddBag(ActionsBagName);
 			manager.AddBag(ConditionsBagName);
-			manager.AddBag(EventsBagName);
 			manager.AddBag(TriggersBagName);
 			manager.AddBag(OtherBagName);	
 			
@@ -136,7 +130,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			CreateSpecialBlocks();
 			//CreateBlueprints();
 			CreateInstancesFromOpenAreas();
-			CreateEvents();
 			CreateTriggers();
 			CreateAreas();
 		}
@@ -172,14 +165,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
 			manager.AddMoveable(OtherBagName,new NumberBlock(0));
 			manager.AddMoveable(OtherBagName,new StringBlock("click 'change' to edit this Word Block"));
-		}
-		
-		
-		protected void CreateEvents()
-		{			
-			foreach (EventBlock eventBlock in events.GetEvents()) {
-				manager.AddMoveable(EventsBagName,eventBlock);
-			}
 		}
 		
 		

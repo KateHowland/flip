@@ -100,12 +100,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EventBehaviour.cs" />
-    <Compile Include="EventBlock.xaml.cs">
-      <DependentUpon>EventBlock.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Fitters\ConditionFitter.cs" />
-    <Compile Include="Fitters\EventBlockFitter.cs" />
     <Compile Include="Fitters\Fitter.cs" />
     <Compile Include="Fitters\NumberFitter.cs" />
     <Compile Include="Fitters\SpineFitter.cs" />
@@ -180,10 +175,6 @@
       <DependentUpon>TriggerBar.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EventBlockSlot.cs">
-      <DependentUpon>EventBlockSlot.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="TriggerControl.cs" />
     <Compile Include="TriggerSlot.xaml.cs">
       <DependentUpon>TriggerSlot.xaml</DependentUpon>
@@ -216,7 +207,6 @@
     <Page Include="ConditionSlot.xaml" />
     <Page Include="DoWhileControl.xaml" />
     <Page Include="DropZone.xaml" />
-    <Page Include="EventBlock.xaml" />
     <Page Include="FlipWindow.xaml" />
     <Page Include="IfControl.xaml" />
     <Page Include="IfElseControl.xaml" />
@@ -229,7 +219,6 @@
     <Page Include="StatementLabel.xaml" />
     <Page Include="StringBlock.xaml" />
     <Page Include="TriggerBar.xaml" />
-    <Page Include="EventBlockSlot.xaml" />
     <Page Include="TriggerSlot.xaml" />
     <Page Include="WhileControl.xaml" />
     <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">

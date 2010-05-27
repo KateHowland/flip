@@ -267,11 +267,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);
 			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
-			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory();
 				
 			ToolsetEventReporter reporter = new ToolsetEventReporter();
 			
-			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,triggers,reporter);
+			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
 			window = new FlipWindow(attacher,provider,new Nwn2BehaviourFactory());			
 				
