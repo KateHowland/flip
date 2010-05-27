@@ -28,9 +28,6 @@ namespace Sussex.Flip.UI
 			if (behaviourFactory == null) throw new ArgumentNullException("behaviourFactory");
 			ObjectBlock.behaviourFactory = behaviourFactory;
 			
-			
-			
-			
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
 			

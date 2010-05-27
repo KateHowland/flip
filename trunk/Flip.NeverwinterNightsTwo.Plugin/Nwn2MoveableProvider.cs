@@ -120,7 +120,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}
 			
-			manager.DisplayBag(TriggersBagName);
+			manager.DisplayBag(TriggersBagName);	
 		}
 		
 		
@@ -181,13 +181,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
-								
-				string bag = String.Format(BlueprintBagNamingFormat,type.ToString());
-				if (!manager.HasBag(bag)) continue;
 				
-				foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
-					ObjectBlock block = blocks.CreateBlueprintBlock(blueprint);
-					manager.AddMoveable(bag,block);
+				try {
+					string bag = String.Format(BlueprintBagNamingFormat,type.ToString());
+					if (!manager.HasBag(bag)) continue;
+					
+					foreach (INWN2Blueprint blueprint in NWN2GlobalBlueprintManager.GetBlueprintsOfType(type,true,true,true)) {
+						ObjectBlock block = blocks.CreateBlueprintBlock(blueprint);
+						manager.AddMoveable(bag,block);
+					}
+				}
+				catch (Exception e) {
+					MessageBox.Show("Failed to populate bag of " + type + " blueprints.\n\n" + e);
 				}
 			}
 		}

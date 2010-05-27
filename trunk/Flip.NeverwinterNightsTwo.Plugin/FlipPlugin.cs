@@ -159,7 +159,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public void UseConversationLineAsTrigger(NWN2ConversationConnector line, NWN2GameConversation conversation)
 		{
-			if (window == null) throw new InvalidOperationException("Flip is not currently open.");
+			if (window == null) {
+				MessageBox.Show("Flip is not currently open.");
+				return;
+			}
 			if (line == null) throw new ArgumentNullException("line");
 			if (conversation == null) throw new ArgumentNullException("conversation");
 			if (!conversation.AllConnectors.Contains(line)) throw new ArgumentException("Line is not a part of the given conversation.","line");
@@ -186,8 +189,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
-			
-			InitialiseFlip();			
 			
 			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger));
 			UI.ModifyUI();
@@ -261,7 +262,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Nwn2Session session = new Nwn2Session();
 			FlipAttacher attacher = new NWScriptAttacher(translator,session);
 								
-			Nwn2Fitters fitters = new Nwn2Fitters();		
+			Nwn2Fitters fitters = new Nwn2Fitters();	
 			
 			triggers = new Nwn2TriggerFactory(fitters);
 			
@@ -272,8 +273,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(attacher,provider,new Nwn2BehaviourFactory());			
-				
+			window = new FlipWindow(attacher,provider,new Nwn2BehaviourFactory());		
+			
 			window.Closing += delegate(object sender, CancelEventArgs e) 
 			{  
 				e.Cancel = true;
