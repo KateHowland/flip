@@ -25,6 +25,7 @@
 
 using System;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using Sussex.Flip.Core;
@@ -102,6 +103,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				NWN2GameScript script = session.AddScript(name,source.Code);
 				
 				session.CompileScript(script);
+				
+				if (address.StartsWith("Conversation")) {
+					
+					Nwn2ConversationAddress convAddress = new Nwn2ConversationAddress(address);
+										
+					NWN2GameConversation conversation = session.GetConversation(convAddress.Conversation);
+					
+					if (conversation == null) {
+						throw new ArgumentException("Conversation '" + conversation + "' was not found in current module.","address");
+					}
+					
+					NWN2ConversationLine line = session.GetConversationLine(conversation,convAddress.LineID);
+					
+					if (line == null) {
+						throw new ArgumentException("Line with ID " + convAddress.LineID + " was not found in current module.","address");
+					}
+					
+					session.AttachScriptToConversation(script,line);
+					
+					return;
+				}
 				
 				Nwn2Address nwn2Address = new Nwn2Address(address);
 				

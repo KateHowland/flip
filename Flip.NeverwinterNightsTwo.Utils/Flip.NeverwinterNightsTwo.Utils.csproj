@@ -94,6 +94,7 @@
     <Compile Include="ClientNotifier.cs" />
     <Compile Include="Nwn2Address.cs" />
     <Compile Include="Nwn2AddressFactory.cs" />
+    <Compile Include="Nwn2ConversationAddress.cs" />
     <Compile Include="Nwn2ScriptSlot.cs" />
     <Compile Include="Nwn2Session.cs" />
     <Compile Include="Nwn2SessionAdapter.cs" />

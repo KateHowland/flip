@@ -54,5 +54,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			return new Nwn2Address(String.Format("{3}{0}{1}{0}{2}{0}{4}{0}{5}",Nwn2Address.Separator,scriptSlot,areaTag,targetType,instanceTag,index));
 		}
+		
+		
+		public Nwn2ConversationAddress GetConversationAddress(string conversationName, Guid lineID)
+		{
+			return new Nwn2ConversationAddress(String.Format("Conversation{0}{1}{0}{2}",Nwn2ConversationAddress.Separator,conversationName,lineID.ToString()));
+		}
 	}
 }

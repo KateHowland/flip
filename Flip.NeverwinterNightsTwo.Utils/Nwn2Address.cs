@@ -33,7 +33,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	public sealed class Nwn2Address
 	{
 		public const char Separator = '|';
-		private static readonly char[] separatorChars = new char[]{Separator};
+		public static readonly char[] separatorChars = new char[]{Separator};
 		
 		
 		private string val;		
@@ -84,8 +84,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			if (components.Length < 2) {
 				throw new ArgumentException(
-					String.Format("Address format is invalid: to target a module, pass 'Module|<ScriptSlotName>'. {0}{1}",
-					"To target an area, pass 'Area|<name of script slot>|<tag of area>'. " + 
+					String.Format("Address format is invalid: to target a module, pass 'Module|<name of script slot>'. {0}{1}",
+					"To target an area, pass 'Area|<name of script slot>|<tag of area>'. ",
 					"To target an instance, pass '<instance type>|<name of script slot>|<tag of area>|<tag of instance>|<optional index of instance>'."),
 					"address");
 			}	

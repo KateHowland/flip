@@ -68,9 +68,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override string GetAddress()
 		{
-			throw new NotImplementedException();
-//			addressFactory.GetConversationAddress(
-//			agafhgreturn addressFactory.GetModuleAddress("OnUnacquireItem").Value;
+			return addressFactory.GetConversationAddress(conversation,lineGuid).Value;
 		}
 		
 		

@@ -184,12 +184,13 @@ namespace Sussex.Flip.UI
 			
 			FlipScript script = new FlipScript(code);			
 			
-			script.Name = "EmptyScript";
+			script.Name = "flipscript";
 			
 			string address = triggerBar.GetAddress();
 			
 			try {
 				attacher.Attach(script,address);
+				MessageBox.Show("Script was attached successfully.");
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.ToString());

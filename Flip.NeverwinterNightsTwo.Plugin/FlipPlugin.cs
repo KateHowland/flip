@@ -166,6 +166,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			TriggerControl trigger = triggers.GetTrigger(line,conversation);
 			
+			LaunchFlip();
+			
 			window.SetTrigger(trigger);
 		}
 		
@@ -291,6 +293,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (!window.ShowActivated) window.Show();
 			
 			else window.Visibility = Visibility.Visible;
+			
+			window.Activate();
 			
 //			if (window == null) {
 //				InitialiseFlip();
