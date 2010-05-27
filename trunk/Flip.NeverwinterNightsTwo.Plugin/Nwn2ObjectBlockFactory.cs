@@ -32,6 +32,7 @@ using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 
@@ -41,7 +42,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// Creates ObjectBlocks representing Neverwinter Nights 2 objects.
 	/// </summary>
 	public class Nwn2ObjectBlockFactory
-	{		
+	{	
+		protected NarrativeThreadsHelper nt;
+		
+		public Nwn2ObjectBlockFactory()
+		{
+			nt = new NarrativeThreadsHelper();
+		}
+		
 		#region Blocks
 		
 		/// <summary>
@@ -167,9 +175,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string objectType = behaviour.Nwn2Type.ToString();
 			
 			Image image;
-						
-			// If this has an icon, use that:
-			if (!String.IsNullOrEmpty(behaviour.IconName)) {
+			
+			// First, try to get a Narrative Threads user-created image:
+			if (nt.CreatedByNarrativeThreads(behaviour) && nt.HasImage(behaviour.ResRef)) {
+				image = nt.GetImageForResRef(behaviour.ResRef);		
+			}
+			
+			// Or if this has an icon, use that:
+			else if (!String.IsNullOrEmpty(behaviour.IconName)) {
 				image = GetIconImage(behaviour.IconName);
 			}
 			
@@ -274,13 +287,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string objectType = behaviour.Nwn2Type.ToString();
 			
 			Image image;
+			
+			// First, try to get a Narrative Threads user-created image:
+			if (nt.CreatedByNarrativeThreads(behaviour) && nt.HasImage(behaviour.ResRef)) {
+				image = nt.GetImageForResRef(behaviour.ResRef);		
+			}
 						
-			// If this has an icon, use that:
-			if (!String.IsNullOrEmpty(behaviour.IconName)) {
+			// Or if this has an icon, use that:
+			else if (!String.IsNullOrEmpty(behaviour.IconName)) {
 				image = GetIconImage(behaviour.IconName);
 			}
 			
-			// Otherwise, try to get an image representing this instance's template:
+			// Otherwise, try to get a generic image representing this instance's template:
 			else {	
 				image = GetImage(objectType,behaviour.ResRef);
 			}
@@ -299,6 +317,50 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			return new ObjectBlock(image,behaviour);
+		}
+		
+			
+		public ObjectBlock CreateInstanceBlockFromBlueprint(INWN2Blueprint blueprint)
+		{
+			if (blueprint == null) throw new ArgumentNullException("blueprint");
+			
+			InstanceBehaviour behaviour = CreateInstanceBehaviourFromBlueprint(blueprint);
+			
+			ObjectBlock block = CreateInstanceBlock(behaviour);
+			
+			return block;
+		}
+		
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="blueprint"></param>
+		/// <returns></returns>
+		/// <remarks>For use with Narrative Threads.</remarks>
+		public InstanceBehaviour CreateInstanceBehaviourFromBlueprint(INWN2Blueprint blueprint)
+		{
+			if (blueprint == null) throw new ArgumentNullException("blueprint");
+			
+			string tag = ((INWN2Object)blueprint).Tag;
+				
+			string displayName = GetDisplayName(blueprint);
+				
+			if (displayName == String.Empty) displayName = tag;
+			
+			string areaTag = String.Empty;
+			
+			string resRef = blueprint.TemplateResRef.Value;
+						
+			string icon;
+			if (blueprint is NWN2ItemBlueprint) {
+				icon = ((NWN2ItemBlueprint)blueprint).Icon.ToString();
+			}
+			else {
+				icon = String.Empty;
+			}
+			
+			return new InstanceBehaviour(tag,displayName,blueprint.ObjectType,areaTag,resRef,icon);
 		}
 		
 		
