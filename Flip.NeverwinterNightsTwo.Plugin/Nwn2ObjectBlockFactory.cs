@@ -471,6 +471,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				if (name.StartsWith("c_beetlestag")) return "c_beetle";
 				if (name.StartsWith("c_faction_pig")) return "c_pig";
+				
+				if (name.StartsWith("c_dogwolf")) return "c_wolf";
+				if (name.StartsWith("n_wolf")) return "c_wolf";
+				if (name.StartsWith("c_beardire")) return "c_direbear";
+				if (name.StartsWith("c_boardire")) return "c_boar";
+				
+				if (name.StartsWith("c_lizman")) return "c_lizman";
+				if (name.StartsWith("c_summ_balor")) return "c_balor";
+				if (name.StartsWith("c_orc")) return "c_orc";
+				if (name.StartsWith("c_summ_imp")) return "c_imp";
+				if (name.StartsWith("c_fiendrat")) return "c_fiendrat";
+				if (name.StartsWith("c_ratdire")) return "c_fiendrat";
 			}
 			
 			else if (type == "Door") {
