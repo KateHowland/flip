@@ -90,18 +90,6 @@ namespace Sussex.Flip.UI
 		
 		
 		/// <summary>
-		/// Gets whether a given Moveable represents an event.
-		/// </summary>
-		/// <param name="moveable">The Moveable to check.</param>
-		/// <returns>True if the Moveable is an event; false otherwise.</returns>
-		public static bool IsEvent(Moveable moveable)
-		{
-			EventBlock eventBlock = moveable as EventBlock;
-			return eventBlock != null;
-		}
-		
-		
-		/// <summary>
 		/// Gets whether a given Moveable is an ObjectBlock.
 		/// </summary>
 		/// <param name="moveable">The Moveable to check.</param>

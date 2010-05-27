@@ -33,7 +33,6 @@ namespace Sussex.Flip.UI
             
             Type[] moveableTypes = new Type[]
             {
-            	typeof(EventBlock),
             	typeof(ObjectBlock),
             	typeof(Statement),
             	typeof(IfControl),

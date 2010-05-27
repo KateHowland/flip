@@ -26,9 +26,8 @@ namespace Sussex.Flip.UI.Generic
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);	
 			Nwn2TriggerFactory triggers = new Nwn2TriggerFactory(fitters);		
 			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
-			Nwn2EventBlockFactory events = new Nwn2EventBlockFactory();
 			
-			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,events,triggers);
+			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers);
 			
 			FlipWindow window = new FlipWindow(attacher,provider,new Nwn2BehaviourFactory());
 			

@@ -133,14 +133,11 @@
     <Compile Include="Fitters\EventRaiserFitter.cs" />
     <Compile Include="Fitters\InstanceFitter.cs" />
     <Compile Include="Fitters\ModuleFitter.cs" />
-    <Compile Include="Fitters\Nwn2EventBlockFitter.cs" />
     <Compile Include="Fitters\Nwn2Fitter.cs" />
     <Compile Include="Fitters\Nwn2Fitters.cs" />
-    <Compile Include="Fitters\Nwn2RaiserBlockFitter.cs" />
     <Compile Include="Fitters\PlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
     <Compile Include="Nwn2BehaviourFactory.cs" />
-    <Compile Include="Nwn2EventBlockFactory.cs" />
     <Compile Include="Nwn2StatementBehaviour.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />
     <Compile Include="Nwn2ObjectBlockFactory.cs" />
