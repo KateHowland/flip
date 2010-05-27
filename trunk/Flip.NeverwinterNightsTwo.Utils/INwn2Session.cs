@@ -31,6 +31,7 @@ using NWN2Toolset;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
+using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
@@ -242,6 +243,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets a conversation in the current module.
+		/// </summary>
+		/// <param name="name">The name of the conversation.</param>
+		/// <returns>The named conversation, or null 
+		/// if the conversation could not be found.</returns>
+		NWN2GameConversation GetConversation(string name);
+		
+		
+		/// <summary>
+		/// Gets a line of dialogue in the given conversation.
+		/// </summary>
+		/// <param name="conversation">The conversation which has the line.</param>
+		/// <param name="lineID">The unique ID of the desired line of dialogue.</param>
+		/// <returns>The desired line of dialogue, or null 
+		/// if the line could not be found.</returns>
+		NWN2ConversationLine GetConversationLine(NWN2GameConversation conversation, Guid lineID);
+		
+		
+		/// <summary>
 		/// Gets the scripts in the current module.
 		/// </summary>
 		/// <returns>A list of scripts.</returns>
@@ -320,8 +340,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="script">The script to attach.</param>
 		/// <param name="slot">The script slot to attach the script to.</param>
 		void AttachScriptToModule(NWN2GameScript script, string slot);
+			
 		
-		
+		/// <summary>
+		/// Attaches a script to a particular line of dialogue.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="line">The line of dialogue to attach the script to.</param>
+		void AttachScriptToConversation(NWN2GameScript script, NWN2ConversationLine line);
+			
+			
 		/// <summary>
 		/// Clears the value of a named script slot on a given instance.
 		/// </summary>

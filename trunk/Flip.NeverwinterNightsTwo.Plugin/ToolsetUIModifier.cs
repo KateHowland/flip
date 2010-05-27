@@ -213,31 +213,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
 						
 						if (connector == null) {
-							MessageBox.Show("You can't attach scripts to the root. Select a line of dialogue instead.");
+							MessageBox.Show("You can't add a Flip script to the root. Select a line of dialogue instead.");
 						}
 						
-						else {
-							
+						else {							
 							useDialogueAsTriggerDelegate.Invoke(connector,viewer.Conversation);
-							
-//							Guid guid = connector.Line.LineGuid;
-//							string text = connector.Text.GetSafeString(BWLanguages.CurrentLanguage).Value;
-//							string conversation = ((NWN2GameConversation)viewer.ViewedResource).Name;
-//							
-//							MessageBox.Show("To do... Tell Flip to attach script to...\nConversation: " + conversation +
-//							                "\nLine: " + text + "\nID: " + guid);
-							
-							// Conversations[conversation].GetLineFromGUID(guid);
-							
-							
-						
-							/*
-							 * Next up.
-							 * 
-							 * 1. Tell Flip to attach script to the given source.
-							 * 2. Give Flip some way of representing that trigger.
-							 * 3. Implement AttachScriptToConversation(string conversation, Guid lineID).
-							 */
 						}
 					}
 				};

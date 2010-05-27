@@ -34,6 +34,7 @@ using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Campaign;
+using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
@@ -661,6 +662,65 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets a conversation in the current module.
+		/// </summary>
+		/// <param name="name">The name of the conversation.</param>
+		/// <returns>The named conversation, or null 
+		/// if the conversation could not be found.</returns>
+		public NWN2GameConversation GetConversation(string name)
+		{
+			if (name == null) {
+				throw new ArgumentNullException("name","No conversation name was provided (was null).");
+			}	
+			if (name == String.Empty) {
+				throw new ArgumentException("name","No conversation name was provided (was empty).");
+			}		
+				
+			NWN2GameModule module = GetModule();
+				
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}				
+			if (!module.Conversations.ContainsCaseInsensitive(name)) {
+				return null;
+			}
+			else {
+				return module.Conversations[name];
+			}
+		}
+		
+		
+		/// <summary>
+		/// Gets a line of dialogue in the given conversation.
+		/// </summary>
+		/// <param name="conversation">The conversation which has the line.</param>
+		/// <param name="lineID">The unique ID of the desired line of dialogue.</param>
+		/// <returns>The desired line of dialogue, or null 
+		/// if the line could not be found.</returns>
+		public NWN2ConversationLine GetConversationLine(NWN2GameConversation conversation, Guid lineID)
+		{
+			if (conversation == null) {
+				throw new ArgumentNullException("conversation","Null conversation was provided.");
+			}				
+			if (lineID == null) {
+				throw new ArgumentNullException("lineID","Null line ID was provided.");
+			}	
+			
+			NWN2GameModule module = GetModule();
+				
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}				
+			if (!module.Conversations.Contains(conversation)) {
+				return null;
+			}
+			else {
+				return conversation.GetLineFromGUID(lineID);
+			}
+		}
+		
+		
+		/// <summary>
 		/// Gets the scripts in the current module.
 		/// </summary>
 		/// <returns>A list of scripts.</returns>
@@ -1051,6 +1111,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Attaches a script to a particular line of dialogue.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="line">The line of dialogue to attach the script to.</param>
+		public void AttachScriptToConversation(NWN2GameScript script, NWN2ConversationLine line)
+		{
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			if (line == null) {
+				throw new ArgumentNullException("line");
+			}
+			
+			NWN2ScriptFunctor scriptFunctor = new NWN2ScriptFunctor();
+			
+			bool loaded = script.Loaded;
+			if (!loaded) script.Demand();
+			
+			scriptFunctor.Script = script.Resource;
+		
+			line.Actions.Clear();
+			
+			line.Actions.Add(scriptFunctor);
+			
+//			if (!loaded) script.Release();			
+		}
+		
+		
+		/// <summary>
 		/// Clears the value of a named script slot on a given instance.
 		/// </summary>
 		/// <param name="instance">The object which owns the script slot to be cleared.</param>
@@ -1156,7 +1245,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 			IResourceEntry newValue = new MissingResourceEntry();
 			pi.SetValue(module.ModuleInfo,newValue,null);
-		}		
+		}	
 		
 		
 		/// <summary>
