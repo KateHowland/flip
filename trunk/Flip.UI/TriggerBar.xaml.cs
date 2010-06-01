@@ -15,12 +15,13 @@ namespace Sussex.Flip.UI
     	protected Spine spine;
     	
     	
-    	// TODO:
-    	// needs to track changes, both when trigger is changed and when the contents of that trigger change
 		public TriggerControl TriggerControl {
 			get { return triggerSlot.Contents as TriggerControl; }
 			set { 
-				triggerSlot.Contents = value; 
+				if (triggerSlot.Contents != value) {
+					triggerSlot.Contents = value;
+					OnChanged(new EventArgs());
+				}
 			}
 		}
     	
@@ -77,6 +78,7 @@ namespace Sussex.Flip.UI
             
             Effect = new DropShadowEffect();
             
+        	triggerSlot.Changed += delegate { OnChanged(new EventArgs()); };
         	spine.Changed += delegate { OnChanged(new EventArgs()); };
         	
             TriggerControl = initialTrigger;
@@ -123,6 +125,13 @@ namespace Sussex.Flip.UI
 		{
 			ScriptInformation script = new ScriptInformation(TriggerControl,spine);
 			return script;
+		}
+		
+		
+		public void Clear()
+		{
+			TriggerControl = null;
+			Spine.Clear();
 		}
     }
 }

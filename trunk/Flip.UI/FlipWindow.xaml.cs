@@ -53,37 +53,94 @@ namespace Sussex.Flip.UI
 			PreviewDragEnter += CreateAdorner;
 			PreviewDragOver += UpdateAdorner;			
 			PreviewDragLeave += DestroyAdorner;			
-			PreviewDrop += DestroyAdorner;			
-			
-			Fitter spineFitter = new SpineFitter();
+			PreviewDrop += DestroyAdorner;	
 						
-			triggerBar = new TriggerBar(provider.GetDefaultTrigger(),spineFitter);
+			triggerBar = new TriggerBar(provider.GetDefaultTrigger(),new SpineFitter());
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
 			
-			triggerBar.Changed += UpdateNaturalLanguage;
-			DisplayCodeAndNaturalLanguage(triggerBar);
+			triggerBar.Changed += ScriptChanged;
+			UpdateNaturalLanguageView(triggerBar);
 			
-			serialiser = new Sussex.Flip.Utils.Serialiser();
+			Loaded += delegate { UpdateTitle(); };
+		}
+		
+		
+		protected bool isDirty = false;
+		
+		public bool IsDirty {
+			get { return isDirty; }
+			set { 
+				if (isDirty != value) {
+					isDirty = value;
+					UpdateTitle();
+				}
+			}
+		}
+		
+		
+		string filename = "filename";
+		protected void UpdateTitle()
+		{
+			if (isDirty) Title = String.Format("Flip: {0}*",filename);
+			else Title = String.Format("Flip: {0}",filename);
+		}
+		
+		
+		protected bool CloseCurrentScript()
+		{
+			if (!IsDirty) return true;
+			
+			MessageBoxResult result = MessageBox.Show("Save this script before closing?",
+										              "Save changes?",
+										              MessageBoxButton.YesNoCancel,
+										              MessageBoxImage.Question,
+										              MessageBoxResult.Cancel);
+				                
+			switch (result) {
+					
+				case MessageBoxResult.Yes:
+					SaveScriptToFile();
+					CloseScript();
+					return true;
+					
+				case MessageBoxResult.No:
+					CloseScript();
+					return true;
+					
+				default:
+					return false;
+			}
 		}
 		
 		
 		protected void NewScript(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Not implemented.");
+			if (!CloseCurrentScript()) return;
 		}
 		
 		
 		protected void OpenScriptFromModule(object sender, RoutedEventArgs e)
-		{
-			MessageBox.Show("Not implemented.");
+		{			
+			if (!CloseCurrentScript()) return;
+			
+			MessageBox.Show("Open file dialog should run here. Not implemented.");
 		}
 		
 		
 		protected void CloseScript(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Not implemented.");
+			if (!CloseCurrentScript()) return;
+		}
+		
+		
+		protected void CloseScript()
+		{			
+			Clear();
+			IsDirty = false;
+			
+			MessageBox.Show("Empty script file should be opened here. Not implemented.");
 		}
 		
 		
@@ -95,91 +152,27 @@ namespace Sussex.Flip.UI
 		
 		protected void SaveScriptToFile(object sender, RoutedEventArgs e)
 		{
+			SaveScriptToFile();
+		}
+		
+		
+		protected void SaveScriptToFile()
+		{
 			MessageBox.Show("Not implemented.");
 		}
 		
 		
 		protected void ExitFlip(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Not implemented.");
+			if (!CloseCurrentScript()) return;
+			
+			Close();
 		}
 		
 		
 		protected void DisplayAboutScreen(object sender, RoutedEventArgs e)
 		{
 			new AboutWindow().ShowDialog();
-		}
-		
-		
-		
-		
-		Sussex.Flip.Utils.Serialiser serialiser;
-		string scriptPath = @"C:\Flip\script.txt";				
-		
-		protected void OpenScript(object sender, RoutedEventArgs e)
-		{
-			try {
-				OpenScript(scriptPath);
-			}
-			catch (Exception x) {
-				MessageBox.Show(x.ToString());
-			}
-		}		
-				
-		
-		protected void SaveScript(object sender, RoutedEventArgs e)
-		{
-			try {
-				SaveScript(scriptPath);
-			}
-			catch (Exception x) {
-				MessageBox.Show(x.ToString());
-			}
-		}
-		
-		
-		public void OpenScript(string path)
-		{
-			if (path == null) throw new ArgumentNullException("path");
-			
-			ScriptInformation script = provider.GetScriptFromSerialised(scriptPath);
-			OpenScript(script);
-		}
-		
-		
-		public void OpenScript(ScriptInformation script)
-		{
-			if (script == null) throw new ArgumentNullException("script");
-				
-//			// TODO:
-//			// do properly.. either don't deserialise the full controls, or do
-//			// and completely replace the ones that automatically appear on screen
-//			// HACK:
-//			if (script.Trigger.RaiserBlock != null) {
-//				triggerBar.TriggerControl.RaiserBlock = (ObjectBlock)script.Trigger.RaiserBlock.DeepCopy();
-//			}
-//			if (script.Trigger.EventBlock != null) {
-//				triggerBar.TriggerControl.EventBlock = (EventBlock)script.Trigger.EventBlock.DeepCopy();
-//			}
-//			if (script.Spine != null) {
-//				// TODO
-//			}
-		}
-		
-		
-		public void SaveScript(string path)
-		{
-			ScriptInformation script = triggerBar.GetScript();
-			SaveScript(script,path);
-		}
-		
-		
-		public void SaveScript(ScriptInformation script, string path)
-		{
-			if (script == null) throw new ArgumentNullException("script");
-			if (path == null) throw new ArgumentNullException("path");
-			
-			provider.WriteScriptToFile(script,path);
 		}
 		
 		
@@ -191,13 +184,15 @@ namespace Sussex.Flip.UI
 		}
 		
 
-		protected void UpdateNaturalLanguage(object sender, EventArgs e)
+		protected void ScriptChanged(object sender, EventArgs e)
 		{
-			DisplayCodeAndNaturalLanguage(triggerBar);
+			if (!IsDirty) IsDirty = true;
+			
+			UpdateNaturalLanguageView(triggerBar);
 		}
 		
 		
-		protected void DisplayCodeAndNaturalLanguage(ITranslatable translatable)
+		protected void UpdateNaturalLanguageView(ITranslatable translatable)
 		{
 			if (translatable == null) return;
 			this.nlTextBlock.Text = translatable.GetNaturalLanguage();
@@ -231,6 +226,7 @@ namespace Sussex.Flip.UI
 			
 			try {
 				attacher.Attach(script,address);
+				IsDirty = false;
 				MessageBox.Show("Script was saved successfully.");
 			}
 			catch (Exception ex) {
@@ -239,11 +235,15 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void Clear(object sender, RoutedEventArgs e)
+		protected void Clear()
 		{
-			triggerBar.TriggerControl.Clear();
-			triggerBar.Spine.Clear();
-			
+			triggerBar.Clear();
+			ClearCanvas();
+		}
+		
+		
+		protected void ClearCanvas()
+		{			
 			List<Moveable> moveables = new List<Moveable>(mainCanvas.Children.Count);
 			foreach (UIElement element in mainCanvas.Children) {
 				Moveable moveable = element as Moveable;
