@@ -67,6 +67,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Bag.xaml.cs">
       <DependentUpon>Bag.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -201,6 +205,7 @@
     <Folder Include="images" />
     <Folder Include="Core" />
     <Folder Include="Fitters" />
+    <Page Include="AboutWindow.xaml" />
     <Page Include="Bag.xaml" />
     <Page Include="ChangeNumberDialog.xaml" />
     <Page Include="ChangeStringDialog.xaml" />

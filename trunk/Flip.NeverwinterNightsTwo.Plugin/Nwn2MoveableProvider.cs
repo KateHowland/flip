@@ -33,6 +33,7 @@ using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
@@ -260,9 +261,42 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		Sussex.Flip.Games.NeverwinterNightsTwo.Integration.NarrativeThreadsHelper nt 
+			= new Sussex.Flip.Games.NeverwinterNightsTwo.Integration.NarrativeThreadsHelper();
+		
+		
+		protected List<ObjectBlock> ntBlocks = new List<ObjectBlock>();
+		
+		
 		protected void TrackToolsetChanges(ToolsetEventReporter reporter)
 		{			
 			if (!reporter.IsRunning) reporter.Start();
+			
+			
+			reporter.ModuleChanged += delegate(object oSender, ModuleChangedEventArgs eArgs) 
+			{  
+				/* Fires when a module closes, but that doesn't mean that the new module has
+				 * been fully opened yet... usually takes a while!
+				 * 
+				 * BlueprintAdded fires for every module blueprint when you open a new module,
+				 * so we don't need to look for new blueprints in ModuleChanged. However,
+				 * BlueprintRemoved does NOT fire when you close a module, so we do need
+				 * to clear any Narrative Threads blueprints when the module changes.
+				 * 
+				 */				
+				
+				if (manager == null) return;				
+				
+				foreach (ObjectBlock block in ntBlocks) {						
+					string bag = String.Format(InstanceBagNamingFormat,((InstanceBehaviour)block.Behaviour).Nwn2Type);						
+					if (manager.HasBag(bag) && manager.HasMoveable(block,bag)) {
+						manager.RemoveMoveable(bag,block);
+					}
+				}
+					
+				ntBlocks.Clear();	
+			};
+			
 			
 			reporter.InstanceAdded += delegate(object sender, InstanceEventArgs e) 
 			{  	
@@ -274,6 +308,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				ObjectBlock block = blocks.CreateInstanceBlock(e.Instance,e.Area);
 				manager.AddMoveable(bag,block);
 			};
+			
 			
 			reporter.InstanceRemoved += delegate(object sender, InstanceEventArgs e) 
 			{  
@@ -298,35 +333,147 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					System.Windows.MessageBox.Show(ex.ToString());
 				}
 			};
+			
 						
 			reporter.BlueprintAdded += delegate(object sender, BlueprintEventArgs e) 
 			{  
-				if (manager == null || !loadBlueprints) return;
-				ObjectBlock block = blocks.CreateBlueprintBlock(e.Blueprint);
-				manager.AddMoveable(String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString()),block);
+				if (manager == null || e.Blueprint == null) return;
+				
+				if (nt.CreatedByNarrativeThreads(e.Blueprint)) {	
+					
+					Action action = new Action
+					(
+						delegate()
+						{					
+							string bag = String.Format(InstanceBagNamingFormat,e.Blueprint.ObjectType.ToString());
+							
+							if (manager.HasBag(bag)) {						
+								ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(e.Blueprint);
+								
+								block.BorderBrush = Brushes.Gold;
+								block.BorderThickness = new Thickness(5);
+								
+								ntBlocks.Add(block);
+								
+								manager.AddMoveable(bag,block);		
+							}
+						}
+					);					
+					
+					uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);
+				}
+				
+				if (loadBlueprints) {					
+				
+					Action action = new Action
+					(
+						delegate()
+						{
+							string bag = String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString());
+							
+							if (manager.HasBag(bag)) {		
+								ObjectBlock block = blocks.CreateBlueprintBlock(e.Blueprint);
+								manager.AddMoveable(bag,block);
+							}
+						}
+					);					
+					
+					uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);				
+				}
+				
 			};
+			
 			
 			reporter.BlueprintRemoved += delegate(object sender, BlueprintEventArgs e) 
 			{  
-				if (manager == null || !loadBlueprints || e.Blueprint == null) return;
-				string bag = String.Format(BlueprintBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Blueprint.ObjectType));
+				MessageBox.Show("Blueprint removed.");
 				
-				try {
-					UIElementCollection collection = manager.GetMoveables(bag);
-					
-					ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
-					
-					foreach (ObjectBlock block in collection) {
-						if (block.Equals(lost)) {
-							manager.RemoveMoveable(bag,block);
-							return;
+				if (manager == null || e.Blueprint == null) return;
+				
+				if (nt.CreatedByNarrativeThreads(e.Blueprint)) {			
+				
+					Action action = new Action
+					(
+						delegate()
+						{
+							string bag = String.Format(InstanceBagNamingFormat,e.Blueprint.ObjectType.ToString());
+							
+							if (manager.HasBag(bag)) {		
+																
+								ObjectBlock lost = blocks.CreateInstanceBlockFromBlueprint(e.Blueprint);
+								ObjectBlock removing = null;
+								
+								foreach (ObjectBlock block in ntBlocks) {
+									if (block.Equals(lost)) {
+										removing = block;
+										break;
+									}
+								}
+								
+								if (removing != null) {
+									manager.RemoveMoveable(bag,removing);
+									ntBlocks.Remove(removing);
+								}
+							}
 						}
-					}
+					);					
+					
+					uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);				
 				}
-				catch (Exception ex) {
-					System.Windows.MessageBox.Show(ex.ToString());
+				
+				if (loadBlueprints) {					
+				
+					Action action = new Action
+					(
+						delegate()
+						{
+							string bag = String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString());
+							
+							if (manager.HasBag(bag)) {		
+								
+								UIElementCollection collection = manager.GetMoveables(bag);
+								
+								ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
+								
+								// TODO: cycle through backwards
+								// TODO: or find a better way of doing it altogether
+								foreach (ObjectBlock block in collection) {
+									if (block.Equals(lost)) {
+										manager.RemoveMoveable(bag,block);
+										return;
+									}
+								}
+							}
+						}
+					);					
+					
+					uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);				
 				}
 			};
+			
+			
+//			reporter.OldBlueprintRemoved += delegate(object sender, BlueprintEventArgs e) 
+//			{  
+//				if (manager == null || !loadBlueprints || e.Blueprint == null) return;
+//				string bag = String.Format(BlueprintBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Blueprint.ObjectType));
+//				
+//				try {
+//					UIElementCollection collection = manager.GetMoveables(bag);
+//					
+//					ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
+//					
+//					foreach (ObjectBlock block in collection) {
+//						if (block.Equals(lost)) {
+//							manager.RemoveMoveable(bag,block);
+//							return;
+//						}
+//					}
+//				}
+//				catch (Exception ex) {
+//					System.Windows.MessageBox.Show(ex.ToString());
+//				}
+//			};
+			
 			
 			reporter.AreaOpened += delegate(object sender, AreaEventArgs e) 
 			{  
@@ -335,6 +482,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				Thread thread = new Thread(new ParameterizedThreadStart(CreateBlockWhenAreaIsReady));
 				thread.Start(e.Area);			
 			};
+			
 			
 			reporter.ResourceViewerClosed += delegate(object sender, ResourceViewerClosedEventArgs e)
 			{  
