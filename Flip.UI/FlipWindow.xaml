@@ -91,6 +91,10 @@
 					<MenuItem
 					Header="View code"
 					Click="ViewCode"/>
+				
+					<MenuItem
+					Header="Clear canvas"
+					Click="ClearCanvas"/>
 								
 				</MenuItem>
 					

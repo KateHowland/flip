@@ -182,12 +182,23 @@ namespace Sussex.Flip.UI
 					writer.WriteStartElement("Moveables");
 					
 					foreach (UIElement child in mainCanvas.Children) {
+						
 						Moveable moveable = child as Moveable;
+						if (moveable == null) continue;
+						
+						string elementName;
+						
+						if (moveable is ObjectBlock) elementName = "ObjectBlock";
+						else if (moveable is Statement) elementName = "Statement";
+						else throw new FormatException("Unknown Moveable type (" + moveable.GetType() + ").");
+						
 						if (moveable != null) {
-							writer.WriteStartElement("ObjectBlock");
+							writer.WriteStartElement(elementName);
 							moveable.WriteXml(writer);
 							writer.WriteEndElement();
 						}
+						
+						
 					}
 									
 					writer.WriteEndElement();
@@ -196,7 +207,7 @@ namespace Sussex.Flip.UI
 					writer.Flush();
 				}
 				
-				MessageBox.Show
+				MessageBox.Show("Saved.");
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
@@ -237,22 +248,25 @@ namespace Sussex.Flip.UI
 					
 					reader.MoveToContent();
 				
-					while (reader.LocalName == "ObjectBlock") {
+					while (reader.LocalName == "ObjectBlock" || reader.LocalName == "Statement") {
 					
-						ObjectBlock block = new ObjectBlock();
-						block.ReadXml(reader);
+						Moveable moveable;
+						
+						if (reader.LocalName == "ObjectBlock") moveable = new ObjectBlock();
+						else if (reader.LocalName == "Statement") moveable = new Statement();
+						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
+						
+						moveable.ReadXml(reader);
 						position += 10;
-						Canvas.SetRight(block,position);
-						Canvas.SetBottom(block,position);
-						mainCanvas.Children.Add(block);
+						Canvas.SetRight(moveable,position);
+						Canvas.SetBottom(moveable,position);
+						mainCanvas.Children.Add(moveable);
 						
 						reader.MoveToContent();
 					}
 					
 					reader.ReadEndElement();
 				}
-				
-				MessageBox.Show("Saved.");
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
@@ -356,6 +370,12 @@ namespace Sussex.Flip.UI
 		protected void ViewCode(object sender, RoutedEventArgs e)
 		{
 			MessageBox.Show(triggerBar.GetCode());
+		}
+		
+		
+		private void ClearCanvas(object sender, RoutedEventArgs e)
+		{
+			ClearCanvas();
 		}
 		
 		

@@ -186,59 +186,5 @@ namespace Sussex.Flip.UI
 			Behaviour.WriteXml(writer);
 			writer.WriteEndElement();
 		}
-		
-
-//        void DoThing()
-//        {
-//        	MessageBox.Show("Writing...");
-//        	
-//			string path = @"C:\Flip\tempwritten.txt";
-//			WriteScriptToFile(path);
-//        	
-//			//System.Diagnostics.Process.Start(path);
-//			
-//			MessageBox.Show("Reading...");
-//			
-//			ObjectBehaviour b = ReadBehaviourFromFile(path);
-//			
-//			MessageBox.Show("Read: " + b);
-//        }
-//        
-//        
-//		public void WriteScriptToFile(string path)
-//		{
-//			XmlWriterSettings settings = new XmlWriterSettings();
-//			settings.CloseOutput = true;
-//			settings.Indent = true;
-//			settings.NewLineOnAttributes = false;
-//			
-//			using (XmlWriter writer = XmlWriter.Create(path,settings)) {
-//				writer.WriteStartDocument();				
-//				WriteXml(writer);				
-//				writer.WriteEndDocument();				
-//				writer.Flush();
-//			}
-//		}
-//		
-//		
-//		public ObjectBehaviour ReadBehaviourFromFile(string path)
-//		{
-//			if (path == null) throw new ArgumentNullException("path");
-//			
-//			XmlReader reader = new XmlTextReader(path);
-//						
-//			reader.MoveToContent();
-//			
-//			ObjectBehaviour behaviour = null;
-//			
-//			try {
-//				behaviour = (ObjectBehaviour)SerialisationHelper.GetObjectFromXml(reader);
-//			}
-//			catch (Exception e) {
-//				MessageBox.Show(e.ToString());
-//			}
-//			
-//			return behaviour;
-//		}
     }
 }
