@@ -148,9 +148,28 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		string path = @"C:\Flip\script.txt";
 		protected void SaveScriptToFile()
 		{
+			Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+			dialog.AddExtension = true;
+			dialog.CheckFileExists = false;
+			dialog.CheckPathExists = true;
+			dialog.CreatePrompt = false;
+			dialog.DefaultExt = ".txt";
+			dialog.DereferenceLinks = false;			
+			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
+			dialog.FilterIndex = 0;			
+			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
+			dialog.OverwritePrompt = true;
+			dialog.RestoreDirectory = false;
+			dialog.Title = "Save script";
+			dialog.ValidateNames = true;
+			
+			bool? result = dialog.ShowDialog(this);			
+			if (!result.HasValue || !result.Value) return;
+			
+			string path = dialog.FileName;
+			
 			try {
 				XmlWriterSettings settings = new XmlWriterSettings();
 				settings.CloseOutput = true;
@@ -176,6 +195,8 @@ namespace Sussex.Flip.UI
 					writer.WriteEndDocument();				
 					writer.Flush();
 				}
+				
+				MessageBox.Show
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
@@ -186,6 +207,23 @@ namespace Sussex.Flip.UI
 		int position = 40;
 		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
 		{
+			Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+			dialog.CheckFileExists = true;
+			dialog.CheckPathExists = true;
+			dialog.DefaultExt = ".txt";
+			dialog.DereferenceLinks = true;
+			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
+			dialog.FilterIndex = 0;
+			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
+			dialog.Multiselect = false;
+			dialog.Title = "Open script";
+			dialog.ValidateNames = true;
+			
+			bool? result = dialog.ShowDialog(this);			
+			if (!result.HasValue || !result.Value) return;
+			
+			string path = dialog.FileName;
+			
 			try {
 				XmlReader reader = new XmlTextReader(path);
 				
@@ -213,6 +251,8 @@ namespace Sussex.Flip.UI
 					
 					reader.ReadEndElement();
 				}
+				
+				MessageBox.Show("Saved.");
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());

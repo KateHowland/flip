@@ -55,11 +55,13 @@
 				
 					<MenuItem
 					Header="Open"
-					Click="OpenScriptFromModule"/>
+					Click="OpenScriptFromModule"
+					IsEnabled="false"/>
 				
 					<MenuItem
 					Header="Save"
-					Click="SaveScriptToModule"/>
+					Click="SaveScriptToModule"
+					IsEnabled="false"/>
 					
 					<MenuItem
 					Header="Close"
