@@ -24,15 +24,51 @@
  */
 
 using System;
+using System.Reflection;
+using System.Runtime;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
 	/// Description of BehaviourFactory.
 	/// </summary>
-	public abstract class BehaviourFactory
+	public abstract class SerialisationHelper
 	{
 		public abstract ObjectBehaviour GetObjectBehaviour(XmlReader reader);
+		public abstract TriggerControl GetTriggerControl(XmlReader reader);
+		
+		
+		public static Assembly customObjectAssembly = null;
+		public static IXmlSerializable GetObjectFromXml(XmlReader reader)
+		{
+			if (reader == null) throw new ArgumentNullException("reader");
+			
+			reader.MoveToContent();	
+			
+			string type = reader.GetAttribute("Type");
+			if (String.IsNullOrEmpty(type)) {
+				throw new ArgumentException("Could not read Type attribute from XmlReader.","reader");
+			}			
+			
+			IXmlSerializable obj;
+				
+			try {
+				Assembly assembly = customObjectAssembly;
+				obj = (IXmlSerializable)assembly.CreateInstance(type);
+			}
+			catch (Exception x) {
+				throw new ArgumentException("Could not create object of type " + type + ".",x);
+			}
+			
+			if (obj == null) {
+				throw new ArgumentException("Could not create object of type " + type + " - type was not recognised.");
+			}
+			
+			obj.ReadXml(reader);
+			
+			return obj;
+		}
 	}
 }

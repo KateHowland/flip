@@ -113,6 +113,8 @@ namespace Sussex.Flip.UI
     		
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;
+    		
+    		MouseDoubleClick += delegate { DoThing(); };
         }
         
         
@@ -161,7 +163,6 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public static BehaviourFactory behaviourFactory = null;
 		public override void ReadXml(XmlReader reader)
 		{
 			reader.MoveToContent();			
@@ -169,8 +170,9 @@ namespace Sussex.Flip.UI
 			if (reader.IsEmptyElement || !reader.ReadToDescendant("Behaviour")) {
 				throw new FormatException("ObjectBlock does not specify a Behaviour, and could not be deserialised.");
 			}
+						
+			Behaviour = (ObjectBehaviour)SerialisationHelper.GetObjectFromXml(reader);
 			
-			Behaviour = behaviourFactory.GetObjectBehaviour(reader);
 			reader.ReadEndElement();
 		}
 		
@@ -185,6 +187,71 @@ namespace Sussex.Flip.UI
 			writer.WriteAttributeString("Type",Behaviour.BehaviourType);
 			Behaviour.WriteXml(writer);
 			writer.WriteEndElement();
+		}
+		
+
+        void DoThing()
+        {
+        	MessageBox.Show("Writing...");
+        	
+			string path = @"C:\Flip\tempwritten.txt";
+			WriteScriptToFile(path);
+        	
+			//System.Diagnostics.Process.Start(path);
+			
+			MessageBox.Show("Reading...");
+			
+			ObjectBehaviour b = ReadBehaviourFromFile(path);
+			
+			MessageBox.Show("Read: " + b);
+        }
+        
+        
+		public void WriteScriptToFile(string path)
+		{
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.CloseOutput = true;
+			settings.Indent = true;
+			settings.NewLineOnAttributes = false;
+			
+			using (XmlWriter writer = XmlWriter.Create(path,settings)) {
+				writer.WriteStartDocument();				
+				WriteXml(writer);				
+				writer.WriteEndDocument();				
+				writer.Flush();
+			}
+		}
+		
+		
+		public ObjectBehaviour ReadBehaviourFromFile(string path)
+		{
+			if (path == null) throw new ArgumentNullException("path");
+			
+			XmlReader reader = new XmlTextReader(path);
+						
+			reader.MoveToContent();
+			
+			ObjectBehaviour behaviour = null;
+			
+			try {
+				behaviour = (ObjectBehaviour)SerialisationHelper.GetObjectFromXml(reader);
+			}
+			catch (Exception e) {
+				MessageBox.Show(e.ToString());
+			}
+			
+			return behaviour;
+			
+//			Nwn2SlotTrigger trigger = new Nwn2SlotTrigger();			
+//			trigger.ReadXml(reader);
+//			reader.MoveToContent();
+//			
+//			Spine spine = new Spine();
+//			spine.ReadXml(reader);
+//			
+//			ScriptInformation script = new ScriptInformation(trigger,spine);
+			
+			//return null;//script;
 		}
     }
 }

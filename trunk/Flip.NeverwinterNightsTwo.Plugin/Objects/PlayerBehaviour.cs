@@ -90,6 +90,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
+		public override string ToString()
+		{
+			return GetNaturalLanguage();
+		}
+		
+		
 		public override void ReadXml(XmlReader reader)
 		{
 			reader.MoveToContent();

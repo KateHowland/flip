@@ -277,7 +277,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(attacher,provider,new Nwn2BehaviourFactory());		
+			window = new FlipWindow(attacher,provider);		
+			
+			// HACK:
+			// TODO:
+			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
 			
 			window.Closing += delegate(object sender, CancelEventArgs e) 
 			{  
