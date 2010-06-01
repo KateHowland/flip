@@ -319,14 +319,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void WatchModule(NWN2GameModule mod)
 		{
-			// TODO: Can this be made to work with the NWN2GlobalBlueprintManager instead?
-			// so that it can track ANY added/removed blueprints?
+			/* Only tracking blueprints which are added to and removed from the module...
+			 * this is correct for our purposes! Narrative Threads only uses the module blueprint collections. */
 			
 			if (mod != null) {	
 				
 				/* There seems to be a bug where the following events events fire at a later stage... they do
 				 * fire when they should, but when the paused test is allowed to complete, they fire again. */
 				foreach (NWN2BlueprintCollection bc in mod.BlueprintCollections) {
+					
 					bc.Inserted += delegate(OEICollectionWithEvents cList, int index, object value) 
 					{
 						OnBlueprintAdded(bc,new BlueprintEventArgs((INWN2Blueprint)value));

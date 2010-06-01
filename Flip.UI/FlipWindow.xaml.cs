@@ -69,6 +69,50 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		protected void NewScript(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Not implemented.");
+		}
+		
+		
+		protected void OpenScriptFromModule(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Not implemented.");
+		}
+		
+		
+		protected void CloseScript(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Not implemented.");
+		}
+		
+		
+		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Not implemented.");
+		}
+		
+		
+		protected void SaveScriptToFile(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Not implemented.");
+		}
+		
+		
+		protected void ExitFlip(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Not implemented.");
+		}
+		
+		
+		protected void DisplayAboutScreen(object sender, RoutedEventArgs e)
+		{
+			new AboutWindow().ShowDialog();
+		}
+		
+		
+		
+		
 		Sussex.Flip.Utils.Serialiser serialiser;
 		string scriptPath = @"C:\Flip\script.txt";				
 		
@@ -168,7 +212,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void CompileAndAttach(object sender, RoutedEventArgs e)
+		protected void SaveScriptToModule(object sender, RoutedEventArgs e)
 		{			
 			if (!triggerBar.IsComplete) {
 				MessageBox.Show("Your script isn't complete! Make sure you've filled in the trigger, and " +
@@ -187,19 +231,12 @@ namespace Sussex.Flip.UI
 			
 			try {
 				attacher.Attach(script,address);
-				MessageBox.Show("Script was attached successfully.");
+				MessageBox.Show("Script was saved successfully.");
 			}
 			catch (Exception ex) {
-				MessageBox.Show(ex.ToString());
+				MessageBox.Show(String.Format("Script could not be saved - something went wrong.\n\n{0}",ex));
 			}
 		}
-		
-		
-		protected void RefreshBlocks(object sender, RoutedEventArgs e)
-		{
-			provider.Refresh(blockBox);
-			MessageBox.Show("Refreshed.");
-		}	
 		
 		
 		protected void Clear(object sender, RoutedEventArgs e)

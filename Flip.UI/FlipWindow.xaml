@@ -47,32 +47,44 @@
 			HorizontalAlignment="Stretch">
 				
 				<MenuItem 
-				Header="File"
-				IsEnabled="False"/>
+				Header="File">
+				
+					<MenuItem
+					Header="New"
+					Click="NewScript"/>
+				
+					<MenuItem
+					Header="Open"
+					Click="OpenScriptFromModule"/>
+				
+					<MenuItem
+					Header="Save"
+					Click="SaveScriptToModule"/>
+					
+					<MenuItem
+					Header="Close"
+					Click="CloseScript"/>
+				
+					<Separator/>
+				
+					<MenuItem
+					Header="Open script from file"
+					Click="OpenScriptFromFile"/>
+				
+					<MenuItem
+					Header="Save script to file"
+					Click="SaveScriptToFile"/>
+									
+					<Separator/>
+				
+					<MenuItem
+					Header="Exit"
+					Click="ExitFlip"/>
+				
+				</MenuItem>
 					
 				<MenuItem 
-				Header="Development"
-				IsEnabled="True">
-				
-					<MenuItem
-					Header="Compile and attach"
-					Click="CompileAndAttach"/>
-				
-					<MenuItem
-					Header="Refresh blocks"
-					Click="RefreshBlocks"/>
-				
-					<MenuItem
-					Header="Save script"
-					Click="SaveScript"/>
-				
-					<MenuItem
-					Header="Open script"
-					Click="OpenScript"/>
-				
-					<MenuItem
-					Header="Clear"
-					Click="Clear"/>
+				Header="Development">
 				
 					<MenuItem
 					Header="View code"
@@ -82,7 +94,7 @@
 					
 				<MenuItem 
 				Header="About"
-				IsEnabled="False"/>
+				Click="DisplayAboutScreen"/>
 				
 			</Menu>
 				
