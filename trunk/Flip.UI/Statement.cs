@@ -73,6 +73,16 @@ namespace Sussex.Flip.UI
     		conditionBrush = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
     	}
     	
+    	
+    	/// <summary>
+    	/// For deserialisation.
+    	/// </summary>
+    	public Statement()
+    	{    	
+        	InitializeComponent();
+        	this.behaviour = new DefaultStatementBehaviour();
+    	}
+    	
         
         public Statement(StatementBehaviour behaviour)
         {
@@ -239,13 +249,16 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			throw new NotImplementedException();
+			reader.MoveToContent();
+			
+			AddComponent(new StatementComponent("Deserialised"));
+			
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			writer.WriteElementString("SomeStatement",String.Empty);
 		}
     }
 }
