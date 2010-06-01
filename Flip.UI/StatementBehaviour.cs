@@ -25,6 +25,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
@@ -32,7 +35,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of ActionBehaviour.
 	/// </summary>
-	public abstract class StatementBehaviour: IDeepCopyable<StatementBehaviour>
+	public abstract class StatementBehaviour: IDeepCopyable<StatementBehaviour>, IXmlSerializable
 	{		
 		protected int parameterCount;
 		protected List<StatementComponent> components;
@@ -59,5 +62,50 @@ namespace Sussex.Flip.UI
 		public abstract string GetCode(params string[] args);
 		public abstract string GetNaturalLanguage(params string[] args);
 		public abstract StatementBehaviour DeepCopy();
+    	
+		
+		// TODO:
+		//public abstract string BehaviourType { get; };
+		public string BehaviourType { 
+			get { 
+				return "Sussex.Flip.Games.NeverwinterNightsTwo.EndGame"; 
+			}
+		}
+		
+			
+		// TODO:
+		// temp... these actually need to be overriden properly, but for now...
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public void ReadXml(XmlReader reader)
+		{
+			reader.MoveToContent();			
+			bool isEmpty = reader.IsEmptyElement;			
+			reader.ReadStartElement();
+			
+			if (!isEmpty) {
+				statementType = (StatementType)Enum.Parse(typeof(StatementType),reader["StatementType"]);
+				
+				int count = int.Parse(reader["ComponentCount"]);
+				components = new List<StatementComponent>(count);
+				
+				for (int i = 0; i < count; i++) {
+					components.Add(new StatementComponent("component " + i));
+				}
+				
+				reader.ReadEndElement();
+			}
+		}
+		
+		
+		public void WriteXml(XmlWriter writer)
+		{
+			writer.WriteAttributeString("StatementType",StatementType.ToString());
+			writer.WriteAttributeString("ComponentCount",components.Count.ToString());
+		}
 	}
 }

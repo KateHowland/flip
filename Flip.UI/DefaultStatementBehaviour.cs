@@ -38,8 +38,7 @@ namespace Sussex.Flip.UI
 			components = new System.Collections.Generic.List<StatementComponent>(1);
 			statementType = StatementType.Action;
 			
-			StatementComponent component = new StatementComponent("default");
-			components.Add(component);
+			components.Add(new StatementComponent("DEFAULT"));
 		}
 		
 		
