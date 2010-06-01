@@ -75,7 +75,7 @@
       <DependentUpon>Bag.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BehaviourFactory.cs" />
+    <Compile Include="SerialisationHelper.cs" />
     <Compile Include="ChangeNumberDialog.xaml.cs">
       <DependentUpon>ChangeNumberDialog.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Serialization;
 using Sussex.Flip.Core;
 
 namespace Sussex.Flip.UI
@@ -22,12 +24,8 @@ namespace Sussex.Flip.UI
 		protected MoveableProvider provider;
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, BehaviourFactory behaviourFactory) // HACK
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider)
 		{
-			// HACK:
-			if (behaviourFactory == null) throw new ArgumentNullException("behaviourFactory");
-			ObjectBlock.behaviourFactory = behaviourFactory;
-			
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
 			
@@ -144,21 +142,81 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
-		{
-			MessageBox.Show("Not implemented.");
-		}
-		
-		
 		protected void SaveScriptToFile(object sender, RoutedEventArgs e)
 		{
 			SaveScriptToFile();
 		}
 		
 		
+		string path = @"C:\Flip\script.txt";
 		protected void SaveScriptToFile()
 		{
-			MessageBox.Show("Not implemented.");
+			try {
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.CloseOutput = true;
+				settings.Indent = true;
+				settings.NewLineOnAttributes = false;
+				
+				using (XmlWriter writer = XmlWriter.Create(path,settings)) {
+					writer.WriteStartDocument();				
+					
+					writer.WriteStartElement("Moveables");
+					
+					foreach (UIElement child in mainCanvas.Children) {
+						Moveable moveable = child as Moveable;
+						if (moveable != null) {
+							writer.WriteStartElement("ObjectBlock");
+							moveable.WriteXml(writer);
+							writer.WriteEndElement();
+						}
+					}
+									
+					writer.WriteEndElement();
+					
+					writer.WriteEndDocument();				
+					writer.Flush();
+				}
+			}
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
+			}
+		}
+		
+		
+		int position = 40;
+		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
+		{
+			try {
+				XmlReader reader = new XmlTextReader(path);
+				
+				reader.MoveToContent();
+				
+				bool isEmpty = reader.IsEmptyElement;
+				
+				reader.ReadStartElement("Moveables");
+				
+				if (!isEmpty) {
+					
+					reader.MoveToContent();
+				
+					while (reader.LocalName == "ObjectBlock") {
+					
+						ObjectBlock block = new ObjectBlock();
+						block.ReadXml(reader);
+						position += 10;
+						Canvas.SetRight(block,position);
+						Canvas.SetBottom(block,position);
+						mainCanvas.Children.Add(block);
+						
+						reader.MoveToContent();
+					}
+					
+					reader.ReadEndElement();
+				}
+			}
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
+			}
 		}
 		
 		

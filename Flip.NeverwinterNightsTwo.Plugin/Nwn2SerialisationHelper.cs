@@ -27,6 +27,7 @@ using System;
 using System.Reflection;
 using System.Windows;
 using System.Xml;
+using System.Xml.Serialization;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.UI;
 	
@@ -35,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// <summary>
 	/// Description of Nwn2BehaviourFactory.
 	/// </summary>
-	public class Nwn2BehaviourFactory : BehaviourFactory
+	public class Nwn2SerialisationHelper : SerialisationHelper
 	{
 		public override ObjectBehaviour GetObjectBehaviour(XmlReader reader)
 		{			
@@ -43,26 +44,56 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			reader.MoveToContent();	
 			
-			string behaviourType = reader.GetAttribute("Type");
-			if (String.IsNullOrEmpty(behaviourType)) {
-				throw new ArgumentException("Could not read Type attribute of Behaviour object from XmlReader.","reader");
+			string type = reader.GetAttribute("Type");
+			if (String.IsNullOrEmpty(type)) {
+				throw new ArgumentException("Could not read Type attribute from XmlReader.","reader");
 			}					
 				
 			ObjectBehaviour behaviour;
 			try {
-				behaviour = (ObjectBehaviour)Assembly.GetExecutingAssembly().CreateInstance(behaviourType);
+				behaviour = (ObjectBehaviour)Assembly.GetExecutingAssembly().CreateInstance(type);
 			}
 			catch (Exception x) {
-				throw new ArgumentException("Could not create an ObjectBehaviour of type " + behaviourType + ".",x);
+				throw new ArgumentException("Could not create object of type " + type + ".",x);
 			}
 			
 			if (behaviour == null) {
-				throw new ArgumentException("Could not create an ObjectBehaviour of type " + behaviourType + " - type was not recognised.");
+				throw new ArgumentException("Could not create object of type " + type + " - type was not recognised.");
 			}
 			
 			behaviour.ReadXml(reader);
 			
 			return behaviour;
+		}
+		
+		
+		public override TriggerControl GetTriggerControl(XmlReader reader)
+		{
+			if (reader == null) throw new ArgumentNullException("reader");
+			
+			reader.MoveToContent();	
+			
+			string type = reader.GetAttribute("Type");
+			if (String.IsNullOrEmpty(type)) {
+				throw new ArgumentException("Could not read Type attribute from XmlReader.","reader");
+			}			
+			
+			TriggerControl control;
+				
+			try {
+				control = (TriggerControl)Assembly.GetExecutingAssembly().CreateInstance(type);
+			}
+			catch (Exception x) {
+				throw new ArgumentException("Could not create object of type " + type + ".",x);
+			}
+			
+			if (control == null) {
+				throw new ArgumentException("Could not create object of type " + type + " - type was not recognised.");
+			}
+			
+			control.ReadXml(reader);
+			
+			return control;
 		}
 	}
 }

@@ -17,8 +17,6 @@ namespace Sussex.Flip.UI.Generic
 	{
 		public App()
 		{
-//			InitializeComponent();
-			
 			FlipTranslator translator = new FakeTranslator();
 			FlipAttacher attacher = new FakeAttacher(translator);			
 			
@@ -29,7 +27,11 @@ namespace Sussex.Flip.UI.Generic
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers);
 			
-			FlipWindow window = new FlipWindow(attacher,provider,new Nwn2BehaviourFactory());
+			FlipWindow window = new FlipWindow(attacher,provider);
+			
+			// HACK:
+			// TODO:
+			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
 			
 			window.Show();
 		}
