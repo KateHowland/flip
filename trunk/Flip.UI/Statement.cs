@@ -81,17 +81,6 @@ namespace Sussex.Flip.UI
         	InitializeComponent();
         	this.behaviour = behaviour;
         	Initialise();
-        	
-        	
-        	
-        	
-        	
-        	
-        	// HACK:
-        	MouseDoubleClick += delegate 
-        	{  
-        		
-        	};
         }
         
         

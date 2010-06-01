@@ -138,7 +138,6 @@
     <Compile Include="Fitters\PlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
     <Compile Include="Integration\NarrativeThreadsHelper.cs" />
-    <Compile Include="Nwn2SerialisationHelper.cs" />
     <Compile Include="Nwn2StatementBehaviour.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />
     <Compile Include="Nwn2ObjectBlockFactory.cs" />

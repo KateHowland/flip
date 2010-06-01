@@ -32,14 +32,10 @@ using System.Xml.Serialization;
 namespace Sussex.Flip.UI
 {
 	/// <summary>
-	/// Description of BehaviourFactory.
+	/// Description of SerialisationHelper.
 	/// </summary>
 	public abstract class SerialisationHelper
 	{
-		public abstract ObjectBehaviour GetObjectBehaviour(XmlReader reader);
-		public abstract TriggerControl GetTriggerControl(XmlReader reader);
-		
-		
 		public static Assembly customObjectAssembly = null;
 		public static IXmlSerializable GetObjectFromXml(XmlReader reader)
 		{
