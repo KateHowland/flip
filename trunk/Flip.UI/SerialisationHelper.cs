@@ -36,6 +36,11 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class SerialisationHelper
 	{
+		// TODO:
+		// Need to define a custom interface here which defines
+		// Type as a field.
+		
+		
 		public static Assembly customObjectAssembly = null;
 		public static IXmlSerializable GetObjectFromXml(XmlReader reader)
 		{

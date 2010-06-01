@@ -28,6 +28,18 @@ namespace Sussex.Flip.UI
     	
     	
     	protected StatementBehaviour behaviour;
+    	
+    	
+    	public StatementBehaviour Behaviour {
+    		get { return behaviour; }
+    		set { 
+    			if (behaviour != value) {
+    				behaviour = value;
+    				Initialise();
+    				OnChanged(new EventArgs()); //? TODO not sure if it's appropriate to call this here since it should never happen, but I do in ObjectBlock    				
+    			}
+    		}
+    	}
 		
 		
 		/// <summary>
@@ -80,7 +92,7 @@ namespace Sussex.Flip.UI
     	public Statement()
     	{    	
         	InitializeComponent();
-        	this.behaviour = new DefaultStatementBehaviour();
+        	MouseDoubleClick += delegate { Behaviour = new DefaultStatementBehaviour(); };
     	}
     	
         
@@ -89,14 +101,16 @@ namespace Sussex.Flip.UI
         	if (behaviour == null) throw new ArgumentNullException("behaviour");
         	
         	InitializeComponent();
-        	this.behaviour = behaviour;
-        	Initialise();
+        	Behaviour = behaviour;
+        	MouseDoubleClick += delegate { Behaviour = new DefaultStatementBehaviour(); };
         }
         
         
         protected void Initialise()
         {
         	if (behaviour == null) throw new InvalidOperationException("This Statement has not been assigned a behaviour.");
+        	        	
+        	mainPanel.Children.Clear();
         	
         	foreach (StatementComponent component in behaviour.GetComponents()) {
         		AddComponent(component);
@@ -249,16 +263,28 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			reader.MoveToContent();
+			reader.MoveToContent();			
 			
-			AddComponent(new StatementComponent("Deserialised"));
+			if (reader.IsEmptyElement || !reader.ReadToDescendant("Behaviour")) {
+				throw new FormatException("Statement does not specify a Behaviour, and could not be deserialised.");
+			}
+						
+			Behaviour = (StatementBehaviour)SerialisationHelper.GetObjectFromXml(reader);
 			
-			reader.ReadStartElement();
+			reader.ReadEndElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
+			if (behaviour == null) {
+				throw new InvalidOperationException("The Statement being serialised has a null behaviour field.");
+			}
+			
+			writer.WriteStartElement("Behaviour");
+			writer.WriteAttributeString("Type",behaviour.BehaviourType);
+			behaviour.WriteXml(writer);
+			writer.WriteEndElement();
 		}
     }
 }
