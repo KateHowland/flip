@@ -35,7 +35,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Gives nXpAmount to oCreature.
 		// void GiveXPToCreature(object oCreature, int nXpAmount);
 		
-		public GiveXP(Nwn2Fitters fitters) : base(fitters)
+		public GiveXP()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -74,7 +74,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new GiveXP(fitters);
+			return new GiveXP();
 		}
 	}
 }

@@ -54,7 +54,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// void JumpPartyToArea( object oPartyMember, object oDestination );
 		
 		
-		public AreaTransition(Nwn2Fitters fitters) : base(fitters)
+		public AreaTransition()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -89,7 +89,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new AreaTransition(fitters);
+			return new AreaTransition();
 		}
 	}
 }

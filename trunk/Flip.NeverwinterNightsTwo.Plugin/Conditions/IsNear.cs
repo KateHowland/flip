@@ -38,7 +38,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// * Return value if either object is invalid: 0.0f
 		// float GetDistanceBetween(object oObjectA, object oObjectB);
 		
-		public IsNear(Nwn2Fitters fitters) : base(fitters)
+		public IsNear()
 		{
 			statementType = StatementType.Condition;
 			parameterCount = 3;
@@ -77,7 +77,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new IsNear(fitters);
+			return new IsNear();
 		}
 	}
 }

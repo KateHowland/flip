@@ -43,7 +43,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// RWT-OEI 03/13/07 - This will now 'heal' doors and placeables.
 		// effect EffectHeal(int nDamageToHeal);
 		
-		public Heal(Nwn2Fitters fitters) : base(fitters)
+		public Heal()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -77,7 +77,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new Heal(fitters);
+			return new Heal();
 		}
 	}
 }

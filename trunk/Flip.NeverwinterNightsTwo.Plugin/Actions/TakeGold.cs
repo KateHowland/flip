@@ -40,7 +40,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// - bDisplayFeedback: If set to FALSE, none of the normal chat messages will be sent.
 		// void TakeGoldFromCreature(int nAmount, object oCreatureToTakeFrom, int bDestroy=FALSE, int bDisplayFeedback=TRUE);
 		
-		public TakeGold(Nwn2Fitters fitters) : base(fitters)
+		public TakeGold()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -79,7 +79,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new TakeGold(fitters);
+			return new TakeGold();
 		}
 	}
 }

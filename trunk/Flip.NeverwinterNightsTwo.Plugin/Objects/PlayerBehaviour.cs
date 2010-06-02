@@ -40,20 +40,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		public const string NWScript_GetPlayer = "GetFirstPC()";
 		
 		
-		protected static string behaviourType;
-			
-				
-    	public override string BehaviourType { 
-			get { return behaviourType; }
-		}
-			
-		
-		static PlayerBehaviour()
-		{
-			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.PlayerBehaviour";
-		}
-		
-		
 		public PlayerBehaviour() : base(String.Empty,"player")
 		{						
 		}

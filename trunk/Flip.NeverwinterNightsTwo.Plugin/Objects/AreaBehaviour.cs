@@ -38,19 +38,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	public class AreaBehaviour : Nwn2ObjectBehaviour
 	{
 		protected bool isExterior;
-		protected static string behaviourType;
-			
-			
-		static AreaBehaviour()
-		{
-			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.AreaBehaviour";
-		}
 		
-		
-    	public override string BehaviourType { 
-			get { return behaviourType; }
-		}
-    	
 		
 		public override Nwn2Type Nwn2Type {
 			get {

@@ -33,12 +33,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public abstract class Nwn2StatementBehaviour : StatementBehaviour
 	{
-		protected Nwn2Fitters fitters;
+		protected static Nwn2Fitters fitters;
 		
 		
-		public Nwn2StatementBehaviour(Nwn2Fitters fitters)
+		public static Nwn2Fitters Fitters {
+			get { return fitters; }
+			set { fitters = value; }
+		}
+		
+		
+		static Nwn2StatementBehaviour()
 		{
-			this.fitters = fitters;
+			fitters = new Nwn2Fitters();
+		}
+		
+		
+		public Nwn2StatementBehaviour()
+		{
 		}
 	}
 }

@@ -34,7 +34,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Get the amount of gold possessed by oTarget.
 		// int GetGold(object oTarget=OBJECT_SELF);
 				
-		public HasGold(Nwn2Fitters fitters) : base(fitters)
+		public HasGold()
 		{
 			statementType = StatementType.Condition;
 			parameterCount = 2;
@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new HasGold(fitters);
+			return new HasGold();
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// bState = TRUE to pause, FALSE to unpause
 		// void SetPause( int bState );		
 		
-		public Unpause(Nwn2Fitters fitters) : base(fitters)
+		public Unpause()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 0;
@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new Unpause(fitters);
+			return new Unpause();
 		}
 	}
 }

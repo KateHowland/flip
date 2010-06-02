@@ -33,7 +33,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{	
 		// if (GetItemPossessor(object oItem) == oCreature)
 		
-		public OwnsItem(Nwn2Fitters fitters) : base(fitters)
+		public OwnsItem()
 		{
 			statementType = StatementType.Condition;
 			parameterCount = 2;
@@ -68,7 +68,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new OwnsItem(fitters);
+			return new OwnsItem();
 		}
 	}
 }

@@ -62,15 +62,6 @@ namespace Sussex.Flip.UI
 		public abstract string GetCode(params string[] args);
 		public abstract string GetNaturalLanguage(params string[] args);
 		public abstract StatementBehaviour DeepCopy();
-    	
-		
-		// TODO:
-		//public abstract string BehaviourType { get; };
-		public string BehaviourType { 
-			get { 
-				return "Sussex.Flip.Games.NeverwinterNightsTwo.EndGame"; 
-			}
-		}
 		
 			
 		// TODO:

@@ -35,7 +35,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Jump to an object ID, or as near to it as possible.
 		// void ActionJumpToObject(object oToJumpTo, int bWalkStraightLineToPoint=TRUE);
 		
-		public JumpsTo(Nwn2Fitters fitters) : base(fitters)
+		public JumpsTo()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new JumpsTo(fitters);
+			return new JumpsTo();
 		}
 	}
 }

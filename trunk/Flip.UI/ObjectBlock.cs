@@ -182,7 +182,7 @@ namespace Sussex.Flip.UI
 			}
 			
 			writer.WriteStartElement("Behaviour");
-			writer.WriteAttributeString("Type",Behaviour.BehaviourType);
+			writer.WriteAttributeString("Type",Behaviour.GetType().FullName);
 			Behaviour.WriteXml(writer);
 			writer.WriteEndElement();
 		}

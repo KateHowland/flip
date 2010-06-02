@@ -34,7 +34,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// * Returns TRUE if oCreature is a dead NPC, dead PC or a dying PC.
 		// int GetIsDead(object oCreature, int bIgnoreDying=FALSE);
 		
-		public IsDead(Nwn2Fitters fitters) : base(fitters)
+		public IsDead()
 		{
 			statementType = StatementType.Condition;
 			parameterCount = 1;
@@ -68,7 +68,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new IsDead(fitters);
+			return new IsDead();
 		}
 	}
 }

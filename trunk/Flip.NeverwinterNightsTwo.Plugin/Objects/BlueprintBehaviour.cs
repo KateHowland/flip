@@ -41,20 +41,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		protected string baseResRef;	
 		protected string iconName;
 		protected Nwn2Type type;
-		protected static string behaviourType;
 			
-			
-		static BlueprintBehaviour()
-		{
-			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.BlueprintBehaviour";
-		}
-		
-		
-    	public override string BehaviourType { 
-			get { return behaviourType; }
-		}
-		
-		
+					
 		public string ResRef {
 			get { return Identifier; }
 			set { Identifier = value; }

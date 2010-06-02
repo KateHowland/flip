@@ -42,7 +42,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// notes - returns 0 if there is no room in party to add henchman, though this is not technically an error
 		// int HenchmanAdd(object oMaster, object oHench, int bForce=0, int bOverrideBehavior=0)
 		
-		public MakeHenchman(Nwn2Fitters fitters) : base(fitters)
+		public MakeHenchman()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -79,7 +79,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new MakeHenchman(fitters);
+			return new MakeHenchman();
 		}
 	}
 }

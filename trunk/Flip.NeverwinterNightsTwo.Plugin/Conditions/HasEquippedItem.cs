@@ -34,7 +34,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Requires flip_functions.ncs
 		// int CreatureHasItemEquipped(object oCreature, object oItem)
 				
-		public HasEquippedItem(Nwn2Fitters fitters) : base(fitters)
+		public HasEquippedItem()
 		{
 			statementType = StatementType.Condition;
 			parameterCount = 2;
@@ -69,7 +69,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new HasEquippedItem(fitters);
+			return new HasEquippedItem();
 		}
 	}
 }
