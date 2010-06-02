@@ -271,7 +271,53 @@ namespace Sussex.Flip.UI
 						
 			Behaviour = (StatementBehaviour)SerialisationHelper.GetObjectFromXml(reader);
 			
-			reader.ReadEndElement();
+			reader.MoveToContent();
+			
+			if (reader.LocalName != "Slots") throw new FormatException("Statement does not specify Slots, and could not be deserialised.");
+				
+			bool collectionIsEmpty = reader.IsEmptyElement;			
+			reader.ReadStartElement();
+			
+			if (!collectionIsEmpty) {
+				
+				List<BlockSlot> slots = GetSlots();
+				
+				reader.MoveToContent();
+				
+				while (reader.LocalName == "Slot") {
+					
+					bool slotIsEmpty = reader.IsEmptyElement;
+					
+					BlockSlot slot;
+					int index;
+					try {
+						index = int.Parse(reader.GetAttribute("Index"));
+						slot = slots[index];
+					}
+					catch (Exception e) {
+						throw new FormatException("Slot did not define a valid Index value.",e);
+					}
+						
+					reader.ReadStartElement();
+					
+					if (!slotIsEmpty) {
+						reader.MoveToContent();			
+						
+						ObjectBlock block = new ObjectBlock();
+						block.ReadXml(reader);
+						slot.Contents = block;
+						
+						reader.ReadEndElement();							
+					}
+					
+					reader.MoveToContent();
+				}
+			
+				reader.ReadEndElement(); // </Slots>
+				reader.MoveToContent();
+			}	
+			
+			reader.ReadEndElement(); // </Statement>
 		}
 		
 		
@@ -284,6 +330,25 @@ namespace Sussex.Flip.UI
 			writer.WriteStartElement("Behaviour");
 			writer.WriteAttributeString("Type",behaviour.GetType().FullName);
 			behaviour.WriteXml(writer);
+			writer.WriteEndElement();
+			
+			writer.WriteStartElement("Slots");
+			
+			List<BlockSlot> slots = GetSlots();
+			
+			foreach (BlockSlot slot in slots) {
+				writer.WriteStartElement("Slot");
+				writer.WriteAttributeString("Index",slots.IndexOf(slot).ToString());
+				
+				if (slot.Contents != null) {
+					writer.WriteStartElement("Block");
+					slot.Contents.WriteXml(writer);
+					writer.WriteEndElement();
+				}
+				
+				writer.WriteEndElement();
+			}
+			
 			writer.WriteEndElement();
 		}
     }
