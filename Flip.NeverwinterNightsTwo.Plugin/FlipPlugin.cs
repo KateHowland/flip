@@ -37,6 +37,7 @@ using NWN2Toolset.Plugins;
 using Sussex.Flip.Core;
 using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -270,14 +271,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			triggers = new Nwn2TriggerFactory(fitters);
 			
-			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);
-			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
+			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);	
+			Nwn2ImageProvider images = new Nwn2ImageProvider(new NarrativeThreadsHelper());
+			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory(images);
 				
 			ToolsetEventReporter reporter = new ToolsetEventReporter();
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(attacher,provider);		
+			window = new FlipWindow(attacher,provider,images);		
 			
 			// HACK:
 			// TODO:

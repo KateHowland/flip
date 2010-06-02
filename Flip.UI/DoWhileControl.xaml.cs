@@ -136,5 +136,14 @@ namespace Sussex.Flip.UI
 			
 			return String.Format("this happens: {0}... and then keeps happening until {1}",doText,whileText);
 		}
+		
+		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			
+			if (Condition != null) Condition.AssignImage(imageProvider);
+			if (Consequences != null) Consequences.AssignImage(imageProvider);
+		}
     }
 }

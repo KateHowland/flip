@@ -43,14 +43,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class Nwn2ObjectBlockFactory
 	{	
-		protected NarrativeThreadsHelper nt;
+		protected Nwn2ImageProvider images;
+		
+		
+		public Nwn2ImageProvider ImageProvider {
+			get { return images; }
+		}
+		
 		
 		public Nwn2ObjectBlockFactory()
 		{
-			nt = new NarrativeThreadsHelper();
+			images = new Nwn2ImageProvider(new NarrativeThreadsHelper());
 		}
 		
-		#region Blocks
+		
+		public Nwn2ObjectBlockFactory(Nwn2ImageProvider images)
+		{
+			this.images = images;
+		}
+		
 		
 		/// <summary>
 		/// Creates an ObjectBlock representing the player.
@@ -58,9 +69,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns>An ObjectBlock representing the player.</returns>
 		public ObjectBlock CreatePlayerBlock()
 		{
-			Image image = GetImage("Other","Player");
-			if (image == null) image = GetImage("Placeholder","Default");
-			
+			Image image = images.GetModuleImage();
 			return new ObjectBlock(image,new PlayerBehaviour());
 		}
 		
@@ -71,9 +80,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns>An ObjectBlock representing the module.</returns>
 		public ObjectBlock CreateModuleBlock()
 		{
-			Image image = GetImage("Other","Module");
-			if (image == null) image = GetImage("Placeholder","Default");
-			
+			Image image = images.GetPlayerImage();			
 			return new ObjectBlock(image,new ModuleBehaviour());
 		}
 		
@@ -119,12 +126,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (area == null) throw new ArgumentNullException("area");
 			
-			Image image;
-			if (area.IsExterior) image = GetImage("Other","Area_Exterior");
-			else image = GetImage("Other","Area_Interior");
-						
-			if (image == null) image = GetImage("Placeholder","Default");
-		
+			Image image = images.GetImage(area);
 			ObjectBlock block = new ObjectBlock(image,area);
 						
 			return block;
@@ -171,43 +173,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public ObjectBlock CreateBlueprintBlock(BlueprintBehaviour behaviour)
 		{
 			if (behaviour == null) throw new ArgumentNullException("behaviour");
-						
-			string objectType = behaviour.Nwn2Type.ToString();
 			
-			Image image;
-			
-			// First, try to get a Narrative Threads user-created image:
-			if (nt.CreatedByNarrativeThreads(behaviour) && nt.HasImage(behaviour.ResRef)) {
-				image = nt.GetImageForResRef(behaviour.ResRef);		
-			}
-			
-			// Or if this has an icon, use that:
-			else if (!String.IsNullOrEmpty(behaviour.IconName)) {
-				image = GetIconImage(behaviour.IconName);
-			}
-			
-			// Otherwise, try to get an image representing this blueprint:
-			else {	
-				image = GetImage(objectType,behaviour.ResRef);
-			}
-			
-			// Failing that, try to retrieve an image of the blueprint it derives from:
-			if (image == null) {
-				image = GetImage(objectType,behaviour.BaseResRef);
-			}
-			
-			// If neither is available, use a placeholder image:
-			if (image == null) {
-				if (behaviour.Nwn2Type == Nwn2Type.Item) {
-					image = GetImage("Placeholder","Item");
-				}
-				else if (behaviour.Nwn2Type == Nwn2Type.Waypoint) {
-					image = GetImage("Placeholder","Waypoint");
-				}
-				else {
-					image = GetImage("Placeholder","Blueprint");
-				}
-			}
+			Image image = images.GetImage(behaviour);
 				
 			return new ObjectBlock(image,behaviour);
 		}
@@ -284,37 +251,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{						
 			if (behaviour == null) throw new ArgumentNullException("behaviour");
 			
-			string objectType = behaviour.Nwn2Type.ToString();
-			
-			Image image;
-			
-			// First, try to get a Narrative Threads user-created image:
-			if (nt.CreatedByNarrativeThreads(behaviour) && nt.HasImage(behaviour.ResRef)) {
-				image = nt.GetImageForResRef(behaviour.ResRef);		
-			}
-						
-			// Or if this has an icon, use that:
-			else if (!String.IsNullOrEmpty(behaviour.IconName)) {
-				image = GetIconImage(behaviour.IconName);
-			}
-			
-			// Otherwise, try to get a generic image representing this instance's template:
-			else {	
-				image = GetImage(objectType,behaviour.ResRef);
-			}
-			
-			// If neither is available, use a placeholder image:
-			if (image == null) {
-				if (behaviour.Nwn2Type == Nwn2Type.Item) {
-					image = GetImage("Placeholder","Item");
-				}
-				else if (behaviour.Nwn2Type == Nwn2Type.Waypoint) {
-					image = GetImage("Placeholder","Waypoint");
-				}
-				else {
-					image = GetImage("Placeholder","Instance");
-				}
-			}
+			Image image = images.GetImage(behaviour);
 			
 			return new ObjectBlock(image,behaviour);
 		}
@@ -441,129 +378,5 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (displayName != null) return displayName;
 			else return String.Empty;
 		}
-		
-		#endregion
-		
-		#region Images
-		
-		/// <summary>
-		/// Gets an Image from an image file at the given path.
-		/// </summary>
-		/// <param name="path">The path to locate an image.</param>
-		/// <returns>An Image, or null if an exception was raised.</returns>
-		protected Image GetImage(string path)
-		{			
-			if (path == null) throw new ArgumentNullException("path");
-			if (!System.IO.File.Exists(path)) return null;
-			
-			try {
-				Image image = new Image();
-				Uri uri = new Uri(path);
-				BitmapImage bmp = new BitmapImage(uri);
-				image.Source = bmp;
-				return image;
-			}
-			catch (Exception) {
-				return null;
-			}
-		}
-		
-		
-		/// <summary>
-		/// Gets an image representing a particular Neverwinter Nights 2
-		/// entity, of a given name and type.
-		/// </summary>
-		/// <param name="type">The type of entity to get an image of. Examples
-		/// include 'Creature', 'Door', 'Placeholder' and 'Other'.</param>
-		/// <param name="name">The name of the specific entity of the given
-		/// type to get an image of. Usually the tag of an instance or the
-		/// ResRef of a blueprint.</param>
-		/// <returns>An Image, or null if an exception was raised.</returns>
-		protected Image GetImage(string type, string name)
-		{
-			name = GetSimilar(type,name);
-			
-			// TODO:
-			// We should ultimately be using a .dll collection
-			// of image resources.
-			string pathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
-			string path = String.Format(pathFormat,type,name);
-			return GetImage(path);
-		}
-		
-		
-		protected Image GetIconImage(string icon)
-		{
-			if (icon == null) throw new ArgumentNullException("icon");
-			if (icon == String.Empty) throw new ArgumentException("Must provide an icon name.","icon");
-			
-			// TODO:
-			// We should ultimately be using a .dll collection
-			// of image resources.
-			string pathFormat = @"C:\Flip\object pics\bmp icons\{0}.bmp";
-			string path = String.Format(pathFormat,icon);
-			Image image = GetImage(path);
-			
-			return image;
-		}
-		
-		
-		protected string GetSimilar(string type, string name)
-		{
-			if (type == "Creature") {
-				if (name.StartsWith("c_elmwater")) return "c_elmwater";
-				if (name.StartsWith("c_elmfire")) return "c_elmfire";
-				if (name.StartsWith("c_elmearth")) return "c_elmearth";
-				if (name.StartsWith("c_elmair")) return "c_elmair";
-				
-				if (name.StartsWith("c_ancom_badger")) return "c_badger";
-				if (name.StartsWith("c_ancom_bear")) return "c_bear";
-				if (name.StartsWith("c_ancom_boar")) return "c_boar";
-				if (name.StartsWith("c_ancom_spider")) return "c_spider";
-				if (name.StartsWith("c_ancom_wolf")) return "c_wolf";
-				
-				if (name.StartsWith("c_fam_bat")) return "c_bat";
-				if (name.StartsWith("c_fam_beetle")) return "c_beetle";
-				if (name.StartsWith("c_fam_cat")) return "c_cat";
-				if (name.StartsWith("c_fam_pig")) return "c_pig";
-				if (name.StartsWith("c_fam_rabbit")) return "c_rabbit";
-				if (name.StartsWith("c_fam_rat")) return "c_rat";
-				if (name.StartsWith("c_fam_spider")) return "c_spider";
-				if (name.StartsWith("c_fam_weasel")) return "c_weasel";
-				
-				if (name.StartsWith("c_beetlestag")) return "c_beetle";
-				if (name.StartsWith("c_faction_pig")) return "c_pig";
-				
-				if (name.StartsWith("c_dogwolf")) return "c_wolf";
-				if (name.StartsWith("n_wolf")) return "c_wolf";
-				if (name.StartsWith("c_beardire")) return "c_direbear";
-				if (name.StartsWith("c_boardire")) return "c_boar";
-				
-				if (name.StartsWith("c_lizman")) return "c_lizman";
-				if (name.StartsWith("c_summ_balor")) return "c_balor";
-				if (name.StartsWith("c_orc")) return "c_orc";
-				if (name.StartsWith("c_summ_imp")) return "c_imp";
-				if (name.StartsWith("c_fiendrat")) return "c_fiendrat";
-				if (name.StartsWith("c_ratdire")) return "c_fiendrat";
-			}
-			
-			else if (type == "Door") {
-				return "plc_dt_doorsc2";
-			}		
-			
-			else if (type == "Placeholder") {
-				if (name == "Instance") return "ia_sacredvengeance";
-				if (name == "Blueprint") return "ia_sacredvengeance";
-			}
-			
-			else if (type == "Other") {
-				if (name == "Player") return "ig_hu_redknight";
-				if (name == "Module") return "ig_hu_grumbar";
-			}
-			
-			return name;
-		}
-		
-		#endregion
 	}
 }

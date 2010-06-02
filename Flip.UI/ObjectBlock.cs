@@ -154,6 +154,14 @@ namespace Sussex.Flip.UI
 			return other != null && other.Behaviour.Equals(this.Behaviour);
 		}		
 		
+		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			
+			imageProvider.AssignImage(this);
+		}
+		
 			
 		public override XmlSchema GetSchema()
 		{

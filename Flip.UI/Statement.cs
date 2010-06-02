@@ -252,6 +252,16 @@ namespace Sussex.Flip.UI
 			}
 			
 			return behaviour.GetNaturalLanguage(args);
+		}	
+		
+		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			
+			foreach (BlockSlot slot in GetSlots()) {
+				if (slot.Contents != null) slot.Contents.AssignImage(imageProvider);
+			}
 		}
 			
 		

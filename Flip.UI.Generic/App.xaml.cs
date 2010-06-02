@@ -7,6 +7,7 @@ using System.Xml;
 using Sussex.Flip.Core;
 using Sussex.Flip.UI;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 
 namespace Sussex.Flip.UI.Generic
 {
@@ -22,12 +23,13 @@ namespace Sussex.Flip.UI.Generic
 			
 			Nwn2Fitters fitters = new Nwn2Fitters();
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);	
-			Nwn2TriggerFactory triggers = new Nwn2TriggerFactory(fitters);		
-			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory();
+			Nwn2TriggerFactory triggers = new Nwn2TriggerFactory(fitters);	
+			Nwn2ImageProvider images = new Nwn2ImageProvider(new NarrativeThreadsHelper());
+			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory(images);
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers);
 			
-			FlipWindow window = new FlipWindow(attacher,provider);
+			FlipWindow window = new FlipWindow(attacher,provider,images);
 			
 			// HACK:
 			// TODO:

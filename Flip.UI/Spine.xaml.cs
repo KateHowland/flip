@@ -361,6 +361,16 @@ namespace Sussex.Flip.UI
 			}
 		}
 		
+		
+		public void AssignImage(ImageProvider imageProvider)
+		{
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			
+			foreach (Peg peg in Pegs) {
+				if (peg.Slot.Contents != null) peg.Slot.Contents.AssignImage(imageProvider);
+			}
+		}
+		
     	
 		public XmlSchema GetSchema()
 		{

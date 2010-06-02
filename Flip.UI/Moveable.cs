@@ -119,6 +119,9 @@ namespace Sussex.Flip.UI
     	}
     	
     	
+    	public abstract void AssignImage(ImageProvider imageProvider);
+    	
+    	
     	protected void WriteCoordinates(XmlWriter writer)
     	{
 			if (writer == null) throw new ArgumentNullException("writer");

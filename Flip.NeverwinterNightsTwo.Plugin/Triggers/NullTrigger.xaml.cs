@@ -55,6 +55,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+		}
+		
+		
 		public override XmlSchema GetSchema()
 		{
 			return null;

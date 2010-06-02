@@ -108,7 +108,12 @@ namespace Sussex.Flip.UI
 		public bool Equals(StringBlock other)
 		{
 			return other != null && other.Value == Value;
-		}		
+		}			
+		
+		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+		}	
 		
 			
 		public override XmlSchema GetSchema()
