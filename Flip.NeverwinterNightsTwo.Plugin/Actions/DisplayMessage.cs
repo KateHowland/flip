@@ -56,7 +56,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//void DisplayMessageBox( object oPC, int nMessageStrRef..................
 		
 		
-		public DisplayMessage(Nwn2Fitters fitters) : base(fitters)
+		public DisplayMessage()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -91,7 +91,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new DisplayMessage(fitters);
+			return new DisplayMessage();
 		}
 	}
 }

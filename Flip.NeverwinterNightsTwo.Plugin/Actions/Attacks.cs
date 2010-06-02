@@ -37,7 +37,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// - bPassive: If this is TRUE, attack is in passive mode.
 		// void ActionAttack(object oAttackee, int bPassive=FALSE);
 		
-		public Attacks(Nwn2Fitters fitters) : base(fitters)
+		public Attacks()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -113,7 +113,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new Attacks(fitters);
+			return new Attacks();
 		}
 	}
 }

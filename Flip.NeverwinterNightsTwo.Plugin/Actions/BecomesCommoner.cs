@@ -47,7 +47,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//int STANDARD_FACTION_MERCHANT = 2;
 		//int STANDARD_FACTION_DEFENDER = 3;
 		
-		public BecomesCommoner(Nwn2Fitters fitters) : base(fitters)
+		public BecomesCommoner()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -84,7 +84,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new BecomesCommoner(fitters);
+			return new BecomesCommoner();
 		}
 	}
 }

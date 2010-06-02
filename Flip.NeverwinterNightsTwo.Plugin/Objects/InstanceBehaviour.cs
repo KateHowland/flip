@@ -42,18 +42,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		protected string iconName;
 		protected Nwn2Type type;		
 		protected string areaTag;
-		protected static string behaviourType;
-			
-			
-		static InstanceBehaviour()
-		{
-			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour";
-		}
-		
-		
-    	public override string BehaviourType { 
-			get { return behaviourType; }
-		}
 		
 		
 		public override Nwn2Type Nwn2Type {

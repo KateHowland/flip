@@ -35,7 +35,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Set the locked state of oTarget, which can be a door or a placeable object.
 		// void SetLocked(object oTarget, int bLocked);
 
-		public Unlock(Nwn2Fitters fitters) : base(fitters)
+		public Unlock()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -69,7 +69,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new Unlock(fitters);
+			return new Unlock();
 		}
 	}
 }

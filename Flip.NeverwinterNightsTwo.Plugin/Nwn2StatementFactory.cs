@@ -92,197 +92,199 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			return statements;
 		}
 		
+		#endregion
+		
 		#region Actions
 		
 		public Statement Attacks()
 		{
-			return new Statement(new Attacks(fitters));
+			return new Statement(new Attacks());
 		}
 		
 		
 		public Statement PicksUp()
 		{
-			return new Statement(new PicksUp(fitters));
+			return new Statement(new PicksUp());
 		}
 		
 		
 		public Statement DisplayMessage()
 		{
-			return new Statement(new DisplayMessage(fitters));
+			return new Statement(new DisplayMessage());
 		}
 		
 		
 		public Statement GiveGold()
 		{
-			return new Statement(new GiveGold(fitters));
+			return new Statement(new GiveGold());
 		}		
 		
 		
 		public Statement TakeGold()
 		{
-			return new Statement(new TakeGold(fitters));
+			return new Statement(new TakeGold());
 		}
 		
 		
 		public Statement GiveXP()
 		{
-			return new Statement(new GiveXP(fitters));
+			return new Statement(new GiveXP());
 		}
 		
 		
 		public Statement Lock()
 		{
-			return new Statement(new Lock(fitters));
+			return new Statement(new Lock());
 		}
 		
 		
 		public Statement Unlock()
 		{
-			return new Statement(new Unlock(fitters));
+			return new Statement(new Unlock());
 		}
 		
 		
 		public Statement EndGame()
 		{
-			return new Statement(new EndGame(fitters));
+			return new Statement(new EndGame());
 		}
 		
 		
 		public Statement JumpsTo()
 		{
-			return new Statement(new JumpsTo(fitters));
+			return new Statement(new JumpsTo());
 		}
 		
 		
 		public Statement WalksTo()
 		{
-			return new Statement(new WalksTo(fitters));
+			return new Statement(new WalksTo());
 		}
 		
 		
 		public Statement RunsTo()
 		{
-			return new Statement(new RunsTo(fitters));
+			return new Statement(new RunsTo());
 		}
 		
 		
 		public Statement OpenStore()
 		{
-			return new Statement(new OpenStore(fitters));
+			return new Statement(new OpenStore());
 		}
 		
 		
 		public Statement IsDead()
 		{
-			return new Statement(new IsDead(fitters));
+			return new Statement(new IsDead());
 		}
 		
 		
 		public Statement OwnsItem()
 		{
-			return new Statement(new OwnsItem(fitters));
+			return new Statement(new OwnsItem());
 		}
 		
 		
 		public Statement BecomesCommoner()
 		{
-			return new Statement(new BecomesCommoner(fitters));
+			return new Statement(new BecomesCommoner());
 		}
 		
 		
 		public Statement BecomesDefender()
 		{
-			return new Statement(new BecomesDefender(fitters));
+			return new Statement(new BecomesDefender());
 		}
 		
 		
 		public Statement BecomesHostile()
 		{
-			return new Statement(new BecomesHostile(fitters));
+			return new Statement(new BecomesHostile());
 		}
 		
 		
 		public Statement MakeHenchman()
 		{
-			return new Statement(new MakeHenchman(fitters));
+			return new Statement(new MakeHenchman());
 		}
 		
 		
 		public Statement UnmakeHenchman()
 		{
-			return new Statement(new UnmakeHenchman(fitters));
+			return new Statement(new UnmakeHenchman());
 		}
 		
 		
 		public Statement Kill()
 		{
-			return new Statement(new Kill(fitters));
+			return new Statement(new Kill());
 		}
 		
 		
 		public Statement Heal()
 		{
-			return new Statement(new Heal(fitters));
+			return new Statement(new Heal());
 		}
 		
 		
 		public Statement Pause()
 		{
-			return new Statement(new Pause(fitters));
+			return new Statement(new Pause());
 		}
 		
 		
 		public Statement Unpause()
 		{
-			return new Statement(new Unpause(fitters));
+			return new Statement(new Unpause());
 		}
 		
 		
 		public Statement SetTimeToNoon()
 		{
-			return new Statement(new SetTimeToNoon(fitters));
+			return new Statement(new SetTimeToNoon());
 		}
 		
 		
 		public Statement SetTimeToMidnight()
 		{
-			return new Statement(new SetTimeToMidnight(fitters));
+			return new Statement(new SetTimeToMidnight());
 		}
 		
 		
 		public Statement SetTimeToSunrise()
 		{
-			return new Statement(new SetTimeToSunrise(fitters));
+			return new Statement(new SetTimeToSunrise());
 		}
 		
 		
 		public Statement SetTimeToSunset()
 		{
-			return new Statement(new SetTimeToSunset(fitters));
+			return new Statement(new SetTimeToSunset());
 		}
 		
 		
 		public Statement Delete()
 		{
-			return new Statement(new Delete(fitters));
+			return new Statement(new Delete());
 		}
 		
 		
 		public Statement AreaTransition()
 		{
-			return new Statement(new AreaTransition(fitters));
+			return new Statement(new AreaTransition());
 		}
 		
 		
 		public Statement HasGold()
 		{
-			return new Statement(new HasGold(fitters));
+			return new Statement(new HasGold());
 		}
 		
 		
 		public Statement IsNear()
 		{
-			return new Statement(new IsNear(fitters));
+			return new Statement(new IsNear());
 		}
 		
 		
@@ -296,87 +298,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// be appended to the start of the file.
 //		public Statement HasEquippedItem()
 //		{
-//			return new Statement(new HasEquippedItem(fitters));
-//		}
+//			return new Statement(new HasEquippedItem());
+//		}		
 		
 		
-		
-		#endregion
-		
-		#region Conditions
-		
-//		[ConditionStatement("Is dead")]
-//		public Statement IsDead()
-//		{			
-//			Statement statement = new ConditionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("is dead");
-//			return statement;
-//		}
-//		
-//		
-//		[ConditionStatement("Is alive")]
-//		public Statement IsAlive()
-//		{			
-//			Statement statement = new ConditionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("is alive");
-//			return statement;
-//		}
-//		
-//		
-//		[ConditionStatement("Is carrying")]
-//		public Statement IsCarrying()
-//		{			
-//			Statement statement = new ConditionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("creature1",fitters.OnlyCreaturesOrPlayers));
-//			statement.AddLabel("is carrying");
-//			statement.AddParameter(new ObjectBlockSlot("item1",fitters.OnlyItems));
-//			return statement;
-//		}
-//		
-//		
-//		[ConditionStatement("Is open")]
-//		public Statement IsOpen()
-//		{			
-//			Statement statement = new ConditionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("is open");
-//			return statement;
-//		}
-//		
-//		
-//		[ConditionStatement("Is closed")]
-//		public Statement IsClosed()
-//		{			
-//			Statement statement = new ConditionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("is closed");
-//			return statement;
-//		}
-//		
-//		
-//		[ConditionStatement("Is locked")]
-//		public Statement IsLocked()
-//		{			
-//			Statement statement = new ConditionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("is locked");
-//			return statement;
-//		}
-//		
-//		
-//		[ConditionStatement("Is unlocked")]
-//		public Statement IsUnlocked()
-//		{			
-//			Statement statement = new ConditionStatement();
-//			statement.AddParameter(new ObjectBlockSlot("door1",fitters.OnlyDoorsOrPlaceables));
-//			statement.AddLabel("is unlocked");
-//			return statement;
-//		}
-		
-		#endregion
-	
 		#endregion
 	}
 }

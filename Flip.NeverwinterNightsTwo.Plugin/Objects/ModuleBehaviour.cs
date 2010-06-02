@@ -37,22 +37,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class ModuleBehaviour : Nwn2ObjectBehaviour
 	{
-		protected static string behaviourType;
-			
-			
-		static ModuleBehaviour()
-		{
-			behaviourType = "Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.ModuleBehaviour";
-		}
-		
-		
 		public ModuleBehaviour() : base(String.Empty,"module")
 		{						
-		}
-		
-		
-    	public override string BehaviourType { 
-			get { return behaviourType; }
 		}
 		
 		

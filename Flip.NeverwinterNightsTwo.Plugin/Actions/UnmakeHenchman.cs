@@ -41,7 +41,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//		1 on success, 0 on failure
 		// int HenchmanRemove(object oMaster, object oHench)
 		
-		public UnmakeHenchman(Nwn2Fitters fitters) : base(fitters)
+		public UnmakeHenchman()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -76,7 +76,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new UnmakeHenchman(fitters);
+			return new UnmakeHenchman();
 		}
 	}
 }

@@ -35,7 +35,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Force the action subject to move to oMoveTo.
 		// void ActionForceMoveToObject(object oMoveTo, int bRun=FALSE, float fRange=1.0f, float fTimeout=30.0f);
 		
-		public WalksTo(Nwn2Fitters fitters) : base(fitters)
+		public WalksTo()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -70,7 +70,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new WalksTo(fitters);
+			return new WalksTo();
 		}
 	}
 }

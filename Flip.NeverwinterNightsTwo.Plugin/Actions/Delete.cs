@@ -47,7 +47,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//  be notified of the item being destroyed.
 		// void DestroyObject(object oDestroy, float fDelay=0.0f, int nDisplayFeedback=TRUE);
 		
-		public Delete(Nwn2Fitters fitters) : base(fitters)
+		public Delete() : base()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -81,7 +81,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new Delete(fitters);
+			return new Delete();
 		}
 	}
 }

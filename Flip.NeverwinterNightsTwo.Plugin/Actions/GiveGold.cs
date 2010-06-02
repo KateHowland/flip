@@ -38,7 +38,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//void GiveGoldToCreature(object oCreature, int nGP, int bDisplayFeedback=TRUE );
 		
 		
-		public GiveGold(Nwn2Fitters fitters) : base(fitters)
+		public GiveGold()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -77,7 +77,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new GiveGold(fitters);
+			return new GiveGold();
 		}
 	}
 }

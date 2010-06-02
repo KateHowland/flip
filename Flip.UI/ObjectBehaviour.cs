@@ -56,9 +56,6 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-    	public abstract string BehaviourType { get; }
-    	
-    	
     	static ObjectBehaviour()
     	{
     		IdentifierProperty = DependencyProperty.Register("Identifier",typeof(string),typeof(ObjectBehaviour));
@@ -110,13 +107,6 @@ namespace Sussex.Flip.UI
 				DisplayName = reader["DisplayName"];
 				reader.ReadEndElement();
 			}
-			
-			// old:
-//			if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "ObjectBehaviour") {
-//				Identifier = reader["Identifier"];
-//				DisplayName = reader["DisplayName"];				
-//				reader.Read();
-//			}
 		}
 		
 		

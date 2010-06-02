@@ -29,20 +29,6 @@ namespace Sussex.Flip.UI
 {
 	public class DefaultObjectBehaviour : ObjectBehaviour
 	{
-		protected static string behaviourType;
-			
-			
-		static DefaultObjectBehaviour()
-		{
-			behaviourType = "Sussex.Flip.UI.DefaultObjectBehaviour";
-		}
-		
-		
-    	public override string BehaviourType { 
-			get { return behaviourType; }
-		}
-    	
-    	
 		public override string GetCode()
 		{
 			return String.Empty;			

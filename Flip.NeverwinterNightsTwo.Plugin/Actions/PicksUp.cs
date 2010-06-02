@@ -37,7 +37,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//   "ActionPickUpItem failed."
 		// void ActionPickUpItem(object oItem);
 		
-		public PicksUp(Nwn2Fitters fitters) : base(fitters)
+		public PicksUp()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new PicksUp(fitters);
+			return new PicksUp();
 		}
 	}
 }

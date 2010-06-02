@@ -36,17 +36,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// game's main menu.
 		// void EndGame(string sEndMovie);
 		
-		/// <summary>
-		/// HACK:
-		/// Temp constructor for deserialising. 
-		/// </summary>
-		public EndGame() : this(new Nwn2Fitters())
-		{
-			
-		}
 		
-		
-		public EndGame(Nwn2Fitters fitters) : base(fitters)
+		public EndGame()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 0;
@@ -80,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new EndGame(fitters);
+			return new EndGame();
 		}
 	}
 }

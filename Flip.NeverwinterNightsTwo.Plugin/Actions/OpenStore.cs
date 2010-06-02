@@ -39,7 +39,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// - nBonusMarkDown is added to the stores default mark down percentage on items bought (-100 to 100)
 		// void OpenStore(object oStore, object oPC, int nBonusMarkUp=0, int nBonusMarkDown=0);
 		
-		public OpenStore(Nwn2Fitters fitters) : base(fitters)
+		public OpenStore()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -78,7 +78,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new OpenStore(fitters);
+			return new OpenStore();
 		}
 	}
 }

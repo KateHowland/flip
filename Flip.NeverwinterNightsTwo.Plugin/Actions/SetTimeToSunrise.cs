@@ -49,7 +49,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//    and the time being set to 18 hours, 10 minutes, 10 milliseconds.
 		// void SetTime(int nHour,int nMinute,int nSecond,int nMillisecond);
 		
-		public SetTimeToSunrise(Nwn2Fitters fitters) : base(fitters)
+		public SetTimeToSunrise()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 0;
@@ -82,7 +82,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new SetTimeToSunrise(fitters);
+			return new SetTimeToSunrise();
 		}
 	}
 }

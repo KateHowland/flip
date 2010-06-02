@@ -51,7 +51,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//                  effect on the dead body.
 		// effect EffectDeath(int nSpectacularDeath=FALSE, int nDisplayFeedback=TRUE, int nIgnoreDeathImmunity=FALSE, int bPurgeEffects=TRUE);
 		
-		public Kill(Nwn2Fitters fitters) : base(fitters)
+		public Kill()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -85,7 +85,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new Kill(fitters);
+			return new Kill();
 		}
 	}
 }

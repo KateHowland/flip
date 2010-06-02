@@ -38,7 +38,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Note that any Placeable seems to be lockable with this script, regardless of
 		// whether it is set to Lockable in its properties (or is naturally Lockable).
 
-		public Lock(Nwn2Fitters fitters) : base(fitters)
+		public Lock()
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new Lock(fitters);
+			return new Lock();
 		}
 	}
 }
