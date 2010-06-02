@@ -80,14 +80,6 @@ namespace Sussex.Flip.UI
 			
 			if (!isEmpty) {
 				statementType = (StatementType)Enum.Parse(typeof(StatementType),reader["StatementType"]);
-				
-				int count = int.Parse(reader["ComponentCount"]);
-				components = new List<StatementComponent>(count);
-				
-				for (int i = 0; i < count; i++) {
-					components.Add(new StatementComponent("component " + i));
-				}
-				
 				reader.ReadEndElement();
 			}
 		}
@@ -95,8 +87,7 @@ namespace Sussex.Flip.UI
 		
 		public void WriteXml(XmlWriter writer)
 		{
-			writer.WriteAttributeString("StatementType",StatementType.ToString());
-			writer.WriteAttributeString("ComponentCount",components.Count.ToString());
+			writer.WriteAttributeString("StatementType",StatementType.ToString());			
 		}
 	}
 }
