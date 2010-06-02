@@ -24,6 +24,7 @@ namespace Sussex.Flip.UI
     	public static readonly Size DefaultSize;
     	protected static DependencyProperty ValueProperty;
     	protected TextShorteningConverter converter;
+    	protected int maxLength;
     	
     	
     	public string Value {
@@ -76,6 +77,7 @@ namespace Sussex.Flip.UI
     		Value = value;
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;    		
+    		maxLength = 140;
     	}
         
         
@@ -117,19 +119,30 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			throw new NotImplementedException();
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) throw new FormatException("StringBlock should not have children.");
+			
+			try {
+				Value = reader.GetAttribute("Value");
+			}
+			catch (Exception e) {
+				throw new FormatException("Serialised StringBlock does not define a valid Value.",e);
+			}
+			
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			throw new NotImplementedException();
+			writer.WriteAttributeString("Value",Value);
 		}
 		
 		
 		protected void ChangeValue(object sender, RoutedEventArgs e)
 		{
-			new ChangeStringDialog(this,140).ShowDialog();
+			new ChangeStringDialog(this,maxLength).ShowDialog();
 		}
     }
 }
