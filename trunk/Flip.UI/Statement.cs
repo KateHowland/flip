@@ -303,9 +303,15 @@ namespace Sussex.Flip.UI
 					if (!slotIsEmpty) {
 						reader.MoveToContent();			
 						
-						ObjectBlock block = new ObjectBlock();
-						block.ReadXml(reader);
-						slot.Contents = block;
+						Moveable moveable;
+						
+						if (reader.LocalName == "ObjectBlock") moveable = new ObjectBlock();
+						else if (reader.LocalName == "NumberBlock") moveable = new NumberBlock();
+						else if (reader.LocalName == "StringBlock") moveable = new StringBlock();
+						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
+						
+						moveable.ReadXml(reader);
+						slot.Contents = moveable;
 						
 						reader.ReadEndElement();							
 					}
@@ -341,7 +347,7 @@ namespace Sussex.Flip.UI
 				writer.WriteAttributeString("Index",slots.IndexOf(slot).ToString());
 				
 				if (slot.Contents != null) {
-					writer.WriteStartElement("Block");
+					writer.WriteStartElement(slot.Contents.GetType().Name);
 					slot.Contents.WriteXml(writer);
 					writer.WriteEndElement();
 				}

@@ -165,10 +165,13 @@ namespace Sussex.Flip.UI
 		{
 			reader.MoveToContent();			
 			
-			if (reader.IsEmptyElement || !reader.ReadToDescendant("Behaviour")) {
-				throw new FormatException("ObjectBlock does not specify a Behaviour, and could not be deserialised.");
-			}
-						
+			if (reader.IsEmptyElement) throw new FormatException("ObjectBlock does not specify a Behaviour, and could not be deserialised.");
+			
+			reader.ReadStartElement();
+			reader.MoveToContent();
+			
+			if (reader.LocalName != "Behaviour") throw new FormatException("ObjectBlock does not specify a Behaviour, and could not be deserialised.");
+			
 			Behaviour = (ObjectBehaviour)SerialisationHelper.GetObjectFromXml(reader);
 			
 			reader.ReadEndElement();

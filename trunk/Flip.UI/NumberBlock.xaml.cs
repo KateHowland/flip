@@ -26,6 +26,9 @@ namespace Sussex.Flip.UI
     	protected static DependencyProperty ValueProperty;
     	
     	
+    	protected Int32 min, max;
+    	
+    	
     	public Int32 Value {
     		get {
     			return (Int32)base.GetValue(ValueProperty);
@@ -62,6 +65,9 @@ namespace Sussex.Flip.UI
     		Value = number;
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;
+    		
+    		min = 0;
+    		max = 999;
     	}
         
         
@@ -103,19 +109,30 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			throw new NotImplementedException();
+			reader.MoveToContent();
+			
+			if (!reader.IsEmptyElement) throw new FormatException("NumberBlock should not have children.");
+			
+			try {
+				Value = Int32.Parse(reader.GetAttribute("Value"));
+			}
+			catch (Exception e) {
+				throw new FormatException("Serialised NumberBlock does not define a valid Value.",e);
+			}
+			
+			reader.ReadStartElement();
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			throw new NotImplementedException();
+			writer.WriteAttributeString("Value",Value.ToString());
 		}
 		
 		
 		protected void ChangeValue(object sender, RoutedEventArgs e)
 		{
-			new ChangeNumberDialog(this,0,999).ShowDialog();
+			new ChangeNumberDialog(this,min,max).ShowDialog();
 		}
     }
 }

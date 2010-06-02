@@ -190,6 +190,8 @@ namespace Sussex.Flip.UI
 						
 						if (moveable is ObjectBlock) elementName = "ObjectBlock";
 						else if (moveable is Statement) elementName = "Statement";
+						else if (moveable is NumberBlock) elementName = "NumberBlock";
+						else if (moveable is StringBlock) elementName = "StringBlock";
 						else throw new FormatException("Unknown Moveable type (" + moveable.GetType() + ").");
 						
 						if (moveable != null) {
@@ -248,12 +250,14 @@ namespace Sussex.Flip.UI
 					
 					reader.MoveToContent();
 				
-					while (reader.LocalName == "ObjectBlock" || reader.LocalName == "Statement") {
+					while (reader.LocalName != "Moveables") {
 					
 						Moveable moveable;
 						
 						if (reader.LocalName == "ObjectBlock") moveable = new ObjectBlock();
 						else if (reader.LocalName == "Statement") moveable = new Statement();
+						else if (reader.LocalName == "NumberBlock") moveable = new NumberBlock();
+						else if (reader.LocalName == "StringBlock") moveable = new StringBlock();
 						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
 						
 						moveable.ReadXml(reader);
