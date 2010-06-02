@@ -74,6 +74,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+			if (RaiserBlock != null) RaiserBlock.AssignImage(imageProvider);
+		}
+		
+		
 		public override XmlSchema GetSchema()
 		{
 			return null;

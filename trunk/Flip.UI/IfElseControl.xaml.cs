@@ -182,5 +182,15 @@ namespace Sussex.Flip.UI
 				return String.Format("if {0}, {1}; otherwise, {2}",ifText,thenText,elseText);
 			}
 		}
+		
+		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			
+			if (Condition != null) Condition.AssignImage(imageProvider);
+			if (Consequences != null) Consequences.AssignImage(imageProvider);
+			if (Alternative != null) Alternative.AssignImage(imageProvider);
+		}
     }
 }

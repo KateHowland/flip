@@ -22,15 +22,18 @@ namespace Sussex.Flip.UI
 		protected FlipAttacher attacher;		
 		protected MoveablesPanel blockBox;
 		protected MoveableProvider provider;
+		protected ImageProvider imageProvider;
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider)
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider)
 		{
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
 			
 			this.attacher = attacher;
 			this.provider = provider;
+			this.imageProvider = imageProvider;
 			
 			InitializeComponent();
 			
@@ -260,6 +263,9 @@ namespace Sussex.Flip.UI
 						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
 						
 						moveable.ReadXml(reader);
+						
+						moveable.AssignImage(imageProvider);
+						
 						mainCanvas.Children.Add(moveable);
 						
 						reader.MoveToContent();

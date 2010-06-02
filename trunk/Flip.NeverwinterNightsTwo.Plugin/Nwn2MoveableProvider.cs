@@ -600,6 +600,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				writer.Flush();
 			}
-		}
+		}	
 	}
 }

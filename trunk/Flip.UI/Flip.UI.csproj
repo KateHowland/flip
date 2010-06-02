@@ -76,6 +76,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DefaultStatementBehaviour.cs" />
+    <Compile Include="ImageProvider.cs" />
     <Compile Include="SerialisationHelper.cs" />
     <Compile Include="ChangeNumberDialog.xaml.cs">
       <DependentUpon>ChangeNumberDialog.xaml</DependentUpon>

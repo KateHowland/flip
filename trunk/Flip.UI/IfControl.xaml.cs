@@ -133,5 +133,14 @@ namespace Sussex.Flip.UI
 		{
 			return String.Format("if {0}, {1}",slot.GetNaturalLanguage(),spine.GetNaturalLanguage());
 		}
+		
+		
+		public override void AssignImage(ImageProvider imageProvider)
+		{
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			
+			if (Condition != null) Condition.AssignImage(imageProvider);
+			if (Consequences != null) Consequences.AssignImage(imageProvider);
+		}
     }
 }
