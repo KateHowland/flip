@@ -66,6 +66,13 @@ namespace Sussex.Flip.UI
 			Canvas.SetLeft(this,position.X);
 			Canvas.SetTop(this,position.Y);
 		}
+		
+		
+		public Point Position {
+			get { 
+				return new Point(Canvas.GetLeft(this),Canvas.GetTop(this));
+			}
+		}
     	
     	
 		// HACK:
@@ -110,6 +117,34 @@ namespace Sussex.Flip.UI
     			                                    ", which the application does not know how to detach from.");
     		}
     	}
+    	
+    	
+    	protected void WriteCoordinates(XmlWriter writer)
+    	{
+			if (writer == null) throw new ArgumentNullException("writer");
+			
+			Point p = Position;
+			writer.WriteAttributeString("X",p.X.ToString());
+			writer.WriteAttributeString("Y",p.Y.ToString());
+    	}
+    	
+			
+		protected void ReadCoordinates(XmlReader reader)
+		{
+			if (reader == null) throw new ArgumentNullException("reader");
+			
+			string xStr = reader.GetAttribute("X");
+			string yStr = reader.GetAttribute("Y");
+			
+			try {
+				if (xStr != null && yStr != null) {
+					double x = double.Parse(xStr);
+					double y = double.Parse(yStr);
+					MoveTo(new Point(x,y));
+				}
+			}
+			catch (Exception) { }
+		}
     	
 		
 		public abstract Moveable DeepCopy();

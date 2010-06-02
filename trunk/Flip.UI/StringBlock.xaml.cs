@@ -121,6 +121,8 @@ namespace Sussex.Flip.UI
 		{
 			reader.MoveToContent();
 			
+			ReadCoordinates(reader);
+			
 			if (!reader.IsEmptyElement) throw new FormatException("StringBlock should not have children.");
 			
 			try {
@@ -136,6 +138,7 @@ namespace Sussex.Flip.UI
 		
 		public override void WriteXml(XmlWriter writer)
 		{
+			WriteCoordinates(writer);
 			writer.WriteAttributeString("Value",Value);
 		}
 		
