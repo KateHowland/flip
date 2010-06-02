@@ -263,7 +263,9 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			reader.MoveToContent();			
+			reader.MoveToContent();		
+			
+			ReadCoordinates(reader);	
 			
 			if (reader.IsEmptyElement || !reader.ReadToDescendant("Behaviour")) {
 				throw new FormatException("Statement does not specify a Behaviour, and could not be deserialised.");
@@ -332,6 +334,8 @@ namespace Sussex.Flip.UI
 			if (behaviour == null) {
 				throw new InvalidOperationException("The Statement being serialised has a null behaviour field.");
 			}
+			
+			WriteCoordinates(writer);
 			
 			writer.WriteStartElement("Behaviour");
 			writer.WriteAttributeString("Type",behaviour.GetType().FullName);

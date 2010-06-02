@@ -217,7 +217,6 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		int position = 40;
 		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
 		{
 			Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
@@ -261,9 +260,6 @@ namespace Sussex.Flip.UI
 						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
 						
 						moveable.ReadXml(reader);
-						position += 10;
-						Canvas.SetRight(moveable,position);
-						Canvas.SetBottom(moveable,position);
 						mainCanvas.Children.Add(moveable);
 						
 						reader.MoveToContent();

@@ -167,6 +167,8 @@ namespace Sussex.Flip.UI
 			
 			if (reader.IsEmptyElement) throw new FormatException("ObjectBlock does not specify a Behaviour, and could not be deserialised.");
 			
+			ReadCoordinates(reader);
+			
 			reader.ReadStartElement();
 			reader.MoveToContent();
 			
@@ -183,6 +185,8 @@ namespace Sussex.Flip.UI
 			if (Behaviour == null) {
 				throw new InvalidOperationException("The ObjectBlock being serialised has a null Behaviour property.");
 			}
+			
+			WriteCoordinates(writer);
 			
 			writer.WriteStartElement("Behaviour");
 			writer.WriteAttributeString("Type",Behaviour.GetType().FullName);
