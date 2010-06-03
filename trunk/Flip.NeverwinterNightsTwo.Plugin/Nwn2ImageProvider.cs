@@ -179,7 +179,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			Image image;
 			
-			image = GetImage("Other","Module");
+			image = GetImage("Other","Player");
 			
 			if (image == null) image = GetImage("Placeholder","Default");
 			
@@ -191,7 +191,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			Image image;
 			
-			image = GetImage("Other","Player");
+			image = GetImage("Other","Module");
 			
 			if (image == null) image = GetImage("Placeholder","Default");
 			

@@ -308,69 +308,43 @@ namespace Sussex.Flip.UI
 			return null;
 		}
 		
-    	
+		
+		protected Moveable CreateMoveable(string name)
+		{
+			string type = String.Format("Sussex.Flip.UI.{0}",name);		
+			//MessageBox.Show("Creating " + type);
+			return (Moveable)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(type);
+		}
+		
+		
 		public void ReadXml(XmlReader reader)
 		{
-			bool setPlaceholderContents;
-			
 			reader.MoveToContent();
 			
-			if (reader.IsEmptyElement) {
-				reader.ReadStartElement();
-				setPlaceholderContents = false;
-			}
+			bool isEmpty = reader.IsEmptyElement;
 			
-			else {
-				if (!reader.ReadToDescendant("Contents")) {
-					throw new FormatException("MoveableSlot does not define Contents.");
-				}
-				
-				if (reader.IsEmptyElement) {
-					reader.ReadStartElement();
-					setPlaceholderContents = false;
-				}
-				
-				else {
-					if (!reader.ReadToFollowing("Contents")) throw new Exception ("Fail");
-					reader.Read();
-					setPlaceholderContents = true;
-				}
-				
-//				// TODO:
-//				// This is just skipping to the end of this bit of the XML,
-//				// and needs to be replaced with actually reading the Contents.
-//				if (reader.IsEmptyElement) {
-//					reader.ReadStartElement(); // read all of Contents and move on
-//					MessageBox.Show("Empty contents.");
-//				}
-//				else {
-//					reader.ReadStartElement();
-//					if (!reader.ReadToFollowing("Contents")) throw new Exception("durr");
-//					// TODO:
-//					// Put in placeholder contents.
-//					IfControl ifcontrol = new IfControl();
-//					Contents = ifcontrol;
-//					reader.ReadEndElement();
-//				}
-				
-				// TODO:
-				// Read slot contents.
-				//throw new NotImplementedException();
+			reader.ReadStartElement();
+			
+			if (!isEmpty) {
+				reader.MoveToContent();
+				Moveable moveable = CreateMoveable(reader.LocalName);
+				//MessageBox.Show("Is null?: " + (moveable == null));
+				moveable.ReadXml(reader);
+				Contents = moveable;
 				reader.ReadEndElement();
 			}
-			
-			if (setPlaceholderContents) {
-				IfControl ifc = new IfControl();
-				Contents = ifc;
-			}
+				
+			reader.MoveToContent();
 		}
 		
     	
 		public void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("Contents");
-			if (Contents != null) Contents.WriteXml(writer);
-			writer.WriteEndElement();
+			if (Contents != null) {
+				writer.WriteStartElement(Contents.GetType().Name);
+				Contents.WriteXml(writer);
+				writer.WriteEndElement();
+			}
 		}
 		
 		#endregion

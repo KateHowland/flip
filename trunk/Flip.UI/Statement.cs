@@ -273,16 +273,19 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			reader.MoveToContent();		
+			reader.MoveToContent();			
 			
-			ReadCoordinates(reader);	
+			if (reader.IsEmptyElement) throw new FormatException("Statement does not specify a Behaviour, and could not be deserialised.");
 			
-			if (reader.IsEmptyElement || !reader.ReadToDescendant("Behaviour")) {
-				throw new FormatException("Statement does not specify a Behaviour, and could not be deserialised.");
-			}
+			ReadCoordinates(reader);
+			
+			reader.ReadStartElement();
+			reader.MoveToContent();
+			
+			if (reader.LocalName != "Behaviour") throw new FormatException("Statement does not specify a Behaviour, and could not be deserialised.");
+			
+			Behaviour = (StatementBehaviour)SerialisationHelper.GetObjectFromXml(reader);			
 						
-			Behaviour = (StatementBehaviour)SerialisationHelper.GetObjectFromXml(reader);
-			
 			reader.MoveToContent();
 			
 			if (reader.LocalName != "Slots") throw new FormatException("Statement does not specify Slots, and could not be deserialised.");
@@ -309,32 +312,35 @@ namespace Sussex.Flip.UI
 					catch (Exception e) {
 						throw new FormatException("Slot did not define a valid Index value.",e);
 					}
-						
-					reader.ReadStartElement();
 					
-					if (!slotIsEmpty) {
-						reader.MoveToContent();			
-						
-						Moveable moveable;
-						
-						if (reader.LocalName == "ObjectBlock") moveable = new ObjectBlock();
-						else if (reader.LocalName == "NumberBlock") moveable = new NumberBlock();
-						else if (reader.LocalName == "StringBlock") moveable = new StringBlock();
-						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
-						
-						moveable.ReadXml(reader);
-						slot.Contents = moveable;
-						
-						reader.ReadEndElement();							
-					}
-					
+					slot.ReadXml(reader);
 					reader.MoveToContent();
+					
+//					reader.ReadStartElement();
+//					
+//					if (!slotIsEmpty) {
+//						reader.MoveToContent();			
+//						
+//						Moveable moveable;
+//						
+//						if (reader.LocalName == "ObjectBlock") moveable = new ObjectBlock();
+//						else if (reader.LocalName == "NumberBlock") moveable = new NumberBlock();
+//						else if (reader.LocalName == "StringBlock") moveable = new StringBlock();
+//						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
+//						
+//						moveable.ReadXml(reader);
+//						slot.Contents = moveable;
+//						
+//						reader.ReadEndElement();							
+//					}
+//					
+//					reader.MoveToContent();
 				}
 			
 				reader.ReadEndElement(); // </Slots>
-				reader.MoveToContent();
 			}	
 			
+			reader.MoveToContent();
 			reader.ReadEndElement(); // </Statement>
 		}
 		

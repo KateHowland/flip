@@ -189,13 +189,13 @@ namespace Sussex.Flip.UI
 						Moveable moveable = child as Moveable;
 						if (moveable == null) continue;
 						
-						string elementName;
+						string elementName = moveable.GetType().Name;
 						
-						if (moveable is ObjectBlock) elementName = "ObjectBlock";
-						else if (moveable is Statement) elementName = "Statement";
-						else if (moveable is NumberBlock) elementName = "NumberBlock";
-						else if (moveable is StringBlock) elementName = "StringBlock";
-						else throw new FormatException("Unknown Moveable type (" + moveable.GetType() + ").");
+//						if (moveable is ObjectBlock) elementName = "ObjectBlock";
+//						else if (moveable is Statement) elementName = "Statement";
+//						else if (moveable is NumberBlock) elementName = "NumberBlock";
+//						else if (moveable is StringBlock) elementName = "StringBlock";
+//						else throw new FormatException("Unknown Moveable type (" + moveable.GetType() + ").");
 						
 						if (moveable != null) {
 							writer.WriteStartElement(elementName);
@@ -212,7 +212,9 @@ namespace Sussex.Flip.UI
 					writer.Flush();
 				}
 				
-				MessageBox.Show("Saved.");
+				// HACK:
+				//MessageBox.Show("Saved.");
+				OpenScriptFromFile(null,null);
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
@@ -222,6 +224,8 @@ namespace Sussex.Flip.UI
 		
 		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
 		{
+			Clear();
+			
 			Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
 			dialog.CheckFileExists = true;
 			dialog.CheckPathExists = true;
@@ -260,6 +264,10 @@ namespace Sussex.Flip.UI
 						else if (reader.LocalName == "Statement") moveable = new Statement();
 						else if (reader.LocalName == "NumberBlock") moveable = new NumberBlock();
 						else if (reader.LocalName == "StringBlock") moveable = new StringBlock();
+						else if (reader.LocalName == "IfControl") moveable = new IfControl();
+						else if (reader.LocalName == "IfElseControl") moveable = new IfElseControl();
+						else if (reader.LocalName == "WhileControl") moveable = new WhileControl();
+						else if (reader.LocalName == "DoWhileControl") moveable = new DoWhileControl();
 						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
 						
 						moveable.ReadXml(reader);

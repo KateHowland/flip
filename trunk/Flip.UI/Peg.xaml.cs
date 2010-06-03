@@ -49,29 +49,26 @@ namespace Sussex.Flip.UI
 			return null;
 		}
 		
-    	
+		
 		public void ReadXml(XmlReader reader)
 		{
-			reader.MoveToContent();
+			bool isEmpty = reader.IsEmptyElement;
 			
-			if (reader.IsEmptyElement) {
-				reader.ReadStartElement();
-			}
+			reader.ReadStartElement();
 			
-			else {
-				if (!reader.ReadToDescendant("PegSlot")) {
-					throw new FormatException("Peg does not define a PegSlot.");
-				}
-				
-				Slot.ReadXml(reader);				
+			if (!isEmpty) {
+				reader.MoveToContent();
+				slot.ReadXml(reader);
 				reader.ReadEndElement();
 			}
+			
+			reader.MoveToContent();
 		}
 		
-    	
+		
 		public void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("PegSlot");
+			writer.WriteStartElement("Slot");
 			slot.WriteXml(writer);
 			writer.WriteEndElement();
 		}

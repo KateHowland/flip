@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
@@ -191,6 +185,93 @@ namespace Sussex.Flip.UI
 			if (Condition != null) Condition.AssignImage(imageProvider);
 			if (Consequences != null) Consequences.AssignImage(imageProvider);
 			if (Alternative != null) Alternative.AssignImage(imageProvider);
+		}
+		
+		
+		public override XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{
+			WriteCoordinates(writer);
+			
+			writer.WriteStartElement("Condition");
+			if (Condition != null) {
+				writer.WriteStartElement("Statement");
+				Condition.WriteXml(writer);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+			
+			writer.WriteStartElement("Consequences");
+			if (Consequences != null) {
+				writer.WriteStartElement("Spine");
+				Consequences.WriteXml(writer);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+			
+			writer.WriteStartElement("Alternative");
+			if (Alternative != null) {
+				writer.WriteStartElement("Spine");
+				Alternative.WriteXml(writer);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();			
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+			reader.MoveToContent();		
+			
+			ReadCoordinates(reader);
+			
+			reader.ReadStartElement(); // passed <IfElseControl>
+			
+			reader.MoveToContent();
+			
+			if (reader.LocalName != "Condition") throw new FormatException("Condition is not specified.");
+			
+			bool isEmpty = reader.IsEmptyElement;
+			
+			reader.ReadStartElement("Condition"); // passed <Condition>
+			reader.MoveToContent(); // at <Consequences> or <Statement>
+			
+			if (!isEmpty) {
+				
+				if (reader.LocalName != "Statement") throw new FormatException("Condition is not correctly specified.");
+				
+				Statement statement = new Statement();
+				statement.ReadXml(reader);
+				reader.MoveToContent();
+				
+				reader.ReadEndElement(); // passed </Condition>
+				reader.MoveToContent(); // at <Consequences>
+			}
+			
+			if (reader.IsEmptyElement) throw new FormatException("Consequences is not correctly specified (no Spine).");
+			
+			reader.ReadStartElement("Consequences");
+			reader.MoveToContent();			
+			Consequences.ReadXml(reader);
+			reader.MoveToContent();
+			reader.ReadEndElement();
+			reader.MoveToContent();
+			
+			if (reader.IsEmptyElement) throw new FormatException("Alternative is not correctly specified (no Spine).");
+			
+			reader.ReadStartElement("Alternative");
+			reader.MoveToContent();			
+			Alternative.ReadXml(reader);
+			reader.MoveToContent();
+			reader.ReadEndElement();
+			
+			reader.MoveToContent();
+			reader.ReadEndElement();
 		}
     }
 }
