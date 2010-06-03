@@ -180,14 +180,7 @@ namespace Sussex.Flip.UI
 				settings.NewLineOnAttributes = false;
 				
 				using (XmlWriter writer = XmlWriter.Create(path,settings)) {
-					writer.WriteStartDocument();	
-					
-					writer.WriteStartElement("Script");
-					triggerBar.WriteXml(writer);
-					writer.WriteEndElement();
-					
-					writer.WriteEndDocument();				
-					writer.Flush();
+					new ScriptWriter(triggerBar).WriteFlipCode(writer);
 				}
 				
 				// HACK:
@@ -197,6 +190,13 @@ namespace Sussex.Flip.UI
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
 			}
+		}
+		
+		
+		protected void DoStuff(object sender, RoutedEventArgs e)
+		{
+			ScriptWriter scriptWriter = new ScriptWriter(triggerBar);
+			MessageBox.Show("Combined:\n\n" + scriptWriter.GetCombinedCode());
 		}
 		
 		

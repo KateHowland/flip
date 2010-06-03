@@ -94,6 +94,10 @@
 					<MenuItem
 					Header="Clear canvas"
 					Click="ClearCanvas"/>
+				
+					<MenuItem
+					Header="Try and generate code double file"
+					Click="DoStuff"/>
 								
 				</MenuItem>
 					

@@ -165,11 +165,6 @@ namespace Sussex.Flip.UI
     	
 		public void WriteXml(XmlWriter writer)
 		{
-			// Not sure we actually want to serialise the trigger...?
-//			writer.WriteStartElement("Trigger");
-//			if (TriggerControl != null) TriggerControl.WriteXml(writer);
-//			writer.WriteEndElement();
-			
 			writer.WriteStartElement("Code");
 			Spine.WriteXml(writer);
 			writer.WriteEndElement();
