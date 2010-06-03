@@ -60,8 +60,7 @@
 				
 					<MenuItem
 					Header="Save"
-					Click="SaveScriptToModule"
-					IsEnabled="false"/>
+					Click="SaveScriptToModule"/>
 					
 					<MenuItem
 					Header="Close"

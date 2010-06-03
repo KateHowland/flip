@@ -62,11 +62,17 @@ namespace Sussex.Flip.UI
     	
     	public Image DisplayImage {
     		get { return (Image)base.GetValue(DisplayImageProperty); }
-    		set { 
-    			if (DisplayImage != value) {
-    				base.SetValue(DisplayImageProperty,value);
-    				OnChanged(new EventArgs());
-    			}
+    		set {     			
+    			if (value == null) {
+    				value = FindResource("defaultimg") as Image;
+    				if (value == null) value = new Image();
+    			}    				
+    			
+    			value.Stretch = Stretch.Fill;
+    			value.StretchDirection = StretchDirection.Both;
+    			
+    			base.SetValue(DisplayImageProperty,value);
+    			OnChanged(new EventArgs());
     		}
     	}
     	
@@ -97,19 +103,8 @@ namespace Sussex.Flip.UI
         	Behaviour = behaviour;
         	
             InitializeComponent();
-            
-            if (image == null) {
-            	image = new Image();
-            	Image res = FindResource("defaultimg") as Image;
-            	if (res != null) {
-            		image.Source = res.Source;
-            	}            	
-            }
 
     		DisplayImage = image;
-    		
-    		DisplayImage.Stretch = Stretch.Fill;
-    		DisplayImage.StretchDirection = StretchDirection.Both;
     		
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;

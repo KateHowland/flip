@@ -309,14 +309,6 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected Moveable CreateMoveable(string name)
-		{
-			string type = String.Format("Sussex.Flip.UI.{0}",name);		
-			//MessageBox.Show("Creating " + type);
-			return (Moveable)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(type);
-		}
-		
-		
 		public void ReadXml(XmlReader reader)
 		{
 			reader.MoveToContent();
@@ -327,8 +319,7 @@ namespace Sussex.Flip.UI
 			
 			if (!isEmpty) {
 				reader.MoveToContent();
-				Moveable moveable = CreateMoveable(reader.LocalName);
-				//MessageBox.Show("Is null?: " + (moveable == null));
+				Moveable moveable = Moveable.CreateMoveable(reader.LocalName);
 				moveable.ReadXml(reader);
 				Contents = moveable;
 				reader.ReadEndElement();

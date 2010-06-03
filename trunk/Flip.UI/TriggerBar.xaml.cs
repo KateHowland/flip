@@ -2,6 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Effects;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
@@ -132,6 +135,52 @@ namespace Sussex.Flip.UI
 		{
 			TriggerControl = null;
 			Spine.Clear();
+		}
+		
+    	
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
+		
+		
+		public void ReadXml(XmlReader reader)
+		{
+			reader.MoveToContent();
+			
+			if (reader.IsEmptyElement) throw new FormatException("Script is empty.");
+			
+			reader.ReadStartElement();
+			reader.MoveToContent();
+			
+			if (reader.LocalName != "Code") throw new FormatException("Script does not include Code.");
+			
+			Spine.ReadXml(reader);
+			
+			reader.MoveToElement();			
+			reader.ReadEndElement();
+			reader.MoveToElement();
+		}
+		
+    	
+		public void WriteXml(XmlWriter writer)
+		{
+			// Not sure we actually want to serialise the trigger...?
+//			writer.WriteStartElement("Trigger");
+//			if (TriggerControl != null) TriggerControl.WriteXml(writer);
+//			writer.WriteEndElement();
+			
+			writer.WriteStartElement("Code");
+			Spine.WriteXml(writer);
+			writer.WriteEndElement();
+		}
+		
+		
+		public void AssignImage(ImageProvider imageProvider)
+		{
+			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			
+			Spine.AssignImage(imageProvider);
 		}
     }
 }
