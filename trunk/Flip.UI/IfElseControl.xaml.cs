@@ -247,6 +247,7 @@ namespace Sussex.Flip.UI
 				
 				Statement statement = new Statement();
 				statement.ReadXml(reader);
+				Condition = statement;
 				reader.MoveToContent();
 				
 				reader.ReadEndElement(); // passed </Condition>
