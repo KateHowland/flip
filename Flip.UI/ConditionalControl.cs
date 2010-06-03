@@ -78,11 +78,11 @@ namespace Sussex.Flip.UI
 		/// The actions to be taken if the condition is met.
 		/// </summary>
 		public abstract Spine Consequences { get; set; }
-			
+		
 		
 		public override XmlSchema GetSchema()
 		{
-			return null;
+			throw new NotImplementedException();
 		}
 		
 		

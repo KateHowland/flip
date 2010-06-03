@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Xml;
@@ -226,8 +225,7 @@ namespace Sussex.Flip.UI
         
         public void RemovePeg(bool animate)
         {
-        	if (Pegs.Count == 0) throw new InvalidOperationException("No pegs to remove.");        	
-        	RemovePeg(animate,Pegs.Count-1);
+        	if (Pegs.Count > 0) RemovePeg(animate,Pegs.Count-1);
         }
         
         
@@ -380,26 +378,38 @@ namespace Sussex.Flip.UI
     	
 		public void ReadXml(XmlReader reader)
 		{		
-			reader.MoveToContent();
+			while (Pegs.Count > 0) RemovePeg(false);
 			
-			if (reader.IsEmptyElement) {
-				reader.ReadStartElement();
-			}
+			reader.MoveToContent(); // at <Spine>
+			
+			if (reader.IsEmptyElement) throw new FormatException("Spine does not define a Pegs collection.");
 						
-			else {
-								
-				if (!reader.ReadToDescendant("Pegs")) {
-					throw new FormatException("Spine does not define a Pegs collection.");
+			reader.ReadStartElement(); // passed <Spine>
+			reader.MoveToContent(); // at <Pegs>
+			
+			if (reader.LocalName != "Pegs") throw new FormatException("Spine does not define a Pegs collection.");
+			
+			bool isEmpty = reader.IsEmptyElement;
+			
+			reader.ReadStartElement(); // passed <Pegs>
+			
+			if (!isEmpty) { 
+				
+				reader.MoveToContent(); // at <Peg> or </Pegs>
+				
+				while (reader.LocalName != "Pegs") {
+					
+					Peg peg = AddPeg();
+					peg.ReadXml(reader);
+					reader.MoveToContent();
+					
 				}
 				
-				if (reader.ReadToDescendant("Peg")) {						
-					do {
-						Peg peg = AddPeg();
-						peg.ReadXml(reader);
-					}
-					while (reader.ReadToNextSibling("Peg"));
-				}
+				reader.ReadEndElement(); // passed </Pegs>
 			}
+			
+			reader.MoveToContent();
+			reader.ReadEndElement(); // passed </Spine>
 		}
 		
     	
