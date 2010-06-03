@@ -82,19 +82,72 @@ namespace Sussex.Flip.UI
 		
 		public override XmlSchema GetSchema()
 		{
-			throw new NotImplementedException();
-		}
-		
-		
-		public override void ReadXml(XmlReader reader)
-		{
-			throw new NotImplementedException();
+			return null;
 		}
 		
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			throw new NotImplementedException();
+			WriteCoordinates(writer);
+			
+			writer.WriteStartElement("Condition");
+			if (Condition != null) {
+				writer.WriteStartElement("Statement");
+				Condition.WriteXml(writer);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+			
+			writer.WriteStartElement("Consequences");
+			if (Consequences != null) {
+				writer.WriteStartElement("Spine");
+				Consequences.WriteXml(writer);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();	
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+			reader.MoveToContent();		
+			
+			ReadCoordinates(reader);
+			
+			reader.ReadStartElement(); // passed <IfElseControl>
+			
+			reader.MoveToContent();
+			
+			if (reader.LocalName != "Condition") throw new FormatException("Condition is not specified.");
+			
+			bool isEmpty = reader.IsEmptyElement;
+			
+			reader.ReadStartElement("Condition"); // passed <Condition>
+			reader.MoveToContent(); // at <Consequences> or <Statement>
+			
+			if (!isEmpty) {
+				
+				if (reader.LocalName != "Statement") throw new FormatException("Condition is not correctly specified.");
+				
+				Statement statement = new Statement();
+				statement.ReadXml(reader);
+				Condition = statement;
+				reader.MoveToContent();
+				
+				reader.ReadEndElement(); // passed </Condition>
+				reader.MoveToContent(); // at <Consequences>
+			}
+			
+			if (reader.IsEmptyElement) throw new FormatException("Consequences is not correctly specified (no Spine).");
+			
+			reader.ReadStartElement("Consequences");
+			reader.MoveToContent();			
+			Consequences.ReadXml(reader);
+			reader.MoveToContent();
+			reader.ReadEndElement();
+			reader.MoveToContent();
+			
+			reader.ReadEndElement();
 		}
 	}
 }
