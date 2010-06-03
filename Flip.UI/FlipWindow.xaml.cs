@@ -25,15 +25,31 @@ namespace Sussex.Flip.UI
 		protected ImageProvider imageProvider;
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider)
+		/// <summary>
+		/// The method to call when the user wants to open an existing Flip script.
+		/// </summary>
+		protected FetchScriptDelegate fetchScriptDelegate;
+				
+		
+		/// <summary>
+		/// The delegate signature of a method to be called which will ask the user 
+		/// to select a Flip-created script and return that script to be opened.
+		/// </summary>
+		public delegate FlipScript FetchScriptDelegate();		
+		
+		
+		
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider, FetchScriptDelegate fetchScriptDelegate)
 		{
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
+			if (fetchScriptDelegate == null) throw new ArgumentNullException("fetchScriptDelegate");
 			
 			this.attacher = attacher;
 			this.provider = provider;
 			this.imageProvider = imageProvider;
+			this.fetchScriptDelegate = fetchScriptDelegate;
 			
 			InitializeComponent();
 			
@@ -126,7 +142,15 @@ namespace Sussex.Flip.UI
 		{			
 			if (!CloseCurrentScript()) return;
 			
-			MessageBox.Show("Open file dialog should run here. Not implemented.");
+			try {
+				FlipScript script = fetchScriptDelegate.Invoke();
+				if (script != null) {
+					OpenFlipScript(script);
+				}
+			}
+			catch (Exception x) {
+				MessageBox.Show(String.Format("Failed to open script.{0}{0}{1}",Environment.NewLine,x));
+			}
 		}
 		
 		
@@ -219,7 +243,7 @@ namespace Sussex.Flip.UI
 			
 			using (StringReader sr = new StringReader(extracted)) {
 				using (XmlReader reader = XmlReader.Create(sr)) {
-					OpenFlipScriptFromFile(reader);
+					OpenFlipScript(reader);
 				}
 			}
 			
@@ -249,7 +273,7 @@ namespace Sussex.Flip.UI
 			string path = dialog.FileName;
 			
 			try {
-				OpenFlipScriptFromFile(path);
+				OpenFlipScript(path);
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
@@ -257,23 +281,34 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void OpenFlipScriptFromFile(string path)
+		protected void OpenFlipScript(string path)
 		{
 			if (String.IsNullOrEmpty(path)) throw new ArgumentException("Invalid path.","path");
 			if (!File.Exists(path)) throw new ArgumentException("Invalid path - file does not exist.","path");
 			
 			XmlReader reader = new XmlTextReader(path);				
-			OpenFlipScriptFromFile(reader);
+			OpenFlipScript(reader);
 		}
 		
 		
-		protected void OpenFlipScriptFromFile(XmlReader reader)
+		protected void OpenFlipScript(XmlReader reader)
 		{
 			if (reader == null) throw new ArgumentNullException("reader");
 						
 			reader.MoveToContent();				
 			triggerBar.ReadXml(reader);
 			triggerBar.AssignImage(imageProvider);
+		}
+		
+		
+		protected void OpenFlipScript(FlipScript script)
+		{
+			if (script == null) throw new ArgumentNullException("script");
+		
+			using (TextReader tr = new StringReader(script.Code)) {
+				XmlReader reader = new XmlTextReader(tr);
+				OpenFlipScript(reader);
+			}
 		}
 		
 		
