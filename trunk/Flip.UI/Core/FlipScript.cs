@@ -64,13 +64,40 @@ namespace Sussex.Flip.Core
 		/// <summary>
 		/// Constructs a new <see cref="FlipScript"/> instance.
 		/// </summary>
+		public FlipScript() : this(String.Empty,String.Empty)
+		{
+		}
+		
+		
+		/// <summary>
+		/// Constructs a new <see cref="FlipScript"/> instance.
+		/// </summary>
 		/// <param name="code">The source code of the script.</param>
-		public FlipScript(string code)
+		public FlipScript(string code) : this(code,String.Empty)
+		{
+		}
+		
+		
+		/// <summary>
+		/// Constructs a new <see cref="FlipScript"/> instance.
+		/// </summary>
+		/// <param name="code">The source code of the script.</param>
+		/// <param name="name">The name of the script.</param>
+		public FlipScript(string code, string name)
 		{
 			this.code = code;
-			this.name = String.Empty;
+			this.name = name;
 		}
 		
 		#endregion	
+		
+		#region Methods
+		
+		public override string ToString()
+		{
+			return String.Format("{0} ({1})",Name,Code);
+		}
+		
+		#endregion
 	}
 }

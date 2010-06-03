@@ -29,13 +29,21 @@ namespace Sussex.Flip.UI.Generic
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers);
 			
-			FlipWindow window = new FlipWindow(attacher,provider,images);
+			FlipWindow window = new FlipWindow(attacher,provider,images,new FlipWindow.FetchScriptDelegate(Rarara));
 			
 			// HACK:
 			// TODO:
 			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
 			
 			window.Show();
+		}
+		
+		
+		public FlipScript Rarara()
+		{
+			FlipScript fs = new FlipScript("some.Awesome(Code);");
+			fs.Name = "Brian";
+			return fs;
 		}
 	}
 }

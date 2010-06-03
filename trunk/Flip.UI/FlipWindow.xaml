@@ -55,8 +55,7 @@
 				
 					<MenuItem
 					Header="Open"
-					Click="OpenScriptFromModule"
-					IsEnabled="false"/>
+					Click="OpenScriptFromModule"/>
 				
 					<MenuItem
 					Header="Save"

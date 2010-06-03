@@ -279,7 +279,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(attacher,provider,images);		
+			window = new FlipWindow(attacher,provider,images,new FlipWindow.FetchScriptDelegate(OpenNWScriptFileDialog));		
 			
 			// HACK:
 			// TODO:
@@ -292,6 +292,37 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};
 		}
 				
+			
+		public FlipScript OpenNWScriptFileDialog()
+		{
+			// HACK:
+			// actually this class better belongs out there than it does inside Flip. But currently it requires a 
+			// TriggerBar to construct it so I'll hack this for now.
+			ScriptWriter scriptWriter = new ScriptWriter(new TriggerBar(new AreaEntered(new CreaturePlayerFitter()),new CreaturePlayerFitter()));
+			
+			// HACK:
+			Nwn2Session session = new Nwn2Session();
+			
+			
+			foreach (NWN2GameScript nwn2script in session.GetScripts().Values) {
+				
+				if (!nwn2script.Name.StartsWith("flipscript")) continue;
+				
+				nwn2script.Demand();
+				
+				string nwscriptcode = nwn2script.Data;
+				string flipcode = scriptWriter.ExtractFlipCodeFromNWScript(nwscriptcode);
+				
+				FlipScript fs = new FlipScript(flipcode,nwn2script.Name);
+				MessageBox.Show("Passing back " + fs + " to be opened.");
+				return fs;
+			}
+			
+			MessageBox.Show("Didn't find any suitable scripts to open.");
+			
+			return null;
+		}
+		
 		
 		/// <summary>
 		/// Launch the Flip application.
