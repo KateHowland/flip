@@ -180,32 +180,10 @@ namespace Sussex.Flip.UI
 				settings.NewLineOnAttributes = false;
 				
 				using (XmlWriter writer = XmlWriter.Create(path,settings)) {
-					writer.WriteStartDocument();				
+					writer.WriteStartDocument();	
 					
-					writer.WriteStartElement("Moveables");
-					
-					foreach (UIElement child in mainCanvas.Children) {
-						
-						Moveable moveable = child as Moveable;
-						if (moveable == null) continue;
-						
-						string elementName = moveable.GetType().Name;
-						
-//						if (moveable is ObjectBlock) elementName = "ObjectBlock";
-//						else if (moveable is Statement) elementName = "Statement";
-//						else if (moveable is NumberBlock) elementName = "NumberBlock";
-//						else if (moveable is StringBlock) elementName = "StringBlock";
-//						else throw new FormatException("Unknown Moveable type (" + moveable.GetType() + ").");
-						
-						if (moveable != null) {
-							writer.WriteStartElement(elementName);
-							moveable.WriteXml(writer);
-							writer.WriteEndElement();
-						}
-						
-						
-					}
-									
+					writer.WriteStartElement("Script");
+					triggerBar.WriteXml(writer);
 					writer.WriteEndElement();
 					
 					writer.WriteEndDocument();				
@@ -244,43 +222,10 @@ namespace Sussex.Flip.UI
 			string path = dialog.FileName;
 			
 			try {
-				XmlReader reader = new XmlTextReader(path);
-				
-				reader.MoveToContent();
-				
-				bool isEmpty = reader.IsEmptyElement;
-				
-				reader.ReadStartElement("Moveables");
-				
-				if (!isEmpty) {
-					
-					reader.MoveToContent();
-				
-					while (reader.LocalName != "Moveables") {
-					
-						Moveable moveable;
-						
-						if (reader.LocalName == "ObjectBlock") moveable = new ObjectBlock();
-						else if (reader.LocalName == "Statement") moveable = new Statement();
-						else if (reader.LocalName == "NumberBlock") moveable = new NumberBlock();
-						else if (reader.LocalName == "StringBlock") moveable = new StringBlock();
-						else if (reader.LocalName == "IfControl") moveable = new IfControl();
-						else if (reader.LocalName == "IfElseControl") moveable = new IfElseControl();
-						else if (reader.LocalName == "WhileControl") moveable = new WhileControl();
-						else if (reader.LocalName == "DoWhileControl") moveable = new DoWhileControl();
-						else throw new FormatException("Unrecognised Moveable type (" + reader.LocalName + ") or Moveable data not found.");
-						
-						moveable.ReadXml(reader);
-						
-						moveable.AssignImage(imageProvider);
-						
-						mainCanvas.Children.Add(moveable);
-						
-						reader.MoveToContent();
-					}
-					
-					reader.ReadEndElement();
-				}
+				XmlReader reader = new XmlTextReader(path);				
+				reader.MoveToContent();				
+				triggerBar.ReadXml(reader);
+				triggerBar.AssignImage(imageProvider);
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());

@@ -69,8 +69,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns>An ObjectBlock representing the player.</returns>
 		public ObjectBlock CreatePlayerBlock()
 		{
-			Image image = images.GetModuleImage();
-			return new ObjectBlock(image,new PlayerBehaviour());
+			ObjectBlock block = new ObjectBlock(null,new PlayerBehaviour());
+			block.AssignImage(images);
+			return block;
 		}
 		
 		
@@ -80,8 +81,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns>An ObjectBlock representing the module.</returns>
 		public ObjectBlock CreateModuleBlock()
 		{
-			Image image = images.GetPlayerImage();			
-			return new ObjectBlock(image,new ModuleBehaviour());
+			ObjectBlock block = new ObjectBlock(null,new ModuleBehaviour());
+			block.AssignImage(images);
+			return block;
 		}
 		
 		
@@ -126,9 +128,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (area == null) throw new ArgumentNullException("area");
 			
-			Image image = images.GetImage(area);
-			ObjectBlock block = new ObjectBlock(image,area);
-						
+			ObjectBlock block = new ObjectBlock(null,area);
+			block.AssignImage(images);
 			return block;
 		}
 		
@@ -173,10 +174,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public ObjectBlock CreateBlueprintBlock(BlueprintBehaviour behaviour)
 		{
 			if (behaviour == null) throw new ArgumentNullException("behaviour");
-			
-			Image image = images.GetImage(behaviour);
 				
-			return new ObjectBlock(image,behaviour);
+			ObjectBlock block = new ObjectBlock(null,behaviour);
+			block.AssignImage(images);
+			return block;
 		}
 		
 			
@@ -251,9 +252,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{						
 			if (behaviour == null) throw new ArgumentNullException("behaviour");
 			
-			Image image = images.GetImage(behaviour);
-			
-			return new ObjectBlock(image,behaviour);
+			ObjectBlock block = new ObjectBlock(null,behaviour);
+			block.AssignImage(images);
+			return block;
 		}
 		
 			

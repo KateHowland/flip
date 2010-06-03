@@ -120,6 +120,13 @@ namespace Sussex.Flip.UI
     	
     	
     	public abstract void AssignImage(ImageProvider imageProvider);
+		
+		
+		internal static Moveable CreateMoveable(string name)
+		{
+			string type = String.Format("Sussex.Flip.UI.{0}",name);
+			return (Moveable)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(type);
+		}
     	
     	
     	protected void WriteCoordinates(XmlWriter writer)
