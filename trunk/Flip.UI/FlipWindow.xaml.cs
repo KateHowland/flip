@@ -193,10 +193,37 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void DoStuff(object sender, RoutedEventArgs e)
-		{
+		protected void DoMoreStuff(object sender, RoutedEventArgs e)
+		{			
 			ScriptWriter scriptWriter = new ScriptWriter(triggerBar);
-			MessageBox.Show("Combined:\n\n" + scriptWriter.GetCombinedCode());
+			
+			string flip = scriptWriter.GetFlipCode();
+			
+			string combined = scriptWriter.GetCombinedCode();
+			
+			CloseScript();
+			
+			MessageBox.Show("Creating combined script file.");
+			
+			MessageBox.Show(combined);
+			
+			MessageBox.Show("Extracting Flip code.");
+			
+			string extracted = scriptWriter.ExtractFlipCodeFromNWScript(combined);
+			
+			MessageBox.Show(extracted);
+			
+			MessageBox.Show("Are they identical? " + (flip == extracted));
+			
+			MessageBox.Show("Opening extracted Flip code.");
+			
+			using (StringReader sr = new StringReader(extracted)) {
+				using (XmlReader reader = XmlReader.Create(sr)) {
+					OpenFlipScriptFromFile(reader);
+				}
+			}
+			
+			MessageBox.Show("Done.");
 		}
 		
 		
@@ -222,14 +249,31 @@ namespace Sussex.Flip.UI
 			string path = dialog.FileName;
 			
 			try {
-				XmlReader reader = new XmlTextReader(path);				
-				reader.MoveToContent();				
-				triggerBar.ReadXml(reader);
-				triggerBar.AssignImage(imageProvider);
+				OpenFlipScriptFromFile(path);
 			}
 			catch (Exception x) {
 				MessageBox.Show(x.ToString());
 			}
+		}
+		
+		
+		protected void OpenFlipScriptFromFile(string path)
+		{
+			if (String.IsNullOrEmpty(path)) throw new ArgumentException("Invalid path.","path");
+			if (!File.Exists(path)) throw new ArgumentException("Invalid path - file does not exist.","path");
+			
+			XmlReader reader = new XmlTextReader(path);				
+			OpenFlipScriptFromFile(reader);
+		}
+		
+		
+		protected void OpenFlipScriptFromFile(XmlReader reader)
+		{
+			if (reader == null) throw new ArgumentNullException("reader");
+						
+			reader.MoveToContent();				
+			triggerBar.ReadXml(reader);
+			triggerBar.AssignImage(imageProvider);
 		}
 		
 		
@@ -266,9 +310,7 @@ namespace Sussex.Flip.UI
 		protected void UpdateNaturalLanguageView(ITranslatable translatable)
 		{
 			if (translatable == null) return;
-			this.nlTextBlock.Text = translatable.GetNaturalLanguage();
-			
-			//this.targetCodeTextBlock.Text = (translatable.IsComplete ? "Complete." : "Incomplete.") + "\n\n" + translatable.GetCode();			
+			this.nlTextBlock.Text = translatable.GetNaturalLanguage();		
 		}
 		
 		
@@ -277,20 +319,18 @@ namespace Sussex.Flip.UI
 			if (!e.Handled) e.Handled = true;
 		}
 		
-		
+				
 		protected void SaveScriptToModule(object sender, RoutedEventArgs e)
 		{			
 			if (!triggerBar.IsComplete) {
-				MessageBox.Show("Your script isn't complete! Make sure you've filled in the trigger, and " +
-				                "filled in all the gaps of any actions, conditions or other blocks you've attached " +
-				                "to your script before trying to compile.");
+				MessageBox.Show("Your script isn't finished! Fill in all the blanks before trying to compile.");
 				return;
 			}
 			
-			string code = triggerBar.GetCode();
+			ScriptWriter scriptWriter = new ScriptWriter(triggerBar);
+			string code = scriptWriter.GetCombinedCode();
 			
-			FlipScript script = new FlipScript(code);			
-			
+			FlipScript script = new FlipScript(code);
 			script.Name = "flipscript";
 			
 			string address = triggerBar.GetAddress();
