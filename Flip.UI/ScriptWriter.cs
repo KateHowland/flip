@@ -35,6 +35,11 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public class ScriptWriter
 	{
+		protected const string FlipCodeBegins = @"/* FLIP CODE - DO NOT EDIT";
+		protected const string FlipCodeEnds = @"FLIP CODE - DO NOT EDIT */";
+		protected string[] separators = new string[] { FlipCodeBegins, FlipCodeEnds };
+		
+		
 		protected TriggerBar triggerBar;
 		
 		
@@ -83,7 +88,7 @@ namespace Sussex.Flip.UI
 		{
 			if (code == null) throw new ArgumentNullException("code");
 			
-			code.AppendLine(@"/*");
+			code.AppendLine(FlipCodeBegins);
 		}
 		
 		
@@ -91,7 +96,7 @@ namespace Sussex.Flip.UI
 		{
 			if (code == null) throw new ArgumentNullException("code");
 			
-			code.AppendLine(@"*/");
+			code.AppendLine(FlipCodeEnds);
 		}
 		
 		
@@ -164,6 +169,23 @@ namespace Sussex.Flip.UI
 			}
 			
 			return result;
+		}
+		
+		
+		public string ExtractFlipCodeFromNWScript(string nwscript)
+		{
+			if (nwscript == null) throw new ArgumentNullException("nwscript");
+			
+			string[] parts = nwscript.Split(separators,StringSplitOptions.RemoveEmptyEntries);
+			
+			if (parts.Length == 0) return null;
+			
+			string flip = parts[0];
+			
+			flip = flip.Trim(null); // remove leading and trailing white space characters
+			flip = flip.Replace(Environment.NewLine,String.Empty); // remove new line characters
+			
+			return flip;
 		}
 	}
 }

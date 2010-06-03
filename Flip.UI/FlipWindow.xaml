@@ -96,8 +96,8 @@
 					Click="ClearCanvas"/>
 				
 					<MenuItem
-					Header="Try and generate code double file"
-					Click="DoStuff"/>
+					Header="Save, combine and recover script file"
+					Click="DoMoreStuff"/>
 								
 				</MenuItem>
 					
