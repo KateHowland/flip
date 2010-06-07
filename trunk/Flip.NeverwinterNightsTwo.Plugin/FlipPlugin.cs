@@ -224,45 +224,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Flip");
 			launchFlip.Activate += delegate { LaunchFlip(); };
 			
-			pluginMenuItem.Items.Add(launchFlip);
-			
-			TD.SandBar.MenuButtonItem checkScripts = new TD.SandBar.MenuButtonItem("checkScripts");
-			checkScripts.Activate += delegate 
-			{ 
-				ModuleTextFile moduleTextFile = new ModuleTextFile();
-				if (moduleTextFile.HasTextFile(ModuleTextFile.AttachedScriptsLogName)) {
-					MessageBox.Show(moduleTextFile.GetTextFileContents(ModuleTextFile.AttachedScriptsLogName));
-				}
-				else {
-					MessageBox.Show("File does not exist in module.");
-				}
-			};
-			
-			pluginMenuItem.Items.Add(checkScripts);
-			
-			TD.SandBar.MenuButtonItem chooseScript = new TD.SandBar.MenuButtonItem("chooseScript");
-			chooseScript.Activate += delegate 
-			{ 
-				if (NWN2ToolsetMainForm.App.Module == null) {
-					MessageBox.Show("No module is open.");
-					return;
-				}
-				
-				ScriptHelper scriptHelper = new ScriptHelper();
-				
-				foreach (NWN2GameScript script in NWN2ToolsetMainForm.App.Module.Scripts) {
-					if (scriptHelper.BelongsTo(script)) {
-						
-						// 1. 
-					}
-				}
-				
-				System.Collections.Generic.List<TriggerControl> triggers = new System.Collections.Generic.List<TriggerControl>();
-				
-				//new ScriptSelector().ShowDialog();
-			};
-			
-			pluginMenuItem.Items.Add(chooseScript);			
+			pluginMenuItem.Items.Add(launchFlip);	
 		}
 		
 		
@@ -334,7 +296,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public ScriptTriggerTuple OpenScriptDialog()
 		{
-			List<ScriptTriggerTuple> tuples = new ScriptHelper().GetScriptsForModule();
+			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetScriptsForModule();
 			
 			foreach (ScriptTriggerTuple tuple in tuples) {
 				if (tuple.Trigger == null) tuple.Trigger = new NullTrigger();
