@@ -153,6 +153,8 @@
     <Compile Include="Objects\Nwn2ObjectBehaviour.cs" />
     <Compile Include="Objects\PlayerBehaviour.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
+    <Compile Include="ScriptHelper.cs">
+    </Compile>
     <Compile Include="ScriptSelector.xaml.cs">
       <DependentUpon>ScriptSelector.xaml</DependentUpon>
       <SubType>Code</SubType>

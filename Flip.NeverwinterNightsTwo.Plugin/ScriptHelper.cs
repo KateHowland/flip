@@ -27,22 +27,30 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using Sussex.Flip.Core;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
 using OEIShared.IO;
 
-namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
 	/// Description of ScriptHelper.
 	/// </summary>
 	public class ScriptHelper
 	{
+		protected Nwn2TriggerFactory triggerFactory;
+		protected Nwn2AddressFactory addressFactory;
+		
 		// TODO: probably combine this with ScriptWriter
 		
-		public ScriptHelper()
+		public ScriptHelper(Nwn2TriggerFactory triggerFactory)
 		{
+			if (triggerFactory == null) throw new ArgumentNullException("triggerFactory");
+			
+			this.triggerFactory = triggerFactory;
+			this.addressFactory = new Nwn2AddressFactory();
 		}
 		
 		
@@ -64,6 +72,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			foreach (string slot in Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module)) {
 				
+				// OnChat seems to display odd behaviour, so ignore it:
+				if (slot == "OnChat") continue;
+				
 				IResourceEntry resource = typeof(NWN2ModuleInformation).GetProperty(slot,typeof(IResourceEntry)).GetValue(mod.ModuleInfo,null) as IResourceEntry;
 				
 				if (resource != null) {
@@ -79,11 +90,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 								
 							FlipScript flipScript = new FlipScript(code,name);
 							
-							tuples.Add(new ScriptTriggerTuple(flipScript,null));
+							Nwn2Address address = addressFactory.GetModuleAddress(slot);
+							TriggerControl trigger = triggerFactory.GetTriggerFromAddress(address);
+							
+							tuples.Add(new ScriptTriggerTuple(flipScript,trigger));
 						}
 					}
 					catch (Exception e) {
-						MessageBox.Show("Resource was not a game script (" + resource + ").\n\n" + e);
+						string msg = String.Format("Failed to add resource '{0}' to the list of scripts which can be opened.{1}{1}{2}",resource,Environment.NewLine,e);
+						MessageBox.Show(msg);
 					}
 				}
 			}

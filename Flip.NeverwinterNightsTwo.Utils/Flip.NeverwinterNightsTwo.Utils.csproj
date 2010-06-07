@@ -116,7 +116,6 @@
     <Compile Include="ResourceViewerClosedEventArgs.cs" />
     <Compile Include="SampleScriptProvider.cs" />
     <Compile Include="ScriptEventArgs.cs" />
-    <Compile Include="ScriptHelper.cs" />
     <Compile Include="Scripts.cs" />
     <Compile Include="ScriptSlotTuple.cs" />
     <EmbeddedResource Include="Licence.txt">
