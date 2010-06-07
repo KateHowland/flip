@@ -37,7 +37,9 @@ namespace Sussex.Flip.UI
 	{
 		protected const string FlipCodeBegins = @"/* FLIP CODE - DO NOT EDIT";
 		protected const string FlipCodeEnds = @"FLIP CODE - DO NOT EDIT */";
-		protected static string[] separators = new string[] { FlipCodeBegins, FlipCodeEnds };
+		protected const string TargetAddressBegins = @"/* FLIP TARGET ADDRESS - DO NOT EDIT";
+		protected const string TargetAddressEnds = @"FLIP TARGET ADDRESS - DO NOT EDIT */";
+		protected static string[] separators = new string[] { FlipCodeBegins, FlipCodeEnds, TargetAddressBegins, TargetAddressEnds };
 		
 		
 		protected TriggerBar triggerBar;
@@ -84,27 +86,45 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void WriteNWScriptOpenComments(StringBuilder code)
+		protected void WriteFlipCodeBegins(StringBuilder code)
 		{
-			if (code == null) throw new ArgumentNullException("code");
-			
+			if (code == null) throw new ArgumentNullException("code");			
 			code.AppendLine(FlipCodeBegins);
 		}
 		
 		
-		protected void WriteNWScriptCloseComments(StringBuilder code)
+		protected void WriteFlipCodeEnds(StringBuilder code)
 		{
-			if (code == null) throw new ArgumentNullException("code");
-			
+			if (code == null) throw new ArgumentNullException("code");			
 			code.AppendLine(FlipCodeEnds);
 		}
 		
 		
-		protected void WriteNWScriptBlankLine(StringBuilder code)
+		protected void WriteAddressBegins(StringBuilder code)
 		{
-			if (code == null) throw new ArgumentNullException("code");
-			
+			if (code == null) throw new ArgumentNullException("code");			
+			code.AppendLine(TargetAddressBegins);
+		}
+		
+		
+		protected void WriteAddressEnds(StringBuilder code)
+		{
+			if (code == null) throw new ArgumentNullException("code");			
+			code.AppendLine(TargetAddressEnds);
+		}
+		
+		
+		protected void WriteNewLine(StringBuilder code)
+		{
+			if (code == null) throw new ArgumentNullException("code");			
 			code.AppendLine();
+		}
+		
+		
+		protected void WriteAddress(StringBuilder code)
+		{
+			if (code == null) throw new ArgumentNullException("code");			
+			code.AppendLine(triggerBar.GetAddress());
 		}
 		
 		
@@ -154,13 +174,16 @@ namespace Sussex.Flip.UI
 			using (TextWriter tw = new StringWriter(code)) {
 				using (XmlWriter xw = XmlWriter.Create(tw)) {
 					
-					WriteNWScriptOpenComments(code);
+					WriteFlipCodeBegins(code);
 					WriteFlipCode(xw);
-					WriteNWScriptBlankLine(code);
-					WriteNWScriptCloseComments(code);
-					WriteNWScriptBlankLine(code);
+					WriteNewLine(code);
+					WriteFlipCodeEnds(code);
+					WriteNewLine(code);
+					WriteAddressBegins(code);
+					WriteAddress(code);
+					WriteAddressEnds(code);
 					WriteNWScriptHeader(code);
-					WriteNWScriptBlankLine(code);
+					WriteNewLine(code);
 					WriteNWScriptBody(code);
 					tw.Flush();
 					
@@ -172,20 +195,26 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public static string ExtractFlipCodeFromNWScript(string nwscript)
+		public static void ExtractFlipCodeFromNWScript(string nwn2Code, out string flipCode, out string address)
 		{
-			if (nwscript == null) throw new ArgumentNullException("nwscript");
+			if (nwn2Code == null) throw new ArgumentNullException("nwn2Code");
 			
-			string[] parts = nwscript.Split(separators,StringSplitOptions.RemoveEmptyEntries);
+			string[] parts = nwn2Code.Split(separators,StringSplitOptions.RemoveEmptyEntries);
 			
-			if (parts.Length == 0) return null;
+			if (parts.Length < 2) {
+				flipCode = null;
+				address = null;
+			}
 			
-			string flip = parts[0];
-			
-			flip = flip.Trim(null); // remove leading and trailing white space characters
-			flip = flip.Replace(Environment.NewLine,String.Empty); // remove new line characters
-			
-			return flip;
+			else {			
+				flipCode = parts[0];				
+				flipCode = flipCode.Trim(null); // remove leading and trailing white space characters
+				flipCode = flipCode.Replace(Environment.NewLine,String.Empty); // remove new line characters
+				
+				address = parts[2];
+				address = address.Trim(null); // remove leading and trailing white space characters
+				address = address.Replace(Environment.NewLine,String.Empty); // remove new line characters
+			}
 		}
 	}
 }

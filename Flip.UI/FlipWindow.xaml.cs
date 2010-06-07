@@ -215,40 +215,6 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void DoMoreStuff(object sender, RoutedEventArgs e)
-		{			
-			ScriptWriter scriptWriter = new ScriptWriter(triggerBar);
-			
-			string flip = scriptWriter.GetFlipCode();
-			
-			string combined = scriptWriter.GetCombinedCode();
-			
-			CloseScript();
-			
-			MessageBox.Show("Creating combined script file.");
-			
-			MessageBox.Show(combined);
-			
-			MessageBox.Show("Extracting Flip code.");
-			
-			string extracted = ScriptWriter.ExtractFlipCodeFromNWScript(combined);
-			
-			MessageBox.Show(extracted);
-			
-			MessageBox.Show("Are they identical? " + (flip == extracted));
-			
-			MessageBox.Show("Opening extracted Flip code.");
-			
-			using (StringReader sr = new StringReader(extracted)) {
-				using (XmlReader reader = XmlReader.Create(sr)) {
-					OpenFlipScript(reader);
-				}
-			}
-			
-			MessageBox.Show("Done.");
-		}
-		
-		
 		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
 		{
 			Clear();

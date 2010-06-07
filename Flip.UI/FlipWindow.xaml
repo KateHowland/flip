@@ -93,10 +93,6 @@
 					<MenuItem
 					Header="Clear canvas"
 					Click="ClearCanvas"/>
-				
-					<MenuItem
-					Header="Save, combine and recover script file"
-					Click="DoMoreStuff"/>
 								
 				</MenuItem>
 					
