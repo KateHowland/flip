@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.ConversationData;
@@ -69,6 +70,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public TriggerControl GetDefaultTrigger()
 		{
+			// HACK:
 			return new NullTrigger();
 		}
 		
@@ -77,5 +79,96 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			return new DialogueWasSpoken(line,conversation);
 		}
+		
+		
+		public TriggerControl GetTriggerFromAddress(Nwn2Address address)
+		{
+			if (address == null) throw new ArgumentNullException("address");
+		
+			TriggerControl empty = GetEmptyTrigger(address.TargetType,address.TargetSlot);
+			
+			if (empty == null) return null;
+			
+//			ObjectBlock block = GetBlock(address);
+			
+			return empty;
+		}
+		
+		
+//		protected ObjectBlock GetBlock(Nwn2Address address)
+//		{
+//			if (address == null) throw new ArgumentNullException("address");
+//			
+//			// HACK:
+//			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory(new Nwn2ImageProvider(new Sussex.Flip.Games.NeverwinterNightsTwo.Integration.NarrativeThreadsHelper()));
+//			
+//			if (address.TargetType == Nwn2Type.Module) {
+//				return blocks.CreateModuleBlock();
+//			}
+//			
+//			else if (address.TargetType == Nwn2Type.Area) {
+//				blocks.CreateAreaBlock(new Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.AreaBehaviour(address.AreaTag,addr
+//			}
+//		}
+		
+		
+		//protected void PopulateTrigger(TriggerControl trigger, 
+		
+		
+		// TODO:
+		// TriggerControls should stop taking in fitters as it's stupid.
+		// Once that's done, fix below (the use of AnyFitters).
+		protected TriggerControl GetEmptyTrigger(Nwn2Type targetType, string scriptSlot)
+		{
+			if (scriptSlot == null) throw new ArgumentNullException("scriptSlot");
+						
+			switch (targetType) {
+					
+				case Nwn2Type.Area:
+					if (scriptSlot == "OnClientEnterScript") return new AreaEntered(new AnyFitter());					
+					break;
+					
+				case Nwn2Type.Creature:
+					if (scriptSlot == "OnDeath") return new CreatureDies(new AnyFitter());	
+					break;
+					
+				case Nwn2Type.Door:
+					if (scriptSlot == "OnLock") return new DoorOrPlaceableIsLocked(new AnyFitter());	
+					if (scriptSlot == "OnUnlock") return new DoorOrPlaceableIsUnlocked(new AnyFitter());	
+					break;
+					
+				case Nwn2Type.Module:
+					if (scriptSlot == "OnAcquireItem") return new ItemAcquired();	
+					if (scriptSlot == "OnActivateItem") return new ItemActivated();	
+					if (scriptSlot == "OnUnacquireItem") return new ItemUnacquired();	
+					if (scriptSlot == "OnHeartbeat") return new ModuleHeartbeat();	
+					if (scriptSlot == "OnModuleStart") return new ModuleStarted();	
+					if (scriptSlot == "OnPlayerRespawn") return new PlayerRespawned();	
+					break;
+					
+				case Nwn2Type.Trigger:
+					if (scriptSlot == "OnEnter") return new TriggerEntered(new AnyFitter());	
+					if (scriptSlot == "OnExit") return new TriggerExited(new AnyFitter());	
+					break;
+					
+				case Nwn2Type.Placeable:
+					if (scriptSlot == "OnLock") return new DoorOrPlaceableIsLocked(new AnyFitter());	
+					if (scriptSlot == "OnUnlock") return new DoorOrPlaceableIsUnlocked(new AnyFitter());	
+					break;
+					
+				default:
+					break;
+			}
+			
+			return null;
+		}
+		
+		
+		// TODO
+//		public TriggerControl GetTriggerFromAddress(Nwn2ConversationAddress address)
+//		{			
+//			if (address == null) throw new ArgumentNullException("address");
+//			
+//		}
 	}
 }

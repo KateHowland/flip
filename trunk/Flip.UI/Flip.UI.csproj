@@ -76,7 +76,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DefaultStatementBehaviour.cs" />
+    <Compile Include="Fitters\AnyFitter.cs" />
     <Compile Include="ImageProvider.cs" />
+    <Compile Include="ScriptTriggerTuple.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="SerialisationHelper.cs" />
     <Compile Include="ChangeNumberDialog.xaml.cs">

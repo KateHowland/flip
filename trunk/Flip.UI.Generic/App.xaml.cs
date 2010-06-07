@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Xml;
 using Sussex.Flip.Core;
 using Sussex.Flip.UI;
+using Sussex.Flip.Utils;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 
@@ -35,15 +36,23 @@ namespace Sussex.Flip.UI.Generic
 			// TODO:
 			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
 			
+			window.MouseDoubleClick += delegate 
+			{  
+				ScriptSelector dialog = new ScriptSelector();
+				dialog.ShowDialog();
+				
+				if (dialog.Selected != null) MessageBox.Show("Opening " + dialog.Selected + " in Flip.");
+			};
+			
 			window.Show();
 		}
 		
 		
-		public FlipScript Rarara()
+		public ScriptTriggerTuple? Rarara()
 		{
 			FlipScript fs = new FlipScript("some.Awesome(Code);");
 			fs.Name = "Brian";
-			return fs;
+			return new ScriptTriggerTuple(fs);
 		}
 	}
 }

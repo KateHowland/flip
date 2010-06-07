@@ -31,7 +31,6 @@ namespace Sussex.Flip.UI
 	/// Contains logic about whether a given Moveable meets
 	/// some set of criteria.
 	/// </summary>
-	/// <remarks>Rename CriteriaChecker?</remarks>
 	public abstract class Fitter
 	{
 		/// <summary>

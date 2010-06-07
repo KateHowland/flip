@@ -35,7 +35,7 @@ namespace Sussex.Flip.UI
 		/// The delegate signature of a method to be called which will ask the user 
 		/// to select a Flip-created script and return that script to be opened.
 		/// </summary>
-		public delegate FlipScript FetchScriptDelegate();		
+		public delegate ScriptTriggerTuple? FetchScriptDelegate();		
 		
 		
 		
@@ -143,10 +143,8 @@ namespace Sussex.Flip.UI
 			if (!CloseCurrentScript()) return;
 			
 			try {
-				FlipScript script = fetchScriptDelegate.Invoke();
-				if (script != null) {
-					OpenFlipScript(script);
-				}
+				ScriptTriggerTuple? tuple = fetchScriptDelegate.Invoke();
+				if (tuple.HasValue) OpenFlipScript(tuple.Value);
 			}
 			catch (Exception x) {
 				MessageBox.Show(String.Format("Failed to open script.{0}{0}{1}",Environment.NewLine,x));
@@ -309,6 +307,13 @@ namespace Sussex.Flip.UI
 				XmlReader reader = new XmlTextReader(tr);
 				OpenFlipScript(reader);
 			}
+		}
+		
+		
+		protected void OpenFlipScript(ScriptTriggerTuple tuple)
+		{
+			if (tuple.Trigger != null) SetTrigger(tuple.Trigger);
+			if (tuple.Script != null) OpenFlipScript(tuple.Script);
 		}
 		
 		
