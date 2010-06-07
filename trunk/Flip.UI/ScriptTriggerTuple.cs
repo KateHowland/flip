@@ -25,16 +25,17 @@
 
 using System;
 using Sussex.Flip.Core;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
 	/// Description of ScriptTriggerTuple.
 	/// </summary>
-	public struct ScriptTriggerTuple
+	public class ScriptTriggerTuple : IDeepCopyable<ScriptTriggerTuple>
 	{
-		private FlipScript script;
-		private TriggerControl trigger;
+		protected FlipScript script;
+		protected TriggerControl trigger;
 		
 		
 		public FlipScript Script {
@@ -58,6 +59,29 @@ namespace Sussex.Flip.UI
 		
 		public ScriptTriggerTuple(FlipScript script) : this(script,null)
 		{			
+		}
+		
+		
+		public ScriptTriggerTuple DeepCopy()
+		{
+			FlipScript scriptCopy;
+			TriggerControl triggerCopy;
+			
+			if (script != null) {
+				scriptCopy = script.DeepCopy();
+			}
+			else {
+				scriptCopy = null;
+			}
+			
+			if (trigger != null) {
+				triggerCopy = (TriggerControl)trigger.DeepCopy();
+			}
+			else {
+				triggerCopy = null;
+			}
+			
+			return new ScriptTriggerTuple(scriptCopy,triggerCopy);
 		}
 	}
 }

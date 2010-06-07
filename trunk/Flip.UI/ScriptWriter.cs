@@ -37,7 +37,7 @@ namespace Sussex.Flip.UI
 	{
 		protected const string FlipCodeBegins = @"/* FLIP CODE - DO NOT EDIT";
 		protected const string FlipCodeEnds = @"FLIP CODE - DO NOT EDIT */";
-		protected string[] separators = new string[] { FlipCodeBegins, FlipCodeEnds };
+		protected static string[] separators = new string[] { FlipCodeBegins, FlipCodeEnds };
 		
 		
 		protected TriggerBar triggerBar;
@@ -172,7 +172,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public string ExtractFlipCodeFromNWScript(string nwscript)
+		public static string ExtractFlipCodeFromNWScript(string nwscript)
 		{
 			if (nwscript == null) throw new ArgumentNullException("nwscript");
 			

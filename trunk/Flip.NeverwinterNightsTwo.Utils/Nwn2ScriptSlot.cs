@@ -153,7 +153,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 											 "OnActivateItem",
 											 "OnClientEnter",
 											 "OnClientLeave",
-											 "OnChat",	
+											 "OnChat", // doesn't seem to be used to create an NWN2GameScript? Is it the only one?
 											 "OnCutsceneAbort",
 											 "OnHeartbeat",
 											 "OnModuleLoad",

@@ -24,7 +24,13 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Windows;
+using Sussex.Flip.Core;
+using Sussex.Flip.UI;
+using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
+using OEIShared.IO;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -45,6 +51,44 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (script == null) throw new ArgumentNullException("script");
 			
 			return script.Name.StartsWith("flipscript");
+		}
+		
+		
+		public List<ScriptTriggerTuple> GetScriptsForModule()
+		{			
+			NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
+			
+			if (mod == null) throw new InvalidOperationException("No module is open.");
+			
+			List<ScriptTriggerTuple> tuples = new List<ScriptTriggerTuple>();
+			
+			foreach (string slot in Nwn2ScriptSlot.GetScriptSlotNames(Nwn2Type.Module)) {
+				
+				IResourceEntry resource = typeof(NWN2ModuleInformation).GetProperty(slot,typeof(IResourceEntry)).GetValue(mod.ModuleInfo,null) as IResourceEntry;
+				
+				if (resource != null) {
+					try {
+						NWN2GameScript script = new NWN2GameScript(resource);						
+						
+						if (BelongsTo(script)) {
+							
+							script.Demand();
+							
+							string name = script.Name;
+							string code = ScriptWriter.ExtractFlipCodeFromNWScript(script.Data);
+								
+							FlipScript flipScript = new FlipScript(code,name);
+							
+							tuples.Add(new ScriptTriggerTuple(flipScript,null));
+						}
+					}
+					catch (Exception e) {
+						MessageBox.Show("Resource was not a game script (" + resource + ").\n\n" + e);
+					}
+				}
+			}
+			
+			return tuples;
 		}
 	}
 }
