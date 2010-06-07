@@ -45,6 +45,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected GameInformation game;
 		protected INwn2Session session;
+		protected ModuleTextFile moduleTextFile;
 		
 		#endregion
 		
@@ -71,6 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			this.game = new GameInformation("Neverwinter Nights 2");
 			this.session = session;
+			this.moduleTextFile = new ModuleTextFile();
 		}
 		
 		#endregion
@@ -121,69 +123,79 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					}
 					
 					session.AttachScriptToConversation(script,line);
-					
-					return;
 				}
 				
-				Nwn2Address nwn2Address = new Nwn2Address(address);
-				
-				if (!Scripts.IsEventRaiser(nwn2Address.TargetType)) {
-					throw new ArgumentException("Cannot attach scripts to a " + nwn2Address.TargetType + ".");
-				}
-								
-				if (nwn2Address.TargetType == Nwn2Type.Module) {
-					session.AttachScriptToModule(script,nwn2Address.TargetSlot);
-				}	
-				
-				else {					
-					NWN2GameArea area = session.GetArea(nwn2Address.AreaTag);
-					if (area == null) {
-						throw new ArgumentException("Area '" + nwn2Address.AreaTag + "' was not found in current module.","address");
-					}
+				else {
+					Nwn2Address nwn2Address = new Nwn2Address(address);
 					
-					if (nwn2Address.TargetType == Nwn2Type.Area) {					
-						session.AttachScriptToArea(script,area,nwn2Address.TargetSlot);
+					if (!Scripts.IsEventRaiser(nwn2Address.TargetType)) {
+						throw new ArgumentException("Cannot attach scripts to a " + nwn2Address.TargetType + ".");
 					}
+									
+					if (nwn2Address.TargetType == Nwn2Type.Module) {
+						session.AttachScriptToModule(script,nwn2Address.TargetSlot);
+					}	
 					
-					else {
-						NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
-						
-						NWN2InstanceCollection instances = session.GetObjectsByTag(area,nwn2ObjectType,nwn2Address.InstanceTag);
-						
-						if (instances.Count == 0) {
-							string error = String.Format("No objects of the given type ({0}) and tag ('{1}') were found in area '{2}'.",
-							                             nwn2Address.TargetType,
-							                             nwn2Address.InstanceTag,
-							                             nwn2Address.AreaTag);
-							throw new ArgumentException(error,"address");
+					else {					
+						NWN2GameArea area = session.GetArea(nwn2Address.AreaTag);
+						if (area == null) {
+							throw new ArgumentException("Area '" + nwn2Address.AreaTag + "' was not found in current module.","address");
 						}
 						
-						if (nwn2Address.UseIndex) {	
-							int count = instances.Count;
+						if (nwn2Address.TargetType == Nwn2Type.Area) {					
+							session.AttachScriptToArea(script,area,nwn2Address.TargetSlot);
+						}
+						
+						else {
+							NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
 							
-							if (nwn2Address.Index >= count) {
-								string error = String.Format("Found only {0} objects of the given type ({1}) and tag ('{2}') in area '{3}' - could not assign to index [{4}].",
-								                             count,
+							NWN2InstanceCollection instances = session.GetObjectsByTag(area,nwn2ObjectType,nwn2Address.InstanceTag);
+							
+							if (instances.Count == 0) {
+								string error = String.Format("No objects of the given type ({0}) and tag ('{1}') were found in area '{2}'.",
 								                             nwn2Address.TargetType,
 								                             nwn2Address.InstanceTag,
-								                             nwn2Address.AreaTag,
-								                             nwn2Address.Index);
+								                             nwn2Address.AreaTag);
 								throw new ArgumentException(error,"address");
 							}
 							
-							else {
-								INWN2Instance instance = instances[nwn2Address.Index];
-								session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+							if (nwn2Address.UseIndex) {	
+								int count = instances.Count;
+								
+								if (nwn2Address.Index >= count) {
+									string error = String.Format("Found only {0} objects of the given type ({1}) and tag ('{2}') in area '{3}' - could not assign to index [{4}].",
+									                             count,
+									                             nwn2Address.TargetType,
+									                             nwn2Address.InstanceTag,
+									                             nwn2Address.AreaTag,
+									                             nwn2Address.Index);
+									throw new ArgumentException(error,"address");
+								}
+								
+								else {
+									INWN2Instance instance = instances[nwn2Address.Index];
+									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+								}
 							}
-						}
-						
-						else {													
-							foreach (INWN2Instance instance in instances) {
-								session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+							
+							else {													
+								foreach (INWN2Instance instance in instances) {
+									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+								}
 							}
 						}
 					}
 				}
+								
+				string entry = String.Format("{0}:{1}",name,address);
+				string file = ModuleTextFile.AttachedScriptsLogName;
+				
+				if (!moduleTextFile.HasTextFile(file)) {
+					moduleTextFile.CreateTextFile(file);
+					new Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Nwn2Session().SaveModule(NWN2Toolset.NWN2ToolsetMainForm.App.Module);
+				}
+				
+				moduleTextFile.AddStringEntry(entry,file);
 			}
 			catch (Exception e) {
 				throw new ApplicationException("Failed to translate and attach script.\n\n" + e.ToString(),e);

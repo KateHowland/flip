@@ -138,6 +138,7 @@
     <Compile Include="Fitters\PlayerFitter.cs" />
     <Compile Include="FlipPlugin.cs" />
     <Compile Include="Integration\NarrativeThreadsHelper.cs" />
+    <Compile Include="ModuleTextFile.cs" />
     <Compile Include="Nwn2ImageProvider.cs" />
     <Compile Include="Nwn2StatementBehaviour.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />
@@ -152,6 +153,10 @@
     <Compile Include="Objects\Nwn2ObjectBehaviour.cs" />
     <Compile Include="Objects\PlayerBehaviour.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
+    <Compile Include="ScriptSelector.xaml.cs">
+      <DependentUpon>ScriptSelector.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ServiceController.cs" />
     <Compile Include="ToolsetEventReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -202,6 +207,7 @@
       <Name>Flip.Utils</Name>
       <Private>False</Private>
     </ProjectReference>
+    <Page Include="ScriptSelector.xaml" />
     <Page Include="Triggers\NullTrigger.xaml" />
     <Page Include="Triggers\Nwn2ParameterlessTrigger.xaml" />
     <Page Include="Triggers\Nwn2SlotTrigger.xaml" />
