@@ -24,13 +24,14 @@
  */
  
 using System;
+using Sussex.Flip.Utils;
 		
 namespace Sussex.Flip.Core
 {
 	/// <summary>
 	/// Represents a script written in Flip.
 	/// </summary>
-	public class FlipScript
+	public class FlipScript : IDeepCopyable<FlipScript>
 	{		
 		#region Fields
 		
@@ -96,6 +97,12 @@ namespace Sussex.Flip.Core
 		public override string ToString()
 		{
 			return String.Format("{0} ({1})",Name,Code);
+		}
+		
+		
+		public FlipScript DeepCopy()
+		{
+			return new FlipScript(code,name);
 		}
 		
 		#endregion

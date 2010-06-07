@@ -48,7 +48,7 @@ namespace Sussex.Flip.UI.Generic
 		}
 		
 		
-		public ScriptTriggerTuple? Rarara()
+		public ScriptTriggerTuple Rarara()
 		{
 			FlipScript fs = new FlipScript("some.Awesome(Code);");
 			fs.Name = "Brian";

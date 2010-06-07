@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
@@ -331,26 +332,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public ScriptTriggerTuple? OpenScriptDialog()
+		public ScriptTriggerTuple OpenScriptDialog()
 		{
-			ScriptSelector dialog = new ScriptSelector();
+			List<ScriptTriggerTuple> tuples = new ScriptHelper().GetScriptsForModule();
+			
+			foreach (ScriptTriggerTuple tuple in tuples) {
+				if (tuple.Trigger == null) tuple.Trigger = new NullTrigger();
+			}
+			
+			ScriptSelector dialog = new ScriptSelector(tuples);
 			dialog.ShowDialog();
 			
 			if (dialog.Selected != null) {
 				
-				string x =
+//				string x =
+//				
+//				"<?xml version=\"1.0\" encoding=\"utf-16\"?><Script><Code><Pegs><Peg><Slot><Statement X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.PicksUp\" StatementType=\"Action\" /><Slots><Slot Index=\"0\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"c_reddragon\" DisplayName=\"Red Dragon\" Nwn2Type=\"Creature\" AreaTag=\"\" ResRef=\"c_reddragon\" IconName=\"\" /></ObjectBlock></Slot><Slot Index=\"1\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"mst_swbs_ada_3\" DisplayName=\"Adamantine Bastard Sword\" Nwn2Type=\"Item\" AreaTag=\"\" ResRef=\"mst_swbs_ada_3\" IconName=\"it_wb_bswordv03\" /></ObjectBlock></Slot></Slots></Statement></Slot></Peg><Peg><Slot><Statement X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Attacks\" StatementType=\"Action\" /><Slots><Slot Index=\"0\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"c_reddragon\" DisplayName=\"Red Dragon\" Nwn2Type=\"Creature\" AreaTag=\"\" ResRef=\"c_reddragon\" IconName=\"\" /></ObjectBlock></Slot><Slot Index=\"1\"><ObjectBlock X=\"742.5\" Y=\"355.5\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.PlayerBehaviour\" Identifier=\"\" DisplayName=\"player\" /></ObjectBlock></Slot></Slots></Statement></Slot></Peg><Peg><Slot /></Peg></Pegs></Code></Script>";
 				
-				"<?xml version=\"1.0\" encoding=\"utf-16\"?><Script><Code><Pegs><Peg><Slot><Statement X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.PicksUp\" StatementType=\"Action\" /><Slots><Slot Index=\"0\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"c_reddragon\" DisplayName=\"Red Dragon\" Nwn2Type=\"Creature\" AreaTag=\"\" ResRef=\"c_reddragon\" IconName=\"\" /></ObjectBlock></Slot><Slot Index=\"1\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"mst_swbs_ada_3\" DisplayName=\"Adamantine Bastard Sword\" Nwn2Type=\"Item\" AreaTag=\"\" ResRef=\"mst_swbs_ada_3\" IconName=\"it_wb_bswordv03\" /></ObjectBlock></Slot></Slots></Statement></Slot></Peg><Peg><Slot><Statement X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Attacks\" StatementType=\"Action\" /><Slots><Slot Index=\"0\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"c_reddragon\" DisplayName=\"Red Dragon\" Nwn2Type=\"Creature\" AreaTag=\"\" ResRef=\"c_reddragon\" IconName=\"\" /></ObjectBlock></Slot><Slot Index=\"1\"><ObjectBlock X=\"742.5\" Y=\"355.5\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.PlayerBehaviour\" Identifier=\"\" DisplayName=\"player\" /></ObjectBlock></Slot></Slots></Statement></Slot></Peg><Peg><Slot /></Peg></Pegs></Code></Script>";
+//				FlipScript script = new FlipScript(x,"Samplescritp");
+//				ScriptTriggerTuple tuple = dialog.Selected.DeepCopy();
+//				tuple.Script = script;
+//				return tuple;
 				
-				
-				
-				
-				
-				
-				
-				FlipScript script = new FlipScript(x,"Samplescritp");
-				ScriptTriggerTuple tuple = new ScriptTriggerTuple(script,(TriggerControl)dialog.Selected.DeepCopy());
-				return tuple;
+				return dialog.Selected.DeepCopy();
 			}
 			
 			return null;
@@ -359,11 +363,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 //		public FlipScript OpenNWScriptFileDialog()
 //		{
-//			// HACK:
-//			// actually this class better belongs out there than it does inside Flip. But currently it requires a 
-//			// TriggerBar to construct it so I'll hack this for now.
-//			ScriptWriter scriptWriter = new ScriptWriter(new TriggerBar(new AreaEntered(new CreaturePlayerFitter()),new CreaturePlayerFitter()));
-//			
 //			// HACK:
 //			Nwn2Session session = new Nwn2Session();
 //			
