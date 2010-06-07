@@ -296,57 +296,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public ScriptTriggerTuple OpenScriptDialog()
 		{
-			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetScriptsForModule();
-			
-			foreach (ScriptTriggerTuple tuple in tuples) {
-				if (tuple.Trigger == null) tuple.Trigger = new NullTrigger();
-			}
+			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts();
 			
 			ScriptSelector dialog = new ScriptSelector(tuples);
 			dialog.ShowDialog();
 			
 			if (dialog.Selected != null) {
-				
-//				string x =
-//				
-//				"<?xml version=\"1.0\" encoding=\"utf-16\"?><Script><Code><Pegs><Peg><Slot><Statement X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.PicksUp\" StatementType=\"Action\" /><Slots><Slot Index=\"0\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"c_reddragon\" DisplayName=\"Red Dragon\" Nwn2Type=\"Creature\" AreaTag=\"\" ResRef=\"c_reddragon\" IconName=\"\" /></ObjectBlock></Slot><Slot Index=\"1\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"mst_swbs_ada_3\" DisplayName=\"Adamantine Bastard Sword\" Nwn2Type=\"Item\" AreaTag=\"\" ResRef=\"mst_swbs_ada_3\" IconName=\"it_wb_bswordv03\" /></ObjectBlock></Slot></Slots></Statement></Slot></Peg><Peg><Slot><Statement X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Attacks\" StatementType=\"Action\" /><Slots><Slot Index=\"0\"><ObjectBlock X=\"NaN\" Y=\"NaN\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.InstanceBehaviour\" Identifier=\"c_reddragon\" DisplayName=\"Red Dragon\" Nwn2Type=\"Creature\" AreaTag=\"\" ResRef=\"c_reddragon\" IconName=\"\" /></ObjectBlock></Slot><Slot Index=\"1\"><ObjectBlock X=\"742.5\" Y=\"355.5\"><Behaviour Type=\"Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.PlayerBehaviour\" Identifier=\"\" DisplayName=\"player\" /></ObjectBlock></Slot></Slots></Statement></Slot></Peg><Peg><Slot /></Peg></Pegs></Code></Script>";
-				
-//				FlipScript script = new FlipScript(x,"Samplescritp");
-//				ScriptTriggerTuple tuple = dialog.Selected.DeepCopy();
-//				tuple.Script = script;
-//				return tuple;
-				
 				return dialog.Selected.DeepCopy();
 			}
-			
-			return null;
+			else {				
+				return null;
+			}
 		}
-		
-			
-//		public FlipScript OpenNWScriptFileDialog()
-//		{
-//			// HACK:
-//			Nwn2Session session = new Nwn2Session();
-//			
-//			
-//			foreach (NWN2GameScript nwn2script in session.GetScripts().Values) {
-//				
-//				if (!nwn2script.Name.StartsWith("flipscript")) continue;
-//				
-//				nwn2script.Demand();
-//				
-//				string nwscriptcode = nwn2script.Data;
-//				string flipcode = scriptWriter.ExtractFlipCodeFromNWScript(nwscriptcode);
-//				
-//				FlipScript fs = new FlipScript(flipcode,nwn2script.Name);
-//				MessageBox.Show("Passing back " + fs + " to be opened.");
-//				return fs;
-//			}
-//			
-//			MessageBox.Show("Didn't find any suitable scripts to open.");
-//			
-//			return null;
-//		}
 		
 		
 		/// <summary>

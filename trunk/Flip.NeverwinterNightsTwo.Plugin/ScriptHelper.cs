@@ -54,7 +54,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public bool BelongsTo(NWN2GameScript script)
+		public bool WasCreatedByFlip(NWN2GameScript script)
 		{
 			if (script == null) throw new ArgumentNullException("script");
 			
@@ -62,7 +62,54 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public List<ScriptTriggerTuple> GetScriptsForModule()
+		public List<ScriptTriggerTuple> GetAllScripts()
+		{			
+			NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
+			
+			if (mod == null) throw new InvalidOperationException("No module is open.");
+			
+			List<ScriptTriggerTuple> tuples = new List<ScriptTriggerTuple>();
+			
+			foreach (NWN2GameScript script in mod.Scripts.Values) {
+				
+				if (!WasCreatedByFlip(script)) continue;
+				
+				script.Demand();
+				
+				// TODO: Check you can still find the target object as specified in the address:
+							
+				string code, address;
+				ScriptWriter.ExtractFlipCodeFromNWScript(script.Data, out code, out address);
+				
+				Nwn2Address nwn2Address = new Nwn2Address(address);
+				TriggerControl trigger = triggerFactory.GetTriggerFromAddress(nwn2Address);
+				
+				// ...
+				// ...
+				// ...
+				// ...
+				// ...
+				
+				// TODO: Check the script is still attached to the target object in the slot it claims to be:
+				// ...
+				// ...
+				// ...
+				// ...
+				// ...
+				
+				// If so, add it to the set of scripts which can be opened:
+								
+				string name = script.Name;
+				FlipScript flipScript = new FlipScript(code,name);							
+							
+				tuples.Add(new ScriptTriggerTuple(flipScript,trigger));				
+			}
+			
+			return tuples;
+		}
+		
+		
+		public List<ScriptTriggerTuple> deprecatedGetScriptsForModule()
 		{			
 			NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
 			
@@ -81,17 +128,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					try {
 						NWN2GameScript script = new NWN2GameScript(resource);						
 						
-						if (BelongsTo(script)) {
+						if (WasCreatedByFlip(script)) {
 							
 							script.Demand();
 							
-							string name = script.Name;
-							string code = ScriptWriter.ExtractFlipCodeFromNWScript(script.Data);
+							string code, address;
+							ScriptWriter.ExtractFlipCodeFromNWScript(script.Data, out code, out address);
 								
+							string name = script.Name;
 							FlipScript flipScript = new FlipScript(code,name);
 							
-							Nwn2Address address = addressFactory.GetModuleAddress(slot);
-							TriggerControl trigger = triggerFactory.GetTriggerFromAddress(address);
+							Nwn2Address nwn2Address = new Nwn2Address(address);//addressFactory.GetModuleAddress(slot);
+							TriggerControl trigger = triggerFactory.GetTriggerFromAddress(nwn2Address);
 							
 							tuples.Add(new ScriptTriggerTuple(flipScript,trigger));
 						}
