@@ -186,16 +186,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						}
 					}
 				}
-								
-				string entry = String.Format("{0}:{1}",name,address);
-				string file = ModuleTextFile.AttachedScriptsLogName;
-				
-				if (!moduleTextFile.HasTextFile(file)) {
-					moduleTextFile.CreateTextFile(file);
-					new Sussex.Flip.Games.NeverwinterNightsTwo.Utils.Nwn2Session().SaveModule(NWN2Toolset.NWN2ToolsetMainForm.App.Module);
-				}
-				
-				moduleTextFile.AddStringEntry(entry,file);
 			}
 			catch (Exception e) {
 				throw new ApplicationException("Failed to translate and attach script.\n\n" + e.ToString(),e);

@@ -64,16 +64,6 @@
 					<MenuItem
 					Header="Close"
 					Click="CloseScript"/>
-				
-					<Separator/>
-				
-					<MenuItem
-					Header="Open script from file"
-					Click="OpenScriptFromFile"/>
-				
-					<MenuItem
-					Header="Save script to file"
-					Click="SaveScriptToFile"/>
 									
 					<Separator/>
 				

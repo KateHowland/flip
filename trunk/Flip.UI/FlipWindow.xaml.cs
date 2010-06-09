@@ -80,7 +80,8 @@ namespace Sussex.Flip.UI
 			triggerBar.Changed += ScriptChanged;
 			UpdateNaturalLanguageView(triggerBar);
 			
-			Loaded += delegate { UpdateTitle(); };
+//			Loaded += delegate { UpdateTitle(); };
+			Title = "Flip";
 		}
 		
 		
@@ -91,56 +92,59 @@ namespace Sussex.Flip.UI
 			set { 
 				if (isDirty != value) {
 					isDirty = value;
-					UpdateTitle();
+					//UpdateTitle();
 				}
 			}
 		}
 		
 		
-		string filename = "filename";
-		protected void UpdateTitle()
-		{
-			if (isDirty) Title = String.Format("Flip: {0}*",filename);
-			else Title = String.Format("Flip: {0}",filename);
-		}
+//		string filename = "filename";
+//		protected void UpdateTitle()
+//		{
+//			if (isDirty) Title = String.Format("Flip: {0}*",filename);
+//			else Title = String.Format("Flip: {0}",filename);
+//		}
 		
 		
-		protected bool CloseCurrentScript()
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns>Returns false if the user cancelled; true otherwise.</returns>
+		public MessageBoxResult AskWhetherToSaveCurrentScript()
 		{
-			if (!IsDirty) return true;
+			if (!IsDirty) return MessageBoxResult.None;
 			
 			MessageBoxResult result = MessageBox.Show("Save this script before closing?",
 										              "Save changes?",
 										              MessageBoxButton.YesNoCancel,
 										              MessageBoxImage.Question,
 										              MessageBoxResult.Cancel);
-				                
-			switch (result) {
-					
-				case MessageBoxResult.Yes:
-					SaveScriptToFile();
-					CloseScript();
-					return true;
-					
-				case MessageBoxResult.No:
-					CloseScript();
-					return true;
-					
-				default:
-					return false;
+			
+			if (result == MessageBoxResult.Yes) {				
+				bool cancelled = !SaveScriptToModule();
+				
+				if (cancelled) return MessageBoxResult.Cancel;
+				
+				CloseScript();
 			}
+			
+			else if (result == MessageBoxResult.No) {
+				CloseScript();
+			}
+			
+			return result;
 		}
 		
 		
 		protected void NewScript(object sender, RoutedEventArgs e)
 		{
-			if (!CloseCurrentScript()) return;
+			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 		}
 		
 		
 		protected void OpenScriptFromModule(object sender, RoutedEventArgs e)
 		{			
-			if (!CloseCurrentScript()) return;
+			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 			
 			try {
 				ScriptTriggerTuple tuple = fetchScriptDelegate.Invoke();
@@ -154,110 +158,138 @@ namespace Sussex.Flip.UI
 		
 		protected void CloseScript(object sender, RoutedEventArgs e)
 		{
-			if (!CloseCurrentScript()) return;
+			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 		}
 		
 		
-		protected void CloseScript()
+		public void CloseScript()
 		{			
 			Clear();
 			IsDirty = false;
-			
-			MessageBox.Show("Empty script file should be opened here. Not implemented.");
 		}
 		
 		
-		protected void SaveScriptToFile(object sender, RoutedEventArgs e)
-		{
-			SaveScriptToFile();
-		}
+//		/// <summary>
+//		/// Deprecated.
+//		/// </summary>
+//		/// <param name="sender"></param>
+//		/// <param name="e"></param>
+//		protected void SaveScriptToFile(object sender, RoutedEventArgs e)
+//		{
+//			try {
+//				SaveScriptToFile();
+//			}
+//			catch (Exception x) {
+//				MessageBox.Show(x.ToString());
+//			}
+//		}
 		
 		
-		protected void SaveScriptToFile()
-		{
-			Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
-			dialog.AddExtension = true;
-			dialog.CheckFileExists = false;
-			dialog.CheckPathExists = true;
-			dialog.CreatePrompt = false;
-			dialog.DefaultExt = ".txt";
-			dialog.DereferenceLinks = false;			
-			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
-			dialog.FilterIndex = 0;			
-			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
-			dialog.OverwritePrompt = true;
-			dialog.RestoreDirectory = false;
-			dialog.Title = "Save script";
-			dialog.ValidateNames = true;
-			
-			bool? result = dialog.ShowDialog(this);			
-			if (!result.HasValue || !result.Value) return;
-			
-			string path = dialog.FileName;
-			
-			try {
-				XmlWriterSettings settings = new XmlWriterSettings();
-				settings.CloseOutput = true;
-				settings.Indent = true;
-				settings.NewLineOnAttributes = false;
-				
-				using (XmlWriter writer = XmlWriter.Create(path,settings)) {
-					new ScriptWriter(triggerBar).WriteFlipCode(writer);
-				}
-				
-				// HACK:
-				//MessageBox.Show("Saved.");
-				OpenScriptFromFile(null,null);
-			}
-			catch (Exception x) {
-				MessageBox.Show(x.ToString());
-			}
-		}
+//		/// <summary>
+//		/// Deprecated.
+//		/// </summary>
+//		/// <returns>Returns false if the user cancelled; true otherwise.</returns>
+//		protected bool SaveScriptToFile()
+//		{
+//			Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+//			dialog.AddExtension = true;
+//			dialog.CheckFileExists = false;
+//			dialog.CheckPathExists = true;
+//			dialog.CreatePrompt = false;
+//			dialog.DefaultExt = ".txt";
+//			dialog.DereferenceLinks = false;			
+//			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
+//			dialog.FilterIndex = 0;			
+//			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
+//			dialog.OverwritePrompt = true;
+//			dialog.RestoreDirectory = false;
+//			dialog.Title = "Save script";
+//			dialog.ValidateNames = true;
+//			
+//			bool? result = dialog.ShowDialog(this);			
+//			if (!result.HasValue || !result.Value) return false;
+//			
+//			string path = dialog.FileName;
+//			
+//			try {
+//				XmlWriterSettings settings = new XmlWriterSettings();
+//				settings.CloseOutput = true;
+//				settings.Indent = true;
+//				settings.NewLineOnAttributes = false;
+//				
+//				using (XmlWriter writer = XmlWriter.Create(path,settings)) {
+//					new ScriptWriter(triggerBar).WriteFlipCode(writer);
+//				}
+//				
+//				return true;
+//			}
+//			catch (Exception x) {
+//				throw new ApplicationException("Failed to save script.",x);
+//			}
+//		}
 		
 		
-		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
-		{
-			Clear();
-			
-			Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-			dialog.CheckFileExists = true;
-			dialog.CheckPathExists = true;
-			dialog.DefaultExt = ".txt";
-			dialog.DereferenceLinks = true;
-			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
-			dialog.FilterIndex = 0;
-			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
-			dialog.Multiselect = false;
-			dialog.Title = "Open script";
-			dialog.ValidateNames = true;
-			
-			bool? result = dialog.ShowDialog(this);			
-			if (!result.HasValue || !result.Value) return;
-			
-			string path = dialog.FileName;
-			
-			try {
-				OpenFlipScript(path);
-			}
-			catch (Exception x) {
-				MessageBox.Show(x.ToString());
-			}
-		}
+//		protected void OpenScriptFromFile(object sender, RoutedEventArgs e)
+//		{
+//			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+//			
+//			Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+//			dialog.CheckFileExists = true;
+//			dialog.CheckPathExists = true;
+//			dialog.DefaultExt = ".txt";
+//			dialog.DereferenceLinks = true;
+//			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
+//			dialog.FilterIndex = 0;
+//			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
+//			dialog.Multiselect = false;
+//			dialog.Title = "Open script";
+//			dialog.ValidateNames = true;
+//			
+//			bool? result = dialog.ShowDialog(this);			
+//			if (!result.HasValue || !result.Value) return;
+//			
+//			string path = dialog.FileName;
+//			
+//			try {
+//				OpenFlipScript(path);
+//			}
+//			catch (Exception x) {
+//				MessageBox.Show(x.ToString());
+//			}
+//		}
 		
 		
-		protected void OpenFlipScript(string path)
+		public void OpenFlipScript(string path)
 		{
 			if (String.IsNullOrEmpty(path)) throw new ArgumentException("Invalid path.","path");
 			if (!File.Exists(path)) throw new ArgumentException("Invalid path - file does not exist.","path");
 			
 			XmlReader reader = new XmlTextReader(path);				
-			OpenFlipScript(reader);
+			LoadFlipCodeFromReader(reader);
 		}
 		
 		
-		protected void OpenFlipScript(XmlReader reader)
+		public void OpenFlipScript(ScriptTriggerTuple tuple)
+		{			
+			if (tuple == null) throw new ArgumentNullException("tuple");
+			
+			CloseScript();
+			
+			if (tuple.Script != null) {
+				using (TextReader tr = new StringReader(tuple.Script.Code)) {
+					XmlReader reader = new XmlTextReader(tr);
+					LoadFlipCodeFromReader(reader);
+				}
+			}
+			if (tuple.Trigger != null) SetTrigger(tuple.Trigger);
+		}
+		
+		
+		protected void LoadFlipCodeFromReader(XmlReader reader)
 		{
 			if (reader == null) throw new ArgumentNullException("reader");
+			
+			CloseScript();
 						
 			reader.MoveToContent();				
 			triggerBar.ReadXml(reader);
@@ -265,28 +297,8 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void OpenFlipScript(FlipScript script)
-		{
-			if (script == null) throw new ArgumentNullException("script");
-		
-			using (TextReader tr = new StringReader(script.Code)) {
-				XmlReader reader = new XmlTextReader(tr);
-				OpenFlipScript(reader);
-			}
-		}
-		
-		
-		protected void OpenFlipScript(ScriptTriggerTuple tuple)
-		{
-			if (tuple.Trigger != null) SetTrigger(tuple.Trigger);
-			if (tuple.Script != null) OpenFlipScript(tuple.Script);
-		}
-		
-		
 		protected void ExitFlip(object sender, RoutedEventArgs e)
 		{
-			if (!CloseCurrentScript()) return;
-			
 			Close();
 		}
 		
@@ -328,9 +340,25 @@ namespace Sussex.Flip.UI
 				
 		protected void SaveScriptToModule(object sender, RoutedEventArgs e)
 		{			
+			try {
+				if (SaveScriptToModule()) MessageBox.Show("Script was saved successfully.");
+			}
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
+			}
+		}
+		
+				
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns>Returns false if the script was incomplete and the save operation was aborted;
+		/// true otherwise.</returns>
+		protected bool SaveScriptToModule()
+		{			
 			if (!triggerBar.IsComplete) {
 				MessageBox.Show("Your script isn't finished! Fill in all the blanks before trying to compile.");
-				return;
+				return false;
 			}
 			
 			ScriptWriter scriptWriter = new ScriptWriter(triggerBar);
@@ -344,10 +372,10 @@ namespace Sussex.Flip.UI
 			try {
 				attacher.Attach(script,address);
 				IsDirty = false;
-				MessageBox.Show("Script was saved successfully.");
+				return true;
 			}
-			catch (Exception ex) {
-				MessageBox.Show(String.Format("Script could not be saved - something went wrong.\n\n{0}",ex));
+			catch (Exception x) {
+				throw new ApplicationException("Failed to save script to module.",x);
 			}
 		}
 		

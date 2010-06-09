@@ -85,6 +85,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// </summary>
 		protected Nwn2TriggerFactory triggers;
 		
+		/// <summary>
+		/// 
+		/// </summary>
+		protected ScriptHelper scriptHelper;
+		
 		#endregion
 		
 		#region Properties
@@ -160,20 +165,39 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		#region Methods
 		
 		public void UseConversationLineAsTrigger(NWN2ConversationConnector line, NWN2GameConversation conversation)
-		{
-			if (window == null) {
-				MessageBox.Show("Flip is not currently open.");
-				return;
-			}
+		{			
 			if (line == null) throw new ArgumentNullException("line");
 			if (conversation == null) throw new ArgumentNullException("conversation");
 			if (!conversation.AllConnectors.Contains(line)) throw new ArgumentException("Line is not a part of the given conversation.","line");
-			
-			TriggerControl trigger = triggers.GetTrigger(line,conversation);
-			
+							
 			LaunchFlip();
 			
-			window.SetTrigger(trigger);
+			if (window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			
+			try {
+				TriggerControl trigger = triggers.GetTrigger(line,conversation);
+				
+				FlipScript flipScript;
+				
+				if (ScriptHelper.HasFlipScriptAttachedAsAction(line)) {
+					NWN2GameScript script = new NWN2GameScript(line.Actions[0].Script);
+					script.Demand();
+					flipScript = scriptHelper.GetFlipScript(script,false);
+				}
+				
+				else {
+					flipScript = null;
+				}
+				
+				ScriptTriggerTuple tuple = new ScriptTriggerTuple(flipScript,trigger);
+				
+				LaunchFlip();
+				
+				window.OpenFlipScript(tuple);
+			}
+			catch (Exception x) {
+				throw new ApplicationException("Failed to open a script that was attached to a conversation.",x);
+			}
 		}
 		
 		
@@ -268,9 +292,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Nwn2Session session = new Nwn2Session();
 			FlipAttacher attacher = new NWScriptAttacher(translator,session);
 								
-			Nwn2Fitters fitters = new Nwn2Fitters();	
-			
+			Nwn2Fitters fitters = new Nwn2Fitters();				
 			triggers = new Nwn2TriggerFactory(fitters);
+			scriptHelper = new ScriptHelper(triggers);
 			
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);	
 			Nwn2ImageProvider images = new Nwn2ImageProvider(new NarrativeThreadsHelper());
@@ -288,8 +312,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			window.Closing += delegate(object sender, CancelEventArgs e) 
 			{  
+				// Hide the window instead of closing it:
 				e.Cancel = true;
-				window.Visibility = Visibility.Hidden;
+				
+				// Unless the user changes their mind about closing the script,
+				// in which case don't even do that:
+				if (window.AskWhetherToSaveCurrentScript() != MessageBoxResult.Cancel) {
+					window.CloseScript();
+					window.Visibility = Visibility.Hidden;
+				}
 			};
 		}
 		
@@ -322,14 +353,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			else window.Visibility = Visibility.Visible;
 			
 			window.Activate();
-			
-//			if (window == null) {
-//				InitialiseFlip();
-//				window.Show();
-//			}			
-//			else {
-//				window.Visibility = Visibility.Visible;
-//			}
 		}
 		
 		

@@ -196,6 +196,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (tree == null) throw new ApplicationException("Couldn't find GlacialTreeList.");
 								
 				winforms.MenuItem item = new winforms.MenuItem("Add Flip script");
+				item.Name = "AddEditScriptMenuItem";
 				
 				item.Click += delegate
 				{
@@ -219,6 +220,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						else {							
 							useDialogueAsTriggerDelegate.Invoke(connector,viewer.Conversation);
 						}
+					}
+				};
+				
+				tree.ContextMenu.Popup += delegate
+				{  
+					if (tree.SelectedNodes.Count == 1) {
+						GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
+												
+						NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
+						
+						if (connector == null) {
+							item.Enabled = false;
+							item.Text = "Add Flip script";
+						}
+						
+						else {
+							item.Enabled = true;
+							
+							if (ScriptHelper.HasFlipScriptAttachedAsAction(connector)) {
+								item.Text = "Edit Flip script";
+							}
+							else {
+								item.Text = "Add Flip script";
+							}
+						}
+					}					
+					
+					else {
+						item.Enabled = false;
+						item.Text = "Add Flip script";
 					}
 				};
 				

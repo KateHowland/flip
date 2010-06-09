@@ -80,6 +80,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		}
 		
 		
+		public static Nwn2ConversationAddress TryCreate(string address)
+		{
+			try {
+				return new Nwn2ConversationAddress(address);
+			}
+			catch (Exception) {
+				return null;
+			}
+		}
+		
+		
 		public override string ToString()
 		{
 			return val;
