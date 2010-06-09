@@ -38,12 +38,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	public class Nwn2TriggerFactory
 	{
 		protected Nwn2Fitters fitters;
+		protected Nwn2Session session;
 		
 		
 		public Nwn2TriggerFactory(Nwn2Fitters fitters)
 		{
 			if (fitters == null) throw new ArgumentNullException("fitters");
 			this.fitters = fitters;
+			this.session = new Nwn2Session();
 		}
 		
 		
@@ -92,6 +94,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 //			ObjectBlock block = GetBlock(address);
 			
 			return empty;
+		}
+		
+		
+		public TriggerControl GetTriggerFromAddress(Nwn2ConversationAddress address)
+		{
+			if (address == null) throw new ArgumentNullException("address");
+			
+			NWN2GameModule mod = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
+			if (mod == null) throw new InvalidOperationException("No module is open.");
+			
+			NWN2GameConversation conversation = session.GetConversation(address.Conversation);
+			
+			if (conversation == null) throw new ArgumentException("Could not find conversation '" + address.Conversation + "' in this module.","conversation");
+			
+			if (NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(conversation) == null) {
+				conversation.Demand();
+			}
+			
+			NWN2ConversationLine line = conversation.GetLineFromGUID(address.LineID);
+			
+			if (line == null) throw new ArgumentException("Could not find a line with the given ID in conversation '" + address.Conversation + "'.","conversation");
+		
+			return new DialogueWasSpoken(line.OwningConnector,conversation);
 		}
 		
 		
@@ -162,13 +187,5 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			return null;
 		}
-		
-		
-		// TODO
-//		public TriggerControl GetTriggerFromAddress(Nwn2ConversationAddress address)
-//		{			
-//			if (address == null) throw new ArgumentNullException("address");
-//			
-//		}
 	}
 }

@@ -630,7 +630,56 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			AreaBase a = CreateAreaBase(area);
 							
 			return a.GetObjects(type,tag);	
-		}		
+		}
+		
+		
+//		/// <summary>
+//		/// Gets all objects matching a particular address.
+//		/// </summary>
+//		/// <param name="address">The address specifying an instance or instances.</param>
+//		/// <returns>A collection of objects.</returns>
+//		public NWN2InstanceCollection GetObjectsByAddress(Nwn2Address address)
+//		{
+//			if (address == null) throw new ArgumentNullException("address");
+//			if (address.TargetType == Nwn2Type.Module) throw new ArgumentException("Address specifies a Module, not an instance.");
+//			if (address.TargetType == Nwn2Type.Area) throw new ArgumentException("Address specifies a Area, not an instance.");
+//										
+//			NWN2GameArea area = GetArea(address.AreaTag);
+//			if (area == null) return null;
+//			
+//			NWN2ObjectType type = Nwn2ScriptSlot.GetObjectType(address.TargetType).Value;
+//			
+//			string tag = address.InstanceTag;
+//			
+//			return GetObjectsByTag(area,type,tag);
+//		}
+		
+		
+		/// <summary>
+		/// Gets all objects matching a particular address.
+		/// </summary>
+		/// <param name="address">The address specifying an instance or instances.</param>
+		/// <returns>A collection of objects.</returns>
+		/// <remarks>Returns an empty instance collection if the area in question is not open.</remarks>
+		public NWN2InstanceCollection GetObjectsByAddressInArea(Nwn2Address address, string areaTag)
+		{
+			if (areaTag == null) throw new ArgumentNullException("areaTag");
+			if (areaTag == String.Empty) throw new ArgumentException("Must specify an area.","areaTag");
+			if (address == null) throw new ArgumentNullException("address");
+			if (address.TargetType == Nwn2Type.Module) throw new ArgumentException("Address specifies a Module, not an instance.");
+			if (address.TargetType == Nwn2Type.Area) throw new ArgumentException("Address specifies a Area, not an instance.");
+										
+			NWN2GameArea area = GetArea(areaTag);
+			if (area == null) throw new ArgumentException("No such area as " + areaTag + ".","areaTag");
+			
+			if (!AreaIsOpen(area)) return new NWN2InstanceCollection();
+			
+			NWN2ObjectType type = Nwn2ScriptSlot.GetObjectType(address.TargetType).Value;
+			
+			string tag = address.InstanceTag;
+			
+			return GetObjectsByTag(area,type,tag);
+		}
 		
 		
 		/// <summary>

@@ -144,6 +144,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		}
 		
 		
+		public static Nwn2Address TryCreate(string address)
+		{
+			try {
+				return new Nwn2Address(address);
+			}
+			catch (Exception) {
+				return null;
+			}
+		}
+		
+		
 		public override string ToString()
 		{
 			return val;

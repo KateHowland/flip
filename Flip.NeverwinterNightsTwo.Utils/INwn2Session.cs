@@ -234,6 +234,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		
 		/// <summary>
+		/// Gets all objects matching a particular address.
+		/// </summary>
+		/// <param name="address">The address specifying an instance or instances.</param>
+		/// <returns>A collection of objects.</returns>
+		/// <remarks>TODO update this header</remarks>
+		NWN2InstanceCollection GetObjectsByAddressInArea(Nwn2Address address, string areaTag);
+			
+		
+		/// <summary>
 		/// Gets an area in the current module.
 		/// </summary>
 		/// <param name="name">The name of the area.</param>
