@@ -285,16 +285,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				 * 
 				 */				
 				
-				if (manager == null) return;				
+				if (manager != null) {
 				
-				foreach (ObjectBlock block in ntBlocks) {						
-					string bag = String.Format(InstanceBagNamingFormat,((InstanceBehaviour)block.Behaviour).Nwn2Type);						
-					if (manager.HasBag(bag) && manager.HasMoveable(block,bag)) {
-						manager.RemoveMoveable(bag,block);
+					foreach (ObjectBlock block in ntBlocks) {						
+						string bag = String.Format(InstanceBagNamingFormat,((InstanceBehaviour)block.Behaviour).Nwn2Type);						
+						if (manager.HasBag(bag) && manager.HasMoveable(block,bag)) {
+							manager.RemoveMoveable(bag,block);
+						}
 					}
+						
+					ntBlocks.Clear();	
 				}
-					
-				ntBlocks.Clear();	
 			};
 			
 			

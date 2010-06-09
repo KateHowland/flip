@@ -322,6 +322,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					window.Visibility = Visibility.Hidden;
 				}
 			};
+			
+			reporter.ModuleChanged += delegate 
+			{ 
+				if (window != null) {
+					window.CloseScript();
+					window.Close();
+				}
+			};
 		}
 		
 		
