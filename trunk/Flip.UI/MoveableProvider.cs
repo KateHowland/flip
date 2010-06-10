@@ -89,6 +89,5 @@ namespace Sussex.Flip.UI
 		
 		public abstract ScriptInformation GetScriptFromSerialised(string path);
 		public abstract void WriteScriptToFile(ScriptInformation script, string path);
-		public abstract TriggerControl GetDefaultTrigger();
 	}
 }

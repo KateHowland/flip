@@ -255,12 +255,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public override TriggerControl GetDefaultTrigger()
-		{
-			return triggers.GetDefaultTrigger();
-		}
-		
-		
 		Sussex.Flip.Games.NeverwinterNightsTwo.Integration.NarrativeThreadsHelper nt 
 			= new Sussex.Flip.Games.NeverwinterNightsTwo.Integration.NarrativeThreadsHelper();
 		

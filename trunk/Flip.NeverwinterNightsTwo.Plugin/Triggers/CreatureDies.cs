@@ -71,7 +71,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override Moveable DeepCopy()
 		{
-			return new CreatureDies(raiserSlot.Fitter);
+			CreatureDies copy = new CreatureDies(raiserSlot.Fitter);
+			if (RaiserBlock != null) copy.RaiserBlock = (ObjectBlock)RaiserBlock.DeepCopy();
+			return copy;
 		}
 	}
 }

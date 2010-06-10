@@ -29,6 +29,10 @@ using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.ConversationData;
+using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
+using NWN2Toolset.NWN2.Data.TypedCollections;
+using NWN2Toolset.NWN2.Views;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -39,6 +43,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{
 		protected Nwn2Fitters fitters;
 		protected Nwn2Session session;
+		protected Nwn2ObjectBlockFactory blocks;
 		
 		
 		public Nwn2TriggerFactory(Nwn2Fitters fitters)
@@ -46,6 +51,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (fitters == null) throw new ArgumentNullException("fitters");
 			this.fitters = fitters;
 			this.session = new Nwn2Session();
+			this.blocks = new Nwn2ObjectBlockFactory();
 		}
 		
 		
@@ -70,13 +76,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public TriggerControl GetDefaultTrigger()
-		{
-			// HACK:
-			return new NullTrigger();
-		}
-		
-		
 		public TriggerControl GetTrigger(NWN2ConversationConnector line, NWN2GameConversation conversation)
 		{
 			return new DialogueWasSpoken(line,conversation);
@@ -87,13 +86,51 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (address == null) throw new ArgumentNullException("address");
 		
-			TriggerControl empty = GetEmptyTrigger(address.TargetType,address.TargetSlot);
+			TriggerControl trigger = GetEmptyTrigger(address.TargetType,address.TargetSlot);
 			
-			if (empty == null) return null;
+			if (trigger == null) return null;
 			
-//			ObjectBlock block = GetBlock(address);
+			Nwn2SlotTrigger slotted = trigger as Nwn2SlotTrigger;
 			
-			return empty;
+			if (slotted != null) {			
+				ObjectBlock block = GetBlock(address);
+				slotted.RaiserBlock = block;
+			}
+			
+			return trigger;
+		}
+		
+		
+		public ObjectBlock GetBlock(Nwn2Address address)
+		{
+			if (address == null) throw new ArgumentNullException("address");
+			
+			if (session.GetModule() == null) throw new InvalidOperationException("No module is open.");
+			
+			if (address.TargetType == Nwn2Type.Module) return blocks.CreateModuleBlock();
+			
+			else if (address.TargetType == Nwn2Type.Area) {
+				NWN2GameArea area = session.GetArea(address.AreaTag);
+				
+				if (area == null) throw new ArgumentException("No such area in the current module.","area");
+				else return blocks.CreateAreaBlock(area);
+			}
+			
+			else {				
+				NWN2ObjectType type = Nwn2ScriptSlot.GetObjectType(address.TargetType).Value;
+				
+				foreach (NWN2AreaViewer viewer in NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers()) {
+					
+					NWN2InstanceCollection instances = session.GetObjectsByAddressInArea(address,viewer.Area.Tag);
+					
+					if (instances.Count > 0) {
+						INWN2Instance instance = instances[0];
+						return blocks.CreateInstanceBlock(instance);
+					}
+				}
+				
+				return null;
+			}
 		}
 		
 		
