@@ -3,11 +3,25 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
 	
-    <Border
-	x:Name="border"
-	Height="80"
-	Width="400"
-    BorderThickness="3"
-	Background="Pink"/>
+	<Grid>
+	
+	    <Border
+		x:Name="border"
+		Height="80"
+		Width="400"
+	    BorderThickness="3"
+		Background="Pink"
+		Grid.ZIndex="2"/>
+	
+		<TextBlock
+		x:Name="dragMessageTextBlock"
+		FontSize="20"
+		Foreground="SlateGray"
+		Text="Drag and drop an event here"
+		VerticalAlignment="Center"
+		HorizontalAlignment="Center"
+		Grid.ZIndex="3"/>
+	
+	</Grid>
 	
 </flipui:MoveableSlot>

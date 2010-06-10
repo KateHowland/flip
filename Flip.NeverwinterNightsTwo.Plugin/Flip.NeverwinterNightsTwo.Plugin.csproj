@@ -181,7 +181,9 @@
       <DependentUpon>Nwn2ParameterlessTrigger.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Triggers\Nwn2SlotTrigger.cs" />
+    <Compile Include="Triggers\Nwn2SlotTrigger.cs">
+      <DependentUpon>Nwn2SlotTrigger.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Triggers\Nwn2TriggerFactory.cs" />
     <Compile Include="Triggers\PlaceableUsed.cs" />
     <Compile Include="Triggers\PlayerRespawned.cs" />

@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
 	
-	<UserControl.Resources>
+	<UserControl.Resources>		
 		<LinearGradientBrush 
 		x:Key="yellowGradient"
 		StartPoint="0,0"
@@ -18,7 +18,7 @@
 				<GradientStop Offset="0.9" Color="White"/>
 				<GradientStop Offset="0.95" Color="Gold"/>
 			</LinearGradientBrush.GradientStops>
-		</LinearGradientBrush>
+		</LinearGradientBrush>	
 	</UserControl.Resources>
 	
 	<Grid
@@ -27,7 +27,7 @@
 		<Border
 		x:Name="border"
 		Width="700"
-		Height="80"
+		Height="100"
 		VerticalAlignment="Top"
 	    HorizontalAlignment="Stretch"
 		BorderThickness="2"
@@ -45,7 +45,7 @@
 	    		<TextBlock
 	    		Text="WHEN"
 	    		Foreground="Black"
-	    		FontSize="24"
+	    		FontSize="27"
 	    		FontWeight="Bold"
 	    		FontFamily="Helvetica"
 	    		VerticalAlignment="Center"
@@ -55,11 +55,6 @@
 	    	</StackPanel>
 			
 		</Border>	
-	
-		<!--<flipui:Spine
-		x:Name="spine"
-		Margin="14,0,0,0"
-		Grid.ZIndex="1"/>-->
 	
     </Grid>
 </UserControl>

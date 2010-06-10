@@ -58,7 +58,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public List<TriggerControl> GetTriggers()
 		{
 			return new List<TriggerControl> { 
-				new NullTrigger(),
+				//new NullTrigger(),
 				new CreatureDies(fitters.OnlyCreatures),
 				//new DoorOrPlaceableIsLocked(fitters.OnlyDoorsOrPlaceables), //largely pointless
 				new DoorOrPlaceableIsUnlocked(fitters.OnlyDoorsOrPlaceables),

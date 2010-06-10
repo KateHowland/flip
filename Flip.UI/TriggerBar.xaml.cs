@@ -129,13 +129,6 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public ScriptInformation GetScript()
-		{
-			ScriptInformation script = new ScriptInformation(TriggerControl,spine);
-			return script;
-		}
-		
-		
 		public void Clear()
 		{
 			TriggerControl = null;

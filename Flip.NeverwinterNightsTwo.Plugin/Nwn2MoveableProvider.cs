@@ -122,7 +122,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
 			}
 			
-			manager.DisplayBag(OtherBagName);	
+			manager.DisplayBag(TriggersBagName);	
 		}
 		
 		
@@ -528,72 +528,5 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);
 		}
-				
-		
-		Serialiser serialiser = new Serialiser();	
-		
-		
-		public override ScriptInformation GetScriptFromSerialised(string path)
-		{
-			if (path == null) throw new ArgumentNullException("path");
-			
-			XmlReader reader = new XmlTextReader(path);
-						
-			reader.MoveToContent();
-			
-			if (reader.LocalName != "ScriptInformation") {
-				throw new FormatException("Not a valid script file.");
-			}
-			
-			if (reader.IsEmptyElement) {
-				throw new FormatException("Not a valid script file.");				
-			}
-			
-			reader.ReadStartElement();
-			
-//			Nwn2SlotTrigger trigger = new Nwn2SlotTrigger();			
-//			trigger.ReadXml(reader);
-//			reader.MoveToContent();
-//			
-//			Spine spine = new Spine();
-//			spine.ReadXml(reader);
-//			
-//			ScriptInformation script = new ScriptInformation(trigger,spine);
-			
-			return null;//script;
-		}
-		
-		
-		public override void WriteScriptToFile(ScriptInformation script, string path)
-		{
-			if (script == null) throw new ArgumentNullException("script");
-			if (path == null) throw new ArgumentNullException("path");
-			
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.CloseOutput = true;
-			settings.Indent = true;
-			settings.NewLineOnAttributes = false;
-			
-			using (XmlWriter writer = XmlWriter.Create(path,settings)) {
-			
-				writer.WriteStartDocument();
-			
-				writer.WriteStartElement("ScriptInformation");
-				
-				writer.WriteStartElement("Trigger");
-				if (script.Trigger != null) script.Trigger.WriteXml(writer);
-				writer.WriteEndElement();
-				
-				writer.WriteStartElement("Spine");
-				if (script.Spine != null) script.Spine.WriteXml(writer);
-				writer.WriteEndElement();
-			
-				writer.WriteEndElement();
-				
-				writer.WriteEndDocument();
-				
-				writer.Flush();
-			}
-		}	
 	}
 }

@@ -85,9 +85,5 @@ namespace Sussex.Flip.UI
 		
 		protected abstract void CreateBags();
 		protected abstract void PopulateBags();
-		
-		
-		public abstract ScriptInformation GetScriptFromSerialised(string path);
-		public abstract void WriteScriptToFile(ScriptInformation script, string path);
 	}
 }
