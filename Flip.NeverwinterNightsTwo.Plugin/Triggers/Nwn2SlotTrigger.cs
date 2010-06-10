@@ -10,7 +10,7 @@ using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-    public abstract partial class Nwn2SlotTrigger : TriggerControl
+    public partial class Nwn2SlotTrigger : TriggerControl
     {
     	protected BlockSlot raiserSlot;
     	protected Nwn2AddressFactory addressFactory;
@@ -89,6 +89,36 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public override void Clear()
 		{
 			RaiserBlock = null;
+		}
+		
+		
+		public override string GetAddress()
+		{
+			return String.Empty;
+		}
+		
+		
+		public override void WriteXml(XmlWriter writer)
+		{			
+		}
+		
+		
+		public override void ReadXml(XmlReader reader)
+		{
+		}
+		
+		
+		public override string GetNaturalLanguage()
+		{
+			return String.Empty;
+		}
+		
+		
+		public override Moveable DeepCopy()
+		{
+			Nwn2SlotTrigger copy = new Nwn2SlotTrigger(raiserSlot.Fitter,text1.Text,text2.Text);
+			copy.RaiserBlock = RaiserBlock;
+			return copy;
 		}
     }
 }

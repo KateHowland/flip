@@ -72,16 +72,13 @@ namespace Sussex.Flip.UI
 			PreviewDragLeave += DestroyAdorner;			
 			PreviewDrop += DestroyAdorner;	
 						
-			triggerBar = new TriggerBar(provider.GetDefaultTrigger(),new SpineFitter());
+			triggerBar = new TriggerBar(new SpineFitter());
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);
 			
 			triggerBar.Changed += ScriptChanged;
 			UpdateNaturalLanguageView(triggerBar);
-			
-//			Loaded += delegate { UpdateTitle(); };
-			Title = "Flip";
 		}
 		
 		
@@ -92,18 +89,9 @@ namespace Sussex.Flip.UI
 			set { 
 				if (isDirty != value) {
 					isDirty = value;
-					//UpdateTitle();
 				}
 			}
 		}
-		
-		
-//		string filename = "filename";
-//		protected void UpdateTitle()
-//		{
-//			if (isDirty) Title = String.Format("Flip: {0}*",filename);
-//			else Title = String.Format("Flip: {0}",filename);
-//		}
 		
 		
 		/// <summary>
@@ -406,7 +394,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		private void ClearCanvas(object sender, RoutedEventArgs e)
+		protected void ClearCanvas(object sender, RoutedEventArgs e)
 		{
 			ClearCanvas();
 		}

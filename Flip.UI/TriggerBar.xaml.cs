@@ -58,10 +58,15 @@ namespace Sussex.Flip.UI
 			}
 		}	
 		
+		
+		public TriggerBar(Fitter fitter) : this(null,fitter)
+		{			
+		}
+		
     	
         public TriggerBar(TriggerControl initialTrigger, Fitter fitter)
         {
-        	if (initialTrigger == null) throw new ArgumentNullException("triggerControl");
+        	if (fitter == null) throw new ArgumentNullException("fitter");
         	
         	spine = new Spine(fitter,3);
         	Grid.SetRow(spine,0);
