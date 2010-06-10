@@ -32,7 +32,7 @@ using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of ModuleStarted.
+	/// Deprecated. Module.OnPlayerRespawn does not appear to fire.
 	/// </summary>
 	public class PlayerRespawned : Nwn2ParameterlessTrigger
 	{
