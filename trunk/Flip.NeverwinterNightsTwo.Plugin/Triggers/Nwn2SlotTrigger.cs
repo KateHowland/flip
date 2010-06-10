@@ -46,7 +46,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         	this.addressFactory = new Nwn2AddressFactory();
         	
         	raiserSlot = new BlockSlot("raiser",raiserFitter);
-            raiserSlot.Padding = new Thickness(10);
+        	raiserSlot.Padding = new Thickness(4);
             
             InitializeComponent();
             

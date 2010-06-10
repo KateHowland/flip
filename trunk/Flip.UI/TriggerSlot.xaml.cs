@@ -28,7 +28,13 @@ namespace Sussex.Flip.UI
 		public TriggerSlot(Fitter fitter) : base(fitter)
 		{		
         	InitializeComponent();
-        	SetDefaultAppearance();	
+        	SetDefaultAppearance();
+        	MoveableChanged += delegate 
+        	{  
+        		if (Contents == null) dragMessageTextBlock.Visibility = Visibility.Visible;        		
+        		else dragMessageTextBlock.Visibility = Visibility.Hidden;
+        	};
+        	Contents = null;
 		}
 
 		#endregion

@@ -36,7 +36,7 @@
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="270"/>
+				<ColumnDefinition Width="290"/>
 			</Grid.ColumnDefinitions>			
 	
 			<Menu  

@@ -151,7 +151,6 @@
       <DependentUpon>PegSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ScriptInformation.cs" />
     <Compile Include="Spine.xaml.cs">
       <DependentUpon>Spine.xaml</DependentUpon>
       <SubType>Code</SubType>
