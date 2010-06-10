@@ -60,7 +60,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			return new List<TriggerControl> { 
 				new NullTrigger(),
 				new CreatureDies(fitters.OnlyCreatures),
-				new DoorOrPlaceableIsLocked(fitters.OnlyDoorsOrPlaceables),
+				//new DoorOrPlaceableIsLocked(fitters.OnlyDoorsOrPlaceables), //largely pointless
 				new DoorOrPlaceableIsUnlocked(fitters.OnlyDoorsOrPlaceables),
 				new PlaceableUsed(fitters.OnlyPlaceables),
 				new TriggerEntered(fitters.OnlyTriggers),
@@ -68,10 +68,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				new AreaEntered(fitters.OnlyAreas),
 				new ItemAcquired(),
 				new ItemUnacquired(),
-				new ItemActivated(),
-				new ModuleHeartbeat(),
-				new ModuleStarted(),
-				new PlayerRespawned()
+				//new ItemActivated() //broken
+				new ModuleHeartbeat()
+				//new ModuleStarted() //broken
+				//new PlayerRespawned() //broken
 			};
 		}
 		

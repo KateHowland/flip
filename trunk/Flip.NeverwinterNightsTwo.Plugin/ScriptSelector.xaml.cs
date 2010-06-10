@@ -58,12 +58,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
             
             
             foreach (ScriptTriggerTuple tuple in tuples) {
-            	// HACK
-            	TriggerControl trigger = tuple.Trigger;
-            	
-            	trigger.LayoutTransform = new System.Windows.Media.ScaleTransform(0.7,0.7);
-            	trigger.Padding = thickness;
-            	scriptsListBox.Items.Add(trigger);
+            	try {
+            		// HACK
+	            	TriggerControl trigger = tuple.Trigger;
+	            	
+	            	trigger.LayoutTransform = new System.Windows.Media.ScaleTransform(0.7,0.7);
+	            	trigger.Padding = thickness;
+	            	scriptsListBox.Items.Add(trigger);
+            	}
+            	catch (Exception x) {
+            		MessageBox.Show(x.ToString());
+            	}
             }
         }
     	
