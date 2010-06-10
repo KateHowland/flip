@@ -72,7 +72,7 @@
     		</StackPanel.Resources>
 	
 			<Button
-			Content="OK"			
+			Content="Open"			
 	    	Click="OpenScript"
     		Margin="10,10,0,10"/>
 	    	    	

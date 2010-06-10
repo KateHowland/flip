@@ -52,11 +52,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
             	scriptsListBox.Items.Add(trigger);
             }
         }
+    	
+    	
+    	private void DeleteSelectedScript()
+    	{
+    		
+    	}
 
     	
     	protected void OpenScript(object sender, KeyEventArgs e)
     	{
     		if (e.Key == Key.Enter) OpenSelectedScript();
+    		else if (e.Key == Key.Delete) DeleteSelectedScript();
     	}
     	
     	
