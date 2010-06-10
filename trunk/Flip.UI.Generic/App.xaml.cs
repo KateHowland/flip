@@ -30,29 +30,20 @@ namespace Sussex.Flip.UI.Generic
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers);
 			
-			FlipWindow window = new FlipWindow(attacher,provider,images,new FlipWindow.FetchScriptDelegate(Rarara));
+			FlipWindow window = new FlipWindow(attacher,provider,images,new FlipWindow.OpenDeleteScriptDelegate(Rarara));
 			
 			// HACK:
 			// TODO:
 			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
 			
-			window.MouseDoubleClick += delegate 
-			{  
-				ScriptSelector dialog = new ScriptSelector();
-				dialog.ShowDialog();
-				
-				if (dialog.Selected != null) MessageBox.Show("Opening " + dialog.Selected + " in Flip.");
-			};
-			
 			window.Show();
+			
+			window.MouseDoubleClick += delegate { new ScriptSelector().Show(); };
 		}
 		
 		
-		public ScriptTriggerTuple Rarara()
+		public void Rarara()
 		{
-			FlipScript fs = new FlipScript("some.Awesome(Code);");
-			fs.Name = "Brian";
-			return new ScriptTriggerTuple(fs);
 		}
 	}
 }

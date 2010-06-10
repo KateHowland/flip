@@ -12,12 +12,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     /// </summary>
     public partial class ScriptSelector : Window
     {	
+    	public enum Action {
+    		OpenScript,
+    		DeleteScript,
+    		None
+    	}
+    	
+    	
     	protected List<ScriptTriggerTuple> tuples;
     	protected ScriptTriggerTuple selected;
+    	private Action actionToTake;
     	
     	
 		public ScriptTriggerTuple Selected {
 			get { return selected; }
+		}
+    	
+    	
+		public Action ActionToTake {
+			get { return actionToTake; }
 		}
     	
     	
@@ -32,6 +45,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     		this.tuples = tuples;
     		
     		selected = null;
+    		actionToTake = Action.None;
     		
     		//List<TriggerControl> triggers = GetDefaultTriggersFromAddresses();
             InitializeComponent();
@@ -54,9 +68,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         }
     	
     	
-    	private void DeleteSelectedScript()
+    	protected void DeleteSelectedScript()
     	{
-    		
+        	TriggerControl t = scriptsListBox.SelectedItem as TriggerControl;
+        	
+        	if (t == null) {
+        		MessageBox.Show("Select a script to delete.");
+        	}
+        	else {
+        		MessageBoxResult result = MessageBox.Show("Are you sure you want to permanently delete this script?",
+        		                                          "Delete script?",
+        		                                          MessageBoxButton.YesNo,
+        		                                          MessageBoxImage.Warning,
+        		                                          MessageBoxResult.No);
+        		
+        		if (result == MessageBoxResult.No) return;
+        		
+        		// HACK
+        		// Should actually be adding ScriptTriggerTuple directly
+        		// to the ListBox and representing it with a DataTemplate
+        		// so that only the TriggerControl is displayed, but
+        		// that's too finicky to get into just now, so add the
+        		// TriggerControl directly and search for the ScriptSlotTuple
+        		// that possesses it.
+        		
+        		selected = GetOwner(t);
+        		actionToTake = Action.DeleteScript;
+        		Close();
+        	}
     	}
 
     	
@@ -70,6 +109,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         protected void OpenScript(object sender, EventArgs e)
         {
         	OpenSelectedScript();
+        }
+    	
+    	
+        protected void DeleteScript(object sender, EventArgs e)
+        {
+        	DeleteSelectedScript();
         }
         
         
@@ -90,6 +135,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         		// that possesses it.
         		
         		selected = GetOwner(t);
+        		actionToTake = Action.OpenScript;
         		Close();
         	}
         }
@@ -106,6 +152,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         
         protected void CancelOpen(object sender, EventArgs e)
         {
+        	selected = null;
+        	actionToTake = Action.None;
         	Close();
         }
     }

@@ -157,26 +157,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-//		protected ObjectBlock GetBlock(Nwn2Address address)
-//		{
-//			if (address == null) throw new ArgumentNullException("address");
-//			
-//			// HACK:
-//			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory(new Nwn2ImageProvider(new Sussex.Flip.Games.NeverwinterNightsTwo.Integration.NarrativeThreadsHelper()));
-//			
-//			if (address.TargetType == Nwn2Type.Module) {
-//				return blocks.CreateModuleBlock();
-//			}
-//			
-//			else if (address.TargetType == Nwn2Type.Area) {
-//				blocks.CreateAreaBlock(new Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours.AreaBehaviour(address.AreaTag,addr
-//			}
-//		}
-		
-		
-		//protected void PopulateTrigger(TriggerControl trigger, 
-		
-		
 		// TODO:
 		// TriggerControls should stop taking in fitters as it's stupid.
 		// Once that's done, fix below (the use of AnyFitters).

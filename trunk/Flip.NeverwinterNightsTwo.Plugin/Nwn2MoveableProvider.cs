@@ -164,7 +164,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected void CreateSpecialBlocks()
 		{		
 			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
-			manager.AddMoveable(OtherBagName,blocks.CreateModuleBlock());
 			manager.AddMoveable(OtherBagName,new NumberBlock(0));
 			manager.AddMoveable(OtherBagName,new StringBlock("click 'change' to edit this Word Block"));
 		}
