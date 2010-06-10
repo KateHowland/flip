@@ -194,6 +194,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				LaunchFlip();
 				
 				window.OpenFlipScript(tuple);
+				
+				window.IsDirty = true;
 			}
 			catch (Exception x) {
 				throw new ApplicationException("Failed to open a script that was attached to a conversation.",x);

@@ -100,7 +100,10 @@ namespace Sussex.Flip.UI
 		/// <returns>Returns false if the user cancelled; true otherwise.</returns>
 		public MessageBoxResult AskWhetherToSaveCurrentScript()
 		{
-			if (!IsDirty) return MessageBoxResult.None;
+			if (!IsDirty) {
+				CloseScript();
+				return MessageBoxResult.None;
+			}
 			
 			MessageBoxResult result = MessageBox.Show("Save this script before closing?",
 										              "Save changes?",
@@ -254,6 +257,8 @@ namespace Sussex.Flip.UI
 			
 			XmlReader reader = new XmlTextReader(path);				
 			LoadFlipCodeFromReader(reader);
+			
+			IsDirty = false;
 		}
 		
 		
@@ -270,6 +275,8 @@ namespace Sussex.Flip.UI
 				}
 			}
 			if (tuple.Trigger != null) SetTrigger(tuple.Trigger);
+			
+			IsDirty = false;
 		}
 		
 		
@@ -345,7 +352,7 @@ namespace Sussex.Flip.UI
 		protected bool SaveScriptToModule()
 		{			
 			if (!triggerBar.IsComplete) {
-				MessageBox.Show("Your script isn't finished! Fill in all the blanks before trying to compile.");
+				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving to your module.");
 				return false;
 			}
 			
