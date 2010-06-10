@@ -90,6 +90,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// </summary>
 		protected ScriptHelper scriptHelper;
 		
+		/// <summary>
+		/// 
+		/// </summary>
+		protected Nwn2Session session;
+		
 		#endregion
 		
 		#region Properties
@@ -290,8 +295,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// </summary>
 		protected void InitialiseFlip()
 		{
+			session = new Nwn2Session();
 			FlipTranslator translator = new NWScriptTranslator();
-			Nwn2Session session = new Nwn2Session();
 			FlipAttacher attacher = new NWScriptAttacher(translator,session);
 								
 			Nwn2Fitters fitters = new Nwn2Fitters();				
@@ -306,7 +311,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(attacher,provider,images,new FlipWindow.FetchScriptDelegate(OpenScriptDialog));		
+			window = new FlipWindow(attacher,provider,images,new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog));		
 			
 			// HACK:
 			// TODO:
@@ -335,7 +340,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public ScriptTriggerTuple OpenScriptDialog()
+		public void OpenDeleteScriptDialog()
 		{
 			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts();
 			
@@ -343,10 +348,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			dialog.ShowDialog();
 			
 			if (dialog.Selected != null) {
-				return dialog.Selected.DeepCopy();
-			}
-			else {				
-				return null;
+				
+				if (dialog.ActionToTake == ScriptSelector.Action.OpenScript) {
+					try {
+						window.OpenFlipScript(dialog.Selected.DeepCopy());
+					}
+					catch (Exception x) {						
+						MessageBox.Show(String.Format("Something went wrong when opening a script.{0}{0}{1}",Environment.NewLine,x));
+					}
+				}
+				
+				else if (dialog.ActionToTake == ScriptSelector.Action.DeleteScript) {
+					try {
+						session.DeleteScript(dialog.Selected.Script.Name);
+						MessageBox.Show("Script deleted.");
+					}
+					catch (Exception x) {						
+						MessageBox.Show(String.Format("Something went wrong when deleting a script.{0}{0}{1}",Environment.NewLine,x));
+					}					
+				}
+				
 			}
 		}
 		

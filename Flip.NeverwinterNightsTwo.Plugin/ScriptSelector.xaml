@@ -36,7 +36,8 @@
 	Background="{StaticResource backBrush}">
 	
 		<Grid.RowDefinitions>
-			<RowDefinition/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="40"/>
 			<RowDefinition Height="60"/>
 		</Grid.RowDefinitions>
 	
@@ -53,9 +54,24 @@
     	SelectionMode="Single"
     	HorizontalContentAlignment="Center"
     	Margin="10"/>
+		
+		<TextBlock
+    	Grid.Row="1"
+    	Grid.Column="0"
+		Background="Transparent"
+		Foreground="White"
+		FontSize="14"
+		Padding="25"
+		Text="If you seem to be missing a script, make sure the area it's used in is open in the toolset. If the area isn't open, you can't edit the script."
+		FontWeight="Bold"
+		TextWrapping="Wrap"
+		HorizontalAlignment="Center"
+		VerticalAlignment="Center"
+		TextAlignment="Center"
+		/>
     	
     	<StackPanel 
-    	Grid.Row="1"
+    	Grid.Row="2"
     	Grid.Column="0"
     	Orientation="Horizontal"
     	VerticalAlignment="Center"
@@ -64,7 +80,7 @@
     		<StackPanel.Resources>
     			
     			<Style TargetType="Button">
-    				<Setter Property="FontSize" Value="12"/>
+    				<Setter Property="FontSize" Value="14"/>
     				<Setter Property="Height" Value="40"/>
     				<Setter Property="Width" Value="100"/>
     			</Style>
@@ -75,6 +91,12 @@
 			Content="Open"			
 	    	Click="OpenScript"
     		Margin="10,10,0,10"/>
+	
+			<Button
+			Content="Delete"			
+	    	Click="DeleteScript"
+			Foreground="Maroon"
+    		Margin="10"/>
 	    	    	
 	    	<Button
 	    	Content="Cancel"

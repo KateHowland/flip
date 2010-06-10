@@ -26,30 +26,30 @@ namespace Sussex.Flip.UI
 		
 		
 		/// <summary>
-		/// The method to call when the user wants to open an existing Flip script.
+		/// The method to call when the user wants to open or delete a script.
 		/// </summary>
-		protected FetchScriptDelegate fetchScriptDelegate;
+		protected OpenDeleteScriptDelegate openDeleteScriptDelegate;
 				
 		
 		/// <summary>
 		/// The delegate signature of a method to be called which will ask the user 
-		/// to select a Flip-created script and return that script to be opened.
+		/// to select a Flip-created script and open or delete that script.
 		/// </summary>
-		public delegate ScriptTriggerTuple FetchScriptDelegate();		
+		public delegate void OpenDeleteScriptDelegate();		
 		
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider, FetchScriptDelegate fetchScriptDelegate)
+		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider, OpenDeleteScriptDelegate openDeleteScriptDelegate)
 		{
 			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
-			if (fetchScriptDelegate == null) throw new ArgumentNullException("fetchScriptDelegate");
+			if (openDeleteScriptDelegate == null) throw new ArgumentNullException("openDeleteScriptDelegate");
 			
 			this.attacher = attacher;
 			this.provider = provider;
 			this.imageProvider = imageProvider;
-			this.fetchScriptDelegate = fetchScriptDelegate;
+			this.openDeleteScriptDelegate = openDeleteScriptDelegate;
 			
 			InitializeComponent();
 			
@@ -138,11 +138,10 @@ namespace Sussex.Flip.UI
 			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 			
 			try {
-				ScriptTriggerTuple tuple = fetchScriptDelegate.Invoke();
-				if (tuple != null) OpenFlipScript(tuple);
+				openDeleteScriptDelegate.Invoke();
 			}
 			catch (Exception x) {
-				MessageBox.Show(String.Format("Failed to open script.{0}{0}{1}",Environment.NewLine,x));
+				MessageBox.Show(String.Format("Something went wrong when opening or deleting a script.{0}{0}{1}",Environment.NewLine,x));
 			}
 		}
 		
