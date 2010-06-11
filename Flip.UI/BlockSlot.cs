@@ -71,8 +71,8 @@ namespace Sussex.Flip.UI
             
             this.fitter = fitter;
             
-            border.Width = ObjectBlock.DefaultSize.Width + border.BorderThickness.Left + border.BorderThickness.Right;
-            border.Height = ObjectBlock.DefaultSize.Height + border.BorderThickness.Top + border.BorderThickness.Bottom;
+            border.MinWidth = ObjectBlock.DefaultSize.Width + border.BorderThickness.Left + border.BorderThickness.Right;
+            border.MinHeight = ObjectBlock.DefaultSize.Height + border.BorderThickness.Top + border.BorderThickness.Bottom;
             
             SetDefaultAppearance();
         }

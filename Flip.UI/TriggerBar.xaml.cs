@@ -79,7 +79,7 @@ namespace Sussex.Flip.UI
             
             triggerBarPanel.Children.Add(triggerSlot);
             
-            spine.Extends = border.Height + 20;        	
+            spine.Extends = border.Height + 20;     
         	Grid.SetZIndex(spine,1);
         	Grid.SetZIndex(border,2);            
             mainGrid.Children.Add(spine);

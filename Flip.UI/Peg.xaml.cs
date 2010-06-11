@@ -30,7 +30,7 @@ namespace Sussex.Flip.UI
             InitializeComponent();
             
             dropZone = new DropZone(fitter);
-            Grid.SetRow(dropZone,1);
+            Grid.SetRow(dropZone,2);
             Grid.SetColumn(dropZone,0);
             Grid.SetColumnSpan(dropZone,2);
             mainGrid.Children.Add(dropZone);
@@ -39,6 +39,7 @@ namespace Sussex.Flip.UI
             slot.MinHeight = 70;
             slot.MinWidth = 130;
             Grid.SetRow(slot,0);
+            Grid.SetRowSpan(slot,2);
             Grid.SetColumn(slot,1);
             mainGrid.Children.Add(slot);
         }  

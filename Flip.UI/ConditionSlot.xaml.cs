@@ -24,6 +24,8 @@
  */
 
 using System;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Sussex.Flip.UI
 {

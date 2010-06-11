@@ -37,8 +37,6 @@ namespace Sussex.Flip.UI.Generic
 			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
 			
 			window.Show();
-			
-			window.MouseDoubleClick += delegate { new ScriptSelector().Show(); };
 		}
 		
 		

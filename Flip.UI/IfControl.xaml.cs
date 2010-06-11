@@ -47,7 +47,7 @@ namespace Sussex.Flip.UI
 	        		OnChanged(new EventArgs()); 
 	        	};
 	        	
-	            Grid.SetRow(spine,3);
+	            Grid.SetRow(spine,1);
 	            Grid.SetColumn(spine,0);
             	grid.Children.Add(spine);
     		}
@@ -71,13 +71,14 @@ namespace Sussex.Flip.UI
         public IfControl()
         {
         	slot = new ConditionSlot(new ConditionFitter());
-        	slot.Padding = new Thickness(10);
+        	slot.Padding = new Thickness(4);
         	
-        	spine = new Spine(new SpineFitter(),1,10);
+        	spine = new Spine(new SpineFitter(),1);
+        	spine.Margin = new Thickness(14,0,0,0);
         	
         	slot.Changed += delegate 
         	{ 
-        		OnChanged(new EventArgs());
+        		OnChanged(new EventArgs());        		
         	};
         	
         	spine.Changed += delegate 
@@ -87,12 +88,13 @@ namespace Sussex.Flip.UI
             
             InitializeComponent();
             
-            Grid.SetRow(slot,1);
-            Grid.SetColumn(slot,0);
-            grid.Children.Add(slot);
+            spine.Extends = border.Height + 20;
+            
+            stackPanel.Children.Insert(1,slot);
                         
-            Grid.SetRow(spine,3);
+            Grid.SetRow(spine,0);
             Grid.SetColumn(spine,0);
+            Grid.SetZIndex(spine,-1);
             grid.Children.Add(spine);
         }
 
