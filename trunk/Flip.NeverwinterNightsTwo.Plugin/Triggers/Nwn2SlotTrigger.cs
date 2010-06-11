@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -14,6 +15,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     {
     	protected BlockSlot raiserSlot;
     	protected Nwn2AddressFactory addressFactory;
+    	protected static ScaleTransform scaleTransform;
+    	
+    	
+    	static Nwn2SlotTrigger()
+    	{
+    		scaleTransform = new ScaleTransform(0.8,0.8);
+    	}
 		
 		
 		/// <summary>
@@ -46,7 +54,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         	this.addressFactory = new Nwn2AddressFactory();
         	
         	raiserSlot = new BlockSlot("raiser",raiserFitter);
+        	raiserSlot.BorderThickness = new Thickness(1);
         	raiserSlot.Padding = new Thickness(4);
+        	raiserSlot.LayoutTransform = scaleTransform;
             
             InitializeComponent();
             
