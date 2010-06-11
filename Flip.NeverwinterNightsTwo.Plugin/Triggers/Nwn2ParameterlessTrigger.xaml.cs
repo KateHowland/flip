@@ -38,7 +38,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
             
             InitializeComponent();
             
-            this.textBlock.Text = text;
+            this.text1.Text = text;
         }
         
         
