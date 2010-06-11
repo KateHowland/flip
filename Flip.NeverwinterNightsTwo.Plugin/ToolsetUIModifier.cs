@@ -196,7 +196,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			TD.SandBar.ButtonItem flipButton = new TD.SandBar.ButtonItem();
 			flipButton.Text = "Flip";
 			flipButton.BeginGroup = true;
-			flipButton.ForeColor = System.Drawing.Color.DarkBlue;
+			//flipButton.ForeColor = System.Drawing.Color.DarkBlue;
 			
 			// TODO:
 			// Keep the try/catch but centralise and sensiblise the path:

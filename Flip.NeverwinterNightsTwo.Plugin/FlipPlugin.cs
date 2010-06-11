@@ -37,6 +37,7 @@ using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
 using Sussex.Flip.Core;
 using Sussex.Flip.UI;
+using Sussex.Flip.Utils;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
@@ -196,8 +197,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				ScriptTriggerTuple tuple = new ScriptTriggerTuple(flipScript,trigger);
 				
-				LaunchFlip();
-				
 				window.OpenFlipScript(tuple);
 				
 				window.IsDirty = true;
@@ -264,6 +263,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			launchFlip.Activate += delegate { LaunchFlip(); };
 			
 			pluginMenuItem.Items.Add(launchFlip);	
+			
+			// Start logging Flip actions:
+			try {
+				// TODO:
+				// deal with paths properly:
+				// TODO:
+				// safely create a folder for each username:
+				// TODO:
+				// StartLog should do proper checking of directory existence, path safety etc.
+				string logs = @"C:\Sussex University\Flip\Logs\";
+				string path = Path.Combine(logs,ActivityLog.GetFilename());
+				ActivityLog.StartLog(path);
+			}
+			catch (Exception x) {
+				MessageBox.Show("Failed to begin log of Flip activity.\n\n" + x);
+			}
 		}
 		
 		
@@ -294,7 +309,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
 		{	
-			LaunchFlip();
 		}
 		
 		
@@ -413,7 +427,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <param name="cHost">A plugin host component which
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Shutdown(INWN2PluginHost cHost)
-		{
+		{			
+			// Stop logging Flip actions:
+			try {
+				ActivityLog.StopLog();
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when closing Flip activity log.\n\n" + x);
+			}
+			
 			service.Stop();
 		}
 		
