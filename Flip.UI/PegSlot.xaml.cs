@@ -54,6 +54,10 @@ namespace Sussex.Flip.UI
         {
             InitializeComponent();
             SetDefaultAppearance();
+            MoveableChanged += delegate 
+            {  
+            	if (Contents != null) Contents.HorizontalAlignment = HorizontalAlignment.Left;
+            };
         }
         
     	#endregion
