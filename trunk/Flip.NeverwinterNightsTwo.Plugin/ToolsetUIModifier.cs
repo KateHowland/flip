@@ -108,6 +108,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// </summary>
 		protected ProvideTriggerDelegate useDialogueAsTriggerDelegate = null;
 		
+		/// <summary>
+		/// TODO
+		/// </summary>
+		protected TD.SandBar.ToolBar objectsToolbar = null;
+		
 		#endregion
 		
 		#region Properties
@@ -159,7 +164,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// toolset user interface. Should only be called 
 		/// when the toolset is first loaded.
 		/// </summary>
-		/// <remarks>This method currently does nothing.</remarks>
 		public void ModifyUI()
 		{
 			FieldInfo[] fields = typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
@@ -179,6 +183,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					};
 				}
 			}
+		}
+		
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		public TD.SandBar.ButtonItem AddFlipButton()
+		{
+			if (objectsToolbar == null) return null;
+			
+			TD.SandBar.ButtonItem flipButton = new TD.SandBar.ButtonItem();
+			flipButton.Text = "Flip";
+			flipButton.BeginGroup = true;
+			flipButton.ForeColor = System.Drawing.Color.DarkBlue;
+			
+			// TODO:
+			// Keep the try/catch but centralise and sensiblise the path:
+			try {
+				flipButton.Icon = new System.Drawing.Icon(@"C:\Flip\object pics\Flip\fliplogo.ico");
+			}
+			catch (Exception) {}
+			
+			flipButton.ToolTipText = "Launch Flip to edit game scripts";
+			objectsToolbar.Items.Add(flipButton);
+			return flipButton;
 		}
 		
 		
@@ -273,6 +302,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 				
 			foreach (FieldInfo field in typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
+				
 				if (field.FieldType == typeof(NWN2PropertyGrid)) {
 					NWN2PropertyGrid mainPropertyGrid = (NWN2PropertyGrid)field.GetValue(NWN2ToolsetMainForm.App);
 					/*
@@ -283,12 +313,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						mainPropertyInnerGrid = (PropertyGrid)innerPropertyGridFieldInfo.GetValue(mainPropertyGrid);
 					}
 				}
+				
 				else if (field.FieldType == typeof(DockingManager)) {
 					dockingManager = (DockingManager)field.GetValue(NWN2ToolsetMainForm.App);
 				}
+				
+				else if (field.FieldType == typeof(TD.SandBar.ToolBar)) {
+					TD.SandBar.ToolBar tb = (TD.SandBar.ToolBar)field.GetValue(NWN2ToolsetMainForm.App);
+					if (tb.Text == "Object Manipulation") objectsToolbar = tb;
+				}
+
 				else if (field.FieldType == typeof(NWN2ModuleScriptList)) {
 					scriptPanels.Add((NWN2ModuleScriptList)field.GetValue(NWN2ToolsetMainForm.App));
 				}
+				
 				else if (field.FieldType == typeof(TD.SandBar.MenuButtonItem)) {
 					TD.SandBar.MenuButtonItem mbi = (TD.SandBar.MenuButtonItem)field.GetValue(NWN2ToolsetMainForm.App);
 					if (mbi.Text == "&Script" || mbi.Text == "Open Conversation/Script") {

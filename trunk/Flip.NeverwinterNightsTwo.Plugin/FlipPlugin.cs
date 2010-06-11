@@ -226,6 +226,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger));
 			UI.ModifyUI();
 			
+			try {
+				TD.SandBar.ButtonItem flipButton = UI.AddFlipButton();
+				if (flipButton != null) flipButton.Activate += delegate { LaunchFlip(); };
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when adding Flip button to toolbar.\n\n" + x);
+			}
+			
 			// Set up plugin menu items:
 			pluginMenuItem = cHost.GetMenuForPlugin(this);
 			pluginMenuItem.Activate += PluginActivated;
