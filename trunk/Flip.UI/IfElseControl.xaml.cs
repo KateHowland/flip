@@ -15,6 +15,7 @@ namespace Sussex.Flip.UI
     	protected ConditionSlot slot;
     	protected Spine consequenceSpine;
     	protected Spine alternativeSpine;
+    	protected Thickness margin;
     	
     	
     	public override Statement Condition {
@@ -46,11 +47,14 @@ namespace Sussex.Flip.UI
 	        	consequenceSpine.Changed += delegate 
 	        	{ 
 	        		OnChanged(new EventArgs()); 
-	        	};
+	        	};          
 	        	
-	            Grid.SetRow(consequenceSpine,3);
+	            Grid.SetRow(consequenceSpine,0);
 	            Grid.SetColumn(consequenceSpine,0);
-            	grid.Children.Add(consequenceSpine);
+	            Grid.SetZIndex(consequenceSpine,-1);
+            	consequenceSpine.Extends = border1.Height + 20; 
+            	consequenceSpine.Margin = margin;
+	            grid.Children.Add(consequenceSpine);
     		}
 		}
     	
@@ -73,9 +77,12 @@ namespace Sussex.Flip.UI
 	        		OnChanged(new EventArgs()); 
 	        	};
 	        	
-	            Grid.SetRow(alternativeSpine,5);
+	            Grid.SetRow(alternativeSpine,1);
 	            Grid.SetColumn(alternativeSpine,0);
-            	grid.Children.Add(alternativeSpine);
+	            Grid.SetZIndex(alternativeSpine,-1);
+            	alternativeSpine.Extends = border2.Height + 20;
+            	alternativeSpine.Margin = margin;
+	            grid.Children.Add(alternativeSpine);
     		}
 		}
 		
@@ -96,11 +103,13 @@ namespace Sussex.Flip.UI
     	
         public IfElseControl()
         {
+        	margin = new Thickness(14,0,0,0);
+        	
         	slot = new ConditionSlot(new ConditionFitter());
         	slot.Padding = new Thickness(10);
         	
-        	consequenceSpine = new Spine(new SpineFitter(),1,10);
-        	alternativeSpine = new Spine(new SpineFitter(),1,10);
+        	consequenceSpine = new Spine(new SpineFitter(),1);
+        	alternativeSpine = new Spine(new SpineFitter(),1);
         	
         	slot.Changed += delegate 
         	{ 
@@ -118,18 +127,11 @@ namespace Sussex.Flip.UI
         	};
             
             InitializeComponent();
-            
-            Grid.SetRow(slot,1);
-            Grid.SetColumn(slot,0);
-            grid.Children.Add(slot);
                         
-            Grid.SetRow(consequenceSpine,3);
-            Grid.SetColumn(consequenceSpine,0);
-            grid.Children.Add(consequenceSpine);
-                        
-            Grid.SetRow(alternativeSpine,5);
-            Grid.SetColumn(alternativeSpine,0);
-            grid.Children.Add(alternativeSpine);
+            stackPanel.Children.Insert(1,slot);
+                   
+            Consequences = consequenceSpine;
+            Alternative = alternativeSpine;
         }
 
         

@@ -118,6 +118,7 @@ namespace Sussex.Flip.UI
         	if (index > Pegs.Count) throw new ArgumentException("Index out of range.","index");
         	
         	Peg peg = new Peg(fitter);
+        	peg.VerticalAlignment = VerticalAlignment.Top;
         	
         	ScaleTransform scale = null;        	
         	if (animate) {
@@ -335,6 +336,7 @@ namespace Sussex.Flip.UI
 		public Spine DeepCopy()
 		{
 			Spine copy = new Spine(fitter,Pegs.Count,Extends);
+			copy.Margin = Margin;
 			
 			for (int i = 0; i < Pegs.Count; i++) {
 				Peg origPeg = (Peg)Pegs[i];

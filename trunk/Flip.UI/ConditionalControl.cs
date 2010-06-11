@@ -39,30 +39,30 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class ConditionalControl : Moveable
 	{		
-    	protected static ResourceDictionary resourceDictionary;
-    	
-    	
-    	static ConditionalControl()
-    	{
-            resourceDictionary = new ResourceDictionary();
-            
-            Style style = new Style(typeof(TextBlock));
-            style.Setters.Add(new Setter(TextBlock.FontSizeProperty,20.0));
-            style.Setters.Add(new Setter(TextBlock.FontWeightProperty,FontWeights.Bold));
-            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty,new FontFamily("Courier")));
-            style.Setters.Add(new Setter(TextBlock.ForegroundProperty,Brushes.Pink));
-            style.Setters.Add(new Setter(TextBlock.BackgroundProperty,Brushes.Black));
-            style.Setters.Add(new Setter(TextBlock.HeightProperty,30.0));
-            style.Setters.Add(new Setter(TextBlock.HorizontalAlignmentProperty,HorizontalAlignment.Stretch));
-    		
-            resourceDictionary.Add(style.TargetType,style);
-    	}
-    	
-    	
-        public ConditionalControl()
-        {
-            Resources = resourceDictionary;
-        }
+//    	protected static ResourceDictionary resourceDictionary;
+//    	
+//    	
+//    	static ConditionalControl()
+//    	{
+//            resourceDictionary = new ResourceDictionary();
+//            
+//            Style style = new Style(typeof(TextBlock));
+//            style.Setters.Add(new Setter(TextBlock.FontSizeProperty,20.0));
+//            style.Setters.Add(new Setter(TextBlock.FontWeightProperty,FontWeights.Bold));
+//            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty,new FontFamily("Courier")));
+//            style.Setters.Add(new Setter(TextBlock.ForegroundProperty,Brushes.Pink));
+//            style.Setters.Add(new Setter(TextBlock.BackgroundProperty,Brushes.Black));
+//            style.Setters.Add(new Setter(TextBlock.HeightProperty,30.0));
+//            style.Setters.Add(new Setter(TextBlock.HorizontalAlignmentProperty,HorizontalAlignment.Stretch));
+//    		
+//            resourceDictionary.Add(style.TargetType,style);
+//    	}
+//    	
+//    	
+//        public ConditionalControl()
+//        {
+//            Resources = resourceDictionary;
+//        }
         
         
 		/// <summary>

@@ -92,7 +92,6 @@ namespace Sussex.Flip.UI
     	public Statement()
     	{    	
         	InitializeComponent();
-        	MouseDoubleClick += delegate { Behaviour = new DefaultStatementBehaviour(); };
     	}
     	
         
@@ -102,7 +101,6 @@ namespace Sussex.Flip.UI
         	
         	InitializeComponent();
         	Behaviour = behaviour;
-        	MouseDoubleClick += delegate { Behaviour = new DefaultStatementBehaviour(); };
         }
         
         
