@@ -66,7 +66,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public BlueprintBehaviour() : this(string.Empty,string.Empty,string.Empty,string.Empty,NWN2ObjectType.Light)
+		public BlueprintBehaviour() : this(string.Empty,string.Empty,string.Empty,string.Empty,NWN2ObjectType.Prefab)
 		{			
 		}
 		

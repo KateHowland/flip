@@ -93,6 +93,16 @@ namespace Sussex.Flip.UI
 			Bag bag = bags[bagName];
 			bag.Add(moveable);
 		}
+
+
+		public void AddMoveable(string bagName, Moveable moveable, bool bringIntoView)
+		{
+			AddMoveable(bagName,moveable);
+			if (bringIntoView) {
+				DisplayBag(bagName);
+				moveable.BringIntoView();
+			}
+		}
 		
 		
 		public void RemoveMoveable(string bagName, Moveable moveable)

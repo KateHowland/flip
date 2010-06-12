@@ -40,7 +40,27 @@ namespace Sussex.Flip.UI
 		
 		public MoveablesPanel BlockBox {
 			get { return blockBox; }
-		}				
+		}			
+		
+		
+		public MenuItem FileMenu {
+			get { return fileMenu; }
+		}		
+		
+		
+		public MenuItem EditMenu {
+			get { return editMenu; }
+		}		
+		
+		
+		public MenuItem DevelopmentMenu {
+			get { return developmentMenu; }
+		}		
+		
+		
+		public MenuItem AboutMenu {
+			get { return aboutMenu; }
+		}
 		
 		
 		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider, OpenDeleteScriptDelegate openDeleteScriptDelegate)

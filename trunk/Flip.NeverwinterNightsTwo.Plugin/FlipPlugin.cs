@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
@@ -188,9 +189,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(blueprint);
 				string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,blueprint.ObjectType);
 				if (window.BlockBox.HasBag(bag)) {
-					window.BlockBox.AddMoveable(bag,block);
-					window.BlockBox.DisplayBag(bag);
-					block.BringIntoView();
+					window.BlockBox.AddMoveable(bag,block,true);
 				}
 			}
 		}
@@ -387,6 +386,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					window.Close();
 				}
 			};
+			
+			MenuItem addWildcardBlock = new MenuItem();
+			addWildcardBlock.Header = "Add Wildcard block";
+			addWildcardBlock.Click += delegate 
+			{  
+				CreateWildcardDialog dialog = new CreateWildcardDialog();
+				dialog.ShowDialog();
+				
+				if (!String.IsNullOrEmpty(dialog.WildcardTag)) {
+					ObjectBlock block = blocks.CreateWildcardBlock(dialog.WildcardTag);
+					
+					string bag = Nwn2MoveableProvider.OtherBagName;					
+					window.BlockBox.AddMoveable(bag,block,true);
+				}
+			};
+			
+			window.EditMenu.Items.Add(addWildcardBlock);
 		}
 		
 		

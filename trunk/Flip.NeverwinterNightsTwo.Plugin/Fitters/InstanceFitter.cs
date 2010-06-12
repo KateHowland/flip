@@ -67,6 +67,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override bool Fits(Moveable moveable)
 		{
+			if (IsWildcard(moveable)) return true;
+			
 			if (types.Count > 0) {
 				return IsInstance(moveable,types);
 			}

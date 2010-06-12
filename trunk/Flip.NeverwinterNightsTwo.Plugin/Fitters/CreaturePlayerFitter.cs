@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{
 		public override bool Fits(Moveable moveable)
 		{
-			return IsPlayer(moveable) || IsInstance(moveable,NWN2ObjectType.Creature);
+			return IsPlayer(moveable) || IsInstance(moveable,NWN2ObjectType.Creature) || IsWildcard(moveable);
 		}
 		
 		

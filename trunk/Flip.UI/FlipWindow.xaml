@@ -40,6 +40,7 @@
 			</Grid.ColumnDefinitions>			
 	
 			<Menu  
+			x:Name="mainMenu"
 			Grid.Row="0" 
 			Grid.Column="0" 
 			Grid.ColumnSpan="2" 
@@ -47,6 +48,7 @@
 			HorizontalAlignment="Stretch">
 				
 				<MenuItem 
+				x:Name="fileMenu"
 				Header="File">
 				
 					<MenuItem
@@ -74,6 +76,11 @@
 				</MenuItem>
 					
 				<MenuItem 
+				x:Name="editMenu"
+				Header="Edit"/>
+					
+				<MenuItem 
+				x:Name="developmentMenu"
 				Header="Development">
 				
 					<MenuItem
@@ -87,6 +94,7 @@
 				</MenuItem>
 					
 				<MenuItem 
+				x:Name="aboutMenu"
 				Header="About"
 				Click="DisplayAboutScreen"/>
 				

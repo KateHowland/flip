@@ -64,6 +64,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public const string InstanceDescription = "Nwn2.Instance";
 		
 		/// <summary>
+		/// The description of an ObjectBlock representing a wildcard.
+		/// </summary>
+		public const string WildcardDescription = "Nwn2.Wildcard";
+		
+		/// <summary>
 		/// The format for specifying a subtype of an instance or blueprint.
 		/// </summary>
 		public const string SubtypeFormat = "{0}.{1}";
@@ -94,6 +99,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		#endregion
 		
 		#region Methods
+		
+		/// <summary>
+		/// Gets whether a given Moveable is a wildcard.
+		/// </summary>
+		/// <param name="moveable">The Moveable to check.</param>
+		/// <returns>True if the Moveable is a wildcard; false otherwise.</returns>
+		public static bool IsWildcard(Moveable moveable)
+		{
+			if (moveable == null) throw new ArgumentNullException("moveable");
+			
+			ObjectBlock block = moveable as ObjectBlock;
+			return block != null && block.GetDescriptionOfObjectType() == WildcardDescription;
+		}
+		
 		
 		/// <summary>
 		/// Gets whether a given Moveable represents the player.
