@@ -129,6 +129,7 @@
     <Compile Include="Actions\WalksTo.cs" />
     <Compile Include="Conditions\HasEquippedItem.cs" />
     <Compile Include="Conditions\HasGold.cs" />
+    <Compile Include="Conditions\IsLocked.cs" />
     <Compile Include="Conditions\IsNear.cs" />
     <Compile Include="Conditions\OwnsItem.cs" />
     <Compile Include="Conditions\IsDead.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Fitters\CreaturePlayerFitter.cs" />
     <Compile Include="Fitters\EventRaiserFitter.cs" />
     <Compile Include="Fitters\InstanceFitter.cs" />
+    <Compile Include="Fitters\InstancePlayerFitter.cs" />
     <Compile Include="Fitters\ModuleFitter.cs" />
     <Compile Include="Fitters\Nwn2Fitter.cs" />
     <Compile Include="Fitters\Nwn2Fitters.cs" />

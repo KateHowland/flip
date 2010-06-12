@@ -61,7 +61,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			code.Append(args[0]);
 			code.Append(",");
 			code.Append(PlayerBehaviour.NWScript_GetPlayer);
-			code.Append(",0,0);");
+			code.Append(");"); // setting markup/markdown, even to 0, seems to set to 1gp? Testing this... TODO
 			return code.ToString();
 		}
 		

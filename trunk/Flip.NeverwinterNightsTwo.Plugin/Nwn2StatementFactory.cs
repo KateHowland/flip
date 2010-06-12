@@ -288,6 +288,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement IsLocked()
+		{
+			return new Statement(new IsLocked());
+		}
+		
+		
 		public Statement CreateCreatureAtLocation()
 		{
 			return new Statement(new CreateCreatureAtLocation());
@@ -312,19 +318,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		// TODO:
-		// Won't work until code is put in to automatically include
-		// flip_functions.nss in any module.
-		// (Or some more clever way of doing this.. either the
-		// Statement could name the functions it needs, or
-		// the function collections it needs, or it could specify
-		// the function it needs itself (in code), and it would
-		// be appended to the start of the file.
-//		public Statement HasEquippedItem()
-//		{
-//			return new Statement(new HasEquippedItem());
-//		}		
-		
+		public Statement HasEquippedItem()
+		{
+			return new Statement(new HasEquippedItem());
+		}				
 		
 		#endregion
 	}
