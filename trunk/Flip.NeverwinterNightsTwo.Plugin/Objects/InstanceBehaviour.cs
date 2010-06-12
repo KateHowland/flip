@@ -107,6 +107,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
+		public static string GetTagFromCode(string code)
+		{
+			if (String.IsNullOrEmpty(code)) return String.Empty;
+			
+			try {
+				return "\"" + code.Split(new char[]{'"'})[1] + "\"";
+			}
+			catch (Exception) {
+				return "\"FlipErrorCouldNotExtractTag\"";
+			}
+		}
+		
+		
 		public override string GetNaturalLanguage()
 		{
 			return DisplayName;

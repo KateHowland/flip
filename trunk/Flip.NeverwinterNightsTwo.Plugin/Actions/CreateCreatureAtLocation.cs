@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Utils;
 using Sussex.Flip.UI;
 
@@ -68,14 +69,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}	
 			
-			string sTag;
-			try {
-				sTag = "\"" + args[0].Split(new char[]{'"'})[1] + "\"";
-			}
-			catch (Exception) {
-				sTag = "\"FlipErrorCouldNotExtractTag\"";
-			}
-			
+			string sTag = InstanceBehaviour.GetTagFromCode(args[0]);
 			string sTemplate = String.Format("GetSafeResRef({0})",sTag);
 			string lLocation = String.Format("GetLocation({0})",args[1]);
 			return String.Format("CreateObject(OBJECT_TYPE_CREATURE,{0},{1},TRUE,{2});",sTemplate,lLocation,sTag);
