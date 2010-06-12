@@ -288,6 +288,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement CreateCreatureAtLocation()
+		{
+			return new Statement(new CreateCreatureAtLocation());
+		}
+		
+		
 		// TODO:
 		// Won't work until code is put in to automatically include
 		// flip_functions.nss in any module.
