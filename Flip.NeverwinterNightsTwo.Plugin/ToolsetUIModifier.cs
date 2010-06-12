@@ -29,7 +29,9 @@ using System.Reflection;
 using System.Windows;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
+using NWN2Toolset.NWN2.Data.TypedCollections;
 using NWN2Toolset.NWN2.Views;
 using Crownwood.DotNetMagic.Common;
 using Crownwood.DotNetMagic.Controls;
@@ -37,6 +39,7 @@ using Crownwood.DotNetMagic.Docking;
 using GlacialComponents.Controls.GlacialTreeList;
 using OEIShared.Utils;
 using VisualHint.SmartPropertyGrid;
+using TD.SandBar;
 using winforms = System.Windows.Forms;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
@@ -103,15 +106,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public delegate void ProvideTriggerDelegate(NWN2ConversationConnector line, NWN2GameConversation conversation);
 		
 		/// <summary>
+		/// The delegate signature of a method to be called when a blueprint 
+		/// (or blueprint collection) is to be used to create an instance 
+		/// block (or blocks) in Flip.
+		/// </summary>
+		/// <param name="blueprints">The blueprints collection to create blocks from.</param>
+		public delegate void CreateBlockFromBlueprintDelegate(NWN2BlueprintCollection blueprints);
+		
+		/// <summary>
 		/// The method to call when a line of conversation is to be used as a trigger
 		/// for a script.
 		/// </summary>
 		protected ProvideTriggerDelegate useDialogueAsTriggerDelegate = null;
 		
 		/// <summary>
+		/// The method to call when a blueprint is to be used to create an instance 
+		/// block in Flip.
+		/// </summary>
+		protected CreateBlockFromBlueprintDelegate createBlockFromBlueprintDelegate = null;
+		
+		/// <summary>
 		/// TODO
 		/// </summary>
-		protected TD.SandBar.ToolBar objectsToolbar = null;
+		protected ToolBar objectsToolbar = null;
+		
+		protected NWN2BlueprintView blueprintView = null;
 		
 		#endregion
 		
@@ -144,10 +163,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <param name="useDialogueAsTriggerDelegate">A delegate which will be invoked when 
 		/// the user tries to use a line of dialogue in the conversation editor as the trigger 
 		/// to fire a script.</param>
-		public ToolsetUIModifier(ProvideTriggerDelegate useDialogueAsTriggerDelegate)
+		public ToolsetUIModifier(ProvideTriggerDelegate useDialogueAsTriggerDelegate, CreateBlockFromBlueprintDelegate createBlockFromBlueprintDelegate)
 		{			
 			if (useDialogueAsTriggerDelegate == null) throw new ArgumentNullException("useDialogueAsTriggerDelegate");
+			if (createBlockFromBlueprintDelegate == null) throw new ArgumentNullException("createBlockFromBlueprintDelegate");
+			
 			this.useDialogueAsTriggerDelegate = useDialogueAsTriggerDelegate;
+			this.createBlockFromBlueprintDelegate = createBlockFromBlueprintDelegate;
 			
 			FindFields();
 			
@@ -193,7 +215,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (objectsToolbar == null) return null;
 			
-			TD.SandBar.ButtonItem flipButton = new TD.SandBar.ButtonItem();
+			ButtonItem flipButton = new ButtonItem();
 			flipButton.Text = "Flip";
 			flipButton.BeginGroup = true;
 			//flipButton.ForeColor = System.Drawing.Color.DarkBlue;
@@ -290,6 +312,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+//		/// <summary>
+//		/// 
+//		/// </summary>
+//		/// <returns></returns>
+//		/// <remarks>Use this method rather than NWN2BlueprintView.GetAllSelectedBlueprints() as
+//		/// it returns the selected blueprint in EVERY category (bizarrely).</remarks>
+//		protected NWN2BlueprintCollection GetSelectedBlueprints()
+//		{
+//			NWN2BlueprintCollection blueprints = new NWN2BlueprintCollection();
+//			
+//			if (blueprintView != null && blueprintView.ActivePalette != null) {	
+//				foreach (object o in blueprintView.ActivePalette.Selection) {
+//					INWN2Blueprint blueprint = o as INWN2Blueprint;
+//					if (blueprint != null) {
+//						blueprints.Add(blueprint);
+//					}
+//				}
+//			}
+//			
+//			return blueprints;
+//		}
+		
+		
 		/// <summary>
 		/// Gather references to toolset fields which are used by other plugin methods.
 		/// </summary>
@@ -319,12 +364,53 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 				
 				else if (field.FieldType == typeof(TD.SandBar.ToolBar)) {
-					TD.SandBar.ToolBar tb = (TD.SandBar.ToolBar)field.GetValue(NWN2ToolsetMainForm.App);
+					ToolBar tb = (ToolBar)field.GetValue(NWN2ToolsetMainForm.App);
 					if (tb.Text == "Object Manipulation") objectsToolbar = tb;
 				}
 
 				else if (field.FieldType == typeof(NWN2ModuleScriptList)) {
 					scriptPanels.Add((NWN2ModuleScriptList)field.GetValue(NWN2ToolsetMainForm.App));
+				}
+				
+				else if (field.FieldType == typeof(NWN2BlueprintView)) {
+					blueprintView = (NWN2BlueprintView)field.GetValue(NWN2ToolsetMainForm.App);					
+					
+					winforms.ContextMenu menu = blueprintView.ActivePalette.ContextMenu;
+										
+					if (menu != null) {
+						try {
+							winforms.MenuItem item = new winforms.MenuItem("Create a Flip block from this blueprint");
+							
+							item.Click += delegate 
+							{  
+								NWN2BlueprintCollection blueprints = blueprintView.GetFocusedListSelectedBlueprints();
+								
+								if (blueprints.Count == 0) {
+									MessageBox.Show("No blueprint selected.");
+								}
+								
+								else if (blueprints.Count > 1) {
+									MessageBox.Show("Select one blueprint at a time (you have " + blueprints.Count + " blueprints selected).");									
+								}
+								
+								else {
+									createBlockFromBlueprintDelegate.Invoke(blueprints);
+								}
+							};
+							
+							menu.Popup += delegate 
+							{  
+								NWN2BlueprintCollection blueprints = blueprintView.GetFocusedListSelectedBlueprints();
+								item.Enabled = blueprints != null && blueprints.Count > 0;
+							};
+							
+							menu.MenuItems.Add("-");
+							menu.MenuItems.Add(item);
+						}
+						catch (Exception x) {
+							MessageBox.Show(x.ToString());
+						}
+					}
 				}
 				
 				else if (field.FieldType == typeof(TD.SandBar.MenuButtonItem)) {

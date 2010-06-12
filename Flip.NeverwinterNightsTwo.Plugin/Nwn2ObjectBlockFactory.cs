@@ -288,7 +288,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			string areaTag = String.Empty;
 			
-			string resRef = blueprint.TemplateResRef.Value;
+			string resRef = blueprint.ResourceName.Value;
 						
 			string icon;
 			if (blueprint is NWN2ItemBlueprint) {

@@ -53,19 +53,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class Nwn2MoveableProvider : MoveableProvider
 	{
-		protected bool loadBlueprints = true;
+		protected bool loadBlueprints = false;
 		protected Nwn2ObjectBlockFactory blocks;
 		protected Nwn2StatementFactory statements;
 		protected Nwn2TriggerFactory triggers;
 		protected static string[] nwn2BlockTypes;
 			
 		
-		protected const string ActionsBagName = "Actions";
-		protected const string ConditionsBagName = "Conditions";
-		protected const string OtherBagName = "Special";
-		protected const string TriggersBagName = "Events";
-		protected const string BlueprintBagNamingFormat = "{0} blueprints";
-		protected const string InstanceBagNamingFormat = "{0}s";
+		public const string ActionsBagName = "Actions";
+		public const string ConditionsBagName = "Conditions";
+		public const string OtherBagName = "Special";
+		public const string TriggersBagName = "Events";
+		public const string BlueprintBagNamingFormat = "{0} blueprints";
+		public const string InstanceBagNamingFormat = "{0}s";
 		
 		
 		static Nwn2MoveableProvider()

@@ -35,8 +35,12 @@ namespace Sussex.Flip.UI
 		/// The delegate signature of a method to be called which will ask the user 
 		/// to select a Flip-created script and open or delete that script.
 		/// </summary>
-		public delegate void OpenDeleteScriptDelegate();		
+		public delegate void OpenDeleteScriptDelegate();
 		
+		
+		public MoveablesPanel BlockBox {
+			get { return blockBox; }
+		}				
 		
 		
 		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider, OpenDeleteScriptDelegate openDeleteScriptDelegate)
@@ -505,7 +509,7 @@ namespace Sussex.Flip.UI
 						moveable = moveable.DeepCopy();
 					}
 				}	
-				// HACK:
+//				// HACK:
 //				else if (e.Data.GetDataPresent(typeof(NWN2InstanceCollection))) {
 //					NWN2InstanceCollection instances = (NWN2InstanceCollection)e.Data.GetData(typeof(NWN2InstanceCollection));
 //					if (instances.Count > 0) {
@@ -521,7 +525,9 @@ namespace Sussex.Flip.UI
 //							size = ObjectBlock.DefaultSize;
 //						}
 //					}
-//					catch (System.Runtime.InteropServices.COMException) {
+//					catch (System.Runtime.InteropServices.COMException x) {
+//						
+//						MessageBox.Show(x.ToString());
 //						/*
 //						 * Weird error occurs here - even though GetDataPresent() returns true,
 //						 * actually trying to retrieve the data raises this nasty exception.

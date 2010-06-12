@@ -31,7 +31,9 @@ using System.Windows;
 using System.Windows.Media;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
+using NWN2Toolset.NWN2.Data.TypedCollections;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
@@ -95,6 +97,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// 
 		/// </summary>
 		protected Nwn2Session session;
+		
+		protected Nwn2ObjectBlockFactory blocks;
+		
+		protected Nwn2MoveableProvider provider;
 		
 		#endregion
 		
@@ -170,6 +176,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		#region Methods
 		
+		public void CreateInstanceBlocksFromBlueprints(NWN2BlueprintCollection blueprints)
+		{
+			if (blueprints == null) throw new ArgumentNullException("blueprints");
+			
+			if (blueprints.Count == 0) return;
+			
+			LaunchFlip();
+			
+			foreach (INWN2Blueprint blueprint in blueprints) {
+				ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(blueprint);
+				string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,blueprint.ObjectType);
+				if (window.BlockBox.HasBag(bag)) {
+					window.BlockBox.AddMoveable(bag,block);
+					window.BlockBox.DisplayBag(bag);
+					block.BringIntoView();
+				}
+			}
+		}
+		
+		
 		public void UseConversationLineAsTrigger(NWN2ConversationConnector line, NWN2GameConversation conversation)
 		{			
 			if (line == null) throw new ArgumentNullException("line");
@@ -222,7 +248,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ProvideSpecialFunctionsScriptFile();
 			
 			// Modify the user interface:
-			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger));
+			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger),
+			                                             new ToolsetUIModifier.CreateBlockFromBlueprintDelegate(CreateInstanceBlocksFromBlueprints));
 			UI.ModifyUI();
 			
 			try {
@@ -327,13 +354,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			Nwn2StatementFactory statements = new Nwn2StatementFactory(fitters);	
 			Nwn2ImageProvider images = new Nwn2ImageProvider(new NarrativeThreadsHelper());
-			Nwn2ObjectBlockFactory blocks = new Nwn2ObjectBlockFactory(images);
+			blocks = new Nwn2ObjectBlockFactory(images);
 				
 			ToolsetEventReporter reporter = new ToolsetEventReporter();
 			
-			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
+			provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(attacher,provider,images,new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog));		
+			window = new FlipWindow(attacher,provider,images,new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog));	
 			
 			// HACK:
 			// TODO:
