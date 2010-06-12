@@ -294,6 +294,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement CreateItemAtLocation()
+		{
+			return new Statement(new CreateItemAtLocation());
+		}
+		
+		
+		public Statement CreatePlaceableAtLocation()
+		{
+			return new Statement(new CreatePlaceableAtLocation());
+		}
+		
+		
 		// TODO:
 		// Won't work until code is put in to automatically include
 		// flip_functions.nss in any module.

@@ -101,6 +101,8 @@
     <Compile Include="Actions\BecomesDefender.cs" />
     <Compile Include="Actions\BecomesHostile.cs" />
     <Compile Include="Actions\CreateCreatureAtLocation.cs" />
+    <Compile Include="Actions\CreateItemAtLocation.cs" />
+    <Compile Include="Actions\CreatePlaceableAtLocation.cs" />
     <Compile Include="Actions\SetTimeToNoon.cs" />
     <Compile Include="Actions\DisplayMessage.cs" />
     <Compile Include="Actions\EndGame.cs" />
