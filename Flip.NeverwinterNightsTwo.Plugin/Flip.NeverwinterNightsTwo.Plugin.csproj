@@ -127,6 +127,10 @@
     <Compile Include="Actions\UnmakeHenchman.cs" />
     <Compile Include="Actions\Unpause.cs" />
     <Compile Include="Actions\WalksTo.cs" />
+    <Compile Include="CreateWildcardDialog.cs">
+      <DependentUpon>CreateWildcardDialog.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Conditions\HasEquippedItem.cs" />
     <Compile Include="Conditions\HasGold.cs" />
     <Compile Include="Conditions\IsLocked.cs" />
@@ -159,6 +163,7 @@
     <Compile Include="Objects\ModuleBehaviour.cs" />
     <Compile Include="Objects\Nwn2ObjectBehaviour.cs" />
     <Compile Include="Objects\PlayerBehaviour.cs" />
+    <Compile Include="Objects\WildcardBehaviour.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
     <Compile Include="ScriptHelper.cs">
     </Compile>
@@ -218,6 +223,7 @@
       <Name>Flip.Utils</Name>
       <Private>False</Private>
     </ProjectReference>
+    <Page Include="CreateWildcardDialog.xaml" />
     <Page Include="ScriptSelector.xaml" />
     <Page Include="Triggers\NullTrigger.xaml" />
     <Page Include="Triggers\Nwn2ParameterlessTrigger.xaml" />

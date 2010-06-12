@@ -1,0 +1,91 @@
+<Window x:Class="Sussex.Flip.Games.NeverwinterNightsTwo.CreateWildcardDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Create a wildcard block"
+    Height="290" 
+    Width="350"
+	ResizeMode="NoResize"
+	WindowStartupLocation="CenterScreen"
+    >
+	
+	<Window.Resources>
+		
+		<Style TargetType="Button">
+		
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Padding" Value="5"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="Width" Value="70"/>
+			<Setter Property="HorizontalAlignment" Value="Right"/>
+		
+		</Style>
+		
+		<LinearGradientBrush 
+		x:Key="backBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Red"/>
+				<GradientStop Offset="1" Color="Black"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+	</Window.Resources>	
+	
+    <StackPanel
+	Background="{StaticResource backBrush}"
+	Orientation="Vertical">
+    	
+    	<TextBlock
+    	Text="Enter tag for wildcard:"
+    	FontSize="17"
+    	Margin="4"
+    	FontWeight="Bold"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center"/>
+        
+		<TextBox
+		Name="valueTextBox"
+		Height="90"
+		Width="300"
+		FontSize="24"
+		Margin="4"
+		MaxLength="40"
+		Foreground="Maroon"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center"
+    	TextAlignment="Center"
+    	TextWrapping="NoWrap"/>
+		
+		<TextBlock
+		Background="Transparent"
+		Foreground="White"
+		FontSize="14"
+		Padding="10"
+		Text="A wildcard is a special block representing an unknown object with a tag of your choice. The game will try and find an object with this tag when the wildcard appears in a script."
+		FontWeight="Bold"
+		TextWrapping="Wrap"
+		HorizontalAlignment="Center"
+		VerticalAlignment="Center"
+		TextAlignment="Center"
+		/>
+    	
+    	<StackPanel 
+    	Orientation="Horizontal"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center">
+    		
+	    	<Button
+	    	Content="OK"
+	    	Click="CreateBlock"
+    		Margin="5,5,0,5"/>
+	    	    	
+	    	<Button
+	    	Content="Cancel"
+	    	Click="CancelCreation"/>   
+    	
+    	</StackPanel>
+	
+    </StackPanel>
+
+</Window>

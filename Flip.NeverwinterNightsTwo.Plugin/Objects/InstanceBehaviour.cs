@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
-		public InstanceBehaviour() : this(string.Empty,string.Empty,NWN2ObjectType.Light,string.Empty,string.Empty,string.Empty)
+		public InstanceBehaviour() : this(string.Empty,string.Empty,NWN2ObjectType.Prefab,string.Empty,string.Empty,string.Empty)
 		{			
 		}
 		

@@ -88,6 +88,44 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		/// <summary>
+		/// Creates an ObjectBlock representing a wildcard.
+		/// </summary>
+		/// <returns>An ObjectBlock representing a wildcard.</returns>
+		public ObjectBlock CreateWildcardBlock(WildcardBehaviour wildcard)
+		{
+			if (wildcard == null) throw new ArgumentNullException("wildcard");
+			
+			ObjectBlock block = new ObjectBlock(null,wildcard);
+			block.AssignImage(images);
+			return block;
+		}
+		
+		
+		/// <summary>
+		/// Creates an ObjectBehaviour representing a wildcard.
+		/// </summary>
+		/// <returns>An ObjectBehaviour representing a wildcard.</returns>
+		public WildcardBehaviour CreateWildcardBehaviour(string tag)
+		{
+			if (tag == null) throw new ArgumentNullException("tag");
+			if (tag == String.Empty) throw new ArgumentException("Tag cannot be empty.","tag");
+			
+			return new WildcardBehaviour(tag);
+		}
+		
+		
+		/// <summary>
+		/// Creates an ObjectBlock representing a wildcard.
+		/// </summary>
+		/// <returns>An ObjectBlock representing a wildcard.</returns>
+		public ObjectBlock CreateWildcardBlock(string tag)
+		{
+			WildcardBehaviour behaviour = CreateWildcardBehaviour(tag); 
+			return CreateWildcardBlock(behaviour);
+		}
+		
+		
+		/// <summary>
 		/// Creates an ObjectBlock representing a given area.
 		/// </summary>
 		/// <param name="area">The area to represent.</param>
@@ -311,6 +349,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (behaviour is BlueprintBehaviour) return CreateBlueprintBlock((BlueprintBehaviour)behaviour);
 							
 			if (behaviour is InstanceBehaviour) return CreateInstanceBlock((InstanceBehaviour)behaviour);
+			
+			if (behaviour is WildcardBehaviour) return CreateWildcardBlock((WildcardBehaviour)behaviour);
 			
 			if (behaviour is ModuleBehaviour) return CreateModuleBlock();
 			

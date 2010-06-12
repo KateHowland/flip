@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{
 		public override bool Fits(Moveable moveable)
 		{
-			return CanRaiseEvents(moveable);
+			return CanRaiseEvents(moveable) || IsWildcard(moveable);
 		}
 		
 		

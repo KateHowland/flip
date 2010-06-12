@@ -199,6 +199,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Image GetWildcardImage()
+		{
+			Image image;
+			
+			image = GetImage("Other","Wildcard");
+			
+			if (image == null) image = GetImage("Placeholder","Default");
+			
+			return image;
+		}
+		
+		
 		public override void AssignImage(ObjectBlock block)
 		{
 			if (block == null) throw new ArgumentNullException("block");
@@ -210,6 +222,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			else if (b is AreaBehaviour) block.DisplayImage = GetImage((AreaBehaviour)b);
 			else if (b is PlayerBehaviour) block.DisplayImage = GetPlayerImage();
 			else if (b is ModuleBehaviour) block.DisplayImage = GetModuleImage();
+			else if (b is WildcardBehaviour) block.DisplayImage = GetWildcardImage();
 		}
 		
 		
