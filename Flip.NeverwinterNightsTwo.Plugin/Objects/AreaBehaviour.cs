@@ -37,6 +37,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 	/// </summary>
 	public class AreaBehaviour : Nwn2ObjectBehaviour
 	{
+		// Requires flip_functions.nss.
+		// object GetAreaFromTag(string sTag)
+		
 		protected bool isExterior;
 		
 		
@@ -72,14 +75,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		
 		public override string GetCode()
 		{
-			/* Does not appear possible to retrieve an area object in a single
-			 * line of code. You can iterate through areas, and presumably
-			 * retrieve a tag from the area object (which is just class 'object')
-			 * in order to identify one, but that's too complex for GetCode().
-			 * Currently no reason to believe this will be needed, as specific
-			 * area blocks will simply be used for attaching events. */
-			
-			return String.Empty;
+			return String.Format("GetAreaFromTag(\"{0}\")",Tag);
 		}
 		
 		

@@ -34,7 +34,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	public class AreaTransition : Nwn2StatementBehaviour
 	{	
 		// Remarks: this, unlike JumpsTo, can be used to transition to a new
-		// area. (Also: JumpsTo is an instruction, whereas this executes immediately.)
+		// area. 		
+		// (Also: JumpsTo is an instruction, whereas this executes immediately.)
 		// TODO
 		// Have only tested this with waypoints, and have not confirmed what happens
 		// if there are multiple objects with the same tag. Presumably it's just
@@ -53,14 +54,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//will not.
 		// void JumpPartyToArea( object oPartyMember, object oDestination );
 		
+		// Uses:
+		// object GetObjectInArea(string sTag, object oTargetArea)
+		
+		// Requires flip_functions.nss.
 		
 		public AreaTransition()
 		{
 			statementType = StatementType.Action;
-			parameterCount = 1;
-			components = new List<StatementComponent>(2) 
+			parameterCount = 2;
+			components = new List<StatementComponent>(4) 
 			{ 
-				new StatementComponent("teleport player to"),
+				new StatementComponent("teleport to area"),
+				new StatementComponent(fitters.OnlyAreas),
+				new StatementComponent("at location of"),
 				new StatementComponent(fitters.OnlyInstances)
 			};
 		}
@@ -72,7 +79,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}			
 			
-			return String.Format("JumpPartyToArea({0},{1});",PlayerBehaviour.NWScript_GetPlayer,args[0]);
+			string sTag = InstanceBehaviour.GetTagFromCode(args[1]);
+			string oDestination = String.Format("GetObjectInArea({0},{1})",sTag,args[0]);
+			return String.Format("JumpPartyToArea({0},{1});",PlayerBehaviour.NWScript_GetPlayer,oDestination);
 		}
 		
 		
@@ -82,8 +91,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[0] == "something") return String.Format("the player teleports to some location",args);
-			else return String.Format("the player teleports to the location of {0}",args);
+			if (args[1] == "something") return String.Format("the player teleports to the location of some object in area {0}",args);
+			else return String.Format("the player teleports to the location of {1} in {0}",args);
 		}
 		
 		
