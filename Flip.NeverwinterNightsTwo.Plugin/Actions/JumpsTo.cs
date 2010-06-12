@@ -43,7 +43,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
 				new StatementComponent("teleports to"),
-				new StatementComponent(fitters.OnlyInstances)
+				new StatementComponent(fitters.OnlyInstancesOrPlayers)
 			};
 		}
 		

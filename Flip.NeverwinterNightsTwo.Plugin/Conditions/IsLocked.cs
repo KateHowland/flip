@@ -20,30 +20,25 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 17/05/2010 at 12:42.
+ * This file added by Keiron Nicholson on 12/06/2010 at 15:36.
  */
 
 using System;
 using System.Collections.Generic;
-using Sussex.Flip.Utils;
 using Sussex.Flip.UI;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
-	public class RunsTo : Nwn2StatementBehaviour
+	public class IsLocked : Nwn2StatementBehaviour
 	{	
-		// Force the action subject to move to oMoveTo.
-		// void ActionForceMoveToObject(object oMoveTo, int bRun=FALSE, float fRange=1.0f, float fTimeout=30.0f);
-		
-		public RunsTo()
+		public IsLocked()
 		{
-			statementType = StatementType.Action;
-			parameterCount = 2;
-			components = new List<StatementComponent>(3) 
+			statementType = StatementType.Condition;
+			parameterCount = 1;
+			components = new List<StatementComponent>(2) 
 			{ 
-				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("runs to"),
-				new StatementComponent(fitters.OnlyInstancesOrPlayers)
+				new StatementComponent(fitters.OnlyDoorsOrPlaceables),
+				new StatementComponent("is locked"),
 			};
 		}
 		
@@ -52,9 +47,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (args.Length != parameterCount) {
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
-			}	
+			}
 			
-			return String.Format("AssignCommand({0},ActionForceMoveToObject({1},TRUE,1.0f,30.0f));",args);
+			return String.Format("GetLocked({0})",args);
 		}
 		
 		
@@ -64,13 +59,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("{0} runs to {1}",args);
+			return String.Format("{0} is locked",args);
 		}
 		
 		
 		public override StatementBehaviour DeepCopy()
 		{
-			return new RunsTo();
+			return new IsLocked();
 		}
 	}
 }

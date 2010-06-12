@@ -44,11 +44,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 3;
 			components = new List<StatementComponent>(5) 
 			{ 
-				new StatementComponent(fitters.OnlyInstances),
+				new StatementComponent(fitters.OnlyInstancesOrPlayers),
 				new StatementComponent("is within"),
 				new StatementComponent(fitters.OnlyNumbers),
 				new StatementComponent("metres of"),
-				new StatementComponent(fitters.OnlyInstances)
+				new StatementComponent(fitters.OnlyInstancesOrPlayers)
 			};
 		}
 		
@@ -59,7 +59,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("GetIsObjectValid({0}) && GetIsObjectValid({2}) && (GetDistanceBetween({0},{2}) <= {1})",args);
+			string fDistance = String.Format("{0}.0f",args[1]);
+			return String.Format("GetIsObjectValid({0}) && GetIsObjectValid({2}) && (GetDistanceBetween({0},{2}) <= {1})",args[0],fDistance,args[2]);
 		}
 		
 		
