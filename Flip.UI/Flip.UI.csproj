@@ -71,6 +71,10 @@
       <DependentUpon>AboutWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AndBlock.xaml.cs">
+      <DependentUpon>AndBlock.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Bag.xaml.cs">
       <DependentUpon>Bag.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -79,6 +83,10 @@
     <Compile Include="DefaultStatementBehaviour.cs" />
     <Compile Include="Fitters\AnyFitter.cs" />
     <Compile Include="ImageProvider.cs" />
+    <Compile Include="NotBlock.xaml.cs">
+      <DependentUpon>NotBlock.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="OrBlock.xaml.cs">
       <DependentUpon>OrBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -215,6 +223,7 @@
     <Folder Include="Core" />
     <Folder Include="Fitters" />
     <Page Include="AboutWindow.xaml" />
+    <Page Include="AndBlock.xaml" />
     <Page Include="Bag.xaml" />
     <Page Include="ChangeNumberDialog.xaml" />
     <Page Include="ChangeStringDialog.xaml" />
@@ -225,6 +234,7 @@
     <Page Include="IfControl.xaml" />
     <Page Include="IfElseControl.xaml" />
     <Page Include="MoveablesPanel.xaml" />
+    <Page Include="NotBlock.xaml" />
     <Page Include="NumberBlock.xaml" />
     <Page Include="BlockSlot.xaml" />
     <Page Include="OrBlock.xaml" />
