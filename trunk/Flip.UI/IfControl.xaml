@@ -43,20 +43,28 @@
 				<Setter Property="Padding" Value="9"/>
 				
 			</Style>
+			
+			<Style 
+			x:Key="controlBorderStyle"
+			TargetType="Border">
+			
+				<Setter Property="CornerRadius" Value="8"/>
+				<Setter Property="BorderThickness" Value="3"/>
+				<Setter Property="VerticalAlignment" Value="Top"/>
+				<Setter Property="BorderBrush" Value="Black"/>				
+				<Setter Property="Background" Value="{StaticResource redGradient}"/>				
+				<Setter Property="Height" Value="190"/>
+				
+			</Style>
 		
 		</Grid.Resources>
-				
+						
 			<Border
 			x:Name="border"
 			Grid.Row="0"
 			Grid.Column="0"
 			Grid.ZIndex="1"
-			CornerRadius="8"
-			BorderThickness="3"
-			VerticalAlignment="Top"
-			BorderBrush="Black"
-			Background="{StaticResource redGradient}"
-			Height="90">
+			Style="{StaticResource controlBorderStyle}">
 		
 				<StackPanel
 				x:Name="stackPanel"

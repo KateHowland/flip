@@ -84,8 +84,8 @@ namespace Sussex.Flip.UI
 			
 			manager.AddBag(BooleanExpressionsBagName);			
 			manager.AddMoveable(BooleanExpressionsBagName,new OrBlock());
-//			manager.AddMoveable(BooleanExpressionsBagName,new AndBlock());
-//			manager.AddMoveable(BooleanExpressionsBagName,new NotBlock());
+			manager.AddMoveable(BooleanExpressionsBagName,new AndBlock());
+			manager.AddMoveable(BooleanExpressionsBagName,new NotBlock());
 		}
 		
 		
