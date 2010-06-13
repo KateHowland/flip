@@ -17,7 +17,7 @@ namespace Sussex.Flip.UI
     	
     	
 		public override bool IsComplete { 
-    		get { return false; }
+    		get { return slot1.IsComplete && slot2.IsComplete; }
     	}
 		
 		
@@ -70,8 +70,8 @@ namespace Sussex.Flip.UI
 		{			
 			return String.Format("either {0} or {1}",slot1.GetNaturalLanguage(),slot2.GetNaturalLanguage());
 		}
+				
 		
-			
 		public override XmlSchema GetSchema()
 		{
 			return null;
@@ -81,16 +81,33 @@ namespace Sussex.Flip.UI
 		public override void WriteXml(XmlWriter writer)
 		{
 			WriteCoordinates(writer);
+			writer.WriteAttributeString("Type",this.GetType().FullName);
 			
 			writer.WriteStartElement("Condition1");
 			if (slot1.Contents != null) {
+				if (!Fitter.IsBooleanExpression(slot1.Contents)) {
+					throw new ApplicationException("Condition1 was not a Statement or BooleanBlock.");
+				}
+				
+				if (slot1.Contents is Statement) writer.WriteStartElement("Statement");
+				else if (slot1.Contents is BooleanBlock) writer.WriteStartElement("Boolean");
+				
 				slot1.Contents.WriteXml(writer);
+				writer.WriteEndElement();
 			}
 			writer.WriteEndElement();
 			
 			writer.WriteStartElement("Condition2");
 			if (slot2.Contents != null) {
+				if (!Fitter.IsBooleanExpression(slot2.Contents)) {
+					throw new ApplicationException("Condition2 was not a Statement or BooleanBlock.");
+				}
+				
+				if (slot2.Contents is Statement) writer.WriteStartElement("Statement");
+				else if (slot2.Contents is BooleanBlock) writer.WriteStartElement("Boolean");
+				
 				slot2.Contents.WriteXml(writer);
+				writer.WriteEndElement();
 			}
 			writer.WriteEndElement();
 		}
@@ -98,55 +115,69 @@ namespace Sussex.Flip.UI
 		
 		public override void ReadXml(XmlReader reader)
 		{
-			throw new NotImplementedException();
+			reader.MoveToContent();		
 			
-//			reader.MoveToContent();		
-//			
-//			ReadCoordinates(reader);
-//			
-//			reader.ReadStartElement(); // passed <OrBlock>
-//			
-//			reader.MoveToContent();
-//			
-//			if (reader.LocalName != "Condition1") throw new FormatException("Condition1 is not specified.");
-//			
-//			bool isEmpty = reader.IsEmptyElement;
-//			
-//			reader.ReadStartElement("Condition1"); // passed <Condition1>
-//			reader.MoveToContent(); // at <the contents of Condition1> or <Condition2>
-//			
-//			if (!isEmpty) {
-//				
-//				if (reader.LocalName != "Statement") throw new FormatException("Condition is not correctly specified.");
-//				
-//				Statement statement = new Statement();
-//				statement.ReadXml(reader);
-//				Condition = statement;
-//				reader.MoveToContent();
-//				
-//				reader.ReadEndElement(); // passed </Condition>
-//				reader.MoveToContent(); // at <Consequences>
-//			}
-//			
-//			if (reader.IsEmptyElement) throw new FormatException("Consequences is not correctly specified (no Spine).");
-//			
-//			reader.ReadStartElement("Consequences");
-//			reader.MoveToContent();			
-//			Consequences.ReadXml(reader);
-//			reader.MoveToContent();
-//			reader.ReadEndElement();
-//			reader.MoveToContent();
-//			
-//			if (reader.IsEmptyElement) throw new FormatException("Alternative is not correctly specified (no Spine).");
-//			
-//			reader.ReadStartElement("Alternative");
-//			reader.MoveToContent();			
-//			Alternative.ReadXml(reader);
-//			reader.MoveToContent();
-//			reader.ReadEndElement();
-//			
-//			reader.MoveToContent();
-//			reader.ReadEndElement();
+			ReadCoordinates(reader);
+			
+			reader.ReadStartElement();
+			
+			reader.MoveToContent();
+			
+			bool isEmpty = reader.IsEmptyElement;
+			
+			reader.ReadStartElement();
+			reader.MoveToContent();
+			
+			if (!isEmpty) {
+				
+				if (reader.LocalName == "Statement") {					
+					Statement statement = new Statement();
+					statement.ReadXml(reader);
+					slot1.Contents = statement;
+					reader.MoveToContent();
+				}
+				
+				else if (reader.LocalName == "Boolean") {
+					slot1.Contents = (BooleanBlock)SerialisationHelper.GetObjectFromXmlInExecutingAssembly(reader);
+					reader.MoveToContent();
+				}
+				
+				else {
+					throw new FormatException("Condition is not correctly specified.");
+				}
+				
+				reader.ReadEndElement();
+				reader.MoveToContent();
+			}
+			
+			isEmpty = reader.IsEmptyElement;
+			
+			reader.ReadStartElement();
+			reader.MoveToContent();
+			
+			if (!isEmpty) {
+				
+				if (reader.LocalName == "Statement") {					
+					Statement statement = new Statement();
+					statement.ReadXml(reader);
+					slot2.Contents = statement;
+					reader.MoveToContent();
+				}
+				
+				else if (reader.LocalName == "Boolean") {
+					slot2.Contents = (BooleanBlock)SerialisationHelper.GetObjectFromXmlInExecutingAssembly(reader);
+					reader.MoveToContent();
+				}
+				
+				else {
+					throw new FormatException("Condition is not correctly specified.");
+				}
+				
+				reader.ReadEndElement();
+				reader.MoveToContent();
+			}
+			
+			reader.ReadEndElement();
 		}
     }
 }

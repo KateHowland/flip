@@ -71,5 +71,36 @@ namespace Sussex.Flip.UI
 			
 			return obj;
 		}
+		
+		
+		public static IXmlSerializable GetObjectFromXmlInExecutingAssembly(XmlReader reader)
+		{
+			if (reader == null) throw new ArgumentNullException("reader");
+			
+			reader.MoveToContent();	
+			
+			string type = reader.GetAttribute("Type");
+			if (String.IsNullOrEmpty(type)) {
+				throw new ArgumentException("Could not read Type attribute from XmlReader.","reader");
+			}			
+			
+			IXmlSerializable obj;
+				
+			try {
+				Assembly assembly = Assembly.GetExecutingAssembly();;
+				obj = (IXmlSerializable)assembly.CreateInstance(type);
+			}
+			catch (Exception x) {
+				throw new ArgumentException("Could not create object of type " + type + ".",x);
+			}
+			
+			if (obj == null) {
+				throw new ArgumentException("Could not create object of type " + type + " - type was not recognised.");
+			}
+			
+			obj.ReadXml(reader);
+			
+			return obj;
+		}
 	}
 }

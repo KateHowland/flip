@@ -63,12 +63,12 @@ namespace Sussex.Flip.UI
 //        {
 //            Resources = resourceDictionary;
 //        }
-        
+    	
         
 		/// <summary>
 		/// The condition which must be met for the consequences to result.
 		/// </summary>
-		public abstract Statement Condition { get; set; }
+		public abstract Moveable Condition { get; set; }
 		
 		// TODO:
 		// need to set consequences but should probably replace
@@ -88,11 +88,17 @@ namespace Sussex.Flip.UI
 		
 		public override void WriteXml(XmlWriter writer)
 		{
-			WriteCoordinates(writer);
+			WriteCoordinates(writer);			
 			
 			writer.WriteStartElement("Condition");
 			if (Condition != null) {
-				writer.WriteStartElement("Statement");
+				if (!Fitter.IsBooleanExpression(Condition)) {
+					throw new ApplicationException("Condition was not a Statement or BooleanBlock.");
+				}
+				
+				if (Condition is Statement) writer.WriteStartElement("Statement");
+				else if (Condition is BooleanBlock) writer.WriteStartElement("Boolean");
+				
 				Condition.WriteXml(writer);
 				writer.WriteEndElement();
 			}
@@ -127,12 +133,21 @@ namespace Sussex.Flip.UI
 			
 			if (!isEmpty) {
 				
-				if (reader.LocalName != "Statement") throw new FormatException("Condition is not correctly specified.");
+				if (reader.LocalName == "Statement") {					
+					Statement statement = new Statement();
+					statement.ReadXml(reader);
+					Condition = statement;
+					reader.MoveToContent();
+				}
 				
-				Statement statement = new Statement();
-				statement.ReadXml(reader);
-				Condition = statement;
-				reader.MoveToContent();
+				else if (reader.LocalName == "Boolean") {
+					Condition = (BooleanBlock)SerialisationHelper.GetObjectFromXmlInExecutingAssembly(reader);
+					reader.MoveToContent();
+				}
+				
+				else {
+					throw new FormatException("Condition is not correctly specified.");
+				}
 				
 				reader.ReadEndElement(); // passed </Condition>
 				reader.MoveToContent(); // at <Consequences>
