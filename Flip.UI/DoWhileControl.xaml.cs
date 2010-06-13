@@ -10,7 +10,7 @@ namespace Sussex.Flip.UI
     /// <summary>
     /// Interaction logic for DoWhileControl.xaml
     /// </summary>
-    public partial class DoWhileControl : ConditionalControl
+    public partial class DoWhileControl : ControlStructure
     {
     	protected ConditionSlot slot;
     	protected Spine consequenceSpine;
@@ -70,7 +70,7 @@ namespace Sussex.Flip.UI
     	
         public DoWhileControl()
         {
-        	slot = new ConditionSlot(new ConditionFitter());
+        	slot = new ConditionSlot(new BooleanExpressionFitter());
         	slot.Padding = new Thickness(10);
         	
         	consequenceSpine = new Spine(new SpineFitter(),1,10);

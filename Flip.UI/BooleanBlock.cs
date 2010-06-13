@@ -20,31 +20,17 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 19/03/2010 at 13:13.
+ * This file added by Keiron Nicholson on 13/06/2010 at 11:11.
  */
 
 using System;
 
 namespace Sussex.Flip.UI
 {
-	public class SpineFitter : Fitter
-	{		
-		public SpineFitter() : base()
-		{
-			
-		}
-		
-		
-		public override bool Fits(Moveable moveable)
-		{
-			return IsAction(moveable) || IsControlStructure(moveable);
-		}
-		
-		
-		public override string GetMoveableDescription()
-		{
-			return "an action or conditional";
-		}
+	/// <summary>
+	/// Description of BooleanBlock.
+	/// </summary>
+	public abstract class BooleanBlock : Moveable
+	{
 	}
 }
-

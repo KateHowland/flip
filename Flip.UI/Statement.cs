@@ -36,7 +36,7 @@ namespace Sussex.Flip.UI
     			if (behaviour != value) {
     				behaviour = value;
     				Initialise();
-    				OnChanged(new EventArgs()); //? TODO not sure if it's appropriate to call this here since it should never happen, but I do in ObjectBlock    				
+    				OnChanged(new EventArgs());   				
     			}
     		}
     	}

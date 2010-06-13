@@ -10,7 +10,7 @@ namespace Sussex.Flip.UI
     /// <summary>
     /// Interaction logic for IfElseControl.xaml
     /// </summary>
-    public partial class IfElseControl : ConditionalControl
+    public partial class IfElseControl : ControlStructure
     {
     	protected ConditionSlot slot;
     	protected Spine consequenceSpine;
@@ -105,7 +105,7 @@ namespace Sussex.Flip.UI
         {
         	margin = new Thickness(14,0,0,0);
         	
-        	slot = new ConditionSlot(new ConditionFitter());
+        	slot = new ConditionSlot(new BooleanExpressionFitter());
         	slot.Padding = new Thickness(10);
         	
         	consequenceSpine = new Spine(new SpineFitter(),1);

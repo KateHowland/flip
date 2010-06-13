@@ -32,8 +32,7 @@ using Sussex.Flip.UI;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {	
 	/// <summary>
-	/// TODO.
-	/// Description of Nwn2ConditionFactory.
+	/// Factory which provides actions and conditions for Neverwinter Nights 2 game scripting.
 	/// </summary>
 	public class Nwn2StatementFactory
 	{			

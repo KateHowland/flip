@@ -75,9 +75,14 @@
       <DependentUpon>Bag.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BooleanBlock.cs" />
     <Compile Include="DefaultStatementBehaviour.cs" />
     <Compile Include="Fitters\AnyFitter.cs" />
     <Compile Include="ImageProvider.cs" />
+    <Compile Include="OrBlock.xaml.cs">
+      <DependentUpon>OrBlock.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ScriptTriggerTuple.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="SerialisationHelper.cs" />
@@ -90,7 +95,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ComponentType.cs" />
-    <Compile Include="ConditionalControl.cs" />
+    <Compile Include="ControlStructure.cs" />
     <Compile Include="ConditionSlot.xaml.cs">
       <DependentUpon>ConditionSlot.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -109,7 +114,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EventBehaviour.cs" />
-    <Compile Include="Fitters\ConditionFitter.cs" />
+    <Compile Include="Fitters\BooleanExpressionFitter.cs" />
     <Compile Include="Fitters\Fitter.cs" />
     <Compile Include="Fitters\NumberFitter.cs" />
     <Compile Include="Fitters\SpineFitter.cs" />
@@ -222,6 +227,7 @@
     <Page Include="MoveablesPanel.xaml" />
     <Page Include="NumberBlock.xaml" />
     <Page Include="BlockSlot.xaml" />
+    <Page Include="OrBlock.xaml" />
     <Page Include="Peg.xaml" />
     <Page Include="PegSlot.xaml" />
     <Page Include="Spine.xaml" />
