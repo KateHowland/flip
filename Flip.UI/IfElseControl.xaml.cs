@@ -16,20 +16,22 @@ namespace Sussex.Flip.UI
     	protected Spine consequenceSpine;
     	protected Spine alternativeSpine;
     	protected Thickness margin;
+    	    	
     	
-    	
-    	public override Statement Condition {
+    	public override Moveable Condition {
     		get { 
-    			return slot.Contents as Statement; 
+    			return slot.Contents;
     		}
-    		set {     			
-    			if (value != null && value.StatementType != StatementType.Condition) {
-    				throw new ArgumentException("Statement must have StatementType.Condition to be assigned as the condition of a ConditionalControl.");
+    		set {     		
+    			if (value == null || (value is Statement && ((Statement)value).StatementType == StatementType.Condition) || value is BooleanBlock) {
+    				slot.Contents = value;
     			}
-    			slot.Contents = value;
+    			else {
+    				throw new ArgumentException("Can only assign a conditional statement or a boolean expression as the condition of a control structure.");
+    			}
     		}
     	}
-    	
+        
     	
 		public override Spine Consequences {
 			get {
@@ -140,7 +142,7 @@ namespace Sussex.Flip.UI
 			IfElseControl copy = new IfElseControl();
 			
 			if (Condition != null) {
-				copy.Condition = (Statement)Condition.DeepCopy();
+				copy.Condition = Condition.DeepCopy();
 			}
 			
 			copy.Consequences = Consequences.DeepCopy();
@@ -202,9 +204,19 @@ namespace Sussex.Flip.UI
 			
 			writer.WriteStartElement("Condition");
 			if (Condition != null) {
-				writer.WriteStartElement("Statement");
-				Condition.WriteXml(writer);
-				writer.WriteEndElement();
+				if (Condition is Statement) {
+					writer.WriteStartElement("Statement");
+					Condition.WriteXml(writer);
+					writer.WriteEndElement();
+				}
+				else if (Condition is BooleanBlock) {
+					writer.WriteStartElement("Boolean");
+					Condition.WriteXml(writer);
+					writer.WriteEndElement();
+				}
+				else {
+					throw new ApplicationException("Condition was not a Statement or BooleanBlock.");
+				}
 			}
 			writer.WriteEndElement();
 			
@@ -245,12 +257,21 @@ namespace Sussex.Flip.UI
 			
 			if (!isEmpty) {
 				
-				if (reader.LocalName != "Statement") throw new FormatException("Condition is not correctly specified.");
+				if (reader.LocalName == "Statement") {					
+					Statement statement = new Statement();
+					statement.ReadXml(reader);
+					Condition = statement;
+					reader.MoveToContent();
+				}
 				
-				Statement statement = new Statement();
-				statement.ReadXml(reader);
-				Condition = statement;
-				reader.MoveToContent();
+				else if (reader.LocalName == "Boolean") {
+					Condition = (BooleanBlock)SerialisationHelper.GetObjectFromXmlInExecutingAssembly(reader);
+					reader.MoveToContent();
+				}
+				
+				else {
+					throw new FormatException("Condition is not correctly specified.");
+				}
 				
 				reader.ReadEndElement(); // passed </Condition>
 				reader.MoveToContent(); // at <Consequences>

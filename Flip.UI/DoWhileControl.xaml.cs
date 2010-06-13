@@ -16,18 +16,20 @@ namespace Sussex.Flip.UI
     	protected Spine consequenceSpine;
     	
     	
-    	public override Statement Condition {
+    	public override Moveable Condition {
     		get { 
-    			return slot.Contents as Statement; 
+    			return slot.Contents;
     		}
-    		set {     			
-    			if (value != null && value.StatementType != StatementType.Condition) {
-    				throw new ArgumentException("Statement must have StatementType.Condition to be assigned as the condition of a ConditionalControl.");
+    		set {     		
+    			if (value == null || (value is Statement && ((Statement)value).StatementType == StatementType.Condition) || value is BooleanBlock) {
+    				slot.Contents = value;
     			}
-    			slot.Contents = value;
+    			else {
+    				throw new ArgumentException("Can only assign a conditional statement or a boolean expression as the condition of a control structure.");
+    			}
     		}
     	}
-    	
+        
     	
 		public override Spine Consequences {
 			get {
@@ -102,7 +104,7 @@ namespace Sussex.Flip.UI
 			DoWhileControl copy = new DoWhileControl();
 			
 			if (Condition != null) {
-				copy.Condition = (Statement)Condition.DeepCopy();
+				copy.Condition = Condition.DeepCopy();
 			}
 			
 			copy.Consequences = Consequences.DeepCopy();

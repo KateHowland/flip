@@ -31,6 +31,6 @@ namespace Sussex.Flip.UI
 	/// Description of BooleanBlock.
 	/// </summary>
 	public abstract class BooleanBlock : Moveable
-	{
+	{		
 	}
 }
