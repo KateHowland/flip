@@ -59,6 +59,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		// Requires flip_functions.nss.
 		
+		
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { 
+			get { return false; }
+		}
+		
+		
 		public AreaTransition()
 		{
 			statementType = StatementType.Action;

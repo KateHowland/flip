@@ -35,6 +35,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// End the currently running game, play sEndMovie then return all players to the
 		// game's main menu.
 		// void EndGame(string sEndMovie);
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
 		
 		
 		public EndGame()

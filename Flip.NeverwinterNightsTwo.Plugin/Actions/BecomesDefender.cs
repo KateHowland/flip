@@ -46,6 +46,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//int STANDARD_FACTION_COMMONER = 1;
 		//int STANDARD_FACTION_MERCHANT = 2;
 		//int STANDARD_FACTION_DEFENDER = 3;
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
 		
 		public BecomesDefender()
 		{

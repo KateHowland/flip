@@ -46,6 +46,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//  destroyed is an item from a player's inventory, the player will not
 		//  be notified of the item being destroyed.
 		// void DestroyObject(object oDestroy, float fDelay=0.0f, int nDisplayFeedback=TRUE);
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
 		
 		public Delete() : base()
 		{

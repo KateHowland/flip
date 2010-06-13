@@ -34,6 +34,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{	
 		// Force the action subject to move to oMoveTo.
 		// void ActionForceMoveToObject(object oMoveTo, int bRun=FALSE, float fRange=1.0f, float fTimeout=30.0f);
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return true; }
+		}
+		
 		
 		public WalksTo()
 		{

@@ -34,6 +34,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{	
 		// Jump to an object ID, or as near to it as possible.
 		// void ActionJumpToObject(object oToJumpTo, int bWalkStraightLineToPoint=TRUE);
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return true; }
+		}
+		
 		
 		public JumpsTo()
 		{

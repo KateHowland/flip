@@ -37,6 +37,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// - bPassive: If this is TRUE, attack is in passive mode.
 		// void ActionAttack(object oAttackee, int bPassive=FALSE);
 		
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return true; }
+		}
+		
+		
 		public Attacks()
 		{
 			statementType = StatementType.Action;

@@ -38,6 +38,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// - nBonusMarkUp is added to the stores default mark up percentage on items sold (-100 to 100)
 		// - nBonusMarkDown is added to the stores default mark down percentage on items bought (-100 to 100)
 		// void OpenStore(object oStore, object oPC, int nBonusMarkUp=0, int nBonusMarkDown=0);
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return true; }
+		}
+		
 		
 		public OpenStore()
 		{
