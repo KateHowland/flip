@@ -65,26 +65,36 @@ namespace Sussex.Flip.UI
 		
 		
 		/// <summary>
-		/// Gets whether a given Moveable represents a boolean expression.
+		/// Gets whether a given Moveable represents a boolean expression (that is, the Moveable
+		/// represents a conditional, or a boolean expression containing conditionals, or
+		/// simply a boolean value.)
 		/// </summary>
 		/// <param name="moveable">The Moveable to check.</param>
 		/// <returns>True if the Moveable is a boolean expression; false otherwise.</returns>
 		public static bool IsBooleanExpression(Moveable moveable)
 		{
 			Statement statement = moveable as Statement;
-			return statement != null && statement.StatementType == StatementType.Condition;
+			if (statement != null && statement.StatementType == StatementType.Condition) return true;
+			
+			BooleanBlock boolean = moveable as BooleanBlock;
+			if (boolean != null) return true;
+			
+			// YesNoBlock booleanLiteral = moveable as YesNoBlock;
+			// if (booleanLiteral != null) return true;
+			
+			return false;
 		}
 		
 		
 		/// <summary>
-		/// Gets whether a given Moveable represents a conditional construct.
+		/// Gets whether a given Moveable represents a control structure.
 		/// </summary>
 		/// <param name="moveable">The Moveable to check.</param>
-		/// <returns>True if the Moveable is a conditional construct; false otherwise.</returns>
-		public static bool IsConditionalConstruct(Moveable moveable)
+		/// <returns>True if the Moveable is a control structure; false otherwise.</returns>
+		public static bool IsControlStructure(Moveable moveable)
 		{
-			ConditionalControl conditionalConstruct = moveable as ConditionalControl;
-			return conditionalConstruct != null;
+			ControlStructure controlStructure = moveable as ControlStructure;
+			return controlStructure != null;
 		}
 		
 		

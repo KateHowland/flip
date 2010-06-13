@@ -10,7 +10,7 @@ namespace Sussex.Flip.UI
     /// <summary>
     /// Interaction logic for IfControl.xaml
     /// </summary>
-    public partial class IfControl : ConditionalControl
+    public partial class IfControl : ControlStructure
     {
     	protected ConditionSlot slot;
     	protected Spine spine;
@@ -70,7 +70,7 @@ namespace Sussex.Flip.UI
     	
         public IfControl()
         {
-        	slot = new ConditionSlot(new ConditionFitter());
+        	slot = new ConditionSlot(new BooleanExpressionFitter());
         	slot.Padding = new Thickness(4);
         	
         	spine = new Spine(new SpineFitter(),1);

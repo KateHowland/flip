@@ -27,9 +27,9 @@ using System;
 
 namespace Sussex.Flip.UI
 {
-	public class ConditionFitter : Fitter
+	public class BooleanExpressionFitter : Fitter
 	{		
-		public ConditionFitter() : base()
+		public BooleanExpressionFitter() : base()
 		{
 			
 		}

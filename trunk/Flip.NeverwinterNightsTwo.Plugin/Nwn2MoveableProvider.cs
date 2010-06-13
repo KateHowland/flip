@@ -144,6 +144,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			foreach (Statement action in a) {
 				try {
+//					Nwn2StatementBehaviour sb = (Nwn2StatementBehaviour)action.Behaviour;
+//					if (sb.IsAsynchronous) {
+//						action.BorderBrush = Brushes.Black;
+//						action.BorderThickness = new Thickness(10);
+//					}
 					manager.AddMoveable(ActionsBagName,action);
 				}
 				catch (Exception e) {

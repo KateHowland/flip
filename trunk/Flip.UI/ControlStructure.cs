@@ -37,7 +37,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of ConditionalControl.
 	/// </summary>
-	public abstract class ConditionalControl : Moveable
+	public abstract class ControlStructure : Moveable
 	{		
 //    	protected static ResourceDictionary resourceDictionary;
 //    	

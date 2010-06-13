@@ -32,7 +32,8 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class MoveableProvider
 	{
-		protected const string ProgrammingConstructsBagName = "Control";
+		public const string ProgrammingConstructsBagName = "Control";
+		public const string BooleanExpressionsBagName = "Booleans";
 		
 		
 		protected IMoveableManager manager;
@@ -64,7 +65,7 @@ namespace Sussex.Flip.UI
 			if (manager == null) throw new InvalidOperationException("Need an IMoveableManager to work with.");
 			
 			foreach (string bag in manager.GetBags()) {
-				if (bag != ProgrammingConstructsBagName) {
+				if (bag != ProgrammingConstructsBagName && bag != BooleanExpressionsBagName) {
 					manager.EmptyBag(bag);
 				}
 			}
@@ -80,6 +81,11 @@ namespace Sussex.Flip.UI
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfElseControl());
 //			manager.AddMoveable(ProgrammingConstructsBagName,new WhileControl());
 //			manager.AddMoveable(ProgrammingConstructsBagName,new DoWhileControl());
+			
+			manager.AddBag(BooleanExpressionsBagName);			
+			manager.AddMoveable(BooleanExpressionsBagName,new OrBlock());
+//			manager.AddMoveable(BooleanExpressionsBagName,new AndBlock());
+//			manager.AddMoveable(BooleanExpressionsBagName,new NotBlock());
 		}
 		
 		
