@@ -57,7 +57,7 @@ namespace Sussex.Flip.UI
 		
 		public override string GetCode()
 		{
-			return String.Format("(~({0}))",slot1.GetCode());
+			return String.Format("(!({0}))",slot1.GetCode());
 		}
 		
 		
