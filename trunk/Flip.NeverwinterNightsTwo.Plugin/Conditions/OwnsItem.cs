@@ -32,6 +32,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	public class OwnsItem : Nwn2StatementBehaviour
 	{	
 		// if (GetItemPossessor(object oItem) == oCreature)
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
 		
 		public OwnsItem()
 		{

@@ -42,6 +42,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// * Returns an effect of type EFFECT_TYPE_INVALIDEFFECT if nDamageToHeal < 0.
 		// RWT-OEI 03/13/07 - This will now 'heal' doors and placeables.
 		// effect EffectHeal(int nDamageToHeal);
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
 		
 		public Heal()
 		{

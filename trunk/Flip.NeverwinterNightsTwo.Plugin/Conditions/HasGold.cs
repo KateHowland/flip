@@ -33,7 +33,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{	
 		// Get the amount of gold possessed by oTarget.
 		// int GetGold(object oTarget=OBJECT_SELF);
-				
+						
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
+		
 		public HasGold()
 		{
 			statementType = StatementType.Condition;

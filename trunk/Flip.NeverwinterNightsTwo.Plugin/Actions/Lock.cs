@@ -37,7 +37,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		// Note that any Placeable seems to be lockable with this script, regardless of
 		// whether it is set to Lockable in its properties (or is naturally Lockable).
-
+		
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
+		
 		public Lock()
 		{
 			statementType = StatementType.Action;

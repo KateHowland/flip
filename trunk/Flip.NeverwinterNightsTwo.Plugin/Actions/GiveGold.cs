@@ -36,6 +36,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// bDisplayFeedback - if set to FALSE, will not display the feedback string
 		//  in the player's chatlog.
 		//void GiveGoldToCreature(object oCreature, int nGP, int bDisplayFeedback=TRUE );
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}		
 		
 		
 		public GiveGold()

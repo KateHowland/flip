@@ -54,8 +54,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// sCancelString - The string to display in the Cancel button. Overrides anything
 		//               - that nCancelStrRef indicates if it is anything besides empty string
 		//void DisplayMessageBox( object oPC, int nMessageStrRef..................
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return true; }
+		}
 		
-		
+				
 		public DisplayMessage()
 		{
 			statementType = StatementType.Action;

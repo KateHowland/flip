@@ -38,6 +38,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		//Note that clients can toggle this state if the server is set to allow players to pause th game.
 		// bState = TRUE to pause, FALSE to unpause
 		// void SetPause( int bState );		
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
 		
 		public Unpause()
 		{

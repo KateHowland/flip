@@ -41,6 +41,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// Return Value: 1 on success, 0 on error
 		// notes - returns 0 if there is no room in party to add henchman, though this is not technically an error
 		// int HenchmanAdd(object oMaster, object oHench, int bForce=0, int bOverrideBehavior=0)
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
 		
 		public MakeHenchman()
 		{

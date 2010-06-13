@@ -48,6 +48,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		// (if the object exists) or to return the tag itself with the assumption that since
 		// the object does not exist in game the tag comes from a Flip or Narrative Threads
 		// block, in which case we can expect that the resref is probably the same as the tag.
+				
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
 		
 		public CreateCreatureAtLocation()
 		{

@@ -34,7 +34,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	{	
 		// Set the locked state of oTarget, which can be a door or a placeable object.
 		// void SetLocked(object oTarget, int bLocked);
-
+		
+		/// <summary>
+		/// Checks whether the given statement is an asynchronous action (that is,
+		/// it does not wait for the action to finish before executing the next command).
+		/// </summary>
+		public override bool IsAsynchronous { // DoesNotWaitForActionToFinishBeforeProceeding
+			get { return false; }
+		}
+		
+		
 		public Unlock()
 		{
 			statementType = StatementType.Action;
