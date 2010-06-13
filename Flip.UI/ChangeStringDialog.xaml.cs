@@ -39,6 +39,14 @@ namespace Sussex.Flip.UI
     		valueTextBox.MaxLength = maxLength;
     		
     		valueTextBox.Text = block.Value;
+    		
+            valueTextBox.KeyDown += new KeyEventHandler(HitEnterKey);
+    	}
+    	
+    	
+    	protected void HitEnterKey(object sender, KeyEventArgs e)
+    	{
+    		if (e.Key == Key.Enter) AcceptChange(sender,e);
     	}
     	
     	
