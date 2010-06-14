@@ -290,16 +290,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			pluginMenuItem.Items.Add(launchFlip);	
 			
-			// Start logging Flip actions:
-			try {
-				// TODO:
-				// deal with paths properly:
-				// TODO:
-				// safely create a folder for each username:
-				// TODO:
-				// StartLog should do proper checking of directory existence, path safety etc.
-				string logs = @"C:\Sussex University\Flip\Logs\";
-				string path = Path.Combine(logs,ActivityLog.GetFilename());
+			StartLogging();
+		}
+		
+		
+		PathChecker pathChecker = new PathChecker();
+		protected void StartLogging()
+		{
+			string logs = @"C:\Sussex University\Flip\Logs\";
+			
+			try {				
+				string saveTo = Path.Combine(logs,Environment.UserName);
+				try {
+					if (!Directory.Exists(saveTo)) Directory.CreateDirectory(saveTo);
+				}
+				catch (Exception) {
+					saveTo = logs;
+				}
+				
+				string path = Path.Combine(saveTo,ActivityLog.GetFilename());
+				path = pathChecker.GetUnusedFilePath(path);
+				
 				ActivityLog.StartLog(path);
 			}
 			catch (Exception x) {
