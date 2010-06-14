@@ -346,7 +346,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			session = new Nwn2Session();
 			FlipTranslator translator = new NWScriptTranslator();
-			FlipAttacher attacher = new NWScriptAttacher(translator,session);
+			string backups = @"C:\Sussex University\Flip\Scripts\";
+			FlipAttacher attacher = new NWScriptAttacher(translator,session,backups);
 								
 			Nwn2Fitters fitters = new Nwn2Fitters();				
 			triggers = new Nwn2TriggerFactory(fitters);

@@ -37,6 +37,7 @@ namespace Sussex.Flip.Core
 		
 		protected string code;
 		protected string name;
+		protected string original;
 		
 		#endregion
 		
@@ -57,6 +58,16 @@ namespace Sussex.Flip.Core
 			get { return name; }
 			set { name = value; }
 		}
+		
+		
+		/// <summary>
+		/// If this script was created by editing an existing script,
+		/// this field provides the name of the original script.
+		/// </summary>
+		public string Original {
+			get { return original; }
+			set { original = value; }
+		}
 						
 		#endregion
 		
@@ -65,7 +76,7 @@ namespace Sussex.Flip.Core
 		/// <summary>
 		/// Constructs a new <see cref="FlipScript"/> instance.
 		/// </summary>
-		public FlipScript() : this(String.Empty,String.Empty)
+		public FlipScript() : this(String.Empty,String.Empty,String.Empty)
 		{
 		}
 		
@@ -74,7 +85,7 @@ namespace Sussex.Flip.Core
 		/// Constructs a new <see cref="FlipScript"/> instance.
 		/// </summary>
 		/// <param name="code">The source code of the script.</param>
-		public FlipScript(string code) : this(code,String.Empty)
+		public FlipScript(string code) : this(code,String.Empty,String.Empty)
 		{
 		}
 		
@@ -84,10 +95,25 @@ namespace Sussex.Flip.Core
 		/// </summary>
 		/// <param name="code">The source code of the script.</param>
 		/// <param name="name">The name of the script.</param>
-		public FlipScript(string code, string name)
+		/// <param name="original">The name of the script.</param>
+		public FlipScript(string code, string name) : this(code,name,String.Empty)
+		{
+		}
+		
+		
+		/// <summary>
+		/// Constructs a new <see cref="FlipScript"/> instance.
+		/// </summary>
+		/// <param name="code">The source code of the script.</param>
+		/// <param name="name">The name of the script.</param>
+		/// <param name="original">If this script was created 
+		/// by editing an existing script, this field provides 
+		/// the name of the original script.</param>
+		public FlipScript(string code, string name, string original)
 		{
 			this.code = code;
 			this.name = name;
+			this.original = original;
 		}
 		
 		#endregion	
@@ -102,7 +128,7 @@ namespace Sussex.Flip.Core
 		
 		public FlipScript DeepCopy()
 		{
-			return new FlipScript(code,name);
+			return new FlipScript(code,name,original);
 		}
 		
 		#endregion
