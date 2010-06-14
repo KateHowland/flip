@@ -70,8 +70,10 @@ namespace Sussex.Flip.UI.Generic
 		/// <param name="source">The Flip source to be compiled.</param>
 		/// <param name="address">An address representing the location
 		/// to attach this script to.</param>
-		public override void Attach(FlipScript source, string address)
+		/// <returns>The name the script was saved under.</returns>
+		public override string Attach(FlipScript source, string address)
 		{			
+			return null;
 		}
 		
 		#endregion

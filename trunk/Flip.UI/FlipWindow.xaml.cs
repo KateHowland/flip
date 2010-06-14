@@ -179,7 +179,10 @@ namespace Sussex.Flip.UI
 		public void CloseScript()
 		{			
 			Clear();
-			IsDirty = false;
+			
+			triggerBar.CurrentScriptIsBasedOn = String.Empty;
+			
+			IsDirty = false;	
 		}
 		
 		
@@ -278,8 +281,17 @@ namespace Sussex.Flip.UI
 			if (String.IsNullOrEmpty(path)) throw new ArgumentException("Invalid path.","path");
 			if (!File.Exists(path)) throw new ArgumentException("Invalid path - file does not exist.","path");
 			
-			XmlReader reader = new XmlTextReader(path);				
-			LoadFlipCodeFromReader(reader);
+			using (XmlReader reader = new XmlTextReader(path)) {
+				LoadFlipCodeFromReader(reader);
+			}			
+			
+			// Update the property 'CurrentScriptIsBasedOn', since the next time
+			// the script is saved it will be as a new script based on the one
+			// that we've just opened. (This essentially means that we never use
+			// the value we're deserialising in code - it's so we can analyse
+			// the script file at a later date.)
+			string scriptName = Path.GetFileNameWithoutExtension(path);
+			triggerBar.CurrentScriptIsBasedOn = scriptName;
 			
 			IsDirty = false;
 		}
@@ -291,13 +303,23 @@ namespace Sussex.Flip.UI
 			
 			CloseScript();
 			
-			if (tuple.Script != null) {
+			if (tuple.Script != null) {				
 				using (TextReader tr = new StringReader(tuple.Script.Code)) {
 					XmlReader reader = new XmlTextReader(tr);
 					LoadFlipCodeFromReader(reader);
-				}
+				}				
+			
+				// Update the property 'CurrentScriptIsBasedOn', since the next time
+				// the script is saved it will be as a new script based on the one
+				// that we've just opened. (This essentially means that we never use
+				// the value we're deserialising in code - it's so we can analyse
+				// the script file at a later date.)
+				triggerBar.CurrentScriptIsBasedOn = tuple.Script.Name;				
 			}
-			if (tuple.Trigger != null) SetTrigger(tuple.Trigger);
+			
+			if (tuple.Trigger != null) {
+				SetTrigger(tuple.Trigger);
+			}
 			
 			IsDirty = false;
 		}
@@ -386,8 +408,11 @@ namespace Sussex.Flip.UI
 			
 			string address = triggerBar.GetAddress();
 			
-			attacher.Attach(script,address);
+			string savedAs = attacher.Attach(script,address);
+			
+			triggerBar.CurrentScriptIsBasedOn = savedAs;
 			IsDirty = false;
+			
 			return true;
 		}
 		

@@ -80,7 +80,8 @@ namespace Sussex.Flip.Core
 		/// <param name="source">The Flip source to be compiled.</param>
 		/// <param name="address">An address representing the location
 		/// to attach this script to.</param>
-		public abstract void Attach(FlipScript source, string address);
+		/// <returns>The name the script was saved under.</returns>
+		public abstract string Attach(FlipScript source, string address);
 		
 		#endregion
 	}

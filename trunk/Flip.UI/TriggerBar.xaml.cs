@@ -14,6 +14,7 @@ namespace Sussex.Flip.UI
 
     public partial class TriggerBar : UserControl, ITranslatable
     {
+    	protected string currentScriptIsBasedOn;
     	protected TriggerSlot triggerSlot;
     	protected Spine spine;
     	
@@ -28,8 +29,15 @@ namespace Sussex.Flip.UI
 			}
 		}
     	
+    	
 		public Spine Spine {
 			get { return spine; }
+		}
+    	
+    	
+		public string CurrentScriptIsBasedOn {
+			get { return currentScriptIsBasedOn; }
+			set { currentScriptIsBasedOn = value; }
 		}
     	
     	
@@ -67,6 +75,8 @@ namespace Sussex.Flip.UI
         public TriggerBar(TriggerControl initialTrigger, Fitter fitter)
         {
         	if (fitter == null) throw new ArgumentNullException("fitter");
+        	
+        	currentScriptIsBasedOn = String.Empty;
         	
         	spine = new Spine(fitter,3);
         	Grid.SetRow(spine,0);
@@ -149,6 +159,7 @@ namespace Sussex.Flip.UI
 			if (reader.IsEmptyElement) throw new FormatException("Script is empty.");
 			
 			reader.ReadStartElement();
+			CurrentScriptIsBasedOn = reader.GetAttribute("BasedOn");
 			reader.MoveToContent();
 			
 			if (reader.LocalName != "Code") throw new FormatException("Script does not include Code.");
@@ -163,6 +174,7 @@ namespace Sussex.Flip.UI
     	
 		public void WriteXml(XmlWriter writer)
 		{
+			writer.WriteAttributeString("BasedOn",CurrentScriptIsBasedOn);
 			writer.WriteStartElement("Code");
 			Spine.WriteXml(writer);
 			writer.WriteEndElement();
