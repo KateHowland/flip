@@ -43,6 +43,7 @@ namespace Sussex.Flip.Utils
 		{
 			if (path == null) throw new ArgumentNullException("path");
 			if (path == String.Empty) throw new ArgumentException("Must pass a valid path.","path");
+			if (!Directory.Exists(Path.GetDirectoryName(path))) throw new ArgumentException("The folder containing the selected path does not exist.");
 			
 			lock (padlock) {
 				if (IsRunning()) throw new ApplicationException("There is a user log already being written.");
@@ -72,7 +73,7 @@ namespace Sussex.Flip.Utils
 				writer = null;
 			}
 		}
-		
+			
 		
 		public static bool IsRunning()
 		{
@@ -102,6 +103,6 @@ namespace Sussex.Flip.Utils
 			if (dt == null) return String.Empty;
 			
 			return String.Format("{0} {1}",dt.ToLongDateString(),dt.ToLongTimeString().Replace(":","."));
-		}
+		}		
 	}
 }
