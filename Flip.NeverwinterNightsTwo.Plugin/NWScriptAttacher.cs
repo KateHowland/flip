@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.IO;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
@@ -31,6 +32,7 @@ using NWN2Toolset.NWN2.Data.TypedCollections;
 using Sussex.Flip.Core;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -45,7 +47,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected GameInformation game;
 		protected INwn2Session session;
-		protected ModuleTextFile moduleTextFile;
+		protected PathChecker pathChecker;
+		protected string backups;
+		protected bool createFoldersForUsers;
 		
 		#endregion
 		
@@ -66,18 +70,61 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// be used to translate scripts before attaching them.</param>
 		/// <param name="session">The helper class used for creating,
 		/// compiling and attaching scripts.</param>
-		public NWScriptAttacher(FlipTranslator translator, INwn2Session session) : base(translator)
+		/// <param name="backups">The folder to save a second backup
+		/// copy of created script files to. A null or invalid backup
+		/// path will be ignored.</param>
+		public NWScriptAttacher(FlipTranslator translator, INwn2Session session, string backups) : base(translator)
 		{
 			if (session == null) throw new ArgumentNullException("session");
 			
 			this.game = new GameInformation("Neverwinter Nights 2");
 			this.session = session;
-			this.moduleTextFile = new ModuleTextFile();
+			this.backups = backups;
+			
+			pathChecker = new PathChecker();
+			createFoldersForUsers = true;
+		}
+		
+		
+		/// <summary>
+		/// Constructs a new <see cref="NWScriptAttacher"/> instance.
+		/// </summary>
+		/// <param name="translator">The translator which will
+		/// be used to translate scripts before attaching them.</param>
+		/// <param name="session">The helper class used for creating,
+		/// compiling and attaching scripts.</param>
+		public NWScriptAttacher(FlipTranslator translator, INwn2Session session) : this(translator,session,null)
+		{
 		}
 		
 		#endregion
 		
 		#region Methods
+		
+		/// <summary>
+		/// Get a script name which has not already been taken in the current module.
+		/// </summary>
+		/// <returns>An available script name.</returns>
+		public string GetUnusedName()
+		{
+			NWN2GameModule module = session.GetModule();
+			if (module == null) throw new ArgumentNullException("module");
+			
+			// Naming format:
+			// flipscript kn70 quest for the skull 47
+			string ideal = String.Format("flipscript {0} {1}",Environment.UserName,module.Name);			
+					
+			int count = 2;
+			
+			string name = ideal;
+			
+			while (session.HasUncompiled(name)) {
+				name = ideal + " (" + count++ + ")";
+			}
+			
+			return name;
+		}
+		
 		
 		/// <summary>
 		/// Translates Flip source into NWScript, compiles it, 
@@ -99,9 +146,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new InvalidOperationException("No module is currently open in the toolset.");
 			}
 						
-			try {			
-				string name = GetUnusedScriptName(source.Name);
-					
+			string name = GetUnusedName();
+			
+			try {							
 				NWN2GameScript script = session.AddScript(name,source.Code);
 				
 				session.CompileScript(script);
@@ -187,30 +234,54 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					}
 				}
 			}
-			catch (Exception e) {
-				throw new ApplicationException("Failed to translate and attach script.\n\n" + e.ToString(),e);
+			catch (Exception x) {
+				throw new ApplicationException("Something went wrong while saving and attaching script.",x);
+			}
+			
+			if (backups != null && Directory.Exists(backups)) {			
+				
+				string saveTo;
+				
+				if (createFoldersForUsers) {
+					saveTo = Path.Combine(backups,Environment.UserName);
+					if (!Directory.Exists(saveTo)) {
+						try {
+							Directory.CreateDirectory(saveTo);
+						}
+						catch (Exception) {
+							saveTo = backups;
+						}
+					}
+				}
+				else {
+					saveTo = backups;
+				}
+				
+				WriteBackup(name,saveTo,source.Code);
 			}
 		}
+				
 		
-		
-		/// <summary>
-		/// Get a script name which has not already been taken in the current module.
-		/// </summary>
-		/// <param name="preferred">The preferred name for the script,
-		/// which will be amended based on availability.</param>
-		/// <returns>An available script name.</returns>
-		public string GetUnusedScriptName(string preferred)
+		protected void WriteBackup(string name, string folder, string contents)
 		{
-			if (preferred == null) throw new ArgumentNullException("preferred");
+			if (name == null) throw new ArgumentNullException("name");
+			if (name == String.Empty) throw new ArgumentException("Name cannot be blank","name");
+			if (folder == null) throw new ArgumentNullException("folder");
+			if (!Directory.Exists(folder)) throw new ArgumentException("Path '" + folder + "' does not exist.","folder");
+			if (contents == null) throw new ArgumentNullException("contents");
 			
-			string name = preferred;			
-			int count = 2;
-			
-			while (session.HasUncompiled(name)) {
-				name = preferred + " (" + count++ + ")";
+			string path = Path.Combine(folder,name + ".nss");
+			path = pathChecker.GetUnusedFilePath(path);
+							
+			try {
+				using (StreamWriter writer = new StreamWriter(path)) {
+					writer.Write(contents);
+					writer.Flush();
+				}
 			}
-			
-			return name;
+			catch (Exception x) {
+				throw new ApplicationException("Failed to save a backup copy of this script to " + path,x);
+			}
 		}
 		
 		#endregion

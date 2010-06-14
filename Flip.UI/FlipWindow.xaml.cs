@@ -383,18 +383,12 @@ namespace Sussex.Flip.UI
 			string code = scriptWriter.GetCombinedCode();
 			
 			FlipScript script = new FlipScript(code);
-			script.Name = "flipscript";
 			
 			string address = triggerBar.GetAddress();
 			
-			try {
-				attacher.Attach(script,address);
-				IsDirty = false;
-				return true;
-			}
-			catch (Exception x) {
-				throw new ApplicationException("Failed to save script to module.",x);
-			}
+			attacher.Attach(script,address);
+			IsDirty = false;
+			return true;
 		}
 		
 		

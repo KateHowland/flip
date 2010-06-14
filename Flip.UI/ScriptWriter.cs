@@ -49,7 +49,7 @@ namespace Sussex.Flip.UI
 		{
 			if (triggerBar == null) throw new ArgumentNullException("triggerBar");
 			
-			this.triggerBar = triggerBar;			
+			this.triggerBar = triggerBar;
 		}
 		
 		
