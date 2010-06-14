@@ -133,7 +133,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <param name="source">The Flip source to be compiled.</param>
 		/// <param name="address">An address representing the location
 		/// to attach this script to.</param>
-		public override void Attach(FlipScript source, string address)
+		/// <returns>The name the script was saved under.</returns>
+		public override string Attach(FlipScript source, string address)
 		{
 			if (source == null) throw new ArgumentNullException("source");
 			if (address == null) throw new ArgumentNullException("address");
@@ -242,15 +243,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				string saveTo;
 				
-				if (createFoldersForUsers) {
-					saveTo = Path.Combine(backups,Environment.UserName);
-					if (!Directory.Exists(saveTo)) {
-						try {
-							Directory.CreateDirectory(saveTo);
-						}
-						catch (Exception) {
-							saveTo = backups;
-						}
+				if (createFoldersForUsers) {					
+					try {
+						saveTo = Path.Combine(backups,Environment.UserName);
+						if (!Directory.Exists(saveTo)) Directory.CreateDirectory(saveTo);
+						
+						saveTo = Path.Combine(saveTo,module.Name);
+						if (!Directory.Exists(saveTo)) Directory.CreateDirectory(saveTo);
+					}
+					catch (Exception) {
+						saveTo = backups;
 					}
 				}
 				else {
@@ -259,10 +261,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				WriteBackup(name,saveTo,source.Code);
 			}
+			
+			return name;
 		}
 				
 		
-		protected void WriteBackup(string name, string folder, string contents)
+		protected string WriteBackup(string name, string folder, string contents)
 		{
 			if (name == null) throw new ArgumentNullException("name");
 			if (name == String.Empty) throw new ArgumentException("Name cannot be blank","name");
@@ -282,6 +286,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			catch (Exception x) {
 				throw new ApplicationException("Failed to save a backup copy of this script to " + path,x);
 			}
+			
+			return path;
 		}
 		
 		#endregion
