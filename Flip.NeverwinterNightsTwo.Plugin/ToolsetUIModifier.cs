@@ -114,6 +114,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public delegate void CreateBlockFromBlueprintDelegate(NWN2BlueprintCollection blueprints);
 		
 		/// <summary>
+		/// The delegate signature of a method to be called when the tag
+		/// of an object changes, demanding an update to its block.
+		/// </summary>
+		public delegate void UpdateBlockWhenTagChangesDelegate(NWN2PropertyValueChangedEventArgs e);
+		
+		/// <summary>
 		/// The method to call when a line of conversation is to be used as a trigger
 		/// for a script.
 		/// </summary>
@@ -124,6 +130,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// block in Flip.
 		/// </summary>
 		protected CreateBlockFromBlueprintDelegate createBlockFromBlueprintDelegate = null;
+		
+		/// <summary>
+		/// The method to call when the tag of an object changes.
+		/// </summary>
+		protected UpdateBlockWhenTagChangesDelegate updateBlockDelegate = null;
 		
 		/// <summary>
 		/// TODO
@@ -163,13 +174,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <param name="useDialogueAsTriggerDelegate">A delegate which will be invoked when 
 		/// the user tries to use a line of dialogue in the conversation editor as the trigger 
 		/// to fire a script.</param>
-		public ToolsetUIModifier(ProvideTriggerDelegate useDialogueAsTriggerDelegate, CreateBlockFromBlueprintDelegate createBlockFromBlueprintDelegate)
+		/// <param name="createBlockFromBlueprintDelegate">A delegate which will be invoked when 
+		/// a blueprint is to be used to create an instance block in Flip.</param>
+		/// <param name="updateBlockDelegate">A delegate which will be invoked when 
+		/// a blueprint is to be used to create an instance block in Flip.</param>
+		public ToolsetUIModifier(ProvideTriggerDelegate useDialogueAsTriggerDelegate, 
+		                         CreateBlockFromBlueprintDelegate createBlockFromBlueprintDelegate, 
+		                         UpdateBlockWhenTagChangesDelegate updateBlockDelegate)
 		{			
 			if (useDialogueAsTriggerDelegate == null) throw new ArgumentNullException("useDialogueAsTriggerDelegate");
 			if (createBlockFromBlueprintDelegate == null) throw new ArgumentNullException("createBlockFromBlueprintDelegate");
+			if (updateBlockDelegate == null) throw new ArgumentNullException("updateBlockDelegate");
 			
 			this.useDialogueAsTriggerDelegate = useDialogueAsTriggerDelegate;
 			this.createBlockFromBlueprintDelegate = createBlockFromBlueprintDelegate;
+			this.updateBlockDelegate = updateBlockDelegate;
 			
 			FindFields();
 			
@@ -205,6 +224,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					};
 				}
 			}
+			
+			WatchForPropertyGridChanges();
+		}
+		
+		
+		protected void WatchForPropertyGridChanges()
+		{
+			dockingManager.ContentShown += delegate(Content c, EventArgs cea) 
+			{  
+				if (c.Control is NWN2PropertyGrid) {
+					Watch((NWN2PropertyGrid)c.Control);
+				}
+			};
+		}
+		
+		
+		protected void Watch(NWN2PropertyGrid grid)
+		{
+			if (grid == null) throw new ArgumentNullException("grid");
+			grid.ValueChanged += delegate(object sender, NWN2PropertyValueChangedEventArgs args) 
+			{  
+				updateBlockDelegate.Invoke(args);
+			};
 		}
 		
 		
@@ -355,6 +397,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					 * so check that it (and its inner grid) are not null or disposed whenever using them.
 					 */
 					if (mainPropertyGrid != null) {
+						Watch(mainPropertyGrid);
 						mainPropertyInnerGrid = (PropertyGrid)innerPropertyGridFieldInfo.GetValue(mainPropertyGrid);
 					}
 				}
