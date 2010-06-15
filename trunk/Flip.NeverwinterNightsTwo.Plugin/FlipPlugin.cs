@@ -31,9 +31,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using NWN2Toolset;
+using NWN2Toolset.NWN2;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
+using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Views;
@@ -42,6 +45,7 @@ using Sussex.Flip.Core;
 using Sussex.Flip.UI;
 using Sussex.Flip.Utils;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 
@@ -177,6 +181,98 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		#region Methods
 		
+		protected static List<string> tracking = new List<string>{ "Tag", "First Name", "Last Name", "Localized Name", "Display Name" };
+		public void UpdateBlockWithNewTag(NWN2PropertyValueChangedEventArgs e)
+		{
+			LaunchFlip();
+			
+			// TODO: Should only be making sure Flip is initialised, not launching it
+		
+			if (tracking.Contains(e.PropertyName) && e.NewValue != e.OldValue) {
+								
+				foreach (object o in e.ChangedObjects) {
+					
+					if (o is INWN2Instance) {
+						INWN2Instance instance = (INWN2Instance)o;
+						InstanceBehaviour behaviour = blocks.CreateInstanceBehaviour(instance);
+						
+						string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,instance.ObjectType);
+					
+						if (window.BlockBox.HasBag(bag)) {
+							UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
+							
+							// If it's the tag that's changed, use the old tag to search, otherwise use the current one:
+							string tag;
+							if (e.PropertyName == "Tag") tag = e.OldValue as string;
+							else tag = ((INWN2Object)instance).Tag;
+										
+							bool updated = false;
+							
+							foreach (UIElement u in existingBlocks) {
+								ObjectBlock existing = u as ObjectBlock;								
+								if (existing == null) continue;
+								InstanceBehaviour existingBehaviour = existing.Behaviour as InstanceBehaviour;
+								if (existingBehaviour == null) continue;
+								
+								// If you find an instance of the same type, resref and tag, replace its behaviour to update it:
+								if (existingBehaviour.ResRef == behaviour.ResRef && existingBehaviour.Nwn2Type == behaviour.Nwn2Type && existingBehaviour.Tag == tag) {
+									existing.Behaviour = behaviour;
+									updated = true;
+									break;
+								}
+							}
+							
+							if (!updated) {
+								ObjectBlock block = blocks.CreateInstanceBlock(behaviour);
+								window.BlockBox.AddMoveable(bag,block,false);
+							}
+						}
+					}
+					
+					else if (o is NWN2GameArea) {
+						NWN2GameArea area = (NWN2GameArea)o;
+						AreaBehaviour behaviour = blocks.CreateAreaBehaviour(area);
+						
+						string bag = Nwn2MoveableProvider.OtherBagName;
+					
+						if (window.BlockBox.HasBag(bag)) {
+							UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
+							
+							string tag;
+							if (e.PropertyName == "Tag") tag = e.OldValue as string;
+							else tag = area.Tag;
+							
+							bool updated = false;
+							
+							foreach (UIElement u in existingBlocks) {
+								ObjectBlock existing = u as ObjectBlock;								
+								if (existing == null) continue;
+								AreaBehaviour existingBehaviour = existing.Behaviour as AreaBehaviour;
+								if (existingBehaviour == null) continue;
+																
+								// If you find an area with the same tag, replace its behaviour to update it:
+								if (existingBehaviour.Tag == tag) {
+									existing.Behaviour = behaviour;
+									updated = true;
+									break;
+								}
+							}
+							
+							if (!updated) {
+								ObjectBlock block = blocks.CreateAreaBlock(behaviour);
+								window.BlockBox.AddMoveable(bag,block,false);
+							}
+						}
+					}
+				}
+			}
+			
+			else {
+				MessageBox.Show("_"+e.PropertyName+"_"); //TODO
+			}
+		}
+		
+		
 		public void CreateInstanceBlocksFromBlueprints(NWN2BlueprintCollection blueprints)
 		{
 			if (blueprints == null) throw new ArgumentNullException("blueprints");
@@ -248,7 +344,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			// Modify the user interface:
 			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger),
-			                                             new ToolsetUIModifier.CreateBlockFromBlueprintDelegate(CreateInstanceBlocksFromBlueprints));
+			                                             new ToolsetUIModifier.CreateBlockFromBlueprintDelegate(CreateInstanceBlocksFromBlueprints),
+			                                             new ToolsetUIModifier.UpdateBlockWhenTagChangesDelegate(UpdateBlockWithNewTag));
 			UI.ModifyUI();
 			
 			try {
