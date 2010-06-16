@@ -195,8 +195,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							session.AttachScriptToArea(script,area,nwn2Address.TargetSlot);
 						}
 						
-						else {
-							
+						else {							
 							/*
 							 * We want to attach to ALL instances matching the address in ALL OPEN areas, ignoring AreaTag and UseIndex.
 							 */ 
