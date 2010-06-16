@@ -223,46 +223,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								                             nwn2Address.InstanceTag);
 								throw new MatchingInstanceNotFoundException(error,nwn2Address);
 							}
-							
-							
-							// Original:
-							
-//							NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
-//							
-//							NWN2InstanceCollection instances = session.GetObjectsByTag(area,nwn2ObjectType,nwn2Address.InstanceTag);
-//							
-//							if (instances.Count == 0) {
-//								string error = String.Format("No objects of the given type ({0}) and tag ('{1}') were found in area '{2}'.",
-//								                             nwn2Address.TargetType,
-//								                             nwn2Address.InstanceTag,
-//								                             nwn2Address.AreaTag);
-//								throw new ArgumentException(error,"address");
-//							}
-//							
-//							if (nwn2Address.UseIndex) {	
-//								int count = instances.Count;
-//								
-//								if (nwn2Address.Index >= count) {
-//									string error = String.Format("Found only {0} objects of the given type ({1}) and tag ('{2}') in area '{3}' - could not assign to index [{4}].",
-//									                             count,
-//									                             nwn2Address.TargetType,
-//									                             nwn2Address.InstanceTag,
-//									                             nwn2Address.AreaTag,
-//									                             nwn2Address.Index);
-//									throw new ArgumentException(error,"address");
-//								}
-//								
-//								else {
-//									INWN2Instance instance = instances[nwn2Address.Index];
-//									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
-//								}
-//							}
-//							
-//							else {													
-//								foreach (INWN2Instance instance in instances) {
-//									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
-//								}
-//							}
 						}
 					}
 				}
