@@ -217,14 +217,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							}
 							
 							if (!attached) {
-								string error = String.Format("Couldn't find a {0} with tag '{1}' to save script to in any open area.",
+								string error = String.Format("There isn't a {0} with tag '{1}' in any of the areas that are open.",
 								                             nwn2Address.TargetType,
 								                             nwn2Address.InstanceTag);
+								
 								throw new MatchingInstanceNotFoundException(error,nwn2Address);
 							}
 						}
 					}
 				}
+			}
+			catch (MatchingInstanceNotFoundException x) {
+				throw x;
 			}
 			catch (Exception x) {
 				throw new ApplicationException("Something went wrong while saving and attaching script.",x);

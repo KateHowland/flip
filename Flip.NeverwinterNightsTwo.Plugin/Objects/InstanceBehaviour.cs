@@ -144,7 +144,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 						
 			InstanceBehaviour i = other as InstanceBehaviour;
 			
-			return i != null && i.areaTag == this.areaTag;
+			return i != null;// && i.areaTag == this.areaTag;
 		}
 		
 		

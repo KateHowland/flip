@@ -18,17 +18,10 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public partial class FlipWindow : Window
 	{
-		protected TriggerBar triggerBar;
-		protected FlipAttacher attacher;		
+		protected TriggerBar triggerBar;	
 		protected MoveablesPanel blockBox;
 		protected MoveableProvider provider;
 		protected ImageProvider imageProvider;
-		
-		
-		/// <summary>
-		/// The method to call when the user wants to open or delete a script.
-		/// </summary>
-		protected OpenDeleteScriptDelegate openDeleteScriptDelegate;
 				
 		
 		/// <summary>
@@ -36,6 +29,25 @@ namespace Sussex.Flip.UI
 		/// to select a Flip-created script and open or delete that script.
 		/// </summary>
 		public delegate void OpenDeleteScriptDelegate();
+				
+		
+		/// <summary>
+		/// The delegate signature of a method to be called which will 
+		/// save the current script to the target game artifact.
+		/// </summary>
+		public delegate bool SaveScriptDelegate(FlipWindow window);
+		
+		
+		/// <summary>
+		/// The method to call when the user wants to open or delete a script.
+		/// </summary>
+		protected OpenDeleteScriptDelegate openDeleteScriptDelegate;
+		
+		
+		/// <summary>
+		/// The method to call when the user wants to save a script.
+		/// </summary>
+		protected SaveScriptDelegate saveScriptDelegate;
 		
 		
 		public MoveablesPanel BlockBox {
@@ -63,17 +75,25 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public FlipWindow(FlipAttacher attacher, MoveableProvider provider, ImageProvider imageProvider, OpenDeleteScriptDelegate openDeleteScriptDelegate)
+		public TriggerBar TriggerBar {
+			get { return triggerBar; }
+		}
+		
+		
+		public FlipWindow(MoveableProvider provider, 
+		                  ImageProvider imageProvider, 
+		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
+		                  SaveScriptDelegate saveScriptDelegate)
 		{
-			if (attacher == null) throw new ArgumentNullException("attacher");
 			if (provider == null) throw new ArgumentNullException("provider");
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
 			if (openDeleteScriptDelegate == null) throw new ArgumentNullException("openDeleteScriptDelegate");
+			if (saveScriptDelegate == null) throw new ArgumentNullException("saveScriptDelegate");
 			
-			this.attacher = attacher;
 			this.provider = provider;
 			this.imageProvider = imageProvider;
 			this.openDeleteScriptDelegate = openDeleteScriptDelegate;
+			this.saveScriptDelegate = saveScriptDelegate;
 			
 			InitializeComponent();
 			
@@ -135,12 +155,17 @@ namespace Sussex.Flip.UI
 										              MessageBoxImage.Question,
 										              MessageBoxResult.Cancel);
 			
-			if (result == MessageBoxResult.Yes) {				
-				bool cancelled = !SaveScriptToModule();
-				
-				if (cancelled) return MessageBoxResult.Cancel;
-				
-				CloseScript();
+			if (result == MessageBoxResult.Yes) {			
+				try {
+					bool cancelled = !SaveScriptToModule();					
+					if (cancelled) return MessageBoxResult.Cancel;
+				}
+				catch (Exception x) {
+					MessageBox.Show(String.Format("Something went wrong when saving script to module.{0}{0}{1}",Environment.NewLine,x));
+					return MessageBoxResult.Cancel;
+				}	
+					
+				CloseScript();	
 			}
 			
 			else if (result == MessageBoxResult.No) {
@@ -381,13 +406,13 @@ namespace Sussex.Flip.UI
 		protected void SaveScriptToModule(object sender, RoutedEventArgs e)
 		{			
 			try {
-				if (SaveScriptToModule()) MessageBox.Show("Script was saved successfully.");
+				SaveScriptToModule();
 			}
 			catch (Exception x) {
-				MessageBox.Show(x.ToString());
+				MessageBox.Show(String.Format("Something went wrong when saving script to module.{0}{0}{1}",Environment.NewLine,x));
 			}
 		}
-		
+			
 				
 		/// <summary>
 		/// 
@@ -396,24 +421,7 @@ namespace Sussex.Flip.UI
 		/// true otherwise.</returns>
 		protected bool SaveScriptToModule()
 		{			
-			if (!triggerBar.IsComplete) {
-				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving to your module.");
-				return false;
-			}
-			
-			ScriptWriter scriptWriter = new ScriptWriter(triggerBar);
-			string code = scriptWriter.GetCombinedCode();
-			
-			FlipScript script = new FlipScript(code);
-			
-			string address = triggerBar.GetAddress();
-			
-			string savedAs = attacher.Attach(script,address);
-			
-			triggerBar.CurrentScriptIsBasedOn = savedAs;
-			IsDirty = false;
-			
-			return true;
+			return saveScriptDelegate.Invoke(this);
 		}
 		
 		

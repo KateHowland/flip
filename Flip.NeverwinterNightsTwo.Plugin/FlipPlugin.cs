@@ -107,6 +107,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected Nwn2MoveableProvider provider;
 		
+		protected NWScriptAttacher attacher;
+		
 		#endregion
 		
 		#region Properties
@@ -455,7 +457,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			session = new Nwn2Session();
 			FlipTranslator translator = new NWScriptTranslator();
 			string backups = @"C:\Sussex University\Flip\Scripts\";
-			FlipAttacher attacher = new NWScriptAttacher(translator,session,backups);
+			attacher = new NWScriptAttacher(translator,session,backups);
 								
 			Nwn2Fitters fitters = new Nwn2Fitters();				
 			triggers = new Nwn2TriggerFactory(fitters);
@@ -469,7 +471,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(attacher,provider,images,new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog));	
+			window = new FlipWindow(provider,images,new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog),
+			                        				new FlipWindow.SaveScriptDelegate(SaveScriptDialog));
 			
 			// HACK:
 			// TODO:
@@ -515,6 +518,52 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public bool SaveScriptDialog(FlipWindow window)
+		{
+			if (window == null) throw new ArgumentNullException("window");
+			if (window.TriggerBar == null) throw new ArgumentException("FlipWindow does not have a TriggerBar.","window");
+			if (attacher == null) throw new InvalidOperationException("No attacher to save scripts with.");
+			
+			if (!window.TriggerBar.IsComplete) {
+				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving.");
+				return false;
+			}
+			
+			ScriptWriter scriptWriter = new ScriptWriter(window.TriggerBar);
+			string code = scriptWriter.GetCombinedCode();
+			
+			FlipScript script = new FlipScript(code);
+			
+			string address = window.TriggerBar.GetAddress();
+			
+			try {
+				string savedAs = attacher.Attach(script,address);
+				
+				window.TriggerBar.CurrentScriptIsBasedOn = savedAs;
+				
+				window.IsDirty = false;
+				
+				MessageBox.Show("Script was saved successfully.");
+				
+				return true;
+			}
+			
+			catch (MatchingInstanceNotFoundException x) {
+				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open. Make sure that the area containing " + 
+				                              "the {0} is open when you try to save, or it won't work.",x.Address.TargetType,x.Address.InstanceTag));
+				return false;
+			}
+			
+			catch (Exception x) {
+				MessageBox.Show(String.Format("Something went wrong when saving the script.{0}{0}{1}",Environment.NewLine,x));
+				return false;
+			}
+		}
+		
+		
+		/// <summary>
+		/// TODO: should accept window as a parameter as save does.
+		/// </summary>
 		public void OpenDeleteScriptDialog()
 		{
 			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts();
