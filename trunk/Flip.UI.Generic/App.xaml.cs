@@ -30,7 +30,7 @@ namespace Sussex.Flip.UI.Generic
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers);
 			
-			FlipWindow window = new FlipWindow(attacher,provider,images,new FlipWindow.OpenDeleteScriptDelegate(Rarara));
+			FlipWindow window = new FlipWindow(provider,images,new FlipWindow.OpenDeleteScriptDelegate(Open),new FlipWindow.SaveScriptDelegate(Save));
 			
 			// HACK:
 			// TODO:
@@ -40,8 +40,14 @@ namespace Sussex.Flip.UI.Generic
 		}
 		
 		
-		public void Rarara()
+		public void Open()
 		{
+		}
+		
+		
+		public bool Save(FlipWindow window)
+		{		
+			return false;
 		}
 	}
 }
