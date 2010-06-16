@@ -28,6 +28,7 @@ using System.IO;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using Sussex.Flip.Core;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
@@ -195,42 +196,73 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						}
 						
 						else {
-							NWN2Toolset.NWN2.Data.Templates.NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
 							
-							NWN2InstanceCollection instances = session.GetObjectsByTag(area,nwn2ObjectType,nwn2Address.InstanceTag);
+							/*
+							 * We want to attach to ALL instances matching the address in ALL OPEN areas, ignoring AreaTag and UseIndex.
+							 */ 
 							
-							if (instances.Count == 0) {
-								string error = String.Format("No objects of the given type ({0}) and tag ('{1}') were found in area '{2}'.",
-								                             nwn2Address.TargetType,
-								                             nwn2Address.InstanceTag,
-								                             nwn2Address.AreaTag);
-								throw new ArgumentException(error,"address");
-							}
+							NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
+											
+							bool attached = false;
 							
-							if (nwn2Address.UseIndex) {	
-								int count = instances.Count;
+							foreach (NWN2GameArea a in module.Areas.Values) {
 								
-								if (nwn2Address.Index >= count) {
-									string error = String.Format("Found only {0} objects of the given type ({1}) and tag ('{2}') in area '{3}' - could not assign to index [{4}].",
-									                             count,
-									                             nwn2Address.TargetType,
-									                             nwn2Address.InstanceTag,
-									                             nwn2Address.AreaTag,
-									                             nwn2Address.Index);
-									throw new ArgumentException(error,"address");
-								}
+								if (!session.AreaIsOpen(a)) continue;								
 								
-								else {
-									INWN2Instance instance = instances[nwn2Address.Index];
-									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
-								}
-							}
-							
-							else {													
+								NWN2InstanceCollection instances = session.GetObjectsByTag(a,nwn2ObjectType,nwn2Address.InstanceTag);
+																										
 								foreach (INWN2Instance instance in instances) {
 									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+									attached = true;
 								}
 							}
+							
+							if (!attached) {
+								string error = String.Format("Couldn't find a {0} with tag '{1}' to save script to in any open area.",
+								                             nwn2Address.TargetType,
+								                             nwn2Address.InstanceTag);
+								throw new MatchingInstanceNotFoundException(error,nwn2Address);
+							}
+							
+							
+							// Original:
+							
+//							NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
+//							
+//							NWN2InstanceCollection instances = session.GetObjectsByTag(area,nwn2ObjectType,nwn2Address.InstanceTag);
+//							
+//							if (instances.Count == 0) {
+//								string error = String.Format("No objects of the given type ({0}) and tag ('{1}') were found in area '{2}'.",
+//								                             nwn2Address.TargetType,
+//								                             nwn2Address.InstanceTag,
+//								                             nwn2Address.AreaTag);
+//								throw new ArgumentException(error,"address");
+//							}
+//							
+//							if (nwn2Address.UseIndex) {	
+//								int count = instances.Count;
+//								
+//								if (nwn2Address.Index >= count) {
+//									string error = String.Format("Found only {0} objects of the given type ({1}) and tag ('{2}') in area '{3}' - could not assign to index [{4}].",
+//									                             count,
+//									                             nwn2Address.TargetType,
+//									                             nwn2Address.InstanceTag,
+//									                             nwn2Address.AreaTag,
+//									                             nwn2Address.Index);
+//									throw new ArgumentException(error,"address");
+//								}
+//								
+//								else {
+//									INWN2Instance instance = instances[nwn2Address.Index];
+//									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+//								}
+//							}
+//							
+//							else {													
+//								foreach (INWN2Instance instance in instances) {
+//									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+//								}
+//							}
 						}
 					}
 				}

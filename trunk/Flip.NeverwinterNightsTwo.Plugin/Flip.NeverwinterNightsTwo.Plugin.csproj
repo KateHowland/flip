@@ -138,6 +138,7 @@
     <Compile Include="Conditions\OwnsItem.cs" />
     <Compile Include="Conditions\IsDead.cs" />
     <Compile Include="EventDescriber.cs" />
+    <Compile Include="Exceptions\MatchingInstanceNotFoundException.cs" />
     <Compile Include="Fitters\AreaFitter.cs" />
     <Compile Include="Fitters\CreaturePlayerFitter.cs" />
     <Compile Include="Fitters\EventRaiserFitter.cs" />
@@ -232,6 +233,7 @@
     <Folder Include="Conditions" />
     <Folder Include="Fitters" />
     <Folder Include="Integration" />
+    <Folder Include="Exceptions" />
     <Folder Include="Triggers" />
     <Folder Include="Objects" />
   </ItemGroup>
