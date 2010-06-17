@@ -112,14 +112,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected override void CreateBags()
 		{
-			manager.AddBag(ActionsBagName);
-			manager.AddBag(ConditionsBagName);
-			manager.AddBag(TriggersBagName);
-			manager.AddBag(OtherBagName);	
+			manager.AddBag(ActionsBagName,false);
+			manager.AddBag(ConditionsBagName,false);
+			manager.AddBag(TriggersBagName,false);
+			manager.AddBag(OtherBagName,true);	
 			
 			foreach (string nwn2Type in nwn2BlockTypes) {
-				if (loadBlueprints) manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type));
-				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type));
+				if (loadBlueprints) manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type),true);
+				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type),true);
 			}
 			
 			manager.DisplayBag("Control");	

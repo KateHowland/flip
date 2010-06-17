@@ -39,16 +39,22 @@ namespace Sussex.Flip.UI
 
 		public void AddBag(string bagName)
 		{
-			AddBag(bagName,bagName);
+			AddBag(bagName,bagName,false);
 		}
 
 
-		public void AddBag(string bagName, string displayName)
+		public void AddBag(string bagName, bool wrap)
+		{
+			AddBag(bagName,bagName,wrap);
+		}
+
+
+		public void AddBag(string bagName, string displayName, bool wrap)
 		{
 			if (bagName == null) throw new ArgumentNullException("name"); 
 			if (bags.ContainsKey(bagName)) throw new ArgumentException("Bag named '" + bagName + "' already exists.", "name"); 
 			
-			Bag bag = new Bag(bagName);
+			Bag bag = new Bag(bagName,wrap);
 			bags.Add(bagName,bag);
 			tabs.Items.Add(bag);
 			

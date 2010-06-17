@@ -64,7 +64,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 0;
 			components = new List<StatementComponent>(1) 
 			{ 
-				new StatementComponent("noon"),
+				new StatementComponent("make it noon"),
 			};
 		}
 		

@@ -108,7 +108,8 @@ namespace Sussex.Flip.UI
         	margin = new Thickness(14,0,0,0);
         	
         	slot = new ConditionSlot(new BooleanExpressionFitter());
-        	slot.Padding = new Thickness(10);
+        	slot.MinWidth = 100;
+        	slot.Padding = new Thickness(4);
         	
         	consequenceSpine = new Spine(new SpineFitter(),1);
         	alternativeSpine = new Spine(new SpineFitter(),1);
