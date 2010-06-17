@@ -26,6 +26,7 @@
 using System;
 using System.Reflection;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
@@ -44,6 +45,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	public class Nwn2ObjectBlockFactory
 	{	
 		protected Nwn2ImageProvider images;
+		protected NarrativeThreadsHelper helper;
 		
 		
 		public Nwn2ImageProvider ImageProvider {
@@ -53,13 +55,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public Nwn2ObjectBlockFactory()
 		{
-			images = new Nwn2ImageProvider(new NarrativeThreadsHelper());
+			helper = new NarrativeThreadsHelper();
+			images = new Nwn2ImageProvider(helper);
 		}
 		
 		
 		public Nwn2ObjectBlockFactory(Nwn2ImageProvider images)
 		{
 			this.images = images;
+			this.helper = new NarrativeThreadsHelper();
 		}
 		
 		
@@ -291,7 +295,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (behaviour == null) throw new ArgumentNullException("behaviour");
 			
 			ObjectBlock block = new ObjectBlock(null,behaviour);
+			
 			block.AssignImage(images);
+			
+			if (helper != null) {
+				Brush brush = helper.GetBrushForType(behaviour.Nwn2Type);
+				if (brush != null) {
+					block.Colour = brush;
+				}
+			}
+			
 			return block;
 		}
 		

@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class TriggerEntered : Nwn2SlotTrigger
 	{
-		public TriggerEntered(Fitter raiserFitter) : base(raiserFitter,"When","is entered")			
+		public TriggerEntered(Fitter raiserFitter) : base(raiserFitter,"When trigger","is entered")			
 		{
 		}
 					

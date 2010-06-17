@@ -26,7 +26,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NWN2Toolset;
 using NWN2Toolset.NWN2.Data.Blueprints;
@@ -49,7 +51,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Integration
 		/// <summary>
 		/// The name given to the Narrative Threads plugin.
 		/// </summary>
-		public const string PluginName = "Narrative Threads";
+		public const string PluginName = "Narrative Threads";		
 		
 		#endregion
 		
@@ -71,6 +73,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Integration
 		/// Types of blueprint which are typically created by Narrative Threads.
 		/// </summary>
 		protected List<Nwn2Type> associatedTypes;
+		
+		/// <summary>
+		/// Brushes for the backgrounds of ObjectBlocks.
+		/// </summary>
+		protected static LinearGradientBrush creatureBrush, doorBrush, placeableBrush, itemBrush;
 		
 		#endregion
 		
@@ -123,6 +130,40 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Integration
 		
 		#region Constructors
 		
+		static NarrativeThreadsHelper()
+		{			
+			Point start = new Point(0,0);
+			Point end = new Point(1,1);
+			
+			creatureBrush = new LinearGradientBrush();
+			creatureBrush.StartPoint = start;
+			creatureBrush.EndPoint = end;
+			creatureBrush.GradientStops.Add(new GradientStop(Colors.BlanchedAlmond,0));
+			creatureBrush.GradientStops.Add(new GradientStop(Colors.LightBlue,0.5));
+			creatureBrush.GradientStops.Add(new GradientStop(Colors.BlanchedAlmond,1));
+					
+			doorBrush = new LinearGradientBrush();
+			doorBrush.StartPoint = start;
+			doorBrush.EndPoint = end;
+			doorBrush.GradientStops.Add(new GradientStop(Colors.BlanchedAlmond,0.2));
+			doorBrush.GradientStops.Add(new GradientStop(Colors.LightCoral,0.5));
+			doorBrush.GradientStops.Add(new GradientStop(Colors.BlanchedAlmond,0.8));
+			
+			placeableBrush = new LinearGradientBrush();
+			placeableBrush.StartPoint = start;
+			placeableBrush.EndPoint = end;
+			placeableBrush.GradientStops.Add(new GradientStop(Colors.BlanchedAlmond,-0.2));
+			placeableBrush.GradientStops.Add(new GradientStop(Colors.PaleGreen,0.5));
+			placeableBrush.GradientStops.Add(new GradientStop(Colors.BlanchedAlmond,1.2));
+					
+			itemBrush = new LinearGradientBrush();
+			itemBrush.StartPoint = start;
+			itemBrush.EndPoint = end;
+			itemBrush.GradientStops.Add(new GradientStop(Colors.BlanchedAlmond,0));
+			itemBrush.GradientStops.Add(new GradientStop(Colors.Moccasin,1));
+		}
+		
+		
 		/// <summary>
 		/// Constructs a new <see cref="NarrativeThreadsHelper"/> instance.
 		/// </summary>
@@ -138,13 +179,42 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Integration
 				Nwn2Type.Door,
 				Nwn2Type.Item,
 				Nwn2Type.Placeable
-			};				
+			};	
 		}
 		
 		#endregion
 		
 		#region Methods
 				
+		/// <summary>
+		/// Returns the brush that Narrative Threads uses to represent
+		/// a particular NWN2 type, or null if no particular brush is used.
+		/// </summary>
+		/// <param name="type">The type to get a brush for.</param>
+		/// <returns>A brush, or null if the given type is not represented
+		/// by a particular brush.</returns>
+		public Brush GetBrushForType(Nwn2Type type)
+		{
+			switch (type) {
+					
+				case Nwn2Type.Creature:
+					return creatureBrush;
+					
+				case Nwn2Type.Door:
+					return doorBrush;
+					
+				case Nwn2Type.Item:
+					return Brushes.BlanchedAlmond;
+					
+				case Nwn2Type.Placeable:
+					return placeableBrush;
+					
+				default:
+					return itemBrush;
+			}
+		}
+		
+		
 		/// <summary>
 		/// Checks whether a given behaviour represents an instance which
 		/// appears to have been created by Narrative Threads.

@@ -23,8 +23,9 @@
 	</flipui:Moveable.Resources>
 	
 	<Border
+	x:Name="blockEdge"
 	BorderThickness="0.5"
-	BorderBrush="SlateGray"
+	BorderBrush="Black"
 	CornerRadius="5"
 	Background="{StaticResource backBrush}">
 		    	

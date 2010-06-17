@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class DoorOrPlaceableIsUnlocked : Nwn2SlotTrigger
 	{
-		public DoorOrPlaceableIsUnlocked(Fitter raiserFitter) : base(raiserFitter,"When","is unlocked")			
+		public DoorOrPlaceableIsUnlocked(Fitter raiserFitter) : base(raiserFitter,"When door","is unlocked")			
 		{
 		}
 					
