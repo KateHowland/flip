@@ -36,14 +36,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class ItemUnacquired : Nwn2ParameterlessTrigger
 	{
-		public ItemUnacquired() : base("When an item is lost")			
+		public ItemUnacquired() : base("When someone loses an item")			
 		{ 
 		}
 					
 		
 		public override string GetNaturalLanguage()
 		{
-			return "Whenever somebody loses an item";
+			return "Whenever someone loses an item";
 		}
 		
 		

@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class TriggerExited : Nwn2SlotTrigger
 	{
-		public TriggerExited(Fitter raiserFitter) : base(raiserFitter,"When","is exited")			
+		public TriggerExited(Fitter raiserFitter) : base(raiserFitter,"When trigger","is exited")			
 		{
 		}
 					

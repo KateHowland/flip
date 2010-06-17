@@ -88,6 +88,15 @@ namespace Sussex.Flip.UI
     	}
 		
 		
+		public Brush Colour {
+			get { return blockEdge.Background; }
+			set {
+				if (value == null) value = Brushes.LightGray;
+				blockEdge.Background = value; 
+			}
+		}
+		
+		
 		/// <summary>
 		/// Parameterless constructor for deserialisation.
 		/// </summary>
@@ -116,6 +125,7 @@ namespace Sussex.Flip.UI
 			Image img = new Image();
 			img.Source = DisplayImage.Source;
 			ObjectBlock copy = new ObjectBlock(img,Behaviour.DeepCopy());
+			copy.blockEdge.Background = blockEdge.Background; // for Narrative Threads special brushes
 			return copy;
 		}
 		

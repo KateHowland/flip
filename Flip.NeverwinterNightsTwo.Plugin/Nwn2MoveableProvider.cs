@@ -385,8 +385,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			reporter.BlueprintRemoved += delegate(object sender, BlueprintEventArgs e) 
 			{  
-				MessageBox.Show("Blueprint removed.");
-				
 				if (manager == null || e.Blueprint == null) return;
 				
 				if (nt.CreatedByNarrativeThreads(e.Blueprint)) {			
@@ -434,8 +432,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								
 								ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
 								
-								// TODO: cycle through backwards
-								// TODO: or find a better way of doing it altogether
 								foreach (ObjectBlock block in collection) {
 									if (block.Equals(lost)) {
 										manager.RemoveMoveable(bag,block);
@@ -451,34 +447,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};
 			
 			
-//			reporter.OldBlueprintRemoved += delegate(object sender, BlueprintEventArgs e) 
-//			{  
-//				if (manager == null || !loadBlueprints || e.Blueprint == null) return;
-//				string bag = String.Format(BlueprintBagNamingFormat,Nwn2ScriptSlot.GetNwn2Type(e.Blueprint.ObjectType));
-//				
-//				try {
-//					UIElementCollection collection = manager.GetMoveables(bag);
-//					
-//					ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
-//					
-//					foreach (ObjectBlock block in collection) {
-//						if (block.Equals(lost)) {
-//							manager.RemoveMoveable(bag,block);
-//							return;
-//						}
-//					}
-//				}
-//				catch (Exception ex) {
-//					System.Windows.MessageBox.Show(ex.ToString());
-//				}
-//			};
-			
-			
 			reporter.AreaOpened += delegate(object sender, AreaEventArgs e) 
 			{  
 				if (manager == null) return;	
 				
-				Thread thread = new Thread(new ParameterizedThreadStart(CreateBlockWhenAreaIsReady));
+				Thread thread = new Thread(new ParameterizedThreadStart(CreateBlocksWhenAreaIsReady));
 				thread.Start(e.Area);			
 			};
 			
@@ -487,17 +460,52 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{  
 				if (manager == null) return;
 				
-				System.Windows.Controls.UIElementCollection moveables = manager.GetMoveables(OtherBagName);
+				bool isArea = false;
 				
-				foreach (Moveable moveable in moveables) {
-					
+				foreach (Moveable moveable in manager.GetMoveables(OtherBagName)) {
 					ObjectBlock block = moveable as ObjectBlock;
+					if (block == null) continue;
+					AreaBehaviour area = block.Behaviour as AreaBehaviour;
+					if (area == null) continue;
 					
 					// Assumes that there are no conversations or scripts with the same name as an
 					// area, but there's no immediately apparent way around this:
-					if (block != null && block.Identifier == e.ResourceName) {
-						manager.RemoveMoveable(OtherBagName,block);
-						return;
+					// (TODO: Could check that module doesn't have a script or conversation of the same name.)
+					if (area.Identifier == e.ResourceName) {
+						manager.RemoveMoveable(OtherBagName,moveable);
+						isArea = true;
+						break;
+					}
+				}
+				
+				//STILL WORKING ON THIS
+				
+				if (isArea) {
+					
+					// At this point we think it's an area that's been closed, so remove
+					// any instances associated with that area:
+							
+					foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+						string bag = String.Format(InstanceBagNamingFormat,type);
+						if (manager.HasBag(bag)) {
+							
+							List<Moveable> removing = new List<Moveable>();
+							
+							foreach (Moveable moveable in manager.GetMoveables(bag)) {
+								ObjectBlock block = moveable as ObjectBlock;
+								if (block == null) continue;
+								InstanceBehaviour instance = block.Behaviour as InstanceBehaviour;
+								if (instance == null) continue;
+								
+								if (instance.AreaTag == e.ResourceName) {
+									removing.Add(moveable);
+								}
+							}
+							
+							foreach (Moveable moveable in removing) {
+								manager.RemoveMoveable(bag,moveable);
+							}
+						}
 					}
 				}
 			};
@@ -505,7 +513,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		protected System.Windows.Controls.Label uiThreadAccess = new System.Windows.Controls.Label();
-		public void CreateBlockWhenAreaIsReady(object area)
+		public void CreateBlocksWhenAreaIsReady(object area)
 		{
 			NWN2Toolset.NWN2.Data.NWN2GameArea nwn2Area = area as NWN2Toolset.NWN2.Data.NWN2GameArea;
 			if (nwn2Area == null) throw new ArgumentException("Parameter was not of type NWN2Toolset.NWN2.Data.NWN2GameArea.","area");
@@ -526,8 +534,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			(
 				delegate()
 				{
-					ObjectBlock block = blocks.CreateAreaBlock(nwn2Area);
-					manager.AddMoveable(OtherBagName,block);
+					ObjectBlock areaBlock = blocks.CreateAreaBlock(nwn2Area);
+					manager.AddMoveable(OtherBagName,areaBlock);
+					
+					foreach (NWN2InstanceCollection instanceCollection in nwn2Area.AllInstances) {
+						
+						if (instanceCollection.Count == 0) continue;
+						
+						string bag = String.Format(InstanceBagNamingFormat,instanceCollection[0].ObjectType);
+						
+						if (!manager.HasBag(bag)) continue;
+						
+						foreach (INWN2Instance instance in instanceCollection) {
+							ObjectBlock instanceBlock = blocks.CreateInstanceBlock(instance,nwn2Area);
+							manager.AddMoveable(bag,instanceBlock);
+						}
+					}
 				}
 			);
 			

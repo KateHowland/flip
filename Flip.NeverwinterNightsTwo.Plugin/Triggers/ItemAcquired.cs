@@ -36,14 +36,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class ItemAcquired : Nwn2ParameterlessTrigger
 	{
-		public ItemAcquired() : base("When an item is acquired")			
+		public ItemAcquired() : base("When someone gets an item")			
 		{ 
 		}
 					
 		
 		public override string GetNaturalLanguage()
 		{
-			return "Whenever somebody gets an item";
+			return "Whenever someone gets an item";
 		}
 		
 		
