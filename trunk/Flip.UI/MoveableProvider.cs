@@ -76,13 +76,13 @@ namespace Sussex.Flip.UI
 		{
 			if (manager == null) throw new InvalidOperationException("Need an IMoveableManager to work with.");
 			
-			manager.AddBag(ProgrammingConstructsBagName);
+			manager.AddBag(ProgrammingConstructsBagName,false);
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfControl());
 			manager.AddMoveable(ProgrammingConstructsBagName,new IfElseControl());
 //			manager.AddMoveable(ProgrammingConstructsBagName,new WhileControl());
 //			manager.AddMoveable(ProgrammingConstructsBagName,new DoWhileControl());
 			
-			manager.AddBag(BooleanExpressionsBagName);			
+			manager.AddBag(BooleanExpressionsBagName,false);			
 			manager.AddMoveable(BooleanExpressionsBagName,new OrBlock());
 			manager.AddMoveable(BooleanExpressionsBagName,new AndBlock());
 			manager.AddMoveable(BooleanExpressionsBagName,new NotBlock());

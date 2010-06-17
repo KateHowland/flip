@@ -20,6 +20,8 @@ namespace Sussex.Flip.UI
     public partial class Bag : TabItem
     {
     	protected static ResourceDictionary resourceDictionary;
+    	protected WrapPanel wrapPanel;
+    	protected StackPanel stackPanel;
     	
     	
     	static Bag()
@@ -40,7 +42,11 @@ namespace Sussex.Flip.UI
             	typeof(DoWhileControl),
             	typeof(WhileControl),
             	typeof(NumberBlock),
-            	typeof(StringBlock)
+            	typeof(StringBlock),
+            	typeof(TriggerControl),
+            	typeof(AndBlock),
+            	typeof(OrBlock),
+            	typeof(NotBlock)
             };           
             
             
@@ -51,16 +57,45 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-        public Bag(string name)
+    	public Bag(string name) : this(name,false)
+    	{    		
+    	}
+    	
+    	
+        public Bag(string name, bool wrap)
         {
             InitializeComponent();     
             this.Header = name;
             this.Resources = resourceDictionary;
+            
+            if (wrap) {
+            	wrapPanel = new WrapPanel();
+            	wrapPanel.AllowDrop = true;
+            	wrapPanel.Background = Brushes.DarkSlateBlue;
+            	
+            	scroll.Content = wrapPanel;
+            	
+            	stackPanel = null;
+            }
+            
+            else {
+            	stackPanel = new StackPanel();
+            	stackPanel.AllowDrop = true;
+            	stackPanel.Background = Brushes.DarkSlateBlue;
+            	
+            	scroll.Content = stackPanel;
+            	
+            	wrapPanel = null;
+            }
         }
 
         
         public UIElementCollection Children {
-        	get { return wrapPanel.Children; }
+        	get { 
+        		if (wrapPanel != null) return wrapPanel.Children;
+        		else if (stackPanel != null) return stackPanel.Children;
+        		else throw new InvalidOperationException("No panel.");
+        	}
         }
         
         

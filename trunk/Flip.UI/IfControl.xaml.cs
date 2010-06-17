@@ -73,6 +73,7 @@ namespace Sussex.Flip.UI
         public IfControl()
         {
         	slot = new ConditionSlot(new BooleanExpressionFitter());
+        	slot.MinWidth = 100;
         	slot.Padding = new Thickness(4);
         	
         	spine = new Spine(new SpineFitter(),1);

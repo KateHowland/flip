@@ -24,7 +24,7 @@
 			<RowDefinition MinHeight="70"/>
 		</Grid.RowDefinitions>
    		<Grid.ColumnDefinitions>
-			<ColumnDefinition MinWidth="200"/>
+			<ColumnDefinition MinWidth="110"/>
 		</Grid.ColumnDefinitions>
 		
 	    <Border

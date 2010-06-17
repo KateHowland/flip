@@ -16,7 +16,8 @@ namespace Sussex.Flip.UI
 	public interface IMoveableManager
 	{
 		void AddBag(string bagName);
-		void AddBag(string bagName, string displayName);
+		void AddBag(string bagName, bool wrap);
+		void AddBag(string bagName, string displayName, bool wrap);
 		void DisplayBag(string bagName);
 		void RemoveBag(string bagName);
 		void AddMoveable(string bagName, Moveable moveable);
