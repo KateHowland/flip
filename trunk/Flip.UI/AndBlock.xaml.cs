@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml;
@@ -33,8 +34,10 @@ namespace Sussex.Flip.UI
             TextBlock text = new TextBlock();
             text.Text = "AND";
             text.FontSize = 18;
-            text.Background = Brushes.Blue;
-            text.Foreground = Brushes.LimeGreen;
+            text.Padding = new Thickness(4);
+            text.Background = Brushes.Transparent;
+            text.Foreground = Brushes.Lime;
+            text.VerticalAlignment = VerticalAlignment.Center;
             
             stackPanel.Children.Add(slot1);
             stackPanel.Children.Add(text);

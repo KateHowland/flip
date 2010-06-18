@@ -263,9 +263,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			= new Sussex.Flip.Games.NeverwinterNightsTwo.Integration.NarrativeThreadsHelper();
 		
 		
-		protected List<ObjectBlock> ntBlocks = new List<ObjectBlock>();
-		
-		
 		protected void TrackToolsetChanges(ToolsetEventReporter reporter)
 		{			
 			if (!reporter.IsRunning) reporter.Start();
@@ -284,15 +281,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				 */				
 				
 				if (manager != null) {
-				
-					foreach (ObjectBlock block in ntBlocks) {						
-						string bag = String.Format(InstanceBagNamingFormat,((InstanceBehaviour)block.Behaviour).Nwn2Type);						
-						if (manager.HasBag(bag) && manager.HasMoveable(block,bag)) {
-							manager.RemoveMoveable(bag,block);
+					foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+						string bag = String.Format(InstanceBagNamingFormat,type);
+						if (manager.HasBag(bag)) {
+							manager.EmptyBag(bag);
 						}
 					}
-						
-					ntBlocks.Clear();	
+					
+					List<ObjectBlock> areas = new List<ObjectBlock>();
+					foreach (Moveable moveable in manager.GetMoveables(OtherBagName)) {
+						ObjectBlock block = moveable as ObjectBlock;
+						if (block == null) continue;
+						if (block.Behaviour is AreaBehaviour) areas.Add(block);
+					}
+					
+					foreach (ObjectBlock area in areas) {
+						manager.RemoveMoveable(OtherBagName,area);
+					}
 				}
 			};
 			
@@ -352,8 +357,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								block.BorderBrush = Brushes.Gold;
 								block.BorderThickness = new Thickness(5);
 								
-								ntBlocks.Add(block);
-								
 								manager.AddMoveable(bag,block);		
 							}
 						}
@@ -400,7 +403,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								ObjectBlock lost = blocks.CreateInstanceBlockFromBlueprint(e.Blueprint);
 								ObjectBlock removing = null;
 								
-								foreach (ObjectBlock block in ntBlocks) {
+								foreach (ObjectBlock block in manager.GetMoveables(bag)) {
 									if (block.Equals(lost)) {
 										removing = block;
 										break;
@@ -409,7 +412,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								
 								if (removing != null) {
 									manager.RemoveMoveable(bag,removing);
-									ntBlocks.Remove(removing);
 								}
 							}
 						}
@@ -427,16 +429,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							string bag = String.Format(BlueprintBagNamingFormat,e.Blueprint.ObjectType.ToString());
 							
 							if (manager.HasBag(bag)) {		
-								
-								UIElementCollection collection = manager.GetMoveables(bag);
-								
+																
 								ObjectBlock lost = blocks.CreateBlueprintBlock(e.Blueprint);
+								ObjectBlock removing = null;
 								
-								foreach (ObjectBlock block in collection) {
+								foreach (ObjectBlock block in manager.GetMoveables(bag)) {
 									if (block.Equals(lost)) {
-										manager.RemoveMoveable(bag,block);
-										return;
+										removing = block;
+										break;
 									}
+								}
+								
+								if (removing != null) {
+									manager.RemoveMoveable(bag,removing);
 								}
 							}
 						}
@@ -477,8 +482,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						break;
 					}
 				}
-				
-				//STILL WORKING ON THIS
 				
 				if (isArea) {
 					
