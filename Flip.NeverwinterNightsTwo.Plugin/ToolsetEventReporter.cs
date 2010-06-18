@@ -368,7 +368,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				OnConversationOpened(page.Parent,new ConversationEventArgs((NWN2GameConversation)viewer.ViewedResource));
 			}
 			else if (viewer.ViewedResource is NWN2GameArea) {
-				OnAreaOpened(page.Parent,new AreaEventArgs((NWN2GameArea)viewer.ViewedResource));
+				NWN2GameArea area = (NWN2GameArea)viewer.ViewedResource;
+				OnAreaOpened(page.Parent,new AreaEventArgs(area));
+				
+				OEICollectionWithEvents.ChangeHandler cAdded = new OEICollectionWithEvents.ChangeHandler(InstanceInsertedIntoCollection);
+				OEICollectionWithEvents.ChangeHandler cRemoved = new OEICollectionWithEvents.ChangeHandler(InstanceRemovedFromCollection);
+				
+				foreach (NWN2InstanceCollection instances in area.AllInstances) {
+					instances.Inserted += cAdded;
+					instances.Removed += cRemoved;
+				}
 			}
 		}
 
@@ -437,17 +446,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				OnConversationAdded(cDictionary,new ConversationEventArgs((NWN2GameConversation)value));
 			}
 			else if (value is NWN2GameArea) {
-				NWN2GameArea area = (NWN2GameArea)value;
-				
+				NWN2GameArea area = (NWN2GameArea)value;				
 				OnAreaAdded(cDictionary,new AreaEventArgs(area));
-				
-				OEICollectionWithEvents.ChangeHandler cAdded = new OEICollectionWithEvents.ChangeHandler(InstanceInsertedIntoCollection);
-				OEICollectionWithEvents.ChangeHandler cRemoved = new OEICollectionWithEvents.ChangeHandler(InstanceRemovedFromCollection);
-				
-				foreach (NWN2InstanceCollection instances in area.AllInstances) {
-					instances.Inserted += cAdded;
-					instances.Removed += cRemoved;
-				}
 			}
 		}
 

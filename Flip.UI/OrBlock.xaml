@@ -4,6 +4,7 @@
     xmlns:flipui="clr-namespace:Sussex.Flip.UI">
 	
     <StackPanel
-	x:Name="stackPanel"/>
+	x:Name="stackPanel"
+	Orientation="Horizontal"/>
 
 </flipui:BooleanBlock>

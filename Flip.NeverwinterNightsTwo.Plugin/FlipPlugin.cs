@@ -385,7 +385,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			pluginMenuItem.Items.Add(scriptAccessMenuItem);
 			
 			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Flip");
-			launchFlip.Activate += delegate { LaunchFlip(); };
+			launchFlip.Activate += delegate 
+			{ 
+				LaunchFlip(); 
+			};
 			
 			pluginMenuItem.Items.Add(launchFlip);	
 			
