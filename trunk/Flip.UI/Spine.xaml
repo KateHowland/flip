@@ -3,6 +3,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
 	
+	<UserControl.ContextMenu>
+	
+		<ContextMenu>
+		
+			<MenuItem 
+			Header="Grow"
+			Click="GrowSpine"/>
+		
+			<MenuItem 
+			Header="Shrink"
+			Click="ShrinkSpine"/>
+		
+		</ContextMenu>
+	
+	</UserControl.ContextMenu>
+	
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition x:Name="extension" Height="0"/>

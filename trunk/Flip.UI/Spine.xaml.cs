@@ -263,6 +263,28 @@ namespace Sussex.Flip.UI
         	if (index == -1) throw new ArgumentException("Peg is not present on this spine.","peg");
         	RemovePeg(animate,index);
         }
+		
+		
+		protected void ShrinkSpine(object sender, RoutedEventArgs e)
+		{
+			try {
+				Shrink(true);
+			}
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
+			}
+		}
+		
+		
+		protected void GrowSpine(object sender, RoutedEventArgs e)
+		{
+			try {
+				AddPeg(true,0);
+			}
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
+			}
+		}
         
         
         public void Shrink(bool animate)
