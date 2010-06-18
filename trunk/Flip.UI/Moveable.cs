@@ -45,6 +45,9 @@ namespace Sussex.Flip.UI
 		public event EventHandler Changed;
 		
 		
+		public static Moveable CopiedToClipboard = null;
+		
+		
 		protected virtual void OnChanged(EventArgs e)
 		{
 			EventHandler handler = Changed;
@@ -58,6 +61,15 @@ namespace Sussex.Flip.UI
 		{
 			HorizontalAlignment = HorizontalAlignment.Center;
 			VerticalAlignment = VerticalAlignment.Center;
+			
+			if (ContextMenu == null) ContextMenu = new ContextMenu();
+			MenuItem copy = new MenuItem();
+			copy.Header = "Copy";
+			copy.Click += delegate 
+			{ 
+				CopiedToClipboard = this.DeepCopy();
+			};
+			ContextMenu.Items.Add(copy);
 		}
 		
 		
