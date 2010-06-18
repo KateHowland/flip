@@ -464,8 +464,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{  
 				if (manager == null) return;
 				
-				bool isArea = false;
-				
 				foreach (Moveable moveable in manager.GetMoveables(OtherBagName)) {
 					ObjectBlock block = moveable as ObjectBlock;
 					if (block == null) continue;
@@ -477,12 +475,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					// (TODO: Could check that module doesn't have a script or conversation of the same name.)
 					if (area.Identifier == e.ResourceName) {
 						manager.RemoveMoveable(OtherBagName,moveable);
-						isArea = true;
 						break;
 					}
 				}
 				
-				if (isArea) {
+				if (NWN2ToolsetMainForm.App.Module != null && NWN2ToolsetMainForm.App.Module.Areas.ContainsCaseInsensitive(e.ResourceName)) {
 					
 					// At this point we think it's an area that's been closed, so remove
 					// any instances associated with that area:
@@ -499,7 +496,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								InstanceBehaviour instance = block.Behaviour as InstanceBehaviour;
 								if (instance == null) continue;
 								
-								if (instance.AreaTag == e.ResourceName) {
+								if (instance.AreaTag.ToLower() == e.ResourceName.ToLower()) {
 									removing.Add(moveable);
 								}
 							}
