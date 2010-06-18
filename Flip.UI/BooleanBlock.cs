@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Windows.Media;
 
 namespace Sussex.Flip.UI
 {
@@ -32,5 +33,9 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class BooleanBlock : Moveable
 	{		
+		public BooleanBlock()
+		{
+			this.Background = Brushes.Blue;
+		}
 	}
 }
