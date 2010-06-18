@@ -69,8 +69,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			try {
 				Image image = new Image();
 				Uri uri = new Uri(path);
-				BitmapImage bmp = new BitmapImage(uri);
-				image.Source = bmp;
+				
+				BitmapImage bmp = new BitmapImage();
+				bmp.BeginInit();
+				bmp.UriSource = uri;
+				bmp.CacheOption = BitmapCacheOption.OnLoad;
+				bmp.EndInit();
+				
+				image.Source = bmp;				
 				return image;
 			}
 			catch (Exception) {
@@ -118,12 +124,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public Image GetImage(BlueprintBehaviour behaviour)
 		{
-			Image image;						
+			Image image;				
 			string objectType = behaviour.Nwn2Type.ToString();
 			
 			// First, try to get a Narrative Threads user-created image:
 			if (nt != null && nt.CreatedByNarrativeThreads(behaviour) && nt.HasImage(behaviour.ResRef)) {
-				image = nt.GetImageForResRef(behaviour.ResRef);		
+				image = nt.GetImageForResRef(behaviour.ResRef);	
 			}
 			
 			// Or if this has an icon, use that:

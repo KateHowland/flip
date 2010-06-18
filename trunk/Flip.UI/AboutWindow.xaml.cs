@@ -52,8 +52,14 @@ namespace Sussex.Flip.UI
 			try {
 				Image image = new Image();
 				Uri uri = new Uri(path);
-				BitmapImage bmp = new BitmapImage(uri);
-				image.Source = bmp;
+				
+				BitmapImage bmp = new BitmapImage();
+				bmp.BeginInit();
+				bmp.UriSource = uri;
+				bmp.CacheOption = BitmapCacheOption.OnLoad;
+				bmp.EndInit();
+				
+				image.Source = bmp;				
 				return image;
 			}
 			catch (Exception) {
