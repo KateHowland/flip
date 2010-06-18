@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using Sussex.Flip.Core;
@@ -123,6 +124,29 @@ namespace Sussex.Flip.UI
 			
 			triggerBar.Changed += ScriptChanged;
 			UpdateNaturalLanguageView(triggerBar);
+			
+			if (mainCanvas.ContextMenu == null) mainCanvas.ContextMenu = new ContextMenu();
+			MenuItem paste = new MenuItem();
+			paste.Header = "Paste";
+			paste.Click += delegate
+			{				
+				try {
+					if (Moveable.CopiedToClipboard != null) {
+						Moveable copied = Moveable.CopiedToClipboard.DeepCopy();	
+						Point position = Mouse.GetPosition(this);
+						copied.MoveTo(position);				
+						PlaceInWorkspace(copied);
+					}
+				}
+				catch (Exception x) {
+					MessageBox.Show(x.ToString());
+				}
+			};
+			mainCanvas.ContextMenu.Items.Add(paste);
+			mainCanvas.ContextMenuOpening += delegate 
+			{  
+				paste.IsEnabled = (Moveable.CopiedToClipboard != null);
+			};
 		}
 		
 		
