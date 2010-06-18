@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml;
@@ -28,11 +29,15 @@ namespace Sussex.Flip.UI
             
             slot1 = new ConditionSlot(fitter);
             
+            slot1.Changed += delegate(object sender, EventArgs e) { OnChanged(e); };
+            
             TextBlock text = new TextBlock();
             text.Text = "NOT";
             text.FontSize = 18;
-            text.Background = Brushes.Blue;
+            text.Padding = new Thickness(4);
+            text.Background = Brushes.Transparent;
             text.Foreground = Brushes.HotPink;
+            text.VerticalAlignment = VerticalAlignment.Center;         
             
             stackPanel.Children.Add(text);
             stackPanel.Children.Add(slot1);

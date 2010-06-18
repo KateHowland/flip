@@ -73,7 +73,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[0] == "some number") args[0] = "some number of";
+			if (args[1] == "some number") args[1] = "some number of";
 			
 			return String.Format("{0} currently owns at least {1} gold pieces",args);
 		}

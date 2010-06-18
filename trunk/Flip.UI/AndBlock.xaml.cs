@@ -31,6 +31,9 @@ namespace Sussex.Flip.UI
             slot1 = new ConditionSlot(fitter);
             slot2 = new ConditionSlot(fitter);
             
+            slot1.Changed += delegate(object sender, EventArgs e) { OnChanged(e); };
+            slot2.Changed += delegate(object sender, EventArgs e) { OnChanged(e); };
+            
             TextBlock text = new TextBlock();
             text.Text = "AND";
             text.FontSize = 18;
