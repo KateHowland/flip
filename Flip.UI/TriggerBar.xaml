@@ -29,12 +29,12 @@
 		Width="700"
 		Height="100"
 		VerticalAlignment="Top"
-	    HorizontalAlignment="Stretch"
 		BorderThickness="2"
 		BorderBrush="Black"
 		CornerRadius="0,10,10,40"
 		Background="{StaticResource yellowGradient}"
 		Grid.ZIndex="2"
+		HorizontalAlignment="Left"
 		>
 		
 	    	<StackPanel

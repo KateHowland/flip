@@ -81,7 +81,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			if (args[1] == "some number") args[1] = "some number of";
 			
-			return String.Format("{0} is within {1} metres of {2} (assuming both exist)",args);
+			return String.Format("{0} is within {1} metres of {2}",args);
 		}
 		
 		
