@@ -30,6 +30,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using NWN2Toolset;
 using NWN2Toolset.NWN2;
 using NWN2Toolset.NWN2.Data;
@@ -496,10 +497,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			reporter.ModuleChanged += delegate 
 			{ 
-				if (window != null) {
-					window.CloseScript();
-					window.Close();
-				}
+				Action action = new Action
+				(
+					delegate()
+					{		
+						if (window == null) return;
+						window.CloseScript();
+						window.Close();
+					}
+				);					
+					
+				window.Dispatcher.Invoke(DispatcherPriority.Normal,action);
 			};
 			
 			MenuItem addWildcardBlock = new MenuItem();

@@ -275,7 +275,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <exception cref="InvalidOperationException">Start() has already been called on this instance.</exception>
 		public void Start()
 		{
-			if (IsRunning) throw new InvalidOperationException("ToolsetEventReporter is already running.");
+			if (IsRunning) return;
 			
 			isRunning = true;
 			
