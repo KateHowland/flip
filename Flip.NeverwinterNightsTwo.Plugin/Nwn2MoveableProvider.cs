@@ -268,37 +268,40 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (!reporter.IsRunning) reporter.Start();
 			
 			
+				
+				
 			reporter.ModuleChanged += delegate(object oSender, ModuleChangedEventArgs eArgs) 
 			{  
 				/* Fires when a module closes, but that doesn't mean that the new module has
-				 * been fully opened yet... usually takes a while!
-				 * 
-				 * BlueprintAdded fires for every module blueprint when you open a new module,
-				 * so we don't need to look for new blueprints in ModuleChanged. However,
-				 * BlueprintRemoved does NOT fire when you close a module, so we do need
-				 * to clear any Narrative Threads blueprints when the module changes.
-				 * 
-				 */				
+				 * been fully opened yet... usually takes a while! */			
 				
-				if (manager != null) {
-					foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
-						string bag = String.Format(InstanceBagNamingFormat,type);
-						if (manager.HasBag(bag)) {
-							manager.EmptyBag(bag);
+				Action action = new Action
+				(
+					delegate()
+					{		
+						if (manager != null) {
+							foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
+								string bag = String.Format(InstanceBagNamingFormat,type);
+								if (manager.HasBag(bag)) {
+									manager.EmptyBag(bag);
+								}
+							}
+							
+							List<ObjectBlock> areas = new List<ObjectBlock>();
+							foreach (Moveable moveable in manager.GetMoveables(OtherBagName)) {
+								ObjectBlock block = moveable as ObjectBlock;
+								if (block == null) continue;
+								if (block.Behaviour is AreaBehaviour) areas.Add(block);
+							}
+							
+							foreach (ObjectBlock area in areas) {
+								manager.RemoveMoveable(OtherBagName,area);
+							}
 						}
 					}
+				);					
 					
-					List<ObjectBlock> areas = new List<ObjectBlock>();
-					foreach (Moveable moveable in manager.GetMoveables(OtherBagName)) {
-						ObjectBlock block = moveable as ObjectBlock;
-						if (block == null) continue;
-						if (block.Behaviour is AreaBehaviour) areas.Add(block);
-					}
-					
-					foreach (ObjectBlock area in areas) {
-						manager.RemoveMoveable(OtherBagName,area);
-					}
-				}
+				uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);					
 			};
 			
 			
