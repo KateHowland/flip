@@ -185,44 +185,42 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						session.AttachScriptToModule(script,nwn2Address.TargetSlot);
 					}	
 					
-					else {					
+					else if (nwn2Address.TargetType == Nwn2Type.Area) {
 						NWN2GameArea area = session.GetArea(nwn2Address.AreaTag);
 						if (area == null) {
 							throw new ArgumentException("Area '" + nwn2Address.AreaTag + "' was not found in current module.","address");
 						}
 						
-						if (nwn2Address.TargetType == Nwn2Type.Area) {					
-							session.AttachScriptToArea(script,area,nwn2Address.TargetSlot);
+						session.AttachScriptToArea(script,area,nwn2Address.TargetSlot);
+					}
+						
+					else {							
+						/*
+						 * We want to attach to ALL instances matching the address in ALL OPEN areas, ignoring AreaTag and UseIndex.
+						 */ 
+						
+						NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
+										
+						bool attached = false;
+						
+						foreach (NWN2GameArea a in module.Areas.Values) {
+							
+							if (!session.AreaIsOpen(a)) continue;								
+							
+							NWN2InstanceCollection instances = session.GetObjectsByTag(a,nwn2ObjectType,nwn2Address.InstanceTag);
+																									
+							foreach (INWN2Instance instance in instances) {
+								session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
+								attached = true;
+							}
 						}
 						
-						else {							
-							/*
-							 * We want to attach to ALL instances matching the address in ALL OPEN areas, ignoring AreaTag and UseIndex.
-							 */ 
+						if (!attached) {
+							string error = String.Format("There isn't a {0} with tag '{1}' in any of the areas that are open.",
+							                             nwn2Address.TargetType,
+							                             nwn2Address.InstanceTag);
 							
-							NWN2ObjectType nwn2ObjectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;
-											
-							bool attached = false;
-							
-							foreach (NWN2GameArea a in module.Areas.Values) {
-								
-								if (!session.AreaIsOpen(a)) continue;								
-								
-								NWN2InstanceCollection instances = session.GetObjectsByTag(a,nwn2ObjectType,nwn2Address.InstanceTag);
-																										
-								foreach (INWN2Instance instance in instances) {
-									session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
-									attached = true;
-								}
-							}
-							
-							if (!attached) {
-								string error = String.Format("There isn't a {0} with tag '{1}' in any of the areas that are open.",
-								                             nwn2Address.TargetType,
-								                             nwn2Address.InstanceTag);
-								
-								throw new MatchingInstanceNotFoundException(error,nwn2Address);
-							}
+							throw new MatchingInstanceNotFoundException(error,nwn2Address);
 						}
 					}
 				}
