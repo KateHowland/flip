@@ -276,7 +276,7 @@ namespace Sussex.Flip.UI
         /// <param name="moveable">The Moveable to check.</param>
         /// <returns>True if the given Moveable can fit
         /// in this slot; false otherwise.</returns>
-        public bool Fits(Moveable moveable)
+        public virtual bool Fits(Moveable moveable)
         {
         	return fitter.Fits(moveable);
         }

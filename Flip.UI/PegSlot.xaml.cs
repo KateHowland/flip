@@ -63,7 +63,20 @@ namespace Sussex.Flip.UI
     	#endregion
         
     	#region Methods
-    	
+    	      
+        /// <summary>
+        /// Checks whether a given Moveable can be placed
+        /// into this slot.
+        /// </summary>
+        /// <param name="moveable">The Moveable to check.</param>
+        /// <returns>True if the given Moveable can fit
+        /// in this slot; false otherwise.</returns>
+        public override bool Fits(Moveable moveable)
+        {
+        	return Contents == null && fitter.Fits(moveable);
+        }
+        
+        
         /// <summary>
         /// Gets the Moveable held by this slot.
         /// </summary>
