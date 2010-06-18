@@ -356,10 +356,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							
 							if (manager.HasBag(bag)) {						
 								ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(e.Blueprint);
-								
-								block.BorderBrush = Brushes.Gold;
-								block.BorderThickness = new Thickness(5);
-								
 								manager.AddMoveable(bag,block);		
 							}
 						}

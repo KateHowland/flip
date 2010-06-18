@@ -269,10 +269,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					}
 				}
 			}
-			
-			else {
-				MessageBox.Show("_"+e.PropertyName+"_"); //TODO
-			}
 		}
 		
 		
