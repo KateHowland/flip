@@ -103,6 +103,6 @@ namespace Sussex.Flip.Utils
 			if (dt == null) return String.Empty;
 			
 			return String.Format("{0} {1}",dt.ToLongDateString(),dt.ToLongTimeString().Replace(":","."));
-		}		
+		}	
 	}
 }

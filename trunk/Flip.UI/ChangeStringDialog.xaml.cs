@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -57,7 +58,9 @@ namespace Sussex.Flip.UI
     		}
     		
     		else {
+    			string oldValue = block.Value;
 	    		block.Value = valueTextBox.Text;
+				ActivityLog.Write(new Activity("ChangedValueOfStringBlock","OldValue",oldValue,"NewValue",block.Value));
 	    		Close();
     		}
     	}

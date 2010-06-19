@@ -50,6 +50,27 @@ namespace Sussex.Flip.Utils
 		}
 		
 		
+		public Activity(string activity, string attribute1, string value1) : this(activity)
+		{
+			AddAttribute(attribute1,value1);
+		}
+		
+		
+		public Activity(string activity, string attribute1, string value1, string attribute2, string value2) : this(activity)
+		{
+			AddAttribute(attribute1,value1);
+			AddAttribute(attribute2,value2);
+		}
+		
+		
+		public Activity(string activity, string attribute1, string value1, string attribute2, string value2, string attribute3, string value3) : this(activity)
+		{
+			AddAttribute(attribute1,value1);
+			AddAttribute(attribute2,value2);
+			AddAttribute(attribute3,value3);
+		}
+		
+		
 		public void AddAttribute(string attribute, string value)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");

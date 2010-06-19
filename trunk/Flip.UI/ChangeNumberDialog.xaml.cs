@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -62,7 +63,9 @@ namespace Sussex.Flip.UI
     				MessageBox.Show(String.Format("Number must be between {0} and {1}.",min,max));
     			}
     			else {
+    				string oldValue = block.Value.ToString();
 	    			block.Value = newValue;
+	    			ActivityLog.Write(new Activity("ChangedValueOfNumberBlock","OldValue",oldValue,"NewValue",block.Value.ToString()));
     				Close();
     			}
     		}
