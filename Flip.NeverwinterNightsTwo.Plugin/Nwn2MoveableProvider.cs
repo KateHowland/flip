@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -347,21 +348,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (manager == null || e.Blueprint == null) return;
 				
 				if (nt.CreatedByNarrativeThreads(e.Blueprint)) {	
-					
-					Action action = new Action
-					(
-						delegate()
-						{					
-							string bag = String.Format(InstanceBagNamingFormat,e.Blueprint.ObjectType.ToString());
-							
-							if (manager.HasBag(bag)) {						
-								ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(e.Blueprint);
-								manager.AddMoveable(bag,block);		
-							}
-						}
-					);					
-					
-					uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);
+																
+					Thread thread = new Thread(new ParameterizedThreadStart(CreateNarrativeThreadsBlock));	
+					thread.IsBackground = true;
+					thread.Start(e.Blueprint);
 				}
 				
 				if (loadBlueprints) {					
@@ -389,8 +379,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{  
 				if (manager == null || e.Blueprint == null) return;
 				
-				if (nt.CreatedByNarrativeThreads(e.Blueprint)) {			
-				
+				if (nt.CreatedByNarrativeThreads(e.Blueprint)) {	
+					
 					Action action = new Action
 					(
 						delegate()
@@ -414,7 +404,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								}
 							}
 						}
-					);					
+					);	
 					
 					uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);				
 				}
@@ -444,7 +434,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								}
 							}
 						}
-					);					
+					);	
 					
 					uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);				
 				}
@@ -456,6 +446,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (manager == null) return;	
 				
 				Thread thread = new Thread(new ParameterizedThreadStart(CreateBlocksWhenAreaIsReady));
+				thread.IsBackground = true;
 				thread.Start(e.Area);			
 			};
 			
@@ -511,6 +502,52 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public void CreateNarrativeThreadsBlock(object blueprint)
+		{
+			if (blueprint == null) throw new ArgumentNullException("blueprint");
+			INWN2Blueprint bp = blueprint as INWN2Blueprint;
+			if (bp == null) throw new ArgumentException("blueprint must implement interface INWN2Blueprint.","blueprint");
+			CreateNarrativeThreadsBlock(bp);
+		}
+		
+		
+		public void CreateNarrativeThreadsBlock(INWN2Blueprint blueprint)
+		{
+			if (blueprint == null) throw new ArgumentNullException("blueprint");
+			
+			// Wait for up to 3 seconds for the image to appear:
+			WaitForNarrativeThreadsImage(blueprint.Resource.ResRef.Value,3000);
+			
+			Action action = new Action
+			(
+				delegate()
+				{					
+					string bag = String.Format(InstanceBagNamingFormat,blueprint.ObjectType.ToString());
+					
+					if (manager.HasBag(bag)) {
+						ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(blueprint);
+						manager.AddMoveable(bag,block);		
+					}
+				}
+			);					
+					
+			uiThreadAccess.Dispatcher.Invoke(DispatcherPriority.Normal,action);
+		}
+		
+		
+		protected void WaitForNarrativeThreadsImage(string resref, int wait)
+		{			
+			if (wait <= 0) return;
+			
+			int interval = 100;
+			
+			while (wait >= 0 && !nt.HasImage(resref)) {
+				Thread.Sleep(interval);
+				wait -= interval;
+			}
+		}
+		
+		
 		protected System.Windows.Controls.Label uiThreadAccess = new System.Windows.Controls.Label();
 		public void CreateBlocksWhenAreaIsReady(object area)
 		{
@@ -521,7 +558,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			int interval = 100;
 			
 			while (wait >= 0 && nwn2Area.Tag == null) {
-				System.Threading.Thread.Sleep(interval);
+				Thread.Sleep(interval);
 				wait -= interval;
 			}
 			
