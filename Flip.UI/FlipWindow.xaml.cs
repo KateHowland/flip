@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using Sussex.Flip.Core;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -165,6 +166,7 @@ namespace Sussex.Flip.UI
 						Point position = Mouse.GetPosition(this);
 						copied.MoveTo(position);				
 						PlaceInWorkspace(copied);
+						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",copied.GetLogRepresentation(),"Method","UsedContextMenu"));
 					}
 				}
 				catch (Exception x) {
@@ -232,6 +234,7 @@ namespace Sussex.Flip.UI
 		protected void NewScript(object sender, RoutedEventArgs e)
 		{
 			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			ActivityLog.Write(new Activity("CreatedNewScript"));
 		}
 		
 		
@@ -251,6 +254,7 @@ namespace Sussex.Flip.UI
 		protected void CloseScript(object sender, RoutedEventArgs e)
 		{
 			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			ActivityLog.Write(new Activity("ClosedScript"));
 		}
 		
 		
@@ -646,6 +650,13 @@ namespace Sussex.Flip.UI
 					position.X -= (size.Width/2);
 					position.Y -= (size.Height/2);
 					moveable.MoveTo(position);
+						
+					if (e.AllowedEffects == DragDropEffects.Copy) {
+						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",moveable.GetLogRepresentation(),"Method","UsedShiftClickWhileDragDropping"));
+					}
+					else {
+						ActivityLog.Write(new Activity("PlacedBlockOnCanvas","Block",moveable.GetLogRepresentation(),"Method","UsedDragDrop"));
+					}
 				}
 			}
 		}
@@ -658,6 +669,7 @@ namespace Sussex.Flip.UI
 					Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 					if (!blockBox.HasMoveable(moveable)) {
 						moveable.Remove();
+						ActivityLog.Write(new Activity("RemovedBlock","Block",moveable.GetLogRepresentation()));
 					}
 					e.Handled = true;
 				}

@@ -256,10 +256,12 @@ namespace Sussex.Flip.UI
 						
 						if (e.AllowedEffects == DragDropEffects.Copy) {
 							Contents = moveable.DeepCopy();
+							ActivityLog.Write(new Activity("CopyPastedBlockToSlot","Block",Contents.GetLogRepresentation(),"PlacedIn",this.GetLogRepresentation()));
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
 							moveable.Remove();
 							Contents = moveable;
+							ActivityLog.Write(new Activity("PlacedBlockInSlot","Block",Contents.GetLogRepresentation(),"PlacedIn",this.GetLogRepresentation()));
 						}
 					}
 					e.Handled = true;
@@ -336,6 +338,26 @@ namespace Sussex.Flip.UI
 				Contents.WriteXml(writer);
 				writer.WriteEndElement();
 			}
+		}
+		
+		
+		public virtual string GetLogRepresentation()
+		{
+			string parentDescription;
+			
+			Moveable moveable = UIHelper.TryFindParent<Moveable>(this);
+			if (moveable != null) parentDescription = moveable.GetLogRepresentation();
+			else {
+				DependencyObject parent = UIHelper.GetParentObject(this);
+				TriggerBar triggerBar = parent as TriggerBar;
+				if (triggerBar != null) {
+					parentDescription = triggerBar.GetLogRepresentation();
+				}
+				else if (parent != null) parentDescription = parent.ToString();
+				else parentDescription = "missing parent";
+			}
+			
+			return "Slot on " + parentDescription;
 		}
 		
 		#endregion

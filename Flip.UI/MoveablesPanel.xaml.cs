@@ -11,6 +11,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -65,6 +66,7 @@ namespace Sussex.Flip.UI
 			{  
 				tabs.SelectedItem = bag;
 				radioButton.BitmapEffect = highlight;
+				ActivityLog.Write(new Activity("SelectedCategory","Category",bagName));
 			};
 			radioButton.Unchecked += delegate 
 			{  

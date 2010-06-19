@@ -187,87 +187,88 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected static List<string> tracking = new List<string>{ "Tag", "First Name", "Last Name", "Localized Name", "Display Name" };
 		public void UpdateBlockWithNewTag(NWN2PropertyValueChangedEventArgs e)
 		{
-			LaunchFlip();
-			
-			// TODO: Should only be making sure Flip is initialised, not launching it
-		
-			if (tracking.Contains(e.PropertyName) && e.NewValue != e.OldValue) {
-								
-				foreach (object o in e.ChangedObjects) {
-					
-					if (o is INWN2Instance) {
-						INWN2Instance instance = (INWN2Instance)o;
-						InstanceBehaviour behaviour = blocks.CreateInstanceBehaviour(instance);
+			try {
+				if (tracking.Contains(e.PropertyName) && e.NewValue != e.OldValue) {
+									
+					foreach (object o in e.ChangedObjects) {
 						
-						string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,instance.ObjectType);
-					
-						if (window.BlockBox.HasBag(bag)) {
-							UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
+						if (o is INWN2Instance) {
+							INWN2Instance instance = (INWN2Instance)o;
+							InstanceBehaviour behaviour = blocks.CreateInstanceBehaviour(instance);
 							
-							// If it's the tag that's changed, use the old tag to search, otherwise use the current one:
-							string tag;
-							if (e.PropertyName == "Tag") tag = e.OldValue as string;
-							else tag = ((INWN2Object)instance).Tag;
-										
-							bool updated = false;
-							
-							foreach (UIElement u in existingBlocks) {
-								ObjectBlock existing = u as ObjectBlock;								
-								if (existing == null) continue;
-								InstanceBehaviour existingBehaviour = existing.Behaviour as InstanceBehaviour;
-								if (existingBehaviour == null) continue;
+							string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,instance.ObjectType);
+						
+							if (window.BlockBox.HasBag(bag)) {
+								UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
 								
-								// If you find an instance of the same type, resref and tag, replace its behaviour to update it:
-								if (existingBehaviour.ResRef == behaviour.ResRef && existingBehaviour.Nwn2Type == behaviour.Nwn2Type && existingBehaviour.Tag == tag) {
-									existing.Behaviour = behaviour;
-									updated = true;
-									break;
+								// If it's the tag that's changed, use the old tag to search, otherwise use the current one:
+								string tag;
+								if (e.PropertyName == "Tag") tag = e.OldValue as string;
+								else tag = ((INWN2Object)instance).Tag;
+											
+								bool updated = false;
+								
+								foreach (UIElement u in existingBlocks) {
+									ObjectBlock existing = u as ObjectBlock;								
+									if (existing == null) continue;
+									InstanceBehaviour existingBehaviour = existing.Behaviour as InstanceBehaviour;
+									if (existingBehaviour == null) continue;
+									
+									// If you find an instance of the same type, resref and tag, replace its behaviour to update it:
+									if (existingBehaviour.ResRef == behaviour.ResRef && existingBehaviour.Nwn2Type == behaviour.Nwn2Type && existingBehaviour.Tag == tag) {
+										existing.Behaviour = behaviour;
+										updated = true;
+										break;
+									}
 								}
-							}
-							
-							if (!updated) {
-								ObjectBlock block = blocks.CreateInstanceBlock(behaviour);
-								window.BlockBox.AddMoveable(bag,block,false);
+								
+								if (!updated) {
+									ObjectBlock block = blocks.CreateInstanceBlock(behaviour);
+									window.BlockBox.AddMoveable(bag,block,false);
+								}
 							}
 						}
-					}
-					
-					else if (o is NWN2GameArea) {
-						NWN2GameArea area = (NWN2GameArea)o;
-						AreaBehaviour behaviour = blocks.CreateAreaBehaviour(area);
 						
-						string bag = Nwn2MoveableProvider.OtherBagName;
-					
-						if (window.BlockBox.HasBag(bag)) {
-							UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
+						else if (o is NWN2GameArea) {
+							NWN2GameArea area = (NWN2GameArea)o;
+							AreaBehaviour behaviour = blocks.CreateAreaBehaviour(area);
 							
-							string tag;
-							if (e.PropertyName == "Tag") tag = e.OldValue as string;
-							else tag = area.Tag;
-							
-							bool updated = false;
-							
-							foreach (UIElement u in existingBlocks) {
-								ObjectBlock existing = u as ObjectBlock;								
-								if (existing == null) continue;
-								AreaBehaviour existingBehaviour = existing.Behaviour as AreaBehaviour;
-								if (existingBehaviour == null) continue;
-																
-								// If you find an area with the same tag, replace its behaviour to update it:
-								if (existingBehaviour.Tag == tag) {
-									existing.Behaviour = behaviour;
-									updated = true;
-									break;
+							string bag = Nwn2MoveableProvider.OtherBagName;
+						
+							if (window.BlockBox.HasBag(bag)) {
+								UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
+								
+								string tag;
+								if (e.PropertyName == "Tag") tag = e.OldValue as string;
+								else tag = area.Tag;
+								
+								bool updated = false;
+								
+								foreach (UIElement u in existingBlocks) {
+									ObjectBlock existing = u as ObjectBlock;								
+									if (existing == null) continue;
+									AreaBehaviour existingBehaviour = existing.Behaviour as AreaBehaviour;
+									if (existingBehaviour == null) continue;
+																	
+									// If you find an area with the same tag, replace its behaviour to update it:
+									if (existingBehaviour.Tag == tag) {
+										existing.Behaviour = behaviour;
+										updated = true;
+										break;
+									}
 								}
-							}
-							
-							if (!updated) {
-								ObjectBlock block = blocks.CreateAreaBlock(behaviour);
-								window.BlockBox.AddMoveable(bag,block,false);
+								
+								if (!updated) {
+									ObjectBlock block = blocks.CreateAreaBlock(behaviour);
+									window.BlockBox.AddMoveable(bag,block,false);
+								}
 							}
 						}
 					}
 				}
+			}
+			catch (Exception x) {
+				MessageBox.Show(x.ToString());
 			}
 		}
 		
@@ -285,6 +286,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,blueprint.ObjectType);
 				if (window.BlockBox.HasBag(bag)) {
 					window.BlockBox.AddMoveable(bag,block,true);
+					ActivityLog.Write(new Activity("CreatedBlockFromBlueprint","Block",block.GetLogRepresentation()));
 				}
 			}
 		}
@@ -309,16 +311,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					NWN2GameScript script = new NWN2GameScript(line.Actions[0].Script);
 					script.Demand();
 					flipScript = scriptHelper.GetFlipScript(script,false);
+					ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Trigger",trigger.GetLogRepresentation()));
 				}
 				
 				else {
 					flipScript = null;
+					ActivityLog.Write(new Activity("CreatedNewScriptUsingConversationLineAsTrigger","Trigger",trigger.GetLogRepresentation()));
 				}
 				
 				ScriptTriggerTuple tuple = new ScriptTriggerTuple(flipScript,trigger);
 				
 				window.OpenFlipScript(tuple);
-				
+									
 				window.IsDirty = true;
 			}
 			catch (Exception x) {
@@ -349,7 +353,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			try {
 				TD.SandBar.ButtonItem flipButton = UI.AddFlipButton();
-				if (flipButton != null) flipButton.Activate += delegate { LaunchFlip(); };
+				if (flipButton != null) {
+					flipButton.Activate += delegate 
+					{ 
+						LaunchFlip(); 
+						ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Toolbar"));
+					};
+				}
 			}
 			catch (Exception x) {
 				MessageBox.Show("Something went wrong when adding Flip button to toolbar.\n\n" + x);
@@ -385,6 +395,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			launchFlip.Activate += delegate 
 			{ 
 				LaunchFlip();
+				ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Menu"));
 			};
 			
 			pluginMenuItem.Items.Add(launchFlip);	
@@ -486,6 +497,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (window.AskWhetherToSaveCurrentScript() != MessageBoxResult.Cancel) {
 					window.CloseScript();
 					window.Visibility = Visibility.Hidden;
+					ActivityLog.Write(new Activity("ClosedFlip"));
 				}
 			};
 			
@@ -516,6 +528,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					
 					string bag = Nwn2MoveableProvider.OtherBagName;					
 					window.BlockBox.AddMoveable(bag,block,true);
+					ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogRepresentation()));
 				}
 			};
 			
@@ -530,6 +543,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (attacher == null) throw new InvalidOperationException("No attacher to save scripts with.");
 			
 			if (!window.TriggerBar.IsComplete) {
+				ActivityLog.Write(new Activity("TriedToSaveIncompleteScript"));
 				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving.");
 				return false;
 			}
@@ -547,6 +561,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				window.TriggerBar.CurrentScriptIsBasedOn = savedAs;
 				
 				window.IsDirty = false;
+			
+				ActivityLog.Write(new Activity("SavedScript","SavedAs",savedAs));
 				
 				MessageBox.Show("Script was saved successfully.");
 				
@@ -556,6 +572,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			// TODO: NT specific message here if it's running
 			// TODO: test NT.IsRunning method.
 			catch (MatchingInstanceNotFoundException x) {
+				ActivityLog.Write(new Activity("TriedToSaveScriptButTargetCouldNotBeFound","TargetType",x.Address.TargetType.ToString(),"TargetTagOrResRef",x.Address.InstanceTag));
 				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " + 
 				                              "the {0} is open when you try to save, or it won't work.",x.Address.TargetType,x.Address.InstanceTag));
 				return false;
@@ -583,6 +600,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (dialog.ActionToTake == ScriptSelector.Action.OpenScript) {
 					try {
 						window.OpenFlipScript(dialog.Selected.DeepCopy());
+						
+						ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
 					}
 					catch (Exception x) {						
 						MessageBox.Show(String.Format("Something went wrong when opening a script.{0}{0}{1}",Environment.NewLine,x));
@@ -592,6 +611,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				else if (dialog.ActionToTake == ScriptSelector.Action.DeleteScript) {
 					try {
 						session.DeleteScript(dialog.Selected.Script.Name);
+						
+						ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
+					
 						MessageBox.Show("Script deleted.");
 					}
 					catch (Exception x) {						

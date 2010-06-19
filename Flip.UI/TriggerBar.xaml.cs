@@ -152,6 +152,12 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		public string GetLogRepresentation()
+		{
+			return "Trigger bar";
+		}
+		
+		
 		public void ReadXml(XmlReader reader)
 		{
 			reader.MoveToContent();
