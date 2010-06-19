@@ -187,7 +187,7 @@ namespace Sussex.Flip.UI
 			
 			if (reader.LocalName != "Behaviour") throw new FormatException("ObjectBlock does not specify a Behaviour, and could not be deserialised.");
 			
-			Behaviour = (ObjectBehaviour)SerialisationHelper.GetObjectFromXml(reader);
+			Behaviour = FlipWindow.ChosenDeserialisationHelper.GetObjectBehaviour(reader);//(ObjectBehaviour)SerialisationHelper.GetObjectFromXml(reader);
 			
 			reader.ReadEndElement();
 		}

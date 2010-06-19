@@ -471,12 +471,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
-			window = new FlipWindow(provider,images,new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog),
-			                        				new FlipWindow.SaveScriptDelegate(SaveScriptDialog));
-			
-			// HACK:
-			// TODO:
-			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
+			window = new FlipWindow(provider,images,
+			                        new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog),
+			                        new FlipWindow.SaveScriptDelegate(SaveScriptDialog),
+			                        new Nwn2DeserialisationHelper());
 			
 			window.Closing += delegate(object sender, CancelEventArgs e) 
 			{  
