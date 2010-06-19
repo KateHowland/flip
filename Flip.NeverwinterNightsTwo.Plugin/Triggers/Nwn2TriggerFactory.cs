@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
@@ -88,10 +89,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 			TriggerControl trigger = GetEmptyTrigger(address.TargetType,address.TargetSlot);
 			
-			if (trigger == null) {
-				System.Windows.MessageBox.Show("No trigger got.");
-				return null;
-			}
+			if (trigger == null) return null;
 			
 			Nwn2SlotTrigger slotted = trigger as Nwn2SlotTrigger;
 			
@@ -121,6 +119,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			else {				
 				NWN2ObjectType type = Nwn2ScriptSlot.GetObjectType(address.TargetType).Value;
+				
+				INWN2Blueprint blueprint = session.GetBlueprint(address.InstanceTag,type);
+				if (blueprint != null) return blocks.CreateInstanceBlockFromBlueprint(blueprint);
 				
 				foreach (NWN2AreaViewer viewer in NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers()) {
 					
