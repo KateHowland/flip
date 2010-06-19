@@ -62,7 +62,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
             		// HACK
 	            	TriggerControl trigger = tuple.Trigger;
 	            	
-	            	trigger.LayoutTransform = new System.Windows.Media.ScaleTransform(0.7,0.7);
+	            	//trigger.LayoutTransform = new System.Windows.Media.ScaleTransform(0.7,0.7);
 	            	trigger.Padding = thickness;
 	            	scriptsListBox.Items.Add(trigger);
             	}

@@ -28,12 +28,17 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using Sussex.Flip.Core;
+using Sussex.Flip.Games.NeverwinterNightsTwo;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 using NWN2Toolset;
+using NWN2Toolset.NWN2;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
+using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using OEIShared.IO;
 
@@ -47,6 +52,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected Nwn2TriggerFactory triggerFactory;
 		protected Nwn2AddressFactory addressFactory;
 		protected Nwn2Session session;
+		protected NarrativeThreadsHelper nt;
 		
 		
 		public ScriptHelper(Nwn2TriggerFactory triggerFactory)
@@ -56,6 +62,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			this.triggerFactory = triggerFactory;
 			this.addressFactory = new Nwn2AddressFactory();
 			this.session = new Nwn2Session();
+			this.nt = new NarrativeThreadsHelper();
 		}
 		
 		
@@ -156,7 +163,27 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					
 					else {
 						
-						foreach (NWN2GameArea area in mod.Areas.Values) { // Check through all OPEN areas.
+						/*
+						 * The script might be attached to a Narrative Threads blueprint:
+						 */ 				
+						
+						// First check that if a blueprint which uses this tag as resref exists, it was created by Narrative Threads:
+												
+						if (nt.CreatedByNarrativeThreads(nwn2Address.TargetType,nwn2Address.InstanceTag)) {
+							
+							NWN2ObjectType objectType = Nwn2ScriptSlot.GetObjectType(nwn2Address.TargetType).Value;							
+							INWN2Blueprint blueprint = session.GetBlueprint(nwn2Address.InstanceTag.ToLower(),objectType);	
+							
+							if (blueprint != null) {			
+								IResourceEntry resource = blueprint.GetType().GetProperty(nwn2Address.TargetSlot).GetValue(blueprint,null) as IResourceEntry;
+								if (resource != null && resource.ResRef.Value == script.Name) {
+									return new FlipScript(code,script.Name);
+								}								
+							}
+						}
+						
+						// Check through all OPEN areas.
+						foreach (NWN2GameArea area in mod.Areas.Values) { 
 						
 							if (!session.AreaIsOpen(area)) continue;
 							
@@ -212,7 +239,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			return null;
 		}
 		
-									
+					
 		public List<ScriptTriggerTuple> GetAllScripts()
 		{			
 			NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
