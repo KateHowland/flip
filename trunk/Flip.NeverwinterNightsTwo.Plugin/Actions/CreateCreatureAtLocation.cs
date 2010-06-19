@@ -66,7 +66,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent("create copy of creature"),
 				new StatementComponent(fitters.OnlyCreatures),
-				new StatementComponent("at"),
+				new StatementComponent("at location of"),
 				new StatementComponent(fitters.OnlyInstancesOrPlayers)
 			};
 		}
