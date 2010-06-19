@@ -117,6 +117,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Integration
 		public bool IsLoaded {
 			get { 
 				if (!Nwn2ToolsetFunctions.ToolsetIsOpen()) return false;
+				if (NWN2ToolsetMainForm.PluginHost == null) return false;
 				
 				foreach (INWN2Plugin plugin in NWN2ToolsetMainForm.PluginHost.Plugins) {
 					if (plugin.Name == PluginName) return true;
@@ -283,7 +284,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Integration
 		{
 			if (resref == null) throw new ArgumentNullException("resref");	
 			if (resref == String.Empty) throw new ArgumentException("resRef cannot be empty.","resref");			
-			return associatedTypes.Contains(type) && resref.StartsWith(SpecialBlueprintPrefix);
+			return associatedTypes.Contains(type) && resref.ToLower().StartsWith(SpecialBlueprintPrefix);
 		}
 		
 		

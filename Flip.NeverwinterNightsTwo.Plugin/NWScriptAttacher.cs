@@ -26,12 +26,14 @@
 using System;
 using System.IO;
 using NWN2Toolset.NWN2.Data;
+using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
 using Sussex.Flip.Core;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.Utils;
 
@@ -51,6 +53,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected PathChecker pathChecker;
 		protected string backups;
 		protected bool createFoldersForUsers;
+		private NarrativeThreadsHelper nt;
 		
 		#endregion
 		
@@ -84,6 +87,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			pathChecker = new PathChecker();
 			createFoldersForUsers = true;
+			nt = new NarrativeThreadsHelper();
 		}
 		
 		
@@ -213,12 +217,33 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								session.AttachScriptToObject(script,instance,nwn2Address.TargetSlot);
 								attached = true;
 							}
+						}	
+						
+						/*
+						 * We also want to attach to any blueprints which use this tag as their resref.
+						 */ 				
+						
+						// First check that if a blueprint which uses this tag as resref exists, it was created by Narrative Threads:
+						if (nt.CreatedByNarrativeThreads(Nwn2ScriptSlot.GetNwn2Type(nwn2ObjectType),nwn2Address.InstanceTag)) {
+							
+							INWN2Blueprint blueprint = session.GetBlueprint(nwn2Address.InstanceTag.ToLower(), nwn2ObjectType);
+							
+							if (blueprint != null) {								
+								session.AttachScriptToBlueprint(script,blueprint,nwn2Address.TargetSlot);								
+								attached = true;
+							}
 						}
 						
 						if (!attached) {
-							string error = String.Format("There isn't a {0} with tag '{1}' in any of the areas that are open.",
-							                             nwn2Address.TargetType,
-							                             nwn2Address.InstanceTag);
+							string error;
+							
+							if (nt.IsLoaded) error = String.Format("There isn't a {0} with tag '{1}' in any of the areas that are open, or " +
+											                       "in the blueprints collection.",
+										                           nwn2Address.TargetType,
+										                           nwn2Address.InstanceTag);
+							else error = String.Format("There isn't a {0} with tag '{1}' in any of the areas that are open.",
+							                           nwn2Address.TargetType,
+							                           nwn2Address.InstanceTag);
 							
 							throw new MatchingInstanceNotFoundException(error,nwn2Address);
 						}

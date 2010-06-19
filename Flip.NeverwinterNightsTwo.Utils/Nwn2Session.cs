@@ -1015,7 +1015,52 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			//while (!session.HasCompiled(name));
 			//while (!File.Exists(compiled) || new FileInfo(compiled).Length == 0);
-		}					
+		}	
+		
+		
+		/// <summary>
+		/// Attaches a script to a named script slot on a given blueprint.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="blueprint">The blueprint to attach the script to.</param>
+		/// <param name="slot">The script slot to attach the script to.</param>
+		public void AttachScriptToBlueprint(NWN2GameScript script, INWN2Blueprint blueprint, string slot)
+		{
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			if (blueprint == null) {
+				throw new ArgumentNullException("blueprint");
+			}
+			if (slot == null) {
+				throw new ArgumentNullException("slot");
+			}
+			if (slot == String.Empty) {
+				throw new ArgumentException("slot");
+			}
+			if (!Nwn2ScriptSlot.GetScriptSlotNames(blueprint.ObjectType).Contains(slot)) {
+				throw new ArgumentException("Objects of type " + blueprint.ObjectType + " do not have a script slot " +
+				                            "named " + slot + " (call Sussex.Flip.Games.NeverwinterNightsTwo" +
+				                            ".Utils.Nwn2ScriptSlot.GetScriptSlotNames() to find valid " +
+				                            "script slot names.)","slot");
+			}
+			
+			NWN2GameModule module = GetModule();
+			if (module == null) {
+				throw new InvalidOperationException("No module is currently open.");
+			}
+						
+			PropertyInfo pi = blueprint.GetType().GetProperty(slot);
+			if (pi == null) {
+				throw new ArgumentException(blueprint.ObjectType.ToString() + " objects do not " +
+				                            "have a " + slot + " property.");
+			}
+			
+			bool loaded = script.Loaded;
+			if (!loaded) script.Demand();
+			pi.SetValue(blueprint,script.Resource,null);
+//			if (!loaded) script.Release();
+		}
 		
 		
 		/// <summary>
@@ -1028,6 +1073,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		{
 			if (script == null) {
 				throw new ArgumentNullException("script");
+			}
+			if (instance == null) {
+				throw new ArgumentNullException("instance");
 			}
 			if (slot == null) {
 				throw new ArgumentNullException("slot");
