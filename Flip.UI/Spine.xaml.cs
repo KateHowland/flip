@@ -31,7 +31,7 @@ namespace Sussex.Flip.UI
 		
     	protected Duration animationTime;
     	protected Fitter fitter;
-    	protected int minPegs = 1; // TODO settable but not below 1
+    	protected uint minPegs = 1; // TODO settable but not below 1 
 		
 		
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Sussex.Flip.UI
         }
     	
     	
-    	public Spine(Fitter fitter, int pegs)
+    	public Spine(Fitter fitter, uint pegs)
     	{
     		if (fitter == null) throw new ArgumentNullException("fitter");
     		this.fitter = fitter;
@@ -95,7 +95,7 @@ namespace Sussex.Flip.UI
     	}
     	    	
     	
-    	public Spine(Fitter fitter, int pegs, double extends) : this(fitter,pegs)
+    	public Spine(Fitter fitter, uint pegs, double extends) : this(fitter,pegs)
     	{
     		Extends = extends;
     	}
@@ -263,6 +263,20 @@ namespace Sussex.Flip.UI
         	if (index == -1) throw new ArgumentException("Peg is not present on this spine.","peg");
         	RemovePeg(animate,index);
         }
+        
+        
+        public void SetPegCount(uint pegs)
+        {
+        	if (pegs < minPegs) pegs = minPegs;
+        	
+        	while (Pegs.Count < pegs) {
+        		AddPeg(false);
+        	}
+        	
+        	while (Pegs.Count > pegs) {
+        		RemovePeg(false);
+        	}
+        }
 		
 		
 		protected void ShrinkSpine(object sender, RoutedEventArgs e)
@@ -357,7 +371,7 @@ namespace Sussex.Flip.UI
 		
 		public Spine DeepCopy()
 		{
-			Spine copy = new Spine(fitter,Pegs.Count,Extends);
+			Spine copy = new Spine(fitter,(uint)Pegs.Count,Extends);
 			copy.Margin = Margin;
 			
 			for (int i = 0; i < Pegs.Count; i++) {
