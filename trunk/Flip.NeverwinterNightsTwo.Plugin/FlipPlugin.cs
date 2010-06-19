@@ -553,6 +553,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				return true;
 			}
 			
+			// TODO: NT specific message here if it's running
+			// TODO: test NT.IsRunning method.
 			catch (MatchingInstanceNotFoundException x) {
 				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " + 
 				                              "the {0} is open when you try to save, or it won't work.",x.Address.TargetType,x.Address.InstanceTag));

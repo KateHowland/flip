@@ -331,7 +331,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="script">The script to attach.</param>
 		/// <param name="instance">The instance to attach the script to.</param>
 		/// <param name="slot">The script slot to attach the script to.</param>
-		void AttachScriptToObject(NWN2GameScript script, INWN2Instance instance, string slot);
+		void AttachScriptToObject(NWN2GameScript script, INWN2Instance instance, string slot);		
+		
+		
+		/// <summary>
+		/// Attaches a script to a named script slot on a given blueprint.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="blueprint">The blueprint to attach the script to.</param>
+		/// <param name="slot">The script slot to attach the script to.</param>
+		void AttachScriptToBlueprint(NWN2GameScript script, INWN2Blueprint blueprint, string slot);
 				
 		
 		/// <summary>
