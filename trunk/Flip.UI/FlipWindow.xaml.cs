@@ -258,6 +258,8 @@ namespace Sussex.Flip.UI
 		{			
 			Clear();
 			
+			triggerBar.Spine.SetPegCount(3);
+			
 			triggerBar.CurrentScriptIsBasedOn = String.Empty;
 			
 			IsDirty = false;	
