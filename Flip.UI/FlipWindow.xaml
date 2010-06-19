@@ -122,18 +122,12 @@
 			
 			</Border>
 			
-			<!--<ScrollViewer
+			<ScrollViewer
+			x:Name="scrollViewer"
 			Grid.Row="1"
-			Grid.Column="0">-->
-			
-				<Canvas	
-				Name="mainCanvas"	
-				Grid.Row="1"
-				Grid.Column="0"
-				Background="Transparent"
-				AllowDrop="True"/>
-			
-			<!--</ScrollViewer>-->
+			Grid.Column="0"
+			HorizontalScrollBarVisibility="Visible"
+			VerticalScrollBarVisibility="Visible"/>
 		
 		</Grid>
 	

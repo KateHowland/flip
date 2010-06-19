@@ -88,6 +88,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		protected SizedCanvas mainCanvas;
 		public FlipWindow(MoveableProvider provider, 
 		                  ImageProvider imageProvider, 
 		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
@@ -107,6 +108,17 @@ namespace Sussex.Flip.UI
 			ChosenDeserialisationHelper = deserialisationHelper;
 			
 			InitializeComponent();
+						
+			/*
+			 * New SizedCanvas which unlike Canvas reports a desired size
+			 * (by overriding MeasureOverride) based on the positions of
+			 * its children, and hence can be used with a ScrollViewer.
+			 */ 
+			mainCanvas = new SizedCanvas();
+			mainCanvas.Name = "mainCanvas";
+			mainCanvas.Background = Brushes.Transparent;
+			mainCanvas.AllowDrop = true;
+			scrollViewer.Content = mainCanvas;
 			
 			blockBox = new MoveablesPanel();
 			Grid.SetRow(blockBox,1);
@@ -117,10 +129,17 @@ namespace Sussex.Flip.UI
 			provider.Populate(blockBox);
 				
 			mainGrid.Children.Add(blockBox);
-						
-			mainCanvas.Drop += DroppedOnCanvas;
-			MouseDown += GetDragSource;
-			MouseMove += StartDrag;			
+							
+			/*
+			 * Was MouseDown but ScrollViewer suppresses this event
+			 * so now using PreviewMouseDown. GetDragSource only
+			 * gets a reference to what was clicked on and where,
+			 * so there's no reason to believe this change would
+			 * affect any other program logic, and it doesn't seem to.
+			 */ 			
+			PreviewMouseDown += GetDragSource;			
+			MouseMove += StartDrag;
+			mainCanvas.Drop += DroppedOnCanvas;	
 			
 			PreviewDragEnter += CreateAdorner;
 			PreviewDragOver += UpdateAdorner;			
@@ -621,7 +640,7 @@ namespace Sussex.Flip.UI
 				if (moveable != null) {		
 					PlaceInWorkspace(moveable);
 					
-					Point position = e.GetPosition(this);
+					Point position = e.GetPosition(mainCanvas);
 					position.X -= (size.Width/2);
 					position.Y -= (size.Height/2);
 					moveable.MoveTo(position);
@@ -661,6 +680,8 @@ namespace Sussex.Flip.UI
 				moveable.Remove();
 				mainCanvas.Children.Add(moveable);				
 			}
+			
+			mainCanvas.InvalidateMeasure();
 		}
 	}
 }
