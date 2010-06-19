@@ -5,6 +5,7 @@
 	
     <StackPanel
 	x:Name="stackPanel"
-	Orientation="Horizontal"/>
+	Orientation="Horizontal"
+	Background="Transparent"/>
 
 </flipui:BooleanBlock>
