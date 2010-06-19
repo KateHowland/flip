@@ -128,7 +128,7 @@ namespace Sussex.Flip.UI
 				}
 				
 				else if (reader.LocalName == "Boolean") {
-					slot1.Contents = (BooleanBlock)SerialisationHelper.GetObjectFromXmlInExecutingAssembly(reader);
+					slot1.Contents = FlipWindow.ChosenDeserialisationHelper.GetBooleanBlock(reader);//(BooleanBlock)SerialisationHelper.GetObjectFromXmlInExecutingAssembly(reader);
 					reader.MoveToContent();
 				}
 				

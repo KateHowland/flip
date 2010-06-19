@@ -151,6 +151,7 @@
     <Compile Include="FlipPlugin.cs" />
     <Compile Include="Integration\NarrativeThreadsHelper.cs" />
     <Compile Include="ModuleTextFile.cs" />
+    <Compile Include="Nwn2DeserialisationHelper.cs" />
     <Compile Include="Nwn2ImageProvider.cs" />
     <Compile Include="Nwn2StatementBehaviour.cs" />
     <Compile Include="Nwn2StatementFactory.cs" />

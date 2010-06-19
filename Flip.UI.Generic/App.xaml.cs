@@ -30,11 +30,11 @@ namespace Sussex.Flip.UI.Generic
 			
 			Nwn2MoveableProvider provider = new Nwn2MoveableProvider(blocks,statements,triggers);
 			
-			FlipWindow window = new FlipWindow(provider,images,new FlipWindow.OpenDeleteScriptDelegate(Open),new FlipWindow.SaveScriptDelegate(Save));
-			
-			// HACK:
-			// TODO:
-			SerialisationHelper.customObjectAssembly = System.Reflection.Assembly.GetAssembly(typeof(Nwn2ObjectBlockFactory));
+			FlipWindow window = new FlipWindow(provider,
+			                                   images,
+			                                   new FlipWindow.OpenDeleteScriptDelegate(Open),
+			                                   new FlipWindow.SaveScriptDelegate(Save),
+			                                   new Nwn2DeserialisationHelper());
 			
 			window.Show();
 		}

@@ -20,29 +20,23 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 26/04/2010 at 11:39.
+ * This file added by Keiron Nicholson on 18/06/2010 at 16:21.
  */
 
 using System;
 using System.Reflection;
-using System.Runtime;
 using System.Xml;
 using System.Xml.Serialization;
+using Sussex.Flip.UI;
 
-namespace Sussex.Flip.UI
+namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of SerialisationHelper.
+	/// Description of Nwn2BehaviourFactory.
 	/// </summary>
-	public abstract class SerialisationHelper
+	public class Nwn2DeserialisationHelper : DeserialisationHelper
 	{
-		// TODO:
-		// Need to define a custom interface here which defines
-		// Type as a field.
-		
-		
-		public static Assembly customObjectAssembly = null;
-		public static IXmlSerializable GetObjectFromXml(XmlReader reader)
+		protected IXmlSerializable Deserialise(XmlReader reader)
 		{
 			if (reader == null) throw new ArgumentNullException("reader");
 			
@@ -56,7 +50,7 @@ namespace Sussex.Flip.UI
 			IXmlSerializable obj;
 				
 			try {
-				Assembly assembly = customObjectAssembly;
+				Assembly assembly = Assembly.GetExecutingAssembly();
 				obj = (IXmlSerializable)assembly.CreateInstance(type);
 			}
 			catch (Exception x) {
@@ -73,34 +67,15 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public static IXmlSerializable GetObjectFromXmlInExecutingAssembly(XmlReader reader)
+		public override ObjectBehaviour GetObjectBehaviour(XmlReader reader)
 		{
-			if (reader == null) throw new ArgumentNullException("reader");
-			
-			reader.MoveToContent();	
-			
-			string type = reader.GetAttribute("Type");
-			if (String.IsNullOrEmpty(type)) {
-				throw new ArgumentException("Could not read Type attribute from XmlReader.","reader");
-			}			
-			
-			IXmlSerializable obj;
-				
-			try {
-				Assembly assembly = Assembly.GetExecutingAssembly();;
-				obj = (IXmlSerializable)assembly.CreateInstance(type);
-			}
-			catch (Exception x) {
-				throw new ArgumentException("Could not create object of type " + type + ".",x);
-			}
-			
-			if (obj == null) {
-				throw new ArgumentException("Could not create object of type " + type + " - type was not recognised.");
-			}
-			
-			obj.ReadXml(reader);
-			
-			return obj;
+			return (ObjectBehaviour)Deserialise(reader);
+		}
+		
+		
+		public override StatementBehaviour GetStatementBehaviour(XmlReader reader)
+		{
+			return (StatementBehaviour)Deserialise(reader);
 		}
 	}
 }

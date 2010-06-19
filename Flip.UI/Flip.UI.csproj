@@ -79,6 +79,7 @@
       <DependentUpon>Bag.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DeserialisationHelper.cs" />
     <Compile Include="BooleanBlock.cs" />
     <Compile Include="DefaultStatementBehaviour.cs" />
     <Compile Include="Fitters\AnyFitter.cs" />
@@ -93,7 +94,6 @@
     </Compile>
     <Compile Include="ScriptTriggerTuple.cs" />
     <Compile Include="ScriptWriter.cs" />
-    <Compile Include="SerialisationHelper.cs" />
     <Compile Include="ChangeNumberDialog.xaml.cs">
       <DependentUpon>ChangeNumberDialog.xaml</DependentUpon>
       <SubType>Code</SubType>

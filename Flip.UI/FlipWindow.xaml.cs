@@ -51,6 +51,13 @@ namespace Sussex.Flip.UI
 		protected SaveScriptDelegate saveScriptDelegate;
 		
 		
+		// TODO: Bad implementation, replace with something better.
+		/// <summary>
+		/// Provides deserialisation of custom ObjectBehaviours and StatementBehaviours.
+		/// </summary>
+		public static DeserialisationHelper ChosenDeserialisationHelper;
+		
+		
 		public MoveablesPanel BlockBox {
 			get { return blockBox; }
 		}			
@@ -84,17 +91,20 @@ namespace Sussex.Flip.UI
 		public FlipWindow(MoveableProvider provider, 
 		                  ImageProvider imageProvider, 
 		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
-		                  SaveScriptDelegate saveScriptDelegate)
+		                  SaveScriptDelegate saveScriptDelegate,
+		                  DeserialisationHelper deserialisationHelper)
 		{
 			if (provider == null) throw new ArgumentNullException("provider");
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
 			if (openDeleteScriptDelegate == null) throw new ArgumentNullException("openDeleteScriptDelegate");
 			if (saveScriptDelegate == null) throw new ArgumentNullException("saveScriptDelegate");
+			if (deserialisationHelper == null) throw new ArgumentNullException("deserialisationHelper");
 			
 			this.provider = provider;
 			this.imageProvider = imageProvider;
 			this.openDeleteScriptDelegate = openDeleteScriptDelegate;
 			this.saveScriptDelegate = saveScriptDelegate;
+			ChosenDeserialisationHelper = deserialisationHelper;
 			
 			InitializeComponent();
 			

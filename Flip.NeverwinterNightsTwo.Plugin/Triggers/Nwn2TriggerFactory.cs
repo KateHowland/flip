@@ -88,7 +88,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 			TriggerControl trigger = GetEmptyTrigger(address.TargetType,address.TargetSlot);
 			
-			if (trigger == null) return null;
+			if (trigger == null) {
+				System.Windows.MessageBox.Show("No trigger got.");
+				return null;
+			}
 			
 			Nwn2SlotTrigger slotted = trigger as Nwn2SlotTrigger;
 			
@@ -196,6 +199,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				case Nwn2Type.Placeable:
 					if (scriptSlot == "OnLock") return new DoorOrPlaceableIsLocked(new AnyFitter());	
 					if (scriptSlot == "OnUnlock") return new DoorOrPlaceableIsUnlocked(new AnyFitter());	
+					if (scriptSlot == "OnUsed") return new PlaceableUsed(new AnyFitter());
 					break;
 					
 				default:

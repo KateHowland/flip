@@ -122,12 +122,18 @@
 			
 			</Border>
 			
-			<Canvas	
-			Name="mainCanvas"	
+			<!--<ScrollViewer
 			Grid.Row="1"
-			Grid.Column="0"
-			Background="Transparent"
-			AllowDrop="True"/>
+			Grid.Column="0">-->
+			
+				<Canvas	
+				Name="mainCanvas"	
+				Grid.Row="1"
+				Grid.Column="0"
+				Background="Transparent"
+				AllowDrop="True"/>
+			
+			<!--</ScrollViewer>-->
 		
 		</Grid>
 	
