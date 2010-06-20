@@ -149,8 +149,24 @@ namespace Sussex.Flip.UI
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 			
 			string triggerNL = triggerSlot.GetNaturalLanguage();
-			if (triggerNL != "some event") code.AppendLine(triggerNL);
-			code.AppendLine(spine.GetNaturalLanguage());
+			
+			if (triggerNL != "some event") code.AppendLine(triggerNL+":");
+			
+			string spineNL = spine.GetNaturalLanguage();
+			
+			if (spineNL != String.Empty) {
+				try {
+					// Capitalise:
+					string firstCharacter = spineNL.Substring(0,1).ToUpper();
+					if (spineNL.Length == 1) spineNL = firstCharacter;
+					else spineNL = firstCharacter + spineNL.Substring(1,spineNL.Length-1);
+				}
+				catch (Exception) {
+					spineNL = spine.GetNaturalLanguage();
+				}
+					
+				code.AppendLine(spineNL+".");
+			}
 			
 			return code.ToString();
 		}

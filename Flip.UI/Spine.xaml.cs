@@ -49,6 +49,13 @@ namespace Sussex.Flip.UI
 				return true;
 			}
 		}		
+		
+		
+		public bool IsEmpty {
+			get {
+				return GetFilledPegs().Count == 0;
+			}
+		}
 
     	
 		public Fitter Fitter {
@@ -350,7 +357,7 @@ namespace Sussex.Flip.UI
 					
 				code.Append(peg.Slot.GetNaturalLanguage());
 					
-				if (last) code.Append(".");
+				if (last) {}//code.Append(".");
 				else if (penultimate) code.Append(" ");
 				else code.Append(", ");
 			}
