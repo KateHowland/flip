@@ -32,7 +32,10 @@ namespace Sussex.Flip.UI
 	/// </summary>
 	public abstract class MoveableProvider
 	{
-		public const string ProgrammingConstructsBagName = "Control";
+		public const string EventsBagName = "Events";
+		public const string ActionsBagName = "Actions";
+		public const string ConditionsBagName = "Conditions";
+		public const string ControlBagName = "Control";
 		public const string BooleanExpressionsBagName = "Booleans";
 		
 		
@@ -44,7 +47,7 @@ namespace Sussex.Flip.UI
 			if (manager == null) throw new ArgumentNullException("manager");			
 			this.manager = manager;
 			
-			CreateProgrammingBlocks();
+			CreateStandardBagsAndBlocks();
 			CreateBags();
 			PopulateBags();
 		}
@@ -65,24 +68,28 @@ namespace Sussex.Flip.UI
 			if (manager == null) throw new InvalidOperationException("Need an IMoveableManager to work with.");
 			
 			foreach (string bag in manager.GetBags()) {
-				if (bag != ProgrammingConstructsBagName && bag != BooleanExpressionsBagName) {
+				if (bag != ControlBagName && bag != BooleanExpressionsBagName) {
 					manager.EmptyBag(bag);
 				}
 			}
 		}
 		
 		
-		protected virtual void CreateProgrammingBlocks()
+		protected virtual void CreateStandardBagsAndBlocks()
 		{
 			if (manager == null) throw new InvalidOperationException("Need an IMoveableManager to work with.");
+						
+			manager.AddBag(EventsBagName,false);
+			manager.AddBag(ActionsBagName,false);
+			manager.AddBag(ConditionsBagName,false);
+			manager.AddBag(ControlBagName,false);
+			manager.AddBag(BooleanExpressionsBagName,false);
 			
-			manager.AddBag(ProgrammingConstructsBagName,false);
-			manager.AddMoveable(ProgrammingConstructsBagName,new IfControl());
-			manager.AddMoveable(ProgrammingConstructsBagName,new IfElseControl());
-//			manager.AddMoveable(ProgrammingConstructsBagName,new WhileControl());
-//			manager.AddMoveable(ProgrammingConstructsBagName,new DoWhileControl());
+			manager.AddMoveable(ControlBagName,new IfControl());
+			manager.AddMoveable(ControlBagName,new IfElseControl());
+//			manager.AddMoveable(ControlBagName,new WhileControl());
+//			manager.AddMoveable(ControlBagName,new DoWhileControl());		
 			
-			manager.AddBag(BooleanExpressionsBagName,false);			
 			manager.AddMoveable(BooleanExpressionsBagName,new OrBlock());
 			manager.AddMoveable(BooleanExpressionsBagName,new AndBlock());
 			manager.AddMoveable(BooleanExpressionsBagName,new NotBlock());

@@ -132,7 +132,8 @@ namespace Sussex.Flip.UI
 		{
 			System.Text.StringBuilder code = new System.Text.StringBuilder();
 			
-			code.AppendLine(triggerSlot.GetNaturalLanguage());
+			string triggerNL = triggerSlot.GetNaturalLanguage();
+			if (triggerNL != "some event") code.AppendLine(triggerNL);
 			code.AppendLine(spine.GetNaturalLanguage());
 			
 			return code.ToString();
