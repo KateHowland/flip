@@ -96,7 +96,7 @@ namespace Sussex.Flip.UI
     			MoveableSlot slot = f as MoveableSlot;
     			if (slot != null && slot.Contents == this) {
     				slot.Contents = null;
-					ActivityLog.Write(new Activity("RemovedBlockFromSlot","Block",this.GetLogText(),"RemovedFrom",slot.GetLogText()));
+					ActivityLog.Write(new Activity("RemovedBlock","Block",this.GetLogText(),"RemovedFrom",slot.GetLogText()));
     				return;
     			}
     			
@@ -107,7 +107,13 @@ namespace Sussex.Flip.UI
     			Panel panel = (Panel)Parent;
     			if (panel.Children.Contains(this)) {
     				panel.Children.Remove(this);
-    				ActivityLog.Write(new Activity("RemovedBlockFromSomewhere","Block",this.GetLogText(),"RemovedFrom",panel.ToString()));
+    				
+    				if (panel is SizedCanvas) {
+    					ActivityLog.Write(new Activity("RemovedBlock","Block",this.GetLogText(),"RemovedFrom","Canvas"));
+    				}
+    				else {
+    					ActivityLog.Write(new Activity("RemovedBlock","Block",this.GetLogText(),"RemovedFrom","Unknown (" + panel + ")"));
+    				}
     			}
     		}
     		
@@ -115,7 +121,7 @@ namespace Sussex.Flip.UI
     			Decorator decorator = (Decorator)Parent;
     			if (decorator.Child == this) {
     				decorator.Child = null;
-    				ActivityLog.Write(new Activity("RemovedBlockFromSomewhere","Block",this.GetLogText(),"RemovedFrom",decorator.ToString()));
+    				ActivityLog.Write(new Activity("RemovedBlock","Block",this.GetLogText(),"RemovedFrom","Unknown (" + decorator + ")"));
     			}
     		}
     		
