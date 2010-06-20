@@ -533,9 +533,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					window.BlockBox.AddMoveable(bag,block,true);
 					ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogRepresentation()));
 				}
-			};
-			
+			};			
 			window.EditMenu.Items.Add(addWildcardBlock);
+						
+			MenuItem openTriggerlessScripts = new MenuItem();
+			openTriggerlessScripts.Header = "Open unattached script";
+			openTriggerlessScripts.Click += delegate 
+			{  
+				OpenAnyScriptViaDialog();
+			};			
+			window.DevelopmentMenu.Items.Add(openTriggerlessScripts);
+		}
+		
+		
+		protected void OpenAnyScriptViaDialog()
+		{			
+			if (window == null) return;
+			
+			if (window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			
+			try {
+				OpenDeleteScriptDialog(false);
+			}
+			catch (Exception x) {
+				MessageBox.Show(String.Format("Something went wrong when opening or deleting a script.{0}{0}{1}",Environment.NewLine,x));
+			}
 		}
 		
 		
@@ -588,12 +610,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public void OpenDeleteScriptDialog()
+		{
+			OpenDeleteScriptDialog(true);
+		}
+		
+		
 		/// <summary>
 		/// TODO: should accept window as a parameter as save does.
 		/// </summary>
-		public void OpenDeleteScriptDialog()
+		public void OpenDeleteScriptDialog(bool onlyAttachedScripts)
 		{
-			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts();
+			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts(onlyAttachedScripts);
 			
 			ScriptSelector dialog = new ScriptSelector(tuples);
 			dialog.ShowDialog();
@@ -602,9 +630,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				if (dialog.ActionToTake == ScriptSelector.Action.OpenScript) {
 					try {
+						if (dialog.Selected.Trigger is BlankTrigger) dialog.Selected.Trigger = null;
+						
 						window.OpenFlipScript(dialog.Selected.DeepCopy());
 						
-						ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
+						if (dialog.Selected.Trigger != null) {
+							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
+						}
+						else {							
+							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger","NotAttached"));
+						}
 					}
 					catch (Exception x) {						
 						MessageBox.Show(String.Format("Something went wrong when opening a script.{0}{0}{1}",Environment.NewLine,x));
@@ -615,8 +650,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					try {
 						session.DeleteScript(dialog.Selected.Script.Name);
 						
-						ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
-					
+						if (dialog.Selected.Trigger != null) {
+							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
+						}
+						else {							
+							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger","NotAttached"));
+						}
+						
 						MessageBox.Show("Script deleted.");
 					}
 					catch (Exception x) {						

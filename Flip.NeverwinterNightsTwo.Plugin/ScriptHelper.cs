@@ -240,7 +240,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 					
-		public List<ScriptTriggerTuple> GetAllScripts()
+		public List<ScriptTriggerTuple> GetAllScripts(bool onlyAttachedScripts)
 		{			
 			NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
 			
@@ -254,10 +254,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				script.Demand();
 				
-				FlipScript flipScript = GetFlipScript(script,true);
+				FlipScript flipScript = GetFlipScript(script,onlyAttachedScripts);
 								
 				if (flipScript != null) {
-					TriggerControl trigger = GetTrigger(script);
+					
+					TriggerControl trigger;
+					
+					if (onlyAttachedScripts) trigger = GetTrigger(script);
+					
+					else trigger = new BlankTrigger(flipScript.Name);
+					
 					tuples.Add(new ScriptTriggerTuple(flipScript,trigger));
 				}
 			}

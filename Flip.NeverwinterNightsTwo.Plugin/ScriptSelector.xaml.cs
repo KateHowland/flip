@@ -21,7 +21,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	
     	protected List<ScriptTriggerTuple> tuples;
     	protected ScriptTriggerTuple selected;
-    	private Action actionToTake;
+    	protected Action actionToTake;
+    	
+    	
+    	private static Thickness thickness = new Thickness(3);
     	
     	
 		public ScriptTriggerTuple Selected {
@@ -37,7 +40,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     	public ScriptSelector() : this(new List<ScriptTriggerTuple>(0))
     	{    		
     	}
-    	
+    	    	
     	
     	public ScriptSelector(List<ScriptTriggerTuple> tuples)
         {
@@ -47,22 +50,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     		selected = null;
     		actionToTake = Action.None;
     		
-    		//List<TriggerControl> triggers = GetDefaultTriggersFromAddresses();
             InitializeComponent();
             
             MouseButtonEventHandler scriptSelected = new MouseButtonEventHandler(OpenScript);
             scriptsListBox.MouseDoubleClick += scriptSelected;
             scriptsListBox.KeyDown += new KeyEventHandler(OpenScript);
             
-            Thickness thickness = new Thickness(3);
-            
-            
             foreach (ScriptTriggerTuple tuple in tuples) {
             	try {
-            		// HACK
 	            	TriggerControl trigger = tuple.Trigger;
 	            	
-	            	//trigger.LayoutTransform = new System.Windows.Media.ScaleTransform(0.7,0.7);
+	            	if (trigger == null) continue;
+	            	
 	            	trigger.Padding = thickness;
 	            	scriptsListBox.Items.Add(trigger);
             	}
