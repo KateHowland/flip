@@ -60,10 +60,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
-			components = new List<StatementComponent>(2) 
+			components = new List<StatementComponent>(3) 
 			{ 
+				new StatementComponent("change faction of"),
 				new StatementComponent(fitters.OnlyCreatures),
-				new StatementComponent("becomes commoner")
+				new StatementComponent("to commoner")
 			};
 		}
 		

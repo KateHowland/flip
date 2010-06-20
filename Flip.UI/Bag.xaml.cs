@@ -29,29 +29,40 @@ namespace Sussex.Flip.UI
             resourceDictionary = new ResourceDictionary();
     		
     		// Set up common styles for Moveables:
-            Style baseStyle = new Style(typeof(Moveable));
+            Style squareStyle = new Style(typeof(Moveable));
+            Style nonSquareStyle = new Style(typeof(Moveable));
             
-            baseStyle.Setters.Add(new Setter(Moveable.MarginProperty,new Thickness(2)));
+            squareStyle.Setters.Add(new Setter(Moveable.MarginProperty,new Thickness(3)));
+            nonSquareStyle.Setters.Add(new Setter(Moveable.MarginProperty,new Thickness(0,10,0,0)));
             
-            Type[] moveableTypes = new Type[]
+            Type[] squareMoveables = new Type[]
             {
             	typeof(ObjectBlock),
+            	typeof(NumberBlock),
+            	typeof(StringBlock),
+            };       
+            
+            Type[] nonSquareMoveables = new Type[]
+            {
             	typeof(Statement),
             	typeof(IfControl),
             	typeof(IfElseControl),
             	typeof(DoWhileControl),
             	typeof(WhileControl),
-            	typeof(NumberBlock),
-            	typeof(StringBlock),
             	typeof(TriggerControl),
             	typeof(AndBlock),
             	typeof(OrBlock),
             	typeof(NotBlock)
-            };           
+            };              
             
             
-            foreach (Type type in moveableTypes) {
-            	Style style = new Style(type,baseStyle);
+            foreach (Type type in squareMoveables) {
+            	Style style = new Style(type,squareStyle);
+            	resourceDictionary.Add(style.TargetType,style);
+            }
+            
+            foreach (Type type in nonSquareMoveables) {
+            	Style style = new Style(type,nonSquareStyle);
             	resourceDictionary.Add(style.TargetType,style);
             }
     	}

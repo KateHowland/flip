@@ -57,7 +57,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent("take"),
 				new StatementComponent(fitters.OnlyNumbers),
-				new StatementComponent("gold from"),
+				new StatementComponent("gold coins from"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers)
 			};
 		}
@@ -79,7 +79,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[0] == "some number") args[0] = "some number of";
+			//if (args[0] == "some number") args[0] = "some number of";
 						
 			if (args[1] == "1") return String.Format("{1} loses 1 gold coin.",args);			
 			else return String.Format("{1} loses {0} gold coins",args);

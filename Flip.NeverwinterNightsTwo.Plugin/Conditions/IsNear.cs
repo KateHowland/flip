@@ -54,9 +54,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			components = new List<StatementComponent>(5) 
 			{ 
 				new StatementComponent(fitters.OnlyInstancesOrPlayers),
-				new StatementComponent("is within"),
+				new StatementComponent("is less than"),
 				new StatementComponent(fitters.OnlyNumbers),
-				new StatementComponent("metres of"),
+				new StatementComponent("metres away from"),
 				new StatementComponent(fitters.OnlyInstancesOrPlayers)
 			};
 		}
@@ -79,9 +79,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[1] == "some number") args[1] = "some number of";
+			//if (args[1] == "some number") args[1] = "some number of";
 			
-			return String.Format("{0} is within {1} metres of {2}",args);
+			return String.Format("{0} is less than {1} metres away from {2}",args);
 		}
 		
 		

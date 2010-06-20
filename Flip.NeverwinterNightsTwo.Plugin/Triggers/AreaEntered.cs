@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class AreaEntered : Nwn2SlotTrigger
 	{
-		public AreaEntered(Fitter raiserFitter) : base(raiserFitter,"When area","starts")			
+		public AreaEntered(Fitter raiserFitter) : base(raiserFitter,"When","starts")			
 		{ 
 		}
 					

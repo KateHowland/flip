@@ -56,8 +56,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 2;
 			components = new List<StatementComponent>(3) 
 			{ 
+				new StatementComponent("tell"),
 				new StatementComponent(fitters.OnlyCreatures),
-				new StatementComponent("stops protecting"),
+				new StatementComponent("to stop protecting"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
 			};
 		}

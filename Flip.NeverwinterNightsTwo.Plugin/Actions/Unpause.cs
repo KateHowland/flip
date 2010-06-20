@@ -54,7 +54,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 0;
 			components = new List<StatementComponent>(1) 
 			{ 
-				new StatementComponent("unpause game"),
+				new StatementComponent("unpause the game"),
 			};
 		}
 		

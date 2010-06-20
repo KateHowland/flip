@@ -49,7 +49,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			components = new List<StatementComponent>(3) 
 			{ 
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("owns"),
+				new StatementComponent("is carrying"),
 				new StatementComponent(fitters.OnlyItems)
 			};
 		}

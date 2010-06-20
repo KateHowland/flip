@@ -50,9 +50,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			components = new List<StatementComponent>(4) 
 			{ 
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("has at least"),
+				new StatementComponent("is carrying at least"),
 				new StatementComponent(fitters.OnlyNumbers),
-				new StatementComponent("gold")
+				new StatementComponent("gold coins")
 			};
 		}
 		
@@ -73,7 +73,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[1] == "some number") args[1] = "some number of";
+			//if (args[1] == "some number") args[1] = "some number of";
 			
 			return String.Format("{0} currently owns at least {1} gold pieces",args);
 		}

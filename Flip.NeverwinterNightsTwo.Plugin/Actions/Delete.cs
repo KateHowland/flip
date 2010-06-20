@@ -60,10 +60,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
-			components = new List<StatementComponent>(2) 
+			components = new List<StatementComponent>(3) 
 			{ 
-				new StatementComponent("destroy"),
-				new StatementComponent(fitters.OnlyDestroyableObjects)
+				new StatementComponent("remove"),
+				new StatementComponent(fitters.OnlyDestroyableObjects),
+				new StatementComponent("from the game")
 			};
 		}
 		

@@ -94,6 +94,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		#endregion
 		
 		#region Actions
+					
+		public Statement GiveGold()
+		{
+			return new Statement(new GiveGold());
+		}		
+		
+		
+		public Statement TakeGold()
+		{
+			return new Statement(new TakeGold());
+		}
+		
+		
+		public Statement GiveXP()
+		{
+			return new Statement(new GiveXP());
+		}
+		
 		
 		public Statement Attacks()
 		{
@@ -113,24 +131,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public Statement GiveGold()
-		{
-			return new Statement(new GiveGold());
-		}		
-		
-		
-		public Statement TakeGold()
-		{
-			return new Statement(new TakeGold());
-		}
-		
-		
-		public Statement GiveXP()
-		{
-			return new Statement(new GiveXP());
-		}
-		
-		
 		public Statement Lock()
 		{
 			return new Statement(new Lock());
@@ -140,12 +140,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement Unlock()
 		{
 			return new Statement(new Unlock());
-		}
-		
-		
-		public Statement EndGame()
-		{
-			return new Statement(new EndGame());
 		}
 		
 		
@@ -171,6 +165,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			return new Statement(new OpenStore());
 		}
+				
+		
+		public Statement HasGold()
+		{
+			return new Statement(new HasGold());
+		}		
 		
 		
 		public Statement IsDead()
@@ -227,18 +227,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public Statement Pause()
-		{
-			return new Statement(new Pause());
-		}
-		
-		
-		public Statement Unpause()
-		{
-			return new Statement(new Unpause());
-		}
-		
-		
 		public Statement SetTimeToNoon()
 		{
 			return new Statement(new SetTimeToNoon());
@@ -263,6 +251,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement Pause()
+		{
+			return new Statement(new Pause());
+		}
+		
+		
+		public Statement Unpause()
+		{
+			return new Statement(new Unpause());
+		}
+		
+		
+		public Statement EndGame()
+		{
+			return new Statement(new EndGame());
+		}
+		
+		
 		public Statement Delete()
 		{
 			return new Statement(new Delete());
@@ -272,18 +278,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement AreaTransition()
 		{
 			return new Statement(new AreaTransition());
-		}
-		
-		
-		public Statement HasGold()
-		{
-			return new Statement(new HasGold());
-		}
-		
-		
-		public Statement IsNear()
-		{
-			return new Statement(new IsNear());
 		}
 		
 		
@@ -320,7 +314,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement HasEquippedItem()
 		{
 			return new Statement(new HasEquippedItem());
-		}				
+		}	
+		
+		
+		public Statement IsNear()
+		{
+			return new Statement(new IsNear());
+		}			
 		
 		#endregion
 	}
