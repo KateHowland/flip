@@ -87,7 +87,6 @@ namespace Sussex.Flip.UI
 		}
     	
     	
-		// HACK:
     	public void Remove()
     	{
     		FrameworkElement f = this;

@@ -448,7 +448,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							menu.MenuItems.Add(item);
 						}
 						catch (Exception x) {
-							MessageBox.Show(x.ToString());
+							MessageBox.Show("Something went wrong when adding a new option to the Blueprints menu.\n\n" + x);
 						}
 					}
 				}

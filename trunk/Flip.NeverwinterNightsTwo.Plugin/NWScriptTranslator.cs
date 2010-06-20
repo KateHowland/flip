@@ -67,8 +67,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns>The source code of the target language.</returns>
 		public override string Translate(FlipScript script)
 		{			
-			// TODO:
-			// implement
 			SampleScriptProvider sample = new SampleScriptProvider();			
 			string output = sample.GiveGold;
 			

@@ -188,10 +188,6 @@
     <Compile Include="Triggers\ItemUnacquired.cs" />
     <Compile Include="Triggers\ModuleHeartbeat.cs" />
     <Compile Include="Triggers\ModuleStarted.cs" />
-    <Compile Include="Triggers\NullTrigger.xaml.cs">
-      <DependentUpon>NullTrigger.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Triggers\Nwn2ParameterlessTrigger.xaml.cs">
       <DependentUpon>Nwn2ParameterlessTrigger.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -228,7 +224,6 @@
     </ProjectReference>
     <Page Include="CreateWildcardDialog.xaml" />
     <Page Include="ScriptSelector.xaml" />
-    <Page Include="Triggers\NullTrigger.xaml" />
     <Page Include="Triggers\Nwn2ParameterlessTrigger.xaml" />
     <Page Include="Triggers\Nwn2SlotTrigger.xaml" />
     <Folder Include="Actions" />

@@ -139,24 +139,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			foreach (Statement action in a) {
 				try {
-//					Nwn2StatementBehaviour sb = (Nwn2StatementBehaviour)action.Behaviour;
-//					if (sb.IsAsynchronous) {
-//						action.BorderBrush = Brushes.Black;
-//						action.BorderThickness = new Thickness(10);
-//					}
 					manager.AddMoveable(ActionsBagName,action);
 				}
-				catch (Exception e) {
-					System.Windows.MessageBox.Show(e.ToString() + "\n\n" + action.Parent.ToString());
-				}
+				catch (Exception) {}
 			}					
 			foreach (Statement condition in c) {
 				try {
 					manager.AddMoveable(ConditionsBagName,condition);
 				}
-				catch (Exception e) {					
-					System.Windows.MessageBox.Show(e.ToString() + "\n\n" + condition.Parent.ToString());
-				}
+				catch (Exception) {}
 			}
 		}
 		
@@ -331,9 +322,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						}
 					}
 				}
-				catch (Exception ex) {
-					System.Windows.MessageBox.Show(ex.ToString());
-				}
+				catch (Exception) {}
 			};
 			
 						
