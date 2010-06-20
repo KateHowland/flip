@@ -152,6 +152,12 @@ namespace Sussex.Flip.UI
 		{
 			new ChangeStringDialog(this,maxLength).ShowDialog();
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return "String (" + Value + ")";
+		}
     }
 }
 

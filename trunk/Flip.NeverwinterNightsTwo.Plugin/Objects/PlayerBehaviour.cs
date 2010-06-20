@@ -101,5 +101,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return "Player";
+		}
 	}
 }

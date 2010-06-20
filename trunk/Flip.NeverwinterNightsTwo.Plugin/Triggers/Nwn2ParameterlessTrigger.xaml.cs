@@ -68,5 +68,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public override void Clear()
 		{
 		}
+				
+		
+		public override string GetLogText()
+		{
+			return "Event (" + GetNaturalLanguage() + ")";
+		}
     }
 }

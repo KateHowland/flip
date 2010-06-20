@@ -130,5 +130,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			copy.RaiserBlock = RaiserBlock;
 			return copy;
 		}
+				
+		
+		public override string GetLogText()
+		{
+			return "Event (" + GetNaturalLanguage() + ")";
+		}
     }
 }

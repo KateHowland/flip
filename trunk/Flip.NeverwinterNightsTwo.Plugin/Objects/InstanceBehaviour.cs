@@ -186,5 +186,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 			writer.WriteAttributeString("ResRef",ResRef);
 			writer.WriteAttributeString("IconName",IconName);
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return String.Format("{0} (DisplayName: {1}, Tag: {2}",Nwn2Type,DisplayName,Tag);
+		}
 	}
 }

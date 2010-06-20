@@ -206,5 +206,12 @@ namespace Sussex.Flip.UI
 			Behaviour.WriteXml(writer);
 			writer.WriteEndElement();
 		}
+		
+		
+		public override string GetLogText()
+		{
+			if (Behaviour == null) return String.Empty;
+			else return Behaviour.GetLogText();
+		}
     }
 }

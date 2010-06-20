@@ -127,5 +127,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		{
 			return String.Format("Area ({0}, DisplayName:'{1}', Tag: {2})",(isExterior ? "Exterior" : "Interior"),DisplayName,Tag);
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return String.Format("Area (DisplayName: {0}, Tag: {1}",DisplayName,Tag);
+		}
 	}
 }

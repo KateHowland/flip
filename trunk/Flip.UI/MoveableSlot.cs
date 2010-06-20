@@ -256,12 +256,12 @@ namespace Sussex.Flip.UI
 						
 						if (e.AllowedEffects == DragDropEffects.Copy) {
 							Contents = moveable.DeepCopy();
-							ActivityLog.Write(new Activity("CopyPastedBlockToSlot","Block",Contents.GetLogRepresentation(),"PlacedIn",this.GetLogRepresentation()));
+							ActivityLog.Write(new Activity("CopyPastedBlockToSlot","Block",Contents.GetLogText(),"PlacedIn",this.GetLogText()));
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
 							moveable.Remove();
 							Contents = moveable;
-							ActivityLog.Write(new Activity("PlacedBlockInSlot","Block",Contents.GetLogRepresentation(),"PlacedIn",this.GetLogRepresentation()));
+							ActivityLog.Write(new Activity("PlacedBlockInSlot","Block",Contents.GetLogText(),"PlacedIn",this.GetLogText()));
 						}
 					}
 					e.Handled = true;
@@ -341,17 +341,17 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public virtual string GetLogRepresentation()
+		public virtual string GetLogText()
 		{
 			string parentDescription;
 			
 			Moveable moveable = UIHelper.TryFindParent<Moveable>(this);
-			if (moveable != null) parentDescription = moveable.GetLogRepresentation();
+			if (moveable != null) parentDescription = moveable.GetLogText();
 			else {
 				DependencyObject parent = UIHelper.GetParentObject(this);
 				TriggerBar triggerBar = parent as TriggerBar;
 				if (triggerBar != null) {
-					parentDescription = triggerBar.GetLogRepresentation();
+					parentDescription = triggerBar.GetLogText();
 				}
 				else if (parent != null) parentDescription = parent.ToString();
 				else parentDescription = "missing parent";
