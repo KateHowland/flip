@@ -543,6 +543,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				OpenAnyScriptViaDialog();
 			};			
 			window.DevelopmentMenu.Items.Add(openTriggerlessScripts);
+						
+			MenuItem showLogWindow = new MenuItem();
+			showLogWindow.Header = "Show log window";
+			showLogWindow.Click += delegate 
+			{  
+				new ActivityLogWindow().Show();
+			};			
+			window.DevelopmentMenu.Items.Add(showLogWindow);
 		}
 		
 		

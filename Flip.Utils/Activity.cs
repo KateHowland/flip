@@ -83,8 +83,6 @@ namespace Sussex.Flip.Utils
 		public void WriteXML(XmlWriter writer)
 		{
 			if (writer == null) throw new ArgumentNullException("writer");
-			if (writer.WriteState == WriteState.Start) throw new ArgumentException("Writer has not been started.","writer");
-			if (writer.WriteState == WriteState.Closed) throw new ArgumentException("Writer has been closed.","writer");
 			
 			writer.WriteStartElement(name);
 			
@@ -94,6 +92,23 @@ namespace Sussex.Flip.Utils
 			}
 			
 			writer.WriteEndElement();
+		}
+		
+		
+		public override string ToString()
+		{
+			try {
+				using (System.IO.StringWriter stringWriter = new System.IO.StringWriter()) {
+					using (XmlWriter writer = new XmlTextWriter(stringWriter)) {
+						WriteXML(writer);
+						writer.Flush();
+						return stringWriter.ToString();
+					}
+				}
+			}
+			catch (Exception x) {
+				return x.ToString();
+			}
 		}
 	}
 }
