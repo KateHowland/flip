@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Xml;
 using System.Xml.Schema;
@@ -17,6 +18,7 @@ namespace Sussex.Flip.UI
     	protected string currentScriptIsBasedOn;
     	protected TriggerSlot triggerSlot;
     	protected Spine spine;
+    	protected Button saveButton;
     	
     	
 		public TriggerControl TriggerControl {
@@ -33,6 +35,11 @@ namespace Sussex.Flip.UI
 		public Spine Spine {
 			get { return spine; }
 		}
+    	
+    	
+    	public Button SaveButton {
+    		get { return saveButton; }
+    	}
     	
     	
 		public string CurrentScriptIsBasedOn {
@@ -67,12 +74,7 @@ namespace Sussex.Flip.UI
 		}	
 		
 		
-		public TriggerBar(Fitter fitter) : this(null,fitter)
-		{			
-		}
-		
-    	
-        public TriggerBar(TriggerControl initialTrigger, Fitter fitter)
+		public TriggerBar(Fitter fitter)
         {
         	if (fitter == null) throw new ArgumentNullException("fitter");
         	
@@ -84,10 +86,26 @@ namespace Sussex.Flip.UI
         	spine.Margin = new Thickness(14,0,0,0);
         	
         	triggerSlot = new TriggerSlot(new TriggerFitter());
+        	triggerSlot.AllowDrop = true;  
         	
-            InitializeComponent();
-            
+            InitializeComponent();      	
+        	
             triggerBarPanel.Children.Add(triggerSlot);
+            
+			saveButton = new Button();
+			saveButton.Content = "Save";
+			saveButton.Foreground = Brushes.White;
+			saveButton.FontWeight = FontWeights.ExtraBold;
+			saveButton.FontSize = 16;
+			saveButton.Margin = new Thickness(45,5,5,5);
+			saveButton.Height = 40;
+			saveButton.Width = 70;
+			saveButton.AllowDrop = false;
+			saveButton.Background = Brushes.Firebrick.Clone();//(Brush)Resources["buttonGradient"];
+			saveButton.Background.Opacity = 0.8;
+			saveButton.Background.Freeze();
+            
+            triggerBarPanel.Children.Add(saveButton);
             
             spine.Extends = border.Height + 20;     
         	Grid.SetZIndex(spine,1);
@@ -98,8 +116,6 @@ namespace Sussex.Flip.UI
             
         	triggerSlot.Changed += delegate { OnChanged(new EventArgs()); };
         	spine.Changed += delegate { OnChanged(new EventArgs()); };
-        	
-            TriggerControl = initialTrigger;
         }
         
         

@@ -148,6 +148,8 @@ namespace Sussex.Flip.UI
 			PreviewDrop += DestroyAdorner;	
 						
 			triggerBar = new TriggerBar(new SpineFitter());
+			triggerBar.SaveButton.Click += SaveScriptToModule;
+			                                        
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);

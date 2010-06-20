@@ -1,7 +1,8 @@
 <UserControl x:Class="Sussex.Flip.UI.TriggerBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
+	AllowDrop="True">
 	
 	<UserControl.Resources>		
 		<LinearGradientBrush 
@@ -17,6 +18,16 @@
 				<GradientStop Offset="0.8" Color="LemonChiffon"/>
 				<GradientStop Offset="0.9" Color="White"/>
 				<GradientStop Offset="0.95" Color="Gold"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>	
+		<LinearGradientBrush 
+		x:Key="buttonGradient"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="LemonChiffon"/>
+				<GradientStop Offset="0.3" Color="Gold"/>
+				<GradientStop Offset="1" Color="LemonChiffon"/>
 			</LinearGradientBrush.GradientStops>
 		</LinearGradientBrush>	
 	</UserControl.Resources>
@@ -35,6 +46,7 @@
 		Background="{StaticResource yellowGradient}"
 		Grid.ZIndex="2"
 		HorizontalAlignment="Left"
+		AllowDrop="False"
 		>
 		
 	    	<StackPanel
