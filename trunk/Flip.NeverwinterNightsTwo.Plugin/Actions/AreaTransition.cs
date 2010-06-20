@@ -75,9 +75,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 2;
 			components = new List<StatementComponent>(4) 
 			{ 
-				new StatementComponent("teleport to area"),
+				new StatementComponent("teleport player to"),
 				new StatementComponent(fitters.OnlyAreas),
-				new StatementComponent("at location of"),
+				new StatementComponent("at the location of"),
 				new StatementComponent(fitters.OnlyInstances)
 			};
 		}
@@ -101,7 +101,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[1] == "something") return String.Format("the player teleports to the location of some object in area {0}",args);
+			if (args[1] == "something") return String.Format("the player teleports to the location of some object in {0}",args);
 			else return String.Format("the player teleports to the location of {1} in {0}",args);
 		}
 		

@@ -13,7 +13,8 @@
     	<TextBlock
     	x:Name="textBlock"
 		VerticalAlignment="Center"
-		HorizontalAlignment="Center"/>
+		HorizontalAlignment="Center"
+    	Padding="1"/>
 	
     </Border>
 

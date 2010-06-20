@@ -52,7 +52,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent("give"),
 				new StatementComponent(fitters.OnlyNumbers),
-				new StatementComponent("XP to"),
+				new StatementComponent("experience points to"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers)
 			};
 		}
@@ -74,7 +74,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			if (args[0] == "some number") args[0] = "some number of";
+			//if (args[0] == "some number") args[0] = "some number of";
 									
 			if (args[1] == "1") return String.Format("{1} loses 1 experience point",args);			
 			else return String.Format("{1} gets {0} experience points",args);

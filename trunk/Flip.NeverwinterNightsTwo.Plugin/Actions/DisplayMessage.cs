@@ -68,10 +68,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			statementType = StatementType.Action;
 			parameterCount = 1;
-			components = new List<StatementComponent>(1) 
+			components = new List<StatementComponent>(3) 
 			{ 
-				new StatementComponent("display message"),
-				new StatementComponent(fitters.OnlyStrings)
+				new StatementComponent("display"),
+				new StatementComponent(fitters.OnlyStrings),
+				new StatementComponent("as pop-up message"),
 			};
 		}
 		

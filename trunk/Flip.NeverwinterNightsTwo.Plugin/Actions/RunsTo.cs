@@ -50,8 +50,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 2;
 			components = new List<StatementComponent>(3) 
 			{ 
+				new StatementComponent("tell"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("runs to"),
+				new StatementComponent("to run to"),
 				new StatementComponent(fitters.OnlyInstancesOrPlayers)
 			};
 		}

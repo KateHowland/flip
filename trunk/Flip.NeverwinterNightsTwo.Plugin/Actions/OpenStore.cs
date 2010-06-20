@@ -54,7 +54,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 1;
 			components = new List<StatementComponent>(2) 
 			{ 
-				new StatementComponent("open store"),
+				new StatementComponent("open"),
 				new StatementComponent(fitters.OnlyStores)
 			};
 		}

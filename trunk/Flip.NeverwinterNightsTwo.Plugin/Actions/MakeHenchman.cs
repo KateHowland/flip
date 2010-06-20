@@ -55,10 +55,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			statementType = StatementType.Action;
 			parameterCount = 2;
-			components = new List<StatementComponent>(3) 
+			components = new List<StatementComponent>(4) 
 			{ 
+				new StatementComponent("tell"),
 				new StatementComponent(fitters.OnlyCreatures),
-				new StatementComponent("becomes protector of"),
+				new StatementComponent("to protect"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
 			};
 		}

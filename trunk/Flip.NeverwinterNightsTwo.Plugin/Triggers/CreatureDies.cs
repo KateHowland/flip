@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class CreatureDies : Nwn2SlotTrigger
 	{
-		public CreatureDies(Fitter raiserFitter) : base(raiserFitter,"When creature","is killed")			
+		public CreatureDies(Fitter raiserFitter) : base(raiserFitter,"When","is killed")			
 		{
 		}
 					

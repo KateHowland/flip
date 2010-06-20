@@ -31,6 +31,11 @@ namespace Sussex.Flip.UI
     	/// Used to set a thick border.
     	/// </summary>
     	protected static Thickness thick;
+    	
+    	/// <summary>
+    	/// Used to pad the explanation text.
+    	/// </summary>
+    	protected static Thickness textThickness;
     	    	
     	#endregion
     	            
@@ -43,6 +48,7 @@ namespace Sussex.Flip.UI
     	{
     		thin = new Thickness(0.5);
     		thick = new Thickness(1.0);
+    		textThickness = new Thickness(3.0);
     	}
     	
 
@@ -69,10 +75,16 @@ namespace Sussex.Flip.UI
         {
             InitializeComponent();            
             
-            this.fitter = fitter;
+            this.fitter = fitter;            
             
             border.MinWidth = ObjectBlock.DefaultSize.Width + border.BorderThickness.Left + border.BorderThickness.Right;
             border.MinHeight = ObjectBlock.DefaultSize.Height + border.BorderThickness.Top + border.BorderThickness.Bottom;
+            
+            fitterText.Text = fitter.GetMoveableDescription();
+            fitterText.Foreground = Brushes.DarkSlateBlue;
+            fitterText.MaxWidth = border.MinWidth;
+            fitterText.MaxHeight = border.MinHeight;
+            fitterText.Padding = textThickness;
             
             SetDefaultAppearance();
         }
@@ -109,6 +121,7 @@ namespace Sussex.Flip.UI
         	border.Background = Brushes.LightGray;
         	border.BorderBrush = dropBrush;
         	border.BorderThickness = thick;        	
+        	fitterText.FontWeight = FontWeights.Bold;
         }
         
         
@@ -121,6 +134,7 @@ namespace Sussex.Flip.UI
         	border.Background = Brushes.LightGray;
         	border.BorderBrush = noDropBrush;
         	border.BorderThickness = thin;   
+        	fitterText.FontWeight = FontWeights.Normal;
 		}
         
         
@@ -132,12 +146,15 @@ namespace Sussex.Flip.UI
         	if (Contents == null) {
 	        	border.Background = Brushes.LightGray;
 	        	border.BorderBrush = defaultBrush;
+	        	fitterText.Visibility = Visibility.Visible;
         	}
         	else {
         		border.Background = Brushes.Transparent;
         		border.BorderBrush = Brushes.Transparent;
+	        	fitterText.Visibility = Visibility.Hidden;
         	}
         	
+        	fitterText.FontWeight = FontWeights.Normal;
 	        border.BorderThickness = thin;
         }
         

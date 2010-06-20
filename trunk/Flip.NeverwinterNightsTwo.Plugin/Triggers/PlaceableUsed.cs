@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class PlaceableUsed : Nwn2SlotTrigger
 	{
-		public PlaceableUsed(Fitter raiserFitter) : base(raiserFitter,"When placeable","is used")			
+		public PlaceableUsed(Fitter raiserFitter) : base(raiserFitter,"When","is used")			
 		{
 		}
 					

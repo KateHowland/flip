@@ -42,7 +42,7 @@ namespace Sussex.Flip.UI
 		
 		public override string GetMoveableDescription()
 		{
-			return "some number";
+			return "some number of";
 		}
 	}
 }

@@ -63,7 +63,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 2;
 			components = new List<StatementComponent>(4) 
 			{ 
-				new StatementComponent("give copy of item"),
+				new StatementComponent("give a copy of"),
 				new StatementComponent(fitters.OnlyItems),
 				new StatementComponent("to"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers)
