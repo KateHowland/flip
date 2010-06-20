@@ -66,6 +66,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activity.cs" />
+    <Compile Include="ActivityEventArgs.cs" />
+    <Compile Include="ActivityLogWindow.xaml.cs">
+      <DependentUpon>ActivityLogWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Bean.cs" />
     <Compile Include="FileExtensionFilters.cs" />
     <Compile Include="FlipActivities.cs" />
@@ -80,5 +85,8 @@
       <LogicalName>licence</LogicalName>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ActivityLogWindow.xaml" />
   </ItemGroup>
 </Project>

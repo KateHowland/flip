@@ -35,6 +35,18 @@ namespace Sussex.Flip.Utils
 	/// </summary>
 	public static class ActivityLog
 	{
+		public static event EventHandler<ActivityEventArgs> MessageWritten;
+		
+		
+		private static void OnMessageWritten(ActivityEventArgs e)
+		{
+			EventHandler<ActivityEventArgs> handler = MessageWritten;
+			if (handler != null) {
+				handler(null,e);
+			}
+		}
+		
+		
 		private static XmlWriter writer = null;
 		private static object padlock = new object();
 		
@@ -88,6 +100,7 @@ namespace Sussex.Flip.Utils
 					activity.WriteXML(writer);
 					writer.Flush();
 				}
+				OnMessageWritten(new ActivityEventArgs(activity));
 			}
 		}
 		
