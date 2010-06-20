@@ -260,16 +260,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ButtonItem flipButton = new ButtonItem();
 			flipButton.Text = "Flip";
 			flipButton.BeginGroup = true;
-			//flipButton.ForeColor = System.Drawing.Color.DarkBlue;
 			
-			// TODO:
-			// Keep the try/catch but centralise and sensiblise the path:
 			try {
-				flipButton.Icon = new System.Drawing.Icon(@"C:\Flip\object pics\Flip\fliplogo.ico");
+				flipButton.Icon = new System.Drawing.Icon(@"C:\Sussex University\Flip\Pictures\System\fliplogo.ico");
 			}
 			catch (Exception) {}
 			
-			flipButton.ToolTipText = "Launch Flip to edit game scripts";
+			flipButton.ToolTipText = "Create and edit scripts";
 			objectsToolbar.Items.Add(flipButton);
 			return flipButton;
 		}

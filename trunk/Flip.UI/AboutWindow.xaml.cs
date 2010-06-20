@@ -13,11 +13,22 @@ namespace Sussex.Flip.UI
         {
             InitializeComponent();
             
-            Image image = GetImage(@"C:\Flip\object pics\Flip\logo.jpg");
-            image.Width = 200;
-            image.Margin = new Thickness(2,8,2,2);
+            Image image = GetImage(@"C:\Sussex University\Flip\Pictures\System\logo.jpg");
             
-            if (image != null) panel.Children.Insert(0,image);
+            if (image != null) {
+	            image.Width = 200;
+	            image.Margin = new Thickness(2,8,2,2);
+	            panel.Children.Insert(0,image);
+            }
+            else {
+            	TextBlock tb = new TextBlock();
+            	tb.Text = "Flip";
+            	tb.FontSize = 36;
+            	tb.FontWeight = FontWeights.Bold;
+            	tb.HorizontalAlignment = HorizontalAlignment.Center;
+            	panel.Children.Insert(0,tb);
+            }
+            
         }
         
         

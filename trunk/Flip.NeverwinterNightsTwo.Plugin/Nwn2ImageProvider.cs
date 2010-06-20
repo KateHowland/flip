@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.IO;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -50,8 +51,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public Nwn2ImageProvider(NarrativeThreadsHelper nt)
 		{
-			picturesPathFormat = @"C:\Flip\object pics\{0}\{1}.bmp";
-			iconsPathFormat = @"C:\Flip\object pics\bmp icons\{0}.bmp";
+//			if (imagesRoot == null) throw new ArgumentNullException("imagesRoot");
+//			if (!Directory.Exists(imagesRoot)) throw new ArgumentException("Must pass a valid root path for images.");
+			
+			picturesPathFormat = @"C:\Sussex University\Flip\Pictures\{0}\{1}.bmp";
+			iconsPathFormat = @"C:\Sussex University\Flip\Pictures\Icons\{0}.bmp";
 			this.nt = nt;
 		}
 				

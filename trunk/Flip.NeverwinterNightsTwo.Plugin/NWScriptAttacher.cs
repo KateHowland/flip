@@ -257,7 +257,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ApplicationException("Something went wrong while saving and attaching script.",x);
 			}
 			
-			if (backups != null && Directory.Exists(backups)) {			
+			if (backups != null) {			
+				
+				if (!Directory.Exists(backups)) {
+					try {
+						Directory.CreateDirectory(backups);
+					}
+					catch (Exception) { 
+						return name;
+					}
+				}
 				
 				string saveTo;
 				
@@ -277,7 +286,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					saveTo = backups;
 				}
 				
-				WriteBackup(name,saveTo,source.Code);
+				try {
+					WriteBackup(name,saveTo,source.Code);
+				}
+				catch (Exception) {	}
 			}
 			
 			return name;
