@@ -106,19 +106,25 @@
 			Grid.Column="0"
 			BorderThickness="3"
 			BorderBrush="Black"
-			Margin="10">
+			Margin="10">				
+			
+				<ScrollViewer
+				HorizontalScrollBarVisibility="Disabled"
+				VerticalScrollBarVisibility="Auto">
 				
-				<TextBlock
-				x:Name="nlTextBlock"
-				Background="Ivory"
-				Foreground="Maroon"
-				PreviewDrop="Dropped"
-				FontSize="24"
-				FontFamily="Comic Sans"
-				Padding="10"
-				TextWrapping="Wrap"
-				VerticalAlignment="Stretch"
-				HorizontalAlignment="Stretch"/>
+					<TextBlock
+					x:Name="nlTextBlock"
+					Background="Ivory"
+					Foreground="Maroon"
+					PreviewDrop="Dropped"
+					FontSize="24"
+					FontFamily="Comic Sans"
+					Padding="10"
+					TextWrapping="Wrap"
+					VerticalAlignment="Stretch"
+					HorizontalAlignment="Stretch"/>
+				
+				</ScrollViewer>
 			
 			</Border>
 			
