@@ -110,6 +110,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected NWScriptAttacher attacher;
 		
+		public static string FlipLogsPath = @"C:\Sussex University\Flip\Logs\";
+		
+		public static string FlipBackupScriptsPath = @"C:\Sussex University\Flip\Scripts\";
+		
+		public static string FlipImagesPath = @"C:\Sussex University\Flip\Pictures\";
+		
 		#endregion
 		
 		#region Properties
@@ -407,15 +413,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		PathChecker pathChecker = new PathChecker();
 		protected void StartLogging()
 		{
-			string logs = @"C:\Sussex University\Flip\Logs\";
-			
 			try {				
-				string saveTo = Path.Combine(logs,Environment.UserName);
+				string saveTo = Path.Combine(FlipLogsPath,Environment.UserName);
 				try {
 					if (!Directory.Exists(saveTo)) Directory.CreateDirectory(saveTo);
 				}
 				catch (Exception) {
-					saveTo = logs;
+					saveTo = FlipLogsPath;
 				}
 				
 				string path = Path.Combine(saveTo,ActivityLog.GetFilename());
@@ -456,7 +460,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
 		{	
-			InitialiseFlip();
+			InitialiseFlip();			
 		}
 		
 		
@@ -467,8 +471,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			session = new Nwn2Session();
 			FlipTranslator translator = new NWScriptTranslator();
-			string backups = @"C:\Sussex University\Flip\Scripts\";
-			attacher = new NWScriptAttacher(translator,session,backups);
+			attacher = new NWScriptAttacher(translator,session,FlipBackupScriptsPath);
 								
 			Nwn2Fitters fitters = new Nwn2Fitters();				
 			triggers = new Nwn2TriggerFactory(fitters);
