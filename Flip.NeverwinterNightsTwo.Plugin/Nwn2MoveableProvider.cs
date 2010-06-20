@@ -61,10 +61,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected static string[] nwn2BlockTypes;
 			
 		
-		public const string ActionsBagName = "Actions";
-		public const string ConditionsBagName = "Conditions";
-		public const string OtherBagName = "Special";
-		public const string TriggersBagName = "Events";
+		public const string SpecialBagName = "Special";
 		public const string BlueprintBagNamingFormat = "{0} blueprints";
 		public const string InstanceBagNamingFormat = "{0}s";
 		
@@ -112,18 +109,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		protected override void CreateBags()
-		{
-			manager.AddBag(ActionsBagName,false);
-			manager.AddBag(ConditionsBagName,false);
-			manager.AddBag(TriggersBagName,false);
-			manager.AddBag(OtherBagName,true);	
-			
+		{	
 			foreach (string nwn2Type in nwn2BlockTypes) {
 				if (loadBlueprints) manager.AddBag(String.Format(BlueprintBagNamingFormat,nwn2Type),true);
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type),true);
 			}
 			
-			manager.DisplayBag(TriggersBagName);	
+			manager.AddBag(SpecialBagName,true);
+			
+			manager.DisplayBag(ActionsBagName);	
 		}
 		
 		
@@ -169,16 +163,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void CreateSpecialBlocks()
 		{		
-			manager.AddMoveable(OtherBagName,blocks.CreatePlayerBlock());
-			manager.AddMoveable(OtherBagName,new NumberBlock(0));
-			manager.AddMoveable(OtherBagName,new StringBlock("click 'change' to edit this Word Block"));
+			manager.AddMoveable(SpecialBagName,blocks.CreatePlayerBlock());
+			manager.AddMoveable(SpecialBagName,new NumberBlock(0));
+			manager.AddMoveable(SpecialBagName,new StringBlock("click 'change' to edit this Word Block"));
 		}
 		
 		
 		protected void CreateTriggers()
 		{
 			foreach (TriggerControl trigger in triggers.GetTriggers()) {
-				manager.AddMoveable(TriggersBagName,trigger);
+				manager.AddMoveable(EventsBagName,trigger);
 			}
 		}
 		
@@ -255,7 +249,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			foreach (NWN2GameArea area in NWN2Toolset.NWN2ToolsetMainForm.App.Module.Areas.Values) {
 				ObjectBlock block = blocks.CreateAreaBlock(area);
-				manager.AddMoveable(OtherBagName,block);
+				manager.AddMoveable(SpecialBagName,block);
 			}
 		}
 		
@@ -289,14 +283,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							}
 							
 							List<ObjectBlock> areas = new List<ObjectBlock>();
-							foreach (Moveable moveable in manager.GetMoveables(OtherBagName)) {
+							foreach (Moveable moveable in manager.GetMoveables(SpecialBagName)) {
 								ObjectBlock block = moveable as ObjectBlock;
 								if (block == null) continue;
 								if (block.Behaviour is AreaBehaviour) areas.Add(block);
 							}
 							
 							foreach (ObjectBlock area in areas) {
-								manager.RemoveMoveable(OtherBagName,area);
+								manager.RemoveMoveable(SpecialBagName,area);
 							}
 						}
 					}
@@ -455,7 +449,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{  
 				if (manager == null) return;
 				
-				foreach (Moveable moveable in manager.GetMoveables(OtherBagName)) {
+				foreach (Moveable moveable in manager.GetMoveables(SpecialBagName)) {
 					ObjectBlock block = moveable as ObjectBlock;
 					if (block == null) continue;
 					AreaBehaviour area = block.Behaviour as AreaBehaviour;
@@ -465,7 +459,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					// area, but there's no immediately apparent way around this:
 					// (TODO: Could check that module doesn't have a script or conversation of the same name.)
 					if (area.Identifier == e.ResourceName) {
-						manager.RemoveMoveable(OtherBagName,moveable);
+						manager.RemoveMoveable(SpecialBagName,moveable);
 						break;
 					}
 				}
@@ -571,7 +565,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				delegate()
 				{
 					ObjectBlock areaBlock = blocks.CreateAreaBlock(nwn2Area);
-					manager.AddMoveable(OtherBagName,areaBlock);
+					manager.AddMoveable(SpecialBagName,areaBlock);
 					
 					foreach (NWN2InstanceCollection instanceCollection in nwn2Area.AllInstances) {
 						

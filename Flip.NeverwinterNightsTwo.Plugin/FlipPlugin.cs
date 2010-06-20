@@ -239,7 +239,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							NWN2GameArea area = (NWN2GameArea)o;
 							AreaBehaviour behaviour = blocks.CreateAreaBehaviour(area);
 							
-							string bag = Nwn2MoveableProvider.OtherBagName;
+							string bag = Nwn2MoveableProvider.SpecialBagName;
 						
 							if (window.BlockBox.HasBag(bag)) {
 								UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
@@ -529,7 +529,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (!String.IsNullOrEmpty(dialog.WildcardTag)) {
 					ObjectBlock block = blocks.CreateWildcardBlock(dialog.WildcardTag);
 					
-					string bag = Nwn2MoveableProvider.OtherBagName;					
+					string bag = Nwn2MoveableProvider.SpecialBagName;					
 					window.BlockBox.AddMoveable(bag,block,true);
 					ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogRepresentation()));
 				}
