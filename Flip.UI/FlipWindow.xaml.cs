@@ -168,7 +168,7 @@ namespace Sussex.Flip.UI
 						Point position = Mouse.GetPosition(this);
 						copied.MoveTo(position);				
 						PlaceInWorkspace(copied);
-						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",copied.GetLogRepresentation(),"Method","UsedContextMenu"));
+						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",copied.GetLogText(),"Method","UsedContextMenu"));
 					}
 				}
 				catch (Exception x) {
@@ -447,14 +447,18 @@ namespace Sussex.Flip.UI
 		{
 			if (!IsDirty) IsDirty = true;
 			
-			UpdateNaturalLanguageView(triggerBar);
+			string nl = UpdateNaturalLanguageView(triggerBar);
+			
+			ActivityLog.Write(new Activity("ScriptEdited","NewValue",nl));
 		}
 		
 		
-		protected void UpdateNaturalLanguageView(ITranslatable translatable)
+		protected string UpdateNaturalLanguageView(ITranslatable translatable)
 		{
-			if (translatable == null) return;
-			this.nlTextBlock.Text = translatable.GetNaturalLanguage();		
+			if (translatable == null) return null;
+			string nl = translatable.GetNaturalLanguage();
+			this.nlTextBlock.Text = nl;
+			return nl;
 		}
 		
 		
@@ -654,10 +658,10 @@ namespace Sussex.Flip.UI
 					moveable.MoveTo(position);
 						
 					if (e.AllowedEffects == DragDropEffects.Copy) {
-						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",moveable.GetLogRepresentation(),"Method","UsedShiftClickWhileDragDropping"));
+						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",moveable.GetLogText(),"Method","UsedShiftClickWhileDragDropping"));
 					}
 					else {
-						ActivityLog.Write(new Activity("PlacedBlockOnCanvas","Block",moveable.GetLogRepresentation(),"Method","UsedDragDrop"));
+						ActivityLog.Write(new Activity("PlacedBlockOnCanvas","Block",moveable.GetLogText(),"Method","UsedDragDrop"));
 					}
 				}
 			}
@@ -671,7 +675,7 @@ namespace Sussex.Flip.UI
 					Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 					if (!blockBox.HasMoveable(moveable)) {
 						moveable.Remove();
-						ActivityLog.Write(new Activity("RemovedBlock","Block",moveable.GetLogRepresentation()));
+						ActivityLog.Write(new Activity("RemovedBlock","Block",moveable.GetLogText()));
 					}
 					e.Handled = true;
 				}

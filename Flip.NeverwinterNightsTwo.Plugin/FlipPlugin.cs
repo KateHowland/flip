@@ -292,7 +292,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,blueprint.ObjectType);
 				if (window.BlockBox.HasBag(bag)) {
 					window.BlockBox.AddMoveable(bag,block,true);
-					ActivityLog.Write(new Activity("CreatedBlockFromBlueprint","Block",block.GetLogRepresentation()));
+					ActivityLog.Write(new Activity("CreatedBlockFromBlueprint","Block",block.GetLogText()));
 				}
 			}
 		}
@@ -317,12 +317,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					NWN2GameScript script = new NWN2GameScript(line.Actions[0].Script);
 					script.Demand();
 					flipScript = scriptHelper.GetFlipScript(script,false);
-					ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Trigger",trigger.GetLogRepresentation()));
+					ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",trigger.GetLogText()));
 				}
 				
 				else {
 					flipScript = null;
-					ActivityLog.Write(new Activity("CreatedNewScriptUsingConversationLineAsTrigger","Trigger",trigger.GetLogRepresentation()));
+					ActivityLog.Write(new Activity("CreatedNewScriptUsingConversationLineAsEvent","Event",trigger.GetLogText()));
 				}
 				
 				ScriptTriggerTuple tuple = new ScriptTriggerTuple(flipScript,trigger);
@@ -531,7 +531,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					
 					string bag = Nwn2MoveableProvider.SpecialBagName;					
 					window.BlockBox.AddMoveable(bag,block,true);
-					ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogRepresentation()));
+					ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogText()));
 				}
 			};			
 			window.EditMenu.Items.Add(addWildcardBlock);
@@ -643,10 +643,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						window.OpenFlipScript(dialog.Selected.DeepCopy());
 						
 						if (dialog.Selected.Trigger != null) {
-							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
+							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent",dialog.Selected.Trigger.GetLogText()));
 						}
 						else {							
-							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger","NotAttached"));
+							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent","NotAttached"));
 						}
 					}
 					catch (Exception x) {						
@@ -659,10 +659,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						session.DeleteScript(dialog.Selected.Script.Name);
 						
 						if (dialog.Selected.Trigger != null) {
-							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger",dialog.Selected.Trigger.GetLogRepresentation()));
+							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent",dialog.Selected.Trigger.GetLogText()));
 						}
 						else {							
-							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToTrigger","NotAttached"));
+							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent","NotAttached"));
 						}
 						
 						MessageBox.Show("Script deleted.");

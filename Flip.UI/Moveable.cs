@@ -96,7 +96,7 @@ namespace Sussex.Flip.UI
     			MoveableSlot slot = f as MoveableSlot;
     			if (slot != null && slot.Contents == this) {
     				slot.Contents = null;
-					ActivityLog.Write(new Activity("RemovedBlockFromSlot","Block",this.GetLogRepresentation(),"RemovedFrom",slot.GetLogRepresentation()));
+					ActivityLog.Write(new Activity("RemovedBlockFromSlot","Block",this.GetLogText(),"RemovedFrom",slot.GetLogText()));
     				return;
     			}
     			
@@ -107,7 +107,7 @@ namespace Sussex.Flip.UI
     			Panel panel = (Panel)Parent;
     			if (panel.Children.Contains(this)) {
     				panel.Children.Remove(this);
-    				ActivityLog.Write(new Activity("RemovedBlockFromSomewhere","Block",this.GetLogRepresentation(),"RemovedFrom",panel.ToString()));
+    				ActivityLog.Write(new Activity("RemovedBlockFromSomewhere","Block",this.GetLogText(),"RemovedFrom",panel.ToString()));
     			}
     		}
     		
@@ -115,7 +115,7 @@ namespace Sussex.Flip.UI
     			Decorator decorator = (Decorator)Parent;
     			if (decorator.Child == this) {
     				decorator.Child = null;
-    				ActivityLog.Write(new Activity("RemovedBlockFromSomewhere","Block",this.GetLogRepresentation(),"RemovedFrom",decorator.ToString()));
+    				ActivityLog.Write(new Activity("RemovedBlockFromSomewhere","Block",this.GetLogText(),"RemovedFrom",decorator.ToString()));
     			}
     		}
     		
@@ -180,12 +180,6 @@ namespace Sussex.Flip.UI
 		public abstract void WriteXml(XmlWriter writer);
 		
 		
-		//public abstract string GetLogRepresentation();
-				
-		
-		public virtual string GetLogRepresentation()
-		{
-			return GetType().Name;
-		}
+		public abstract string GetLogText();
 	}
 }

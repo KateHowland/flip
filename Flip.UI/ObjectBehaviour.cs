@@ -115,5 +115,8 @@ namespace Sussex.Flip.UI
 			writer.WriteAttributeString("Identifier",Identifier);
 			writer.WriteAttributeString("DisplayName",DisplayName);
 		}
+		
+		
+		public abstract string GetLogText();
 	}
 }

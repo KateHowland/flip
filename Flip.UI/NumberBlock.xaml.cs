@@ -142,6 +142,12 @@ namespace Sussex.Flip.UI
 		{
 			new ChangeNumberDialog(this,min,max).ShowDialog();
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return "Number (" + Value + ")";
+		}
     }
 }
 

@@ -51,5 +51,11 @@ namespace Sussex.Flip.UI
 		{
 			return new DefaultObjectBehaviour();
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return String.Empty;
+		}
 	}
 }

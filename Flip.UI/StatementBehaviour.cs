@@ -89,5 +89,11 @@ namespace Sussex.Flip.UI
 		{
 			writer.WriteAttributeString("StatementType",StatementType.ToString());			
 		}
+		
+		
+		public virtual string GetLogText()
+		{
+			return GetType().Name + StatementType;
+		}
 	}
 }

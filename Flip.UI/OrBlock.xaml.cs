@@ -185,5 +185,11 @@ namespace Sussex.Flip.UI
 			
 			reader.ReadEndElement();
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return "OR";
+		}
     }
 }

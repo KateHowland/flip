@@ -141,5 +141,11 @@ namespace Sussex.Flip.UI
 			if (Condition != null) Condition.AssignImage(imageProvider);
 			if (Consequences != null) Consequences.AssignImage(imageProvider);
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return "Do..While";
+		}
     }
 }

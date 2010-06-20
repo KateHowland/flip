@@ -301,5 +301,11 @@ namespace Sussex.Flip.UI
 			reader.MoveToContent();
 			reader.ReadEndElement();
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return "If..Then..Else";
+		}
     }
 }

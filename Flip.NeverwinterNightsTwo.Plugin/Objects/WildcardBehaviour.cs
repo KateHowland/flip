@@ -82,5 +82,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		{
 			return String.Format("Wildcard (\"{0}\")",Tag);
 		}
+		
+		
+		public override string GetLogText()
+		{
+			return "Wildcard (Tag: " + Tag + ")";
+		}
 	}
 }

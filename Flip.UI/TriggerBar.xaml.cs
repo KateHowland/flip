@@ -185,7 +185,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public string GetLogRepresentation()
+		public string GetLogText()
 		{
 			return "Trigger bar";
 		}
