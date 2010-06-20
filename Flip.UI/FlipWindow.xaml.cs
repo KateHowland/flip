@@ -583,7 +583,7 @@ namespace Sussex.Flip.UI
 	    		}
     		}
     		catch (Exception ex) {
-    			MessageBox.Show(String.Format("Failed to carry out drag-drop operation.{0}{1}",Environment.NewLine,ex.ToString()));
+    			MessageBox.Show(String.Format("Something went wrong when drag-dropping.{0}{1}",Environment.NewLine,ex.ToString()));
     		}
     	}    	
     	

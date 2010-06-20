@@ -281,23 +281,13 @@ namespace Sussex.Flip.UI
 		
 		protected void ShrinkSpine(object sender, RoutedEventArgs e)
 		{
-			try {
-				Shrink(true);
-			}
-			catch (Exception x) {
-				MessageBox.Show(x.ToString());
-			}
+			Shrink(true);
 		}
 		
 		
 		protected void GrowSpine(object sender, RoutedEventArgs e)
 		{
-			try {
-				AddPeg(true,0);
-			}
-			catch (Exception x) {
-				MessageBox.Show(x.ToString());
-			}
+			AddPeg(true,0);
 		}
         
         
