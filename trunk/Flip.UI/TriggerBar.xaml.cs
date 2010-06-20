@@ -187,7 +187,7 @@ namespace Sussex.Flip.UI
 		
 		public string GetLogText()
 		{
-			return "Trigger bar";
+			return "Script";
 		}
 		
 		
