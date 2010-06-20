@@ -170,16 +170,19 @@ namespace Sussex.Flip.UI
         
 		public override string GetNaturalLanguage()
 		{
-			string ifText = slot.GetNaturalLanguage();
-			string thenText = consequenceSpine.GetNaturalLanguage();
-			string elseText = alternativeSpine.GetNaturalLanguage();
+			string ifText;
+			if (slot.Contents == null) ifText = "if some condition is true, then";
+			else ifText = String.Format("if {0}, then",slot.GetNaturalLanguage());
 			
-			if (elseText == String.Empty) {			
-				return String.Format("if {0}, {1}",ifText,thenText);
-			}			
-			else {
-				return String.Format("if {0}, {1}; otherwise, {2}",ifText,thenText,elseText);
-			}
+			string thenText;
+			if (consequenceSpine.IsEmpty) thenText = " something happens, otherwise";
+			else thenText = String.Format(" {0}, otherwise",consequenceSpine.GetNaturalLanguage());
+			
+			string elseText;
+			if (alternativeSpine.IsEmpty) elseText = " something else happens";
+			else elseText = " " + alternativeSpine.GetNaturalLanguage();
+			
+			return ifText + thenText + elseText;
 		}
 		
 		
