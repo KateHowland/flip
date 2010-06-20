@@ -346,15 +346,21 @@ namespace Sussex.Flip.UI
 			string parentDescription;
 			
 			Moveable moveable = UIHelper.TryFindParent<Moveable>(this);
-			if (moveable != null) parentDescription = moveable.GetLogText();
+			if (moveable != null) {
+				parentDescription = moveable.GetLogText();
+			}
+			
 			else {
-				DependencyObject parent = UIHelper.GetParentObject(this);
-				TriggerBar triggerBar = parent as TriggerBar;
+				TriggerBar triggerBar = UIHelper.TryFindParent<TriggerBar>(this);
 				if (triggerBar != null) {
 					parentDescription = triggerBar.GetLogText();
 				}
-				else if (parent != null) parentDescription = parent.ToString();
-				else parentDescription = "missing parent";
+				
+				else {					
+					DependencyObject parent = UIHelper.GetParentObject(this);
+					if (parent != null) parentDescription = parent.ToString();
+					else parentDescription = "unknown";
+				}
 			}
 			
 			return "Slot on " + parentDescription;
