@@ -236,7 +236,7 @@ namespace Sussex.Flip.UI
 		protected void NewScript(object sender, RoutedEventArgs e)
 		{
 			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
-			ActivityLog.Write(new Activity("CreatedNewScript"));
+			ActivityLog.Write(new Activity("NewScript","CreatedVia","FileMenu","Event",String.Empty));
 		}
 		
 		
@@ -443,13 +443,17 @@ namespace Sussex.Flip.UI
 		}
 		
 
+		string previousNaturalLanguageValue = String.Empty;
 		protected void ScriptChanged(object sender, EventArgs e)
 		{
 			if (!IsDirty) IsDirty = true;
 			
 			string nl = UpdateNaturalLanguageView(triggerBar);
 			
-			ActivityLog.Write(new Activity("ScriptEdited","NewValue",nl));
+			if (nl != previousNaturalLanguageValue) {
+				ActivityLog.Write(new Activity("ScriptDump","NLOutput",nl));	
+				previousNaturalLanguageValue = nl;
+			}
 		}
 		
 		
@@ -650,6 +654,8 @@ namespace Sussex.Flip.UI
 //				}			
 				
 				if (moveable != null) {		
+					bool movingWithinCanvas = moveable.Parent == mainCanvas;
+					
 					PlaceInWorkspace(moveable);
 					
 					Point position = e.GetPosition(mainCanvas);
@@ -657,7 +663,12 @@ namespace Sussex.Flip.UI
 					position.Y -= (size.Height/2);
 					moveable.MoveTo(position);
 					
-					ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","Canvas"));
+					if (movingWithinCanvas) {
+						ActivityLog.Write(new Activity("MovedWithinCanvas","Block",moveable.GetLogText()));	
+					}
+					else {
+						ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","Canvas"));						
+					}
 				}
 			}
 		}
@@ -670,7 +681,7 @@ namespace Sussex.Flip.UI
 					Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 					if (!blockBox.HasMoveable(moveable)) {
 						moveable.Remove();
-						ActivityLog.Write(new Activity("RemovedBlock","Block",moveable.GetLogText()));
+						ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","BackInBox"));
 					}
 					e.Handled = true;
 				}

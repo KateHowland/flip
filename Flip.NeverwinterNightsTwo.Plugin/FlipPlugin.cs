@@ -322,7 +322,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				else {
 					flipScript = null;
-					ActivityLog.Write(new Activity("CreatedNewScriptUsingConversationLineAsEvent","Event",trigger.GetLogText()));
+					ActivityLog.Write(new Activity("NewScript","CreatedVia","UsingConversationLineAsEvent","Event",trigger.GetLogText()));
 				}
 				
 				ScriptTriggerTuple tuple = new ScriptTriggerTuple(flipScript,trigger);
@@ -643,10 +643,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						window.OpenFlipScript(dialog.Selected.DeepCopy());
 						
 						if (dialog.Selected.Trigger != null) {
-							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent",dialog.Selected.Trigger.GetLogText()));
+							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
 						}
 						else {							
-							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent","NotAttached"));
+							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
 						}
 					}
 					catch (Exception x) {						
@@ -659,10 +659,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						session.DeleteScript(dialog.Selected.Script.Name);
 						
 						if (dialog.Selected.Trigger != null) {
-							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent",dialog.Selected.Trigger.GetLogText()));
+							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
 						}
 						else {							
-							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"AttachedToEvent","NotAttached"));
+							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
 						}
 						
 						MessageBox.Show("Script deleted.");
