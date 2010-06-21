@@ -70,7 +70,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (script == null) throw new ArgumentNullException("script");
 			
-			return script.Name.StartsWith("flipscript");
+			return script.Name.StartsWith("flip");
 		}
 		
 		
@@ -252,19 +252,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				if (!WasCreatedByFlip(script)) continue;
 				
-				script.Demand();
+				try {
 				
-				FlipScript flipScript = GetFlipScript(script,onlyAttachedScripts);
-								
-				if (flipScript != null) {
+					script.Demand();
 					
-					TriggerControl trigger;
-					
-					if (onlyAttachedScripts) trigger = GetTrigger(script);
-					
-					else trigger = new BlankTrigger(flipScript.Name);
-					
-					tuples.Add(new ScriptTriggerTuple(flipScript,trigger));
+					FlipScript flipScript = GetFlipScript(script,onlyAttachedScripts);
+									
+					if (flipScript != null) {
+						
+						TriggerControl trigger;
+						
+						if (onlyAttachedScripts) trigger = GetTrigger(script);
+						
+						else trigger = new BlankTrigger(flipScript.Name);
+						
+						tuples.Add(new ScriptTriggerTuple(flipScript,trigger));
+					}
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when trying to add " + script.Name + " to the set of openable scripts.\n\n" + x);
 				}
 			}
 			
