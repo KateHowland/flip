@@ -504,20 +504,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 			};
 			
-			reporter.ModuleChanged += delegate 
-			{ 
-				Action action = new Action
-				(
-					delegate()
-					{		
-						if (window == null) return;
-						window.CloseScript();
-						window.Close();
-					}
-				);					
-					
-				window.Dispatcher.Invoke(DispatcherPriority.Normal,action);
-			};
+//			reporter.ModuleChanged += delegate 
+//			{ 
+//				Action action = new Action
+//				(
+//					delegate()
+//					{		
+//						if (window == null) return;
+//						window.CloseScript();
+//						window.Close();
+//					}
+//				);					
+//					
+//				window.Dispatcher.Invoke(DispatcherPriority.Normal,action);
+//			};
 			
 			MenuItem addWildcardBlock = new MenuItem();
 			addWildcardBlock.Header = "Add Wildcard block";

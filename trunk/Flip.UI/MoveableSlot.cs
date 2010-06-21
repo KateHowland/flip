@@ -256,13 +256,13 @@ namespace Sussex.Flip.UI
 						
 						if (e.AllowedEffects == DragDropEffects.Copy) {
 							Contents = moveable.DeepCopy();
-							ActivityLog.Write(new Activity("CopyPastedBlockToSlot","Block",Contents.GetLogText(),"PlacedIn",this.GetLogText()));
 						}
 						else if (e.AllowedEffects == DragDropEffects.Move) {
 							moveable.Remove();
 							Contents = moveable;
-							ActivityLog.Write(new Activity("PlacedBlockInSlot","Block",Contents.GetLogText(),"PlacedIn",this.GetLogText()));
 						}
+							
+						ActivityLog.Write(new Activity("PlacedBlock","Block",Contents.GetLogText(),"PlacedOn",this.GetLogText()));
 					}
 					e.Handled = true;
         		}
