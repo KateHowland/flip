@@ -168,7 +168,7 @@ namespace Sussex.Flip.UI
 						Point position = Mouse.GetPosition(this);
 						copied.MoveTo(position);				
 						PlaceInWorkspace(copied);
-						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",copied.GetLogText(),"Method","UsedContextMenu"));
+						ActivityLog.Write(new Activity("PlacedBlock","Block",copied.GetLogText(),"PlacedOn","Canvas"));
 					}
 				}
 				catch (Exception x) {
@@ -656,13 +656,8 @@ namespace Sussex.Flip.UI
 					position.X -= (size.Width/2);
 					position.Y -= (size.Height/2);
 					moveable.MoveTo(position);
-						
-					if (e.AllowedEffects == DragDropEffects.Copy) {
-						ActivityLog.Write(new Activity("CopyPastedBlockToCanvas","Block",moveable.GetLogText(),"Method","UsedShiftClickWhileDragDropping"));
-					}
-					else {
-						ActivityLog.Write(new Activity("PlacedBlockOnCanvas","Block",moveable.GetLogText(),"Method","UsedDragDrop"));
-					}
+					
+					ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","Canvas"));
 				}
 			}
 		}
