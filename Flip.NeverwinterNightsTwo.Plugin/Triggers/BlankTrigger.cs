@@ -36,7 +36,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	/// </summary>
 	public class BlankTrigger : Nwn2ParameterlessTrigger
 	{		
-		public BlankTrigger() : this("(missing trigger)")
+		public BlankTrigger() : this("(missing event)")
 		{ 
 		}
 		
