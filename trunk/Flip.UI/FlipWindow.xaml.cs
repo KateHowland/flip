@@ -172,7 +172,7 @@ namespace Sussex.Flip.UI
 					}
 				}
 				catch (Exception x) {
-					MessageBox.Show(x.ToString());
+					MessageBox.Show("Something went wrong when copy-pasting.\n\n" + x);
 				}
 			};
 			mainCanvas.ContextMenu.Items.Add(paste);
@@ -262,13 +262,18 @@ namespace Sussex.Flip.UI
 		
 		public void CloseScript()
 		{			
-			Clear();
-			
-			triggerBar.Spine.SetPegCount(3);
-			
-			triggerBar.CurrentScriptIsBasedOn = String.Empty;
-			
-			IsDirty = false;	
+			try {
+				Clear();
+				
+				triggerBar.Spine.SetPegCount(3);
+				
+				triggerBar.CurrentScriptIsBasedOn = String.Empty;
+				
+				IsDirty = false;	
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when closing the script.\n\n" + x);
+			}
 		}
 		
 		
@@ -446,13 +451,18 @@ namespace Sussex.Flip.UI
 		string previousNaturalLanguageValue = String.Empty;
 		protected void ScriptChanged(object sender, EventArgs e)
 		{
-			if (!IsDirty) IsDirty = true;
-			
-			string nl = UpdateNaturalLanguageView(triggerBar);
-			
-			if (nl != previousNaturalLanguageValue) {
-				ActivityLog.Write(new Activity("ScriptDump","NLOutput",nl));	
-				previousNaturalLanguageValue = nl;
+			try {
+				if (!IsDirty) IsDirty = true;
+				
+				string nl = UpdateNaturalLanguageView(triggerBar);
+				
+				if (nl != previousNaturalLanguageValue) {
+					ActivityLog.Write(new Activity("ScriptDump","NLOutput",nl));	
+					previousNaturalLanguageValue = nl;
+				}
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when responding to the script changing.\n\n" + x);
 			}
 		}
 		
@@ -590,101 +600,116 @@ namespace Sussex.Flip.UI
 	    			}
 	    		}
     		}
-    		catch (Exception ex) {
-    			MessageBox.Show(String.Format("Something went wrong when drag-dropping.{0}{1}",Environment.NewLine,ex.ToString()));
+    		catch (Exception x) {
+    			MessageBox.Show(String.Format("Something went wrong when drag-dropping.{0}{1}",Environment.NewLine,x.ToString()));
     		}
     	}    	
     	
 
     	protected void GetDragSource(object sender, MouseEventArgs e)
     	{
-    		FrameworkElement f = e.OriginalSource as FrameworkElement;
-    		    		
-    		if (f == null) return;
-    		
-    		while (!(f is Moveable) && (f = f.Parent as FrameworkElement) != null);
-    		
-    		if (f is Moveable) {
-    			dragPos = e.GetPosition(null);
-    			dragging = (Moveable)f;
+    		try {
+	    		FrameworkElement f = e.OriginalSource as FrameworkElement;
+	    		    		
+	    		if (f == null) return;
+	    		
+	    		while (!(f is Moveable) && (f = f.Parent as FrameworkElement) != null);
+	    		
+	    		if (f is Moveable) {
+	    			dragPos = e.GetPosition(null);
+	    			dragging = (Moveable)f;
+	    		}
+    		}
+    		catch (Exception x) {
+    			MessageBox.Show(String.Format("Something went wrong when identifying the source of a drag-drop.{0}{1}",Environment.NewLine,x.ToString()));
     		}
     	}			
 		
 		
 		protected void DroppedOnCanvas(object sender, DragEventArgs e)
 		{		
-			if (!e.Handled) {
-				
-				Moveable moveable = null;
-				Size size = new Size();
-				
-				if (e.Data.GetDataPresent(typeof(Moveable))) {
-					moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-					size = moveable.RenderSize; // use the original's size as the clone has not been drawn yet
-					if (e.AllowedEffects == DragDropEffects.Copy) {
-						moveable = moveable.DeepCopy();
-					}
-				}	
-//				// HACK:
-//				else if (e.Data.GetDataPresent(typeof(NWN2InstanceCollection))) {
-//					NWN2InstanceCollection instances = (NWN2InstanceCollection)e.Data.GetData(typeof(NWN2InstanceCollection));
-//					if (instances.Count > 0) {
-//						moveable = factory.CreateInstanceBlock(instances[0]);
-//						size = ObjectBlock.DefaultSize;
-//					}
-//				}				
-//				else if (e.Data.GetDataPresent(typeof(NWN2BlueprintCollection))) {
-//					try {
-//						NWN2BlueprintCollection blueprints = (NWN2BlueprintCollection)e.Data.GetData(typeof(NWN2BlueprintCollection));
-//						if (blueprints.Count > 0) {
-//							moveable = factory.CreateBlueprintBlock(blueprints[0]);
-//							size = ObjectBlock.DefaultSize;
-//						}
-//					}
-//					catch (System.Runtime.InteropServices.COMException x) {
-//						
-//						MessageBox.Show(x.ToString());
-//						/*
-//						 * Weird error occurs here - even though GetDataPresent() returns true,
-//						 * actually trying to retrieve the data raises this nasty exception.
-//						 * TODO:
-//						 * Look for the blueprints directly in the toolset instead.
-//						 */
-//					}
-//				}			
-				
-				if (moveable != null) {		
-					bool movingWithinCanvas = moveable.Parent == mainCanvas;
+			try {
+				if (!e.Handled) {
 					
-					PlaceInWorkspace(moveable);
+					Moveable moveable = null;
+					Size size = new Size();
 					
-					Point position = e.GetPosition(mainCanvas);
-					position.X -= (size.Width/2);
-					position.Y -= (size.Height/2);
-					moveable.MoveTo(position);
+					if (e.Data.GetDataPresent(typeof(Moveable))) {
+						moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+						size = moveable.RenderSize; // use the original's size as the clone has not been drawn yet
+						if (e.AllowedEffects == DragDropEffects.Copy) {
+							moveable = moveable.DeepCopy();
+						}
+					}	
+	//				// HACK:
+	//				else if (e.Data.GetDataPresent(typeof(NWN2InstanceCollection))) {
+	//					NWN2InstanceCollection instances = (NWN2InstanceCollection)e.Data.GetData(typeof(NWN2InstanceCollection));
+	//					if (instances.Count > 0) {
+	//						moveable = factory.CreateInstanceBlock(instances[0]);
+	//						size = ObjectBlock.DefaultSize;
+	//					}
+	//				}				
+	//				else if (e.Data.GetDataPresent(typeof(NWN2BlueprintCollection))) {
+	//					try {
+	//						NWN2BlueprintCollection blueprints = (NWN2BlueprintCollection)e.Data.GetData(typeof(NWN2BlueprintCollection));
+	//						if (blueprints.Count > 0) {
+	//							moveable = factory.CreateBlueprintBlock(blueprints[0]);
+	//							size = ObjectBlock.DefaultSize;
+	//						}
+	//					}
+	//					catch (System.Runtime.InteropServices.COMException x) {
+	//						
+	//						MessageBox.Show(x.ToString());
+	//						/*
+	//						 * Weird error occurs here - even though GetDataPresent() returns true,
+	//						 * actually trying to retrieve the data raises this nasty exception.
+	//						 * TODO:
+	//						 * Look for the blueprints directly in the toolset instead.
+	//						 */
+	//					}
+	//				}			
 					
-					if (movingWithinCanvas) {
-						ActivityLog.Write(new Activity("MovedWithinCanvas","Block",moveable.GetLogText()));	
-					}
-					else {
-						ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","Canvas"));						
+					if (moveable != null) {		
+						bool movingWithinCanvas = moveable.Parent == mainCanvas;
+						
+						PlaceInWorkspace(moveable);
+						
+						Point position = e.GetPosition(mainCanvas);
+						position.X -= (size.Width/2);
+						position.Y -= (size.Height/2);
+						moveable.MoveTo(position);
+						
+						if (movingWithinCanvas) {
+							ActivityLog.Write(new Activity("MovedWithinCanvas","Block",moveable.GetLogText()));	
+						}
+						else {
+							ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","Canvas"));						
+						}
 					}
 				}
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when handling a drop on the canvas.\n\n" + x);
 			}
 		}
 		
 
 		protected void ReturnMoveableToBox(object sender, DragEventArgs e)
 		{
-			if (!e.Handled) {
-				if (e.Data.GetDataPresent(typeof(Moveable))) {
-					Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
-					if (!blockBox.HasMoveable(moveable)) {
-						moveable.Remove();
-						ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","BackInBox"));
+			try {
+				if (!e.Handled) {
+					if (e.Data.GetDataPresent(typeof(Moveable))) {
+						Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
+						if (!blockBox.HasMoveable(moveable)) {
+							moveable.Remove();
+							ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","BackInBox"));
+						}
+						e.Handled = true;
 					}
-					e.Handled = true;
 				}
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when handling a drop on the block box.\n\n" + x);
 			}
 		}
 		
@@ -693,21 +718,26 @@ namespace Sussex.Flip.UI
 		public void PlaceInWorkspace(Moveable moveable)
 		{
 			try {
-				Canvas.SetZIndex(moveable,++zIndex);
-			}
-			catch (ArithmeticException) {
-				foreach (UIElement element in mainCanvas.Children) {
-					Canvas.SetZIndex(element,0);
-					zIndex = 0;
+				try {
+					Canvas.SetZIndex(moveable,++zIndex);
 				}
+				catch (ArithmeticException) {
+					foreach (UIElement element in mainCanvas.Children) {
+						Canvas.SetZIndex(element,0);
+						zIndex = 0;
+					}
+				}
+				
+				if (!(moveable.Parent == mainCanvas)) {
+					moveable.Remove();
+					mainCanvas.Children.Add(moveable);				
+				}
+				
+				mainCanvas.InvalidateMeasure();
 			}
-			
-			if (!(moveable.Parent == mainCanvas)) {
-				moveable.Remove();
-				mainCanvas.Children.Add(moveable);				
-			}
-			
-			mainCanvas.InvalidateMeasure();
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when placing a moveable on the canvas.\n\n" + x);
+			} 
 		}
 	}
 }

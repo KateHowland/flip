@@ -245,7 +245,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (grid == null) throw new ArgumentNullException("grid");
 			grid.ValueChanged += delegate(object sender, NWN2PropertyValueChangedEventArgs args) 
 			{  
-				updateBlockDelegate.Invoke(args);
+				try {
+					updateBlockDelegate.Invoke(args);
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when updating a block.\n\n" + x);
+				}
 			};
 		}
 		
@@ -299,16 +304,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					}
 					
 					else {
-						GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
-												
-						NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
-						
-						if (connector == null) {
-							MessageBox.Show("You can't add a Flip script to the root. Select a line of dialogue instead.");
+						try {
+							GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
+													
+							NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
+							
+							if (connector == null) {
+								MessageBox.Show("You can't add a Flip script to the root. Select a line of dialogue instead.");
+							}
+							
+							else {							
+								useDialogueAsTriggerDelegate.Invoke(connector,viewer.Conversation);
+							}
 						}
-						
-						else {							
-							useDialogueAsTriggerDelegate.Invoke(connector,viewer.Conversation);
+						catch (Exception x) {							
+							MessageBox.Show("Something went wrong when trying to use a conversation line as an event.\n\n" + x);
 						}
 					}
 				};
@@ -434,7 +444,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								}
 								
 								else {
-									createBlockFromBlueprintDelegate.Invoke(blueprints);
+									try {
+										createBlockFromBlueprintDelegate.Invoke(blueprints);
+									}
+									catch (Exception x) {										
+										MessageBox.Show("Something went wrong when trying to create a block from a blueprint.\n\n" + x);
+									}
 								}
 							};
 							

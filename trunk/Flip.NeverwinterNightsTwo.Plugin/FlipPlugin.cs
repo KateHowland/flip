@@ -274,26 +274,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 			}
 			catch (Exception x) {
-				MessageBox.Show(x.ToString());
+				MessageBox.Show("Something went wrong when updating a block.\n\n" + x);
 			}
 		}
 		
 		
 		public void CreateInstanceBlocksFromBlueprints(NWN2BlueprintCollection blueprints)
 		{
-			if (blueprints == null) throw new ArgumentNullException("blueprints");
-			
-			if (blueprints.Count == 0) return;
+			if (blueprints == null || blueprints.Count == 0) return;
 			
 			LaunchFlip();
 			
-			foreach (INWN2Blueprint blueprint in blueprints) {
-				ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(blueprint);
-				string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,blueprint.ObjectType);
-				if (window.BlockBox.HasBag(bag)) {
-					window.BlockBox.AddMoveable(bag,block,true);
-					ActivityLog.Write(new Activity("CreatedBlockFromBlueprint","Block",block.GetLogText()));
+			try {
+				foreach (INWN2Blueprint blueprint in blueprints) {
+					ObjectBlock block = blocks.CreateInstanceBlockFromBlueprint(blueprint);
+					string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,blueprint.ObjectType);
+					if (window.BlockBox.HasBag(bag)) {
+						window.BlockBox.AddMoveable(bag,block,true);
+						ActivityLog.Write(new Activity("CreatedBlockFromBlueprint","Block",block.GetLogText()));
+					}
 				}
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when creating a block from a blueprint.\n\n" + x);
 			}
 		}
 		
@@ -346,7 +349,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public void Startup(INWN2PluginHost cHost)
 		{
 			// Start providing useful NWN2 functions as a service to the test suite (obsolete):
-			service.Start();
+			try {
+				service.Start();
+			}
+			catch (Exception x) {				
+				MessageBox.Show("Something went wrong when starting the service.\n\n" + x);
+			}
 			
 			// Ensure flip_functions.nss is in the Override directory of NWN2 - otherwise scripts won't compile:
 			ProvideSpecialFunctionsScriptFile();
@@ -355,7 +363,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger),
 			                                             new ToolsetUIModifier.CreateBlockFromBlueprintDelegate(CreateInstanceBlocksFromBlueprints),
 			                                             new ToolsetUIModifier.UpdateBlockWhenTagChangesDelegate(UpdateBlockWithNewTag));
-			UI.ModifyUI();
+			try {
+				UI.ModifyUI();
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when modifying the user interface.\n\n" + x);
+			}
 			
 			try {
 				TD.SandBar.ButtonItem flipButton = UI.AddFlipButton();
@@ -379,20 +392,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			scriptAccessMenuItem.Checked = UI.AllowScriptAccess;
 			scriptAccessMenuItem.Activate += delegate 
 			{  
-				if (UI.AllowScriptAccess) {
-					foreach (INWN2Viewer viewer in NWN2ToolsetMainForm.App.GetAllViewers()) {
-						if (viewer is NWN2ScriptViewer) {
-							System.Windows.MessageBox.Show("All scripts must be closed before script access can be disabled.",
-							                               "Close all scripts",
-							                			   System.Windows.MessageBoxButton.OK,
-							                			   System.Windows.MessageBoxImage.Exclamation);
-							return;						                               
+				try {
+					if (UI.AllowScriptAccess) {
+						foreach (INWN2Viewer viewer in NWN2ToolsetMainForm.App.GetAllViewers()) {
+							if (viewer is NWN2ScriptViewer) {
+								System.Windows.MessageBox.Show("All scripts must be closed before script access can be disabled.",
+								                               "Close all scripts",
+								                			   System.Windows.MessageBoxButton.OK,
+								                			   System.Windows.MessageBoxImage.Exclamation);
+								return;						                               
+							}
 						}
 					}
+					
+					UI.AllowScriptAccess = !UI.AllowScriptAccess;				
+					scriptAccessMenuItem.Checked = UI.AllowScriptAccess;
 				}
-				
-				UI.AllowScriptAccess = !UI.AllowScriptAccess;				
-				scriptAccessMenuItem.Checked = UI.AllowScriptAccess;
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when changing script access settings.\n\n" + x);
+				}
 			};
 			
 			pluginMenuItem.Items.Add(scriptAccessMenuItem);
@@ -400,8 +418,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Flip");
 			launchFlip.Activate += delegate 
 			{ 
-				LaunchFlip();
-				ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Menu"));
+				try {
+					LaunchFlip();
+					ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Menu"));
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when trying to launch Flip.\n\n" + x);
+				}
 			};
 			
 			pluginMenuItem.Items.Add(launchFlip);	
@@ -460,7 +483,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// manages the plugins currently loaded into the toolset.</param>
 		public void Load(INWN2PluginHost cHost)
 		{	
-			InitialiseFlip();			
+			try {
+				InitialiseFlip();
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when initialising Flip.\n\n" + x);
+			}
 		}
 		
 		
@@ -523,15 +551,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			addWildcardBlock.Header = "Add Wildcard block";
 			addWildcardBlock.Click += delegate 
 			{  
-				CreateWildcardDialog dialog = new CreateWildcardDialog();
-				dialog.ShowDialog();
-				
-				if (!String.IsNullOrEmpty(dialog.WildcardTag)) {
-					ObjectBlock block = blocks.CreateWildcardBlock(dialog.WildcardTag);
+				try {
+					CreateWildcardDialog dialog = new CreateWildcardDialog();
+					dialog.ShowDialog();
 					
-					string bag = Nwn2MoveableProvider.SpecialBagName;					
-					window.BlockBox.AddMoveable(bag,block,true);
-					ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogText()));
+					if (!String.IsNullOrEmpty(dialog.WildcardTag)) {
+						ObjectBlock block = blocks.CreateWildcardBlock(dialog.WildcardTag);
+						
+						string bag = Nwn2MoveableProvider.SpecialBagName;					
+						window.BlockBox.AddMoveable(bag,block,true);
+						ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogText()));
+					}
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when creating a Wildcard block.\n\n" + x);
 				}
 			};			
 			window.EditMenu.Items.Add(addWildcardBlock);
@@ -540,7 +573,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			openTriggerlessScripts.Header = "Open unattached script";
 			openTriggerlessScripts.Click += delegate 
 			{  
-				OpenAnyScriptViaDialog();
+				try {
+					OpenAnyScriptViaDialog();
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when opening a script via its filename.\n\n" + x);
+				}
 			};			
 			window.DevelopmentMenu.Items.Add(openTriggerlessScripts);
 						
@@ -548,7 +586,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			showLogWindow.Header = "Show log window";
 			showLogWindow.Click += delegate 
 			{  
-				new ActivityLogWindow().Show();
+				try {
+					new ActivityLogWindow().Show();
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when launching the log window.\n\n" + x);
+				}
 			};			
 			window.DevelopmentMenu.Items.Add(showLogWindow);
 		}
@@ -718,7 +761,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				MessageBox.Show("Something went wrong when closing Flip activity log.\n\n" + x);
 			}
 			
-			service.Stop();
+			try {
+				service.Stop();
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when stopping the service.\n\n" + x);
+			}
 		}
 		
 		
