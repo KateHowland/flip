@@ -1,0 +1,50 @@
+<UserControl x:Class="Sussex.Flip.UI.MoveablesPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
+	
+	<UserControl.Resources>
+		
+		<ControlTemplate 
+		x:Key="radioButtonControlTemplate"	
+		TargetType="RadioButton">
+		
+			<StackPanel
+			DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+			
+				<TextBlock
+				Text="{Binding Path=Content}" 
+				Background="Transparent"
+				Foreground="White"
+				FontSize="14"
+				FontWeight="Bold"
+				Padding="5"/>
+			
+			</StackPanel>
+		
+		</ControlTemplate>
+	
+		<Style TargetType="RadioButton">
+			<Setter Property="Template" Value="{StaticResource radioButtonControlTemplate}"/>
+		</Style>
+	
+	</UserControl.Resources>
+	
+    <DockPanel
+	Background="DarkBlue">
+		
+    	<WrapPanel
+    	Name="bagButtons"
+    	DockPanel.Dock="Top"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Center"
+    	Margin="7"/>
+    	
+		<TabControl
+		Name="tabs"
+    	DockPanel.Dock="Bottom"
+    	BorderThickness="0"/>
+	
+    </DockPanel>
+
+</UserControl>

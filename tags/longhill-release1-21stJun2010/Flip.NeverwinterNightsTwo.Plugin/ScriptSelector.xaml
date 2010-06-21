@@ -1,0 +1,110 @@
+<Window x:Class="Sussex.Flip.Games.NeverwinterNightsTwo.ScriptSelector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Open a script" 
+    Height="400" 
+    Width="550"
+	ResizeMode="NoResize"
+	WindowStartupLocation="CenterScreen"
+    >
+	
+	<Window.Resources>
+		
+		<Style TargetType="Button">
+		
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Padding" Value="5"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="Width" Value="70"/>
+			<Setter Property="HorizontalAlignment" Value="Right"/>
+		
+		</Style>
+		
+		<LinearGradientBrush 
+		x:Key="backBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Purple"/>
+				<GradientStop Offset="1" Color="HotPink"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+	</Window.Resources>	
+	
+	<Grid
+	Background="{StaticResource backBrush}">
+	
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="60"/>
+		</Grid.RowDefinitions>
+	
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+    
+    	<ListBox
+    	x:Name="scriptsListBox"
+    	Grid.Row="0"
+    	Grid.Column="0"
+    	VerticalAlignment="Stretch"
+    	HorizontalAlignment="Stretch"    	
+    	SelectionMode="Single"
+    	HorizontalContentAlignment="Center"
+    	Margin="10"/>
+		
+		<TextBlock
+    	Grid.Row="1"
+    	Grid.Column="0"
+		Background="Transparent"
+		Foreground="White"
+		FontSize="14"
+		Padding="25"
+		Text="If you seem to be missing a script, make sure the area it's used in is open in the toolset. If the area isn't open, you can't edit the script."
+		FontWeight="Bold"
+		TextWrapping="Wrap"
+		HorizontalAlignment="Center"
+		VerticalAlignment="Center"
+		TextAlignment="Center"
+		/>
+    	
+    	<StackPanel 
+    	Grid.Row="2"
+    	Grid.Column="0"
+    	Orientation="Horizontal"
+    	VerticalAlignment="Center"
+    	HorizontalAlignment="Right">
+    		
+    		<StackPanel.Resources>
+    			
+    			<Style TargetType="Button">
+    				<Setter Property="FontSize" Value="14"/>
+    				<Setter Property="Height" Value="40"/>
+    				<Setter Property="Width" Value="100"/>
+    			</Style>
+    		
+    		</StackPanel.Resources>
+	
+			<Button
+			Content="Open"			
+	    	Click="OpenScript"
+    		Margin="10,10,0,10"/>
+	
+			<Button
+			Content="Delete"			
+	    	Click="DeleteScript"
+			Foreground="Maroon"
+    		Margin="10"/>
+	    	    	
+	    	<Button
+	    	Content="Cancel"
+	    	Click="CancelOpen"
+    		Margin="10"/>
+    	
+    	</StackPanel>	
+	
+	</Grid>
+
+</Window>

@@ -1,0 +1,89 @@
+<flipui:Moveable x:Class="Sussex.Flip.UI.NumberBlock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
+	DataContext="{Binding RelativeSource={RelativeSource Self}}">
+	
+	<flipui:Moveable.Resources>
+		
+		<Image 
+		x:Key="defaultimg" 
+		Source="images/imagemissing.bmp"/>
+	
+		<LinearGradientBrush 
+		x:Key="backBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Peru"/>
+				<GradientStop Offset="0.5" Color="BurlyWood"/>
+				<GradientStop Offset="1" Color="Peru"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+		<RadialGradientBrush 
+		x:Key="valueBrush">			
+			<RadialGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="MidnightBlue"/>
+				<GradientStop Offset="1" Color="Navy"/>
+			</RadialGradientBrush.GradientStops>		
+		</RadialGradientBrush>
+	
+	</flipui:Moveable.Resources>
+	
+	<Border
+	BorderThickness="0.5"
+	BorderBrush="SlateGray"
+	CornerRadius="5"
+	Background="{StaticResource backBrush}">
+		    	
+	   	<Grid
+	   	Background="Transparent">	
+		    		
+	   	<Grid.RowDefinitions>
+	   		<RowDefinition Height="*"/>
+	   		<RowDefinition Height="22"/>
+	   	</Grid.RowDefinitions>
+	   	<Grid.ColumnDefinitions>
+	   		<ColumnDefinition Width="*"/>
+	   	</Grid.ColumnDefinitions>
+	   		
+	   		<Border
+	   		Grid.Row="0"
+	   		Grid.Column="0"
+	   		BorderThickness="1"
+	   		BorderBrush="White"
+		   	Background="{StaticResource valueBrush}"
+	   		Margin="3,3,3,1"
+	   		CornerRadius="8">
+	   			   		
+		   		<TextBlock
+		   		Text="{Binding Path=Value}"
+		   		Background="Transparent"
+		   		FontSize="20"
+		   		FontWeight="ExtraBold"
+		   		Foreground="White"
+		   		VerticalAlignment="Center"
+		   		HorizontalAlignment="Center"
+		   		TextAlignment="Center"/>
+	   		
+	   		</Border>	   		
+		    	
+	   		<Button
+	   		Grid.Row="1"
+		    Grid.Column="0"
+	   		Content="change"	   		
+	   		Click="ChangeValue"
+	   		Height="18"
+	   		Width="40"	   		
+	   		Foreground="Black"
+	   		VerticalAlignment="Stretch"
+	   		HorizontalAlignment="Stretch"
+    		FontSize="9"
+	   		Margin="2"
+    		/>   		
+		    	
+    	</Grid>			
+	</Border>	
+
+</flipui:Moveable>

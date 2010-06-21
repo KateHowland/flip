@@ -1,0 +1,68 @@
+<flipui:TriggerControl 
+	x:Class="Sussex.Flip.Games.NeverwinterNightsTwo.Nwn2ParameterlessTrigger"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI;assembly=Flip.UI">
+    		
+	<flipui:TriggerControl.Resources>
+	
+		<LinearGradientBrush 
+		x:Key="backBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Silver"/>
+				<GradientStop Offset="0.05" Color="White"/>
+				<GradientStop Offset="0.2" Color="Silver"/>
+				<GradientStop Offset="0.4" Color="White"/>
+				<GradientStop Offset="0.7" Color="Silver"/>
+				<GradientStop Offset="0.8" Color="White"/>
+				<GradientStop Offset="0.9" Color="Silver"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+	</flipui:TriggerControl.Resources>
+	
+	<Grid
+	x:Name="mainGrid">
+		
+		<Border
+		x:Name="border"
+		BorderThickness="0.5"
+		BorderBrush="Black"
+		CornerRadius="8"
+		Background="{StaticResource backBrush}"
+		Grid.ZIndex="2"
+		>
+	
+			<StackPanel
+				Name="mainPanel"
+			    Background="Transparent"
+			    Orientation="Horizontal">
+				
+				<StackPanel.Resources>
+				
+					<Style 
+					x:Key="textBlockStyle"
+					TargetType="TextBlock"
+					>
+						<Setter Property="FontSize" Value="18"/>	
+						<Setter Property="FontWeight" Value="SemiBold"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+						<Setter Property="HorizontalAlignment" Value="Center"/>
+						<Setter Property="Padding" Value="7"/>
+					</Style>
+				
+				</StackPanel.Resources>
+			
+				<TextBlock
+				Name="text1"
+				Style="{StaticResource textBlockStyle}"/>
+			
+			</StackPanel>
+			
+		</Border>
+	   
+	</Grid>
+	
+</flipui:TriggerControl> 	

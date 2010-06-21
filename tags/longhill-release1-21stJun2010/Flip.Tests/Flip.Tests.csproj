@@ -1,0 +1,138 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{FAA2CB8C-8150-41DE-A4C6-86FDC1269FB4}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Sussex.Flip.Tests</RootNamespace>
+    <AssemblyName>Flip.Tests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SourceAnalysisOverrideSettingsFile>\\home-fileserver\kn70\WindowsProfile\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Flip.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <BaseIntermediateOutputPath>..\Compiled\Flip.Tests\obj\</BaseIntermediateOutputPath>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>..\Compiled\Flip.Tests\bin\Debug</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <ItemGroup>
+    <Reference Include="Microsoft.DirectX" />
+    <Reference Include="NUnit.Framework">
+      <HintPath>$(SharpDevelopBinPath)\Tools\NUnit\NUnit.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="NWN2Toolset">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OEIShared">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\OEIShared.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="SandBar">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\SandBar.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2CallbacksForTesting.cs" />
+    <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2ScriptSlotTests.cs" />
+    <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2SessionAdapterTests.cs" />
+    <Compile Include="Unit\Games\NeverwinterNightsTwo\Utils\Nwn2ToolsetFunctionsTests.cs" />
+    <Compile Include="Unit\Utils\BeanTests.cs" />
+    <Compile Include="Unit\Utils\PathCheckerTests.cs" />
+    <Compile Include="Unit\Utils\ResourceWriterTests.cs" />
+    <EmbeddedResource Include="Licence.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LogicalName>licence</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\99bottles.NCS">
+      <LogicalName>99bottles_Compiled</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\99bottles.NSS">
+      <LogicalName>99bottles_Uncompiled</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Plugin\Flip.NeverwinterNightsTwo.Plugin.csproj">
+      <Project>{7FBBABEB-7227-4B42-8EBD-309EDFC82687}</Project>
+      <Name>Flip.NeverwinterNightsTwo.Plugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Utils\Flip.NeverwinterNightsTwo.Utils.csproj">
+      <Project>{C6ADDA1C-09F3-4149-99C7-56495FC9C1B2}</Project>
+      <Name>Flip.NeverwinterNightsTwo.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Flip.UI\Flip.UI.csproj">
+      <Project>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</Project>
+      <Name>Flip.UI</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
+      <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>
+      <Name>Flip.Utils</Name>
+    </ProjectReference>
+    <Folder Include="Integration" />
+    <Folder Include="Resources" />
+    <Folder Include="Unit\Core" />
+    <Folder Include="Unit\Games" />
+    <Folder Include="Unit\Games\DragonAge" />
+    <Folder Include="Unit\Games\NeverwinterNights" />
+    <Folder Include="Unit\Games\NeverwinterNightsTwo" />
+    <Folder Include="Unit\Games\NeverwinterNightsTwo\Utils" />
+    <Folder Include="Unit\Games\NeverwinterNightsTwo\Plugin" />
+    <Folder Include="Unit\Language" />
+    <Folder Include="Unit" />
+    <Folder Include="Unit\Utils" />
+    <Folder Include="Unit\UI" />
+  </ItemGroup>
+</Project>

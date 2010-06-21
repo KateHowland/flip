@@ -1,0 +1,237 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{7FBBABEB-7227-4B42-8EBD-309EDFC82687}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Sussex.Flip.Games.NeverwinterNightsTwo.Plugin</RootNamespace>
+    <AssemblyName>Flip.NeverwinterNightsTwo.Plugin</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\Kirn\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Flip.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <BaseIntermediateOutputPath>..\Compiled\Flip.NeverwinterNightsTwo.Plugin\obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>C:\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <ItemGroup>
+    <Reference Include="DotNetMagic2005">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\DotNetMagic2005.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GlacialTreeList">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\GlacialTreeList.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NWN2Toolset">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OEIShared">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\OEIShared.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="QWhale.Syntax">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\QWhale.Syntax.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SandBar">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\SandBar.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SmartPropertyGrid">
+      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\SmartPropertyGrid.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\AreaTransition.cs" />
+    <Compile Include="Actions\Attacks.cs" />
+    <Compile Include="Actions\BecomesCommoner.cs" />
+    <Compile Include="Actions\BecomesDefender.cs" />
+    <Compile Include="Actions\BecomesHostile.cs" />
+    <Compile Include="Actions\CreateCreatureAtLocation.cs" />
+    <Compile Include="Actions\CreateItemAtLocation.cs" />
+    <Compile Include="Actions\CreateItemInInventory.cs" />
+    <Compile Include="Actions\CreatePlaceableAtLocation.cs" />
+    <Compile Include="Actions\SetTimeToNoon.cs" />
+    <Compile Include="Actions\DisplayMessage.cs" />
+    <Compile Include="Actions\EndGame.cs" />
+    <Compile Include="Actions\GiveGold.cs" />
+    <Compile Include="Actions\GiveXP.cs" />
+    <Compile Include="Actions\Heal.cs" />
+    <Compile Include="Actions\JumpsTo.cs" />
+    <Compile Include="Actions\Kill.cs" />
+    <Compile Include="Actions\Lock.cs" />
+    <Compile Include="Actions\MakeHenchman.cs" />
+    <Compile Include="Actions\SetTimeToMidnight.cs" />
+    <Compile Include="Actions\OpenStore.cs" />
+    <Compile Include="Actions\Pause.cs" />
+    <Compile Include="Actions\PicksUp.cs" />
+    <Compile Include="Actions\RunsTo.cs" />
+    <Compile Include="Actions\SetTimeToSunrise.cs" />
+    <Compile Include="Actions\SetTimeToSunset.cs" />
+    <Compile Include="Actions\TakeGold.cs" />
+    <Compile Include="Actions\Delete.cs" />
+    <Compile Include="Actions\Unlock.cs" />
+    <Compile Include="Actions\UnmakeHenchman.cs" />
+    <Compile Include="Actions\Unpause.cs" />
+    <Compile Include="Actions\WalksTo.cs" />
+    <Compile Include="CreateWildcardDialog.cs">
+      <DependentUpon>CreateWildcardDialog.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Conditions\HasEquippedItem.cs" />
+    <Compile Include="Conditions\HasGold.cs" />
+    <Compile Include="Conditions\IsLocked.cs" />
+    <Compile Include="Conditions\IsNear.cs" />
+    <Compile Include="Conditions\OwnsItem.cs" />
+    <Compile Include="Conditions\IsDead.cs" />
+    <Compile Include="EventDescriber.cs" />
+    <Compile Include="Exceptions\MatchingInstanceNotFoundException.cs" />
+    <Compile Include="Fitters\AreaFitter.cs" />
+    <Compile Include="Fitters\CreaturePlayerFitter.cs" />
+    <Compile Include="Fitters\EventRaiserFitter.cs" />
+    <Compile Include="Fitters\InstanceFitter.cs" />
+    <Compile Include="Fitters\InstancePlayerFitter.cs" />
+    <Compile Include="Fitters\ModuleFitter.cs" />
+    <Compile Include="Fitters\Nwn2Fitter.cs" />
+    <Compile Include="Fitters\Nwn2Fitters.cs" />
+    <Compile Include="Fitters\PlayerFitter.cs" />
+    <Compile Include="FlipPlugin.cs" />
+    <Compile Include="Integration\NarrativeThreadsHelper.cs" />
+    <Compile Include="ModuleTextFile.cs" />
+    <Compile Include="Nwn2DeserialisationHelper.cs" />
+    <Compile Include="Nwn2ImageProvider.cs" />
+    <Compile Include="Nwn2StatementBehaviour.cs" />
+    <Compile Include="Nwn2StatementFactory.cs" />
+    <Compile Include="Nwn2ObjectBlockFactory.cs" />
+    <Compile Include="Nwn2MoveableProvider.cs" />
+    <Compile Include="NWScriptAttacher.cs" />
+    <Compile Include="NWScriptTranslator.cs" />
+    <Compile Include="Objects\AreaBehaviour.cs" />
+    <Compile Include="Objects\BlueprintBehaviour.cs" />
+    <Compile Include="Objects\InstanceBehaviour.cs" />
+    <Compile Include="Objects\ModuleBehaviour.cs" />
+    <Compile Include="Objects\Nwn2ObjectBehaviour.cs" />
+    <Compile Include="Objects\PlayerBehaviour.cs" />
+    <Compile Include="Objects\WildcardBehaviour.cs" />
+    <Compile Include="Properties\WPFAssemblyInfo.cs" />
+    <Compile Include="ScriptHelper.cs">
+    </Compile>
+    <Compile Include="ScriptSelector.xaml.cs">
+      <DependentUpon>ScriptSelector.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServiceController.cs" />
+    <Compile Include="ToolsetEventReporter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolsetUIModifier.cs" />
+    <Compile Include="Triggers\AreaEntered.cs" />
+    <Compile Include="Triggers\BlankTrigger.cs" />
+    <Compile Include="Triggers\CreatureDies.cs" />
+    <Compile Include="Triggers\DialogueWasSpoken.cs" />
+    <Compile Include="Triggers\DoorOrPlaceableIsLocked.cs" />
+    <Compile Include="Triggers\DoorOrPlaceableIsUnlocked.cs" />
+    <Compile Include="Triggers\ItemAcquired.cs" />
+    <Compile Include="Triggers\ItemActivated.cs" />
+    <Compile Include="Triggers\ItemUnacquired.cs" />
+    <Compile Include="Triggers\ModuleHeartbeat.cs" />
+    <Compile Include="Triggers\ModuleStarted.cs" />
+    <Compile Include="Triggers\Nwn2ParameterlessTrigger.xaml.cs">
+      <DependentUpon>Nwn2ParameterlessTrigger.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Triggers\Nwn2SlotTrigger.cs">
+      <DependentUpon>Nwn2SlotTrigger.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Triggers\Nwn2TriggerFactory.cs" />
+    <Compile Include="Triggers\PlaceableUsed.cs" />
+    <Compile Include="Triggers\PlayerRespawned.cs" />
+    <Compile Include="Triggers\TriggerEntered.cs" />
+    <Compile Include="Triggers\TriggerExited.cs" />
+    <EmbeddedResource Include="Licence.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LogicalName>licence</LogicalName>
+    </EmbeddedResource>
+    <Resource Include="flip_functions.NSS" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Utils\Flip.NeverwinterNightsTwo.Utils.csproj">
+      <Project>{C6ADDA1C-09F3-4149-99C7-56495FC9C1B2}</Project>
+      <Name>Flip.NeverwinterNightsTwo.Utils</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Flip.UI\Flip.UI.csproj">
+      <Project>{94E070E4-6AB4-4E83-9E14-B230F9A71A0C}</Project>
+      <Name>Flip.UI</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Flip.Utils\Flip.Utils.csproj">
+      <Project>{DA0F7D30-A224-4957-B80B-7F2700D50C54}</Project>
+      <Name>Flip.Utils</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <Page Include="CreateWildcardDialog.xaml" />
+    <Page Include="ScriptSelector.xaml" />
+    <Page Include="Triggers\Nwn2ParameterlessTrigger.xaml" />
+    <Page Include="Triggers\Nwn2SlotTrigger.xaml" />
+    <Folder Include="Actions" />
+    <Folder Include="Conditions" />
+    <Folder Include="Fitters" />
+    <Folder Include="Integration" />
+    <Folder Include="Exceptions" />
+    <Folder Include="Triggers" />
+    <Folder Include="Objects" />
+  </ItemGroup>
+</Project>
