@@ -115,16 +115,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			NWN2GameModule module = session.GetModule();
 			if (module == null) throw new ArgumentNullException("module");
 			
+			// MUST be 32 characters long or under! The module won't warn you of this, rather
+			// it will simply truncate the filename without reporting that it has done so.
+			
 			// Naming format:
-			// flipscript kn70 quest for the skull 47
-			string ideal = String.Format("flipscript {0} {1}",Environment.UserName,module.Name);			
+			// flip kn70 s47
+			string username = Environment.UserName;
+			if (username.Length > 16) username = username.Substring(0,16);
+			
+			string ideal = String.Format("flip {0}",username);			
 					
 			int count = 2;
 			
 			string name = ideal;
 			
 			while (session.HasUncompiled(name)) {
-				name = ideal + " (" + count++ + ")";
+				name = ideal + " s" + count++;
 			}
 			
 			return name;
@@ -154,7 +160,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						
 			string name = GetUnusedName();
 			
-			try {							
+			try {				
+				if (name.Length > 32) throw new ApplicationException("Cannot attach script under the generated name ('" + name + "') " +
+				                                                     "because it is of length " + name.Length + ", and the maximum " +
+				                                                     "valid length of a resource name for NWN2 is 32.");
+				
 				NWN2GameScript script = session.AddScript(name,source.Code);
 				
 				session.CompileScript(script);
