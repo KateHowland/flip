@@ -218,6 +218,11 @@ namespace Sussex.Flip.UI
 					target.Slot.Contents = moveable;
 				}
 			    
+			    try {
+			    	ActivityLog.Write(new Activity("PlacedBlock","Block",target.Slot.Contents.GetLogText(),"PlacedOn",target.Slot.GetLogText()));
+			    }
+			    catch (Exception) {}
+			    
         		OnChanged(new EventArgs());
         	}
         	
@@ -289,12 +294,23 @@ namespace Sussex.Flip.UI
 		protected void ShrinkSpine(object sender, RoutedEventArgs e)
 		{
 			Shrink(true);
+			try {
+				string parentText;
+				if (Pegs.Count > 0) parentText = ((Peg)Pegs[0]).Slot.GetLogText();
+				else parentText = String.Empty;
+				ActivityLog.Write(new Activity("ShrunkPegs","On",parentText));
+			}
+			catch (Exception) {}
 		}
 		
 		
 		protected void GrowSpine(object sender, RoutedEventArgs e)
 		{
-			AddPeg(true,0);
+			Peg peg = AddPeg(true,0);
+			try {
+				ActivityLog.Write(new Activity("AddedPeg","On",peg.Slot.GetLogText()));
+			}
+			catch (Exception) {}
 		}
         
         
