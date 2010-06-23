@@ -97,7 +97,7 @@ namespace Sussex.Flip.UI
 			saveButton.Foreground = Brushes.White;
 			saveButton.FontWeight = FontWeights.ExtraBold;
 			saveButton.FontSize = 16;
-			saveButton.Margin = new Thickness(45,5,5,5);
+			saveButton.Margin = new Thickness(15,5,5,5);
 			saveButton.Height = 40;
 			saveButton.Width = 70;
 			saveButton.AllowDrop = false;

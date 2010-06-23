@@ -37,7 +37,7 @@
 		
 		<Border
 		x:Name="border"
-		Width="700"
+		Width="650"
 		Height="100"
 		VerticalAlignment="Top"
 		BorderThickness="2"
