@@ -29,26 +29,21 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Threading;
 using NWN2Toolset;
-using NWN2Toolset.NWN2;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
-using NWN2Toolset.NWN2.IO;
 using NWN2Toolset.NWN2.Views;
 using NWN2Toolset.Plugins;
 using Sussex.Flip.Core;
-using Sussex.Flip.UI;
-using Sussex.Flip.Utils;
-using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
+using Sussex.Flip.UI;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
