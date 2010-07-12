@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using System.Xml;
-using System.Xml.Serialization;
-using Sussex.Flip.Core;
 using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
