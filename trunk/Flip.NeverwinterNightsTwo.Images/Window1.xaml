@@ -1,0 +1,9 @@
+﻿<Window x:Class="Sussex.Flip.Games.NeverwinterNightsTwo.Images.Window1"
+	xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="test" Height="300" Width="300"
+	>
+	<Grid x:Name="jkjkj">
+		
+	</Grid>
+</Window>
