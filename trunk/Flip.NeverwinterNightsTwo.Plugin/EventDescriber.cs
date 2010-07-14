@@ -28,7 +28,7 @@ using System;
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
 	/// <summary>
-	/// Description of EventDescriber!!!
+	/// Description of EventDescriber!!!!!!!
 	/// </summary>
 	public class EventDescriber
 	{				
