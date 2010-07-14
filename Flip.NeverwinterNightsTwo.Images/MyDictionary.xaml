@@ -1,0 +1,21 @@
+<ResourceDictionary 
+	x:Class="Sussex.Flip.Games.NeverwinterNightsTwo.Images.MyDictionary"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    >
+	
+	<!--<ResourceDictionary.Resources>
+		<Style TargetType="BitmapImage">
+			<Setter Property="CreateOptions" Value="DelayCreation"/>
+		</Style>
+	</ResourceDictionary.Resources>-->
+	
+	<!-- To save significant application memory, set the DecodePixelWidth or
+     DecodePixelHeight of the BitmapImage value of the image source to the desired 
+     height and width of the rendered image. If you don't do this, the application will 
+     cache the image as though it were rendered as its normal size rather then just 
+     the size that is displayed. -->
+
+    <BitmapImage x:Key="pig" UriSource="Pictures/Creature/c_pig.bmp"/>
+    <BitmapImage x:Key="reaver" UriSource="Pictures/Creature/c_reaver.bmp"/>
+</ResourceDictionary>
