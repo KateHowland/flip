@@ -109,8 +109,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public static string FlipBackupScriptsPath = @"C:\Sussex University\Flip\Scripts\";
 		
-		public static string FlipImagesPath = @"C:\Sussex University\Flip\Pictures\";
-		
 		#endregion
 		
 		#region Properties
@@ -347,9 +345,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			try {
 				service.Start();
 			}
-			catch (Exception x) {				
-				MessageBox.Show("Something went wrong when starting the service.\n\n" + x);
-			}
+			catch (Exception) { }
 			
 			// Ensure flip_functions.nss is in the Override directory of NWN2 - otherwise scripts won't compile:
 			ProvideSpecialFunctionsScriptFile();

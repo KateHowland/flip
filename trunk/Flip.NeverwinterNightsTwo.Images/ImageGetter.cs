@@ -58,9 +58,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Images
 		{
 			if (String.IsNullOrEmpty(type) || String.IsNullOrEmpty(name)) return null;
 			
-			if (similar) SubstituteSimilar(ref type, ref name);
-			
-			Uri uri = new Uri(String.Format("Pictures/{0}/{1}.bmp",type,name),UriKind.Relative);
+			if (similar) SubstituteSimilar(ref type, ref name);		
+		
+			Uri uri = new Uri(String.Format("pack://application:,,,/Flip.NeverwinterNightsTwo.Images;component/Pictures/{0}/{1}.bmp",type,name),UriKind.Absolute);
+						
+			//Uri uri = new Uri(String.Format("Pictures/{0}/{1}.bmp",type,name),UriKind.Relative);
 			
 			return GetImage(uri);
 		}
@@ -69,12 +71,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Images
 		public Image GetImage(Uri uri)
 		{
 			try {
-				Image image = new Image();				
-				BitmapImage bmp = new BitmapImage(uri);				
+				Image image = new Image();	
+				
+				BitmapImage bmp = new BitmapImage();
+				bmp.BeginInit();
+				bmp.UriSource = uri;
+				bmp.EndInit();
+				
 				image.Source = bmp;				
 				return image;
+				
 			}
-			catch (Exception) {
+			catch (Exception x) {
+				MessageBox.Show("Failed to get Image for Uri '" + uri + "'.\n\n" + x);
 				return null;
 			}
 		}
