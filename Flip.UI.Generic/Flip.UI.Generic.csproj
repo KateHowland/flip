@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{F1E974DF-347D-4456-BCE9-082B9A632B98}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -64,6 +65,11 @@
     <Compile Include="FakeTranslator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
+    <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Images\Flip.NeverwinterNightsTwo.Images.csproj">
+      <Project>{EEA81743-C6D1-44C8-A808-AC00DC6347B0}</Project>
+      <Name>Flip.NeverwinterNightsTwo.Images</Name>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Flip.NeverwinterNightsTwo.Plugin\Flip.NeverwinterNightsTwo.Plugin.csproj">
       <Project>{7FBBABEB-7227-4B42-8EBD-309EDFC82687}</Project>
       <Name>Flip.NeverwinterNightsTwo.Plugin</Name>

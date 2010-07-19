@@ -62,7 +62,7 @@ namespace Sussex.Flip.UI
     	
     	public Image DisplayImage {
     		get { return (Image)base.GetValue(DisplayImageProperty); }
-    		set {     			
+    		set {    	
     			if (value == null) {
     				value = FindResource("defaultimg") as Image;
     				if (value == null) value = new Image();
