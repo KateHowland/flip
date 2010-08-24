@@ -16,29 +16,78 @@
 				Text="{Binding Path=Content}" 
 				Background="Transparent"
 				Foreground="White"
-				FontSize="14"
+				FontSize="13"
 				FontWeight="Bold"
+				VerticalAlignment="Center"
+				Padding="5"/>
+			
+			</StackPanel>
+		
+		</ControlTemplate>
+		
+		<ControlTemplate 
+		x:Key="bigRadioButtonControlTemplate"	
+		TargetType="RadioButton">
+		
+			<StackPanel
+			DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+			
+				<TextBlock
+				Text="{Binding Path=Content}" 
+				Background="Transparent"
+				Foreground="White"
+				FontSize="16"
+				FontWeight="Bold"
+				VerticalAlignment="Center"
 				Padding="5"/>
 			
 			</StackPanel>
 		
 		</ControlTemplate>
 	
-		<Style TargetType="RadioButton">
-			<Setter Property="Template" Value="{StaticResource radioButtonControlTemplate}"/>
-		</Style>
-	
 	</UserControl.Resources>
 	
     <DockPanel
 	Background="DarkBlue">
-		
-    	<WrapPanel
-    	Name="bagButtons"
+    	
+    	<StackPanel
     	DockPanel.Dock="Top"
     	VerticalAlignment="Center"
     	HorizontalAlignment="Center"
-    	Margin="7"/>
+    	Orientation="Vertical"
+    	Margin="7">
+		
+	    	<WrapPanel
+	    	Name="fixedBagButtons"
+	    	VerticalAlignment="Stretch"
+	    	HorizontalAlignment="Stretch"
+    		Margin="5">
+    			<WrapPanel.Resources>	
+					<Style TargetType="RadioButton">
+						<Setter Property="Template" Value="{StaticResource bigRadioButtonControlTemplate}"/>
+					</Style>
+	    		</WrapPanel.Resources>
+    		</WrapPanel>
+    		
+    		<Polygon 
+    		Points="0,0 300,0 300,2 0,2" 
+    		Fill="DarkSlateBlue"
+    		Margin="5"
+    		VerticalAlignment="Center"
+    		HorizontalAlignment="Center"/>
+		
+	    	<WrapPanel
+	    	Name="bagButtons"
+	   		VerticalAlignment="Stretch"
+	    	HorizontalAlignment="Stretch">
+    			<WrapPanel.Resources>	
+					<Style TargetType="RadioButton">
+						<Setter Property="Template" Value="{StaticResource radioButtonControlTemplate}"/>
+					</Style>
+	    		</WrapPanel.Resources>
+    		</WrapPanel> 
+    	
+    	</StackPanel>
     	
 		<TabControl
 		Name="tabs"

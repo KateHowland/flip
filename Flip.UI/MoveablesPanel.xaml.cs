@@ -40,17 +40,31 @@ namespace Sussex.Flip.UI
 
 		public void AddBag(string bagName)
 		{
-			AddBag(bagName,bagName,false);
+			AddBag(bagName,bagName,false,false);
 		}
 
 
 		public void AddBag(string bagName, bool wrap)
 		{
-			AddBag(bagName,bagName,wrap);
+			AddBag(bagName,bagName,wrap,false);
+		}
+		
+		
+		public void AddBag(string bagName, string displayName, bool wrap)
+		{
+			AddBag(bagName,displayName,wrap,false);
 		}
 
 
-		public void AddBag(string bagName, string displayName, bool wrap)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="bagName"></param>
+		/// <param name="displayName"></param>
+		/// <param name="wrap"></param>
+		/// <param name="top">True to add this bag to the top row of bags,
+		/// false to add it to the second row of bags.</param>
+		public void AddBag(string bagName, string displayName, bool wrap, bool top)
 		{
 			if (bagName == null) throw new ArgumentNullException("name"); 
 			if (bags.ContainsKey(bagName)) throw new ArgumentException("Bag named '" + bagName + "' already exists.", "name"); 
@@ -72,7 +86,9 @@ namespace Sussex.Flip.UI
 			{  
 				radioButton.BitmapEffect = null;
 			};
-			bagButtons.Children.Add(radioButton);
+			
+			if (top) fixedBagButtons.Children.Add(radioButton);
+			else bagButtons.Children.Add(radioButton);
 		}
 		
 		
@@ -82,6 +98,12 @@ namespace Sussex.Flip.UI
 			if (!bags.ContainsKey(bagName)) throw new ArgumentException("No bag named '" + bagName + "' exists.", "bag"); 
 
 			foreach (RadioButton radioButton in bagButtons.Children) {
+				if (radioButton.Content as string == bagName) {
+					radioButton.IsChecked = true;
+					return;
+				}
+			}
+			foreach (RadioButton radioButton in fixedBagButtons.Children) {
 				if (radioButton.Content as string == bagName) {
 					radioButton.IsChecked = true;
 					return;
@@ -151,7 +173,20 @@ namespace Sussex.Flip.UI
 				}
 			}
 			
-			if (removing != null) bagButtons.Children.Remove(removing);
+			if (removing != null) {
+				bagButtons.Children.Remove(removing);
+			}
+			
+			else {
+				foreach (RadioButton radioButton in fixedBagButtons.Children) {
+					if (radioButton.Content as string == bagName) {
+						removing = radioButton;
+						break;
+					}
+				}
+				
+				if (removing != null) fixedBagButtons.Children.Remove(removing);
+			}			
 		}
 		
 		
