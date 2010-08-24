@@ -20,7 +20,7 @@
     <BaseIntermediateOutputPath>..\Compiled\Flip.NeverwinterNightsTwo.Utils\obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>C:\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
+    <OutputPath>C:\Program Files (x86)\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
@@ -45,16 +45,20 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>
     <Reference Include="DotNetMagic2005">
-      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\DotNetMagic2005.dll</HintPath>
+      <HintPath>..\..\..\Program Files %28x86%29\Atari\Neverwinter Nights 2\DotNetMagic2005.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GlacialTreeList">
+      <HintPath>..\..\..\Program Files %28x86%29\Atari\Neverwinter Nights 2\GlacialTreeList.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.DirectX" />
     <Reference Include="NWN2Toolset">
-      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset.dll</HintPath>
+      <HintPath>..\..\..\Program Files %28x86%29\Atari\Neverwinter Nights 2\NWN2Toolset.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="OEIShared">
-      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\OEIShared.dll</HintPath>
+      <HintPath>..\..\..\Program Files %28x86%29\Atari\Neverwinter Nights 2\OEIShared.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore">
@@ -64,15 +68,11 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="QWhale.Syntax">
-      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\QWhale.Syntax.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SandBar">
-      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\SandBar.dll</HintPath>
+      <HintPath>..\..\..\Program Files %28x86%29\Atari\Neverwinter Nights 2\QWhale.Syntax.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SmartPropertyGrid">
-      <HintPath>..\..\..\Program Files\Atari\Neverwinter Nights 2\SmartPropertyGrid.dll</HintPath>
+      <HintPath>..\..\..\Program Files %28x86%29\Atari\Neverwinter Nights 2\SmartPropertyGrid.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

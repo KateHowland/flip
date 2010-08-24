@@ -21,7 +21,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>C:\Program Files\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
+    <OutputPath>C:\Program Files (x86)\Atari\Neverwinter Nights 2\NWN2Toolset\Plugins</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
