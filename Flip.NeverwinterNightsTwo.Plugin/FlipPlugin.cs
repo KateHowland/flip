@@ -302,33 +302,29 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							
 			LaunchFlip();
 			
-			if (window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			bool openingExistingScript = ScriptHelper.HasFlipScriptAttachedAsAction(line);
 			
-			try {
-				TriggerControl trigger = triggers.GetTrigger(line,conversation);
+			if (openingExistingScript && window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			
+			TriggerControl trigger = triggers.GetTrigger(line,conversation);
+			
+			if (openingExistingScript) {
 				
-				FlipScript flipScript;
+				NWN2GameScript script = new NWN2GameScript(line.Actions[0].Script);
+				script.Demand();
+				FlipScript flipScript = scriptHelper.GetFlipScript(script,false);
 				
-				if (ScriptHelper.HasFlipScriptAttachedAsAction(line)) {
-					NWN2GameScript script = new NWN2GameScript(line.Actions[0].Script);
-					script.Demand();
-					flipScript = scriptHelper.GetFlipScript(script,false);
-					ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",trigger.GetLogText()));
-				}
+				window.OpenFlipScript(new ScriptTriggerTuple(flipScript,trigger));
 				
-				else {
-					flipScript = null;
-					ActivityLog.Write(new Activity("NewScript","CreatedVia","UsingConversationLineAsEvent","Event",trigger.GetLogText()));
-				}
-				
-				ScriptTriggerTuple tuple = new ScriptTriggerTuple(flipScript,trigger);
-				
-				window.OpenFlipScript(tuple);
-									
-				window.IsDirty = true;
+				ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",trigger.GetLogText()));		
 			}
-			catch (Exception x) {
-				throw new ApplicationException("Failed to open a script that was attached to a conversation.",x);
+			
+			else {
+				
+				window.SetTrigger(trigger);
+				window.IsDirty = true;
+				
+				ActivityLog.Write(new Activity("NewScript","CreatedVia","UsingConversationLineAsEvent","Event",trigger.GetLogText()));
 			}
 		}
 		
