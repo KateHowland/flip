@@ -20,9 +20,7 @@ namespace Sussex.Flip.UI
 		protected MoveablesPanel blockBox;
 		protected MoveableProvider provider;
 		protected ImageProvider imageProvider;
-				
-		public Grid MainGrid { get { return mainGrid; } }
-		
+						
 		
 		/// <summary>
 		/// The delegate signature of a method to be called which will ask the user 
