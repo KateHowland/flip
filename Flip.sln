@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-# SharpDevelop 4.0.0.5949
+# SharpDevelop 3.2.0.5777
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.Utils", "Flip.Utils\Flip.Utils.csproj", "{DA0F7D30-A224-4957-B80B-7F2700D50C54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.NeverwinterNightsTwo.Plugin", "Flip.NeverwinterNightsTwo.Plugin\Flip.NeverwinterNightsTwo.Plugin.csproj", "{7FBBABEB-7227-4B42-8EBD-309EDFC82687}"
@@ -13,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.UI.Generic", "Flip.UI.Generic\Flip.UI.Generic.csproj", "{F1E974DF-347D-4456-BCE9-082B9A632B98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.NeverwinterNightsTwo.Images", "Flip.NeverwinterNightsTwo.Images\Flip.NeverwinterNightsTwo.Images.csproj", "{EEA81743-C6D1-44C8-A808-AC00DC6347B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flip.Analysis", "Flip.Analysis\Flip.Analysis.csproj", "{485A34BF-2012-4A43-ADAA-E24354CC9D6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,5 +46,9 @@ Global
 		{EEA81743-C6D1-44C8-A808-AC00DC6347B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EEA81743-C6D1-44C8-A808-AC00DC6347B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EEA81743-C6D1-44C8-A808-AC00DC6347B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{485A34BF-2012-4A43-ADAA-E24354CC9D6B}.Debug|Any CPU.Build.0 = Debug|x86
+		{485A34BF-2012-4A43-ADAA-E24354CC9D6B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{485A34BF-2012-4A43-ADAA-E24354CC9D6B}.Release|Any CPU.Build.0 = Release|x86
+		{485A34BF-2012-4A43-ADAA-E24354CC9D6B}.Release|Any CPU.ActiveCfg = Release|x86
 	EndGlobalSection
 EndGlobal
