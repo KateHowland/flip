@@ -15,6 +15,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml;
 
 namespace Sussex.Flip.Analysis
 {
@@ -31,22 +32,20 @@ namespace Sussex.Flip.Analysis
 		 * - total time spent with Flip open
 		 * - total number of actions taken
 		 * - total number of illegal saves
+		 * - a timeline-based walkthrough of their Flip actions
 		 * 
 		 * ...and for each script:
 		 * - the number of times it was edited
 		 * - the number of illegal saves
-		 * 
+		 *  
 		 * ...and for each version of the script:		 
 		 * - the natural language representation		 
 		 * - the number of lines in the script
 		 * - which types of block were used and how many
-		 * 
-		 * 
 		 */
 		
 		public Window1()
 		{
-			InitializeComponent();
 		}
 	}
 }

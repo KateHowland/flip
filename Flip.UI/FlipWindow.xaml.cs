@@ -304,7 +304,6 @@ namespace Sussex.Flip.UI
 //			dialog.DereferenceLinks = false;			
 //			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
 //			dialog.FilterIndex = 0;			
-//			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
 //			dialog.OverwritePrompt = true;
 //			dialog.RestoreDirectory = false;
 //			dialog.Title = "Save script";
@@ -344,7 +343,6 @@ namespace Sussex.Flip.UI
 //			dialog.DereferenceLinks = true;
 //			dialog.Filter = Sussex.Flip.Utils.FileExtensionFilters.TXT_ALL;
 //			dialog.FilterIndex = 0;
-//			dialog.InitialDirectory = @"C:\Sussex University\Flip\";
 //			dialog.Multiselect = false;
 //			dialog.Title = "Open script";
 //			dialog.ValidateNames = true;

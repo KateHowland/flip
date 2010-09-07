@@ -25,6 +25,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using NWN2Toolset;
@@ -267,7 +269,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			flipButton.BeginGroup = true;
 			
 			try {
-				flipButton.Icon = new System.Drawing.Icon(@"C:\Sussex University\Flip\Pictures\System\fliplogo.ico");
+				Stream s = Assembly.GetAssembly(typeof(Sussex.Flip.UI.AboutWindow)).GetManifestResourceStream("fliplogoicon");
+				flipButton.Icon = new Icon(s);
 			}
 			catch (Exception) {}
 			

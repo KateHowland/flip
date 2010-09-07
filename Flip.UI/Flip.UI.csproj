@@ -219,6 +219,10 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="images\chicken.bmp" />
+    <Resource Include="images\logo.jpg" />
+    <EmbeddedResource Include="images\fliplogo.ico">
+      <LogicalName>fliplogoicon</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images" />
