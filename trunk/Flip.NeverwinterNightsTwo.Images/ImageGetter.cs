@@ -37,17 +37,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Images
 	/// Description of ImageGetter.
 	/// </summary>
 	public class ImageGetter
-	{
-//		protected static ResourceDictionary images;
-		
-		
-		static ImageGetter()
-		{
-//			images = new ResourceDictionary();
-//			images.Add("c_elf",GetImage(new Uri("Pictures/Creature/c_elf.bmp", UriKind.Relative)));
-		}
-		
-		
+	{			
 		public Image GetImage(string type, string name)
 		{
 			return GetImage(type,name,true);
@@ -61,8 +51,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Images
 			if (similar) SubstituteSimilar(ref type, ref name);		
 		
 			Uri uri = new Uri(String.Format("pack://application:,,,/Flip.NeverwinterNightsTwo.Images;component/Pictures/{0}/{1}.bmp",type,name),UriKind.Absolute);
-						
-			//Uri uri = new Uri(String.Format("Pictures/{0}/{1}.bmp",type,name),UriKind.Relative);
 			
 			return GetImage(uri);
 		}
@@ -74,6 +62,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Images
 				Image image = new Image();	
 				
 				BitmapImage bmp = new BitmapImage();
+						
+				// "To save significant application memory, set the DecodePixelWidth or
+				// DecodePixelHeight of the BitmapImage value of the image source to the desired 
+				// height and width of the rendered image. If you don't do this, the application will 
+				// cache the image as though it were rendered as its normal size rather then just 
+				// the size that is displayed."
+				bmp.DecodePixelHeight = 55;
+				bmp.DecodePixelWidth = 55;
+				
 				bmp.BeginInit();
 				bmp.UriSource = uri;
 				bmp.EndInit();
@@ -82,8 +79,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Images
 				return image;
 				
 			}
-			catch (Exception x) {
-				MessageBox.Show("Failed to get Image for Uri '" + uri + "'.\n\n" + x);
+			catch (Exception) {
 				return null;
 			}
 		}

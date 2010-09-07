@@ -206,15 +206,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						
 			object[] args = new object[] { image, block };
 			block.Dispatcher.Invoke(new AssignImageDelegate(AssignImage),System.Windows.Threading.DispatcherPriority.Normal,args);
-			
-			//AssignImage(image,block);
-			
-//			if (b is InstanceBehaviour) block.DisplayImage = GetImage((InstanceBehaviour)b);
-//			else if (b is BlueprintBehaviour) block.DisplayImage = GetImage((BlueprintBehaviour)b);
-//			else if (b is AreaBehaviour) block.DisplayImage = GetImage((AreaBehaviour)b);
-//			else if (b is PlayerBehaviour) block.DisplayImage = GetPlayerImage();
-//			else if (b is ModuleBehaviour) block.DisplayImage = GetModuleImage();
-//			else if (b is WildcardBehaviour) block.DisplayImage = GetWildcardImage();
 		}
 		
 		

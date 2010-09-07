@@ -8,6 +8,7 @@ using Sussex.Flip.Core;
 using Sussex.Flip.UI;
 using Sussex.Flip.Utils;
 using Sussex.Flip.Games.NeverwinterNightsTwo;
+using Sussex.Flip.Games.NeverwinterNightsTwo.Images;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Integration;
 
 namespace Sussex.Flip.UI.Generic
@@ -37,6 +38,18 @@ namespace Sussex.Flip.UI.Generic
 			                                   new Nwn2DeserialisationHelper());
 			
 			window.Show();
+			
+			window.MouseDoubleClick += delegate 
+			{  
+				foreach (UIElement element in window.BlockBox.GetMoveables("Special")) {
+					ObjectBlock block = element as ObjectBlock;
+					if (block != null) {						
+						ImageGetter getter = new ImageGetter();
+						
+						block.DisplayImage = getter.GetImage("Creature","c_lich",true);
+					}
+				}
+			};
 		}
 		
 		
