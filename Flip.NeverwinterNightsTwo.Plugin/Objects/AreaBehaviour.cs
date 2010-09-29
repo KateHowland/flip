@@ -97,6 +97,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
+		public override object GetToolTip()
+		{
+			return Tag;
+		}
+		
+		
 		public override void ReadXml(XmlReader reader)
 		{
 			reader.MoveToContent();

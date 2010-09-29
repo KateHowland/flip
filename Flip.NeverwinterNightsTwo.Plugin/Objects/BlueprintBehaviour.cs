@@ -111,6 +111,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
+		public override object GetToolTip()
+		{
+			return ResRef;
+		}
+		
+		
 		public override void ReadXml(XmlReader reader)
 		{
 			reader.MoveToContent();

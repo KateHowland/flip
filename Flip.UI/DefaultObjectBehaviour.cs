@@ -47,6 +47,12 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		public override object GetToolTip()
+		{
+			return null;
+		}
+		
+		
 		public override ObjectBehaviour DeepCopy()
 		{
 			return new DefaultObjectBehaviour();

@@ -60,14 +60,17 @@ namespace Sussex.Flip.UI
 
     	
     	public NumberBlock(Int32 number)
-    	{
+    	{    		
+    		min = 0;
+    		max = 999;
+    		
+    		if (number < min) number = min;
+    		if (number > max) number = max;
+    		
     		InitializeComponent();
     		Value = number;
     		Height = DefaultSize.Height;
     		Width = DefaultSize.Width;
-    		
-    		min = 0;
-    		max = 999;
     	}
         
         
