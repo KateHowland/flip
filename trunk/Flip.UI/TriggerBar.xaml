@@ -52,19 +52,7 @@
 	    	<StackPanel
 			Name="triggerBarPanel"
 	    	Background="Transparent"
-	    	Orientation="Horizontal">
-	    		
-	    		<TextBlock
-	    		Text="WHEN"
-	    		Foreground="Black"
-	    		FontSize="27"
-	    		FontWeight="Bold"
-	    		FontFamily="Helvetica"
-	    		VerticalAlignment="Center"
-	    		HorizontalAlignment="Center"
-	    		Padding="20"/>
-	    		
-	    	</StackPanel>
+	    	Orientation="Horizontal"/>
 			
 		</Border>	
 	

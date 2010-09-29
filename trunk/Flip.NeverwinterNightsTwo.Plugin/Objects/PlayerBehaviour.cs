@@ -76,6 +76,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
+		public override object GetToolTip()
+		{
+			return "The player";
+		}
+				
+		
 		public override string ToString()
 		{
 			return GetNaturalLanguage();

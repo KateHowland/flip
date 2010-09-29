@@ -82,6 +82,7 @@ namespace Sussex.Flip.UI
 		public abstract string GetNaturalLanguage();	
 		public abstract string GetDescriptionOfObjectType();
 		public abstract ObjectBehaviour DeepCopy();		
+		public abstract object GetToolTip();
 		
 		
 		public virtual bool Equals(ObjectBehaviour other)

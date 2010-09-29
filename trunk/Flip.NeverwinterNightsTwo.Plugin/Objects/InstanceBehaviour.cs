@@ -138,6 +138,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours
 		}
 		
 		
+		public override object GetToolTip()
+		{
+			return Tag;
+		}
+		
+		
 		public override bool Equals(ObjectBehaviour other)
 		{	
 			if (!base.Equals(other)) return false;

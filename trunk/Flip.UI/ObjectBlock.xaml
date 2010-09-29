@@ -2,7 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
-	DataContext="{Binding RelativeSource={RelativeSource Self}}">
+	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+	ToolTipService.InitialShowDelay="700">
 	
 	<flipui:Moveable.Resources>
 		

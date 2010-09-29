@@ -87,6 +87,7 @@ namespace Sussex.Flip.UI
         	
         	triggerSlot = new TriggerSlot(new TriggerFitter());
         	triggerSlot.AllowDrop = true;  
+        	triggerSlot.Margin = new Thickness(100,0,0,0);
         	
             InitializeComponent();      	
         	
@@ -97,7 +98,7 @@ namespace Sussex.Flip.UI
 			saveButton.Foreground = Brushes.White;
 			saveButton.FontWeight = FontWeights.ExtraBold;
 			saveButton.FontSize = 16;
-			saveButton.Margin = new Thickness(15,5,5,5);
+			saveButton.Margin = new Thickness(35,5,5,5);
 			saveButton.Height = 40;
 			saveButton.Width = 70;
 			saveButton.AllowDrop = false;

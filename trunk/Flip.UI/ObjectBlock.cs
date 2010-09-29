@@ -83,6 +83,10 @@ namespace Sussex.Flip.UI
     			if (Behaviour != value) {
     				base.SetValue(BehaviourProperty,value);
     				OnChanged(new EventArgs());
+    				try {
+    					ToolTip = Behaviour.GetToolTip();
+    				}
+    				catch (Exception) {}
     			}
     		}
     	}
