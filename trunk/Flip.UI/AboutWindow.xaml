@@ -1,7 +1,7 @@
 <Window x:Class="Sussex.Flip.UI.AboutWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="About" Height="440" Width="400"
+    Title="About" Height="460" Width="400"
 	ResizeMode="NoResize"
 	WindowStartupLocation="CenterScreen"
 	WindowState="Normal"	
