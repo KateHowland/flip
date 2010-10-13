@@ -294,6 +294,44 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public void OpenScript(NWN2GameScript script)
+		{			
+			if (script == null) throw new ArgumentNullException("script");
+							
+			LaunchFlip();
+			
+			if (window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			
+			script.Demand();
+			
+			try {
+				FlipScript flipScript = scriptHelper.GetFlipScript(script,false);
+				
+				if (flipScript == null) throw new InvalidOperationException("Script could not be understood as a Flip script.");
+				
+				TriggerControl trigger;
+
+				try {
+					trigger = scriptHelper.GetTrigger(script);
+				}
+				catch (ArgumentException) {
+					trigger = null;
+				}
+				
+				ScriptTriggerTuple tuple = new ScriptTriggerTuple(flipScript,trigger);
+				
+				window.OpenFlipScript(tuple);
+				
+				string triggerTextForLog = trigger == null ? String.Empty : trigger.GetLogText();
+				
+				ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",triggerTextForLog));
+			}
+			catch (Exception x) {
+				throw new ApplicationException("Failed to open script '" + script.Name + "'.",x);
+			}
+		}
+		
+		
 		public void UseConversationLineAsTrigger(NWN2ConversationConnector line, NWN2GameConversation conversation)
 		{			
 			if (line == null) throw new ArgumentNullException("line");
