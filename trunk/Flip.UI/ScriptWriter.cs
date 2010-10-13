@@ -39,7 +39,8 @@ namespace Sussex.Flip.UI
 		protected const string FlipCodeEnds = @"FLIP CODE - DO NOT EDIT */";
 		protected const string TargetAddressBegins = @"/* FLIP TARGET ADDRESS - DO NOT EDIT";
 		protected const string TargetAddressEnds = @"FLIP TARGET ADDRESS - DO NOT EDIT */";
-		protected static string[] separators = new string[] { FlipCodeBegins, FlipCodeEnds, TargetAddressBegins, TargetAddressEnds };
+		protected const string NaturalLanguageBegins = @"/* NATURAL LANGUAGE";
+		protected const string NaturalLanguageEnds = @"NATURAL LANGUAGE */";	
 		
 		
 		protected TriggerBar triggerBar;
@@ -114,6 +115,20 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		protected void WriteNaturalLanguageBegins(StringBuilder code)
+		{
+			if (code == null) throw new ArgumentNullException("code");			
+			code.AppendLine(NaturalLanguageBegins);
+		}
+		
+		
+		protected void WriteNaturalLanguageEnds(StringBuilder code)
+		{
+			if (code == null) throw new ArgumentNullException("code");			
+			code.AppendLine(NaturalLanguageEnds);
+		}
+		
+		
 		protected void WriteNewLine(StringBuilder code)
 		{
 			if (code == null) throw new ArgumentNullException("code");			
@@ -125,6 +140,13 @@ namespace Sussex.Flip.UI
 		{
 			if (code == null) throw new ArgumentNullException("code");			
 			code.AppendLine(triggerBar.GetAddress());
+		}
+		
+		
+		protected void WriteNaturalLanguage(StringBuilder code)
+		{
+			if (code == null) throw new ArgumentNullException("code");			
+			code.AppendLine(triggerBar.GetNaturalLanguage());
 		}
 		
 		
@@ -182,6 +204,10 @@ namespace Sussex.Flip.UI
 					WriteAddressBegins(code);
 					WriteAddress(code);
 					WriteAddressEnds(code);
+					WriteNewLine(code);
+					WriteNaturalLanguageBegins(code);
+					WriteNaturalLanguage(code);
+					WriteNaturalLanguageEnds(code);
 					WriteNWScriptHeader(code);
 					WriteNewLine(code);
 					WriteNWScriptBody(code);
@@ -195,25 +221,68 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public static void ExtractFlipCodeFromNWScript(string nwn2Code, out string flipCode, out string address)
+		private static string Parse(string body, string delimiter1, string delimiter2)
+		{
+			if (body == null) throw new ArgumentNullException("body");
+			if (delimiter1 == null) throw new ArgumentNullException("delimiter1");
+			if (delimiter2 == null) throw new ArgumentNullException("delimiter2");
+			if (delimiter1 == String.Empty) throw new ArgumentException("Delimiter cannot be blank.",delimiter1);
+			if (delimiter2 == String.Empty) throw new ArgumentException("Delimiter cannot be blank.",delimiter2);
+			
+			if (body.Length == 0) return null;
+			
+			int d1 = body.IndexOf(delimiter1);
+			if (d1 == -1) return null;
+			
+			int start = d1 + delimiter1.Length;
+			if (start == body.Length - 1) return null;
+			
+			int d2 = body.IndexOf(delimiter2,start);
+			if (d2 == -1) return null;
+			
+			int length = d2 - start;
+			
+			return body.Substring(start,length);
+		}
+		
+		
+		public static void ParseNWScript(string nwn2Code, out string flipCode, out string address, out string naturalLanguage)
 		{
 			if (nwn2Code == null) throw new ArgumentNullException("nwn2Code");
 			
-			string[] parts = nwn2Code.Split(separators,StringSplitOptions.RemoveEmptyEntries);
-			
-			if (parts.Length < 2) {
+			try {
+				flipCode = Parse(nwn2Code,FlipCodeBegins,FlipCodeEnds);				
+			}
+			catch (Exception) {
 				flipCode = null;
+			}
+			
+			try {
+				address = Parse(nwn2Code,TargetAddressBegins,TargetAddressEnds);
+			}
+			catch (Exception) {
 				address = null;
 			}
 			
-			else {			
-				flipCode = parts[0];				
+			try {
+				naturalLanguage = Parse(nwn2Code,NaturalLanguageBegins,NaturalLanguageEnds);
+			}
+			catch (Exception) {
+				naturalLanguage = null;
+			}
+			
+			if (flipCode != null) {
 				flipCode = flipCode.Trim(null); // remove leading and trailing white space characters
 				flipCode = flipCode.Replace(Environment.NewLine,String.Empty); // remove new line characters
-				
-				address = parts[2];
+			}
+			
+			if (address != null) {
 				address = address.Trim(null); // remove leading and trailing white space characters
 				address = address.Replace(Environment.NewLine,String.Empty); // remove new line characters
+			}
+			
+			if (naturalLanguage != null) {
+				naturalLanguage = naturalLanguage.Trim(null); // remove leading and trailing white space characters
 			}
 		}
 	}

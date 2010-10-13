@@ -101,8 +101,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (script == null) throw new ArgumentNullException("script");
 			
-			string code, address;
-			ScriptWriter.ExtractFlipCodeFromNWScript(script.Data, out code, out address);				
+			string code, address, naturalLanguage;
+			ScriptWriter.ParseNWScript(script.Data, out code, out address, out naturalLanguage);				
 				
 			Nwn2Address nwn2Address = Nwn2Address.TryCreate(address);
 			Nwn2ConversationAddress nwn2ConversationAddress = Nwn2ConversationAddress.TryCreate(address);
@@ -128,8 +128,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			if (script == null) throw new ArgumentNullException("script");
 			
-			string code, address;
-			ScriptWriter.ExtractFlipCodeFromNWScript(script.Data, out code, out address);
+			string code, address, naturalLanguage;
+			ScriptWriter.ParseNWScript(script.Data, out code, out address, out naturalLanguage);		
 			
 			if (!onlyReturnIfScriptIsAttached) return new FlipScript(code,script.Name);
 			
