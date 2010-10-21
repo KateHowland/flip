@@ -236,7 +236,8 @@
     <Page Include="ConditionSlot.xaml" />
     <Page Include="DoWhileControl.xaml" />
     <Page Include="DropZone.xaml" />
-    <Page Include="FlipWindow.xaml" />
+    <Page Include="FlipWindow.xaml">
+    </Page>
     <Page Include="IfControl.xaml" />
     <Page Include="IfElseControl.xaml" />
     <Page Include="MoveablesPanel.xaml" />
