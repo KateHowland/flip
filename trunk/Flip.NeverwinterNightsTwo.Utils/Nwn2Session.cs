@@ -729,7 +729,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				
 			if (module == null) {
 				throw new InvalidOperationException("No module is currently open.");
-			}				
+			}			
 			if (!module.Conversations.ContainsCaseInsensitive(name)) {
 				return null;
 			}
@@ -737,6 +737,35 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				return module.Conversations[name];
 			}
 		}
+		
+		
+//		/// <summary>
+//		/// Gets a conversation in the current module.
+//		/// </summary>
+//		/// <param name="name">The name of the conversation.</param>
+//		/// <returns>The named conversation, or null 
+//		/// if the conversation could not be found.</returns>
+//		public NWN2GameConversation GetConversation(string name)
+//		{
+//			if (name == null) {
+//				throw new ArgumentNullException("name","No conversation name was provided (was null).");
+//			}	
+//			if (name == String.Empty) {
+//				throw new ArgumentException("name","No conversation name was provided (was empty).");
+//			}		
+//				
+//			NWN2GameModule module = GetModule();
+//				
+//			if (module == null) {
+//				throw new InvalidOperationException("No module is currently open.");
+//			}				
+//			if (!module.Conversations.ContainsCaseInsensitive(name)) {
+//				return null;
+//			}
+//			else {
+//				return module.Conversations[name];
+//			}
+//		}
 		
 		
 		/// <summary>

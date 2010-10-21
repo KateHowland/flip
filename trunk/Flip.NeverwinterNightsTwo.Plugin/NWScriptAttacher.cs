@@ -176,7 +176,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					NWN2GameConversation conversation = session.GetConversation(convAddress.Conversation);
 					
 					if (conversation == null) {
-						throw new ArgumentException("Conversation '" + conversation + "' was not found in current module.","address");
+						throw new ArgumentException("Conversation '" + convAddress.Conversation + "' was not found in current module.","address");
 					}
 					
 					NWN2ConversationLine line = session.GetConversationLine(conversation,convAddress.LineID);
