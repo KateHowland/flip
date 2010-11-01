@@ -120,7 +120,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			// Naming format:
 			// flip kn70 s47
-			string username = Environment.UserName;
+			string username = Environment.UserName.ToLower();
 			if (username.Length > 16) username = username.Substring(0,16);
 			
 			string ideal = String.Format("flip {0}",username);			
