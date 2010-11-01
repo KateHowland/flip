@@ -58,7 +58,7 @@
     		and Keiron Nicholson at the University of Sussex    		
     	</TextBlock>
 		<TextBlock FontSize="14" Style="{StaticResource baseStyle}">
-    		Image capture by Zoe and Louis Good<LineBreak/>
+    		Image capture by Zoe 'Excellent' Goffin and Louis 'Great' Goffin<LineBreak/>
     		Additional work by George Killick
     	</TextBlock>
 		<TextBlock FontSize="10" Style="{StaticResource baseStyle}">2009-2010</TextBlock>
