@@ -1,7 +1,7 @@
 <Window x:Class="Sussex.Flip.UI.AboutWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="About" Height="460" Width="400"
+    Title="About" Height="475" Width="400"
 	ResizeMode="NoResize"
 	WindowStartupLocation="CenterScreen"
 	WindowState="Normal"	
@@ -58,7 +58,8 @@
     		and Keiron Nicholson at the University of Sussex    		
     	</TextBlock>
 		<TextBlock FontSize="14" Style="{StaticResource baseStyle}">
-    		Image capture by Zoe 'Excellent' Goffin and Louis 'Great' Goffin<LineBreak/>
+    		Image capture by Zoe 'Excellent' Goffin<LineBreak/>
+			and Louis 'Great' Goffin<LineBreak/>
     		Additional work by George Killick
     	</TextBlock>
 		<TextBlock FontSize="10" Style="{StaticResource baseStyle}">2009-2010</TextBlock>
