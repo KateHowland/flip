@@ -62,7 +62,7 @@
 		Foreground="White"
 		FontSize="14"
 		Padding="25"
-		Text="If you seem to be missing a script, make sure the area it's used in is open in the toolset. If the area isn't open, you can't edit the script."
+		Text="You need to have an area open before you can edit its scripts. Scripts attached to conversations must be opened from the conversation writer."
 		FontWeight="Bold"
 		TextWrapping="Wrap"
 		HorizontalAlignment="Center"
