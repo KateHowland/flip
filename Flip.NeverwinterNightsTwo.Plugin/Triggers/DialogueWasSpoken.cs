@@ -62,7 +62,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override string GetNaturalLanguage()
 		{
-			return String.Format("When someone says \"{0}\" (in conversation '{1}')",UIHelper.Truncate(dialogue,30),conversation);
+			return String.Format("When someone says \"{0}\"",UIHelper.Truncate(dialogue,30));
 		}
 		
 		
