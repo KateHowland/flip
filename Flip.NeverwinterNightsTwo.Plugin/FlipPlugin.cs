@@ -305,7 +305,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			script.Demand();
 			
 			try {
-				FlipScript flipScript = scriptHelper.GetFlipScript(script,false);
+				FlipScript flipScript = scriptHelper.GetFlipScript(script,Attachment.Ignore);
 				
 				if (flipScript == null) throw new InvalidOperationException("Script could not be understood as a Flip script.");
 				
@@ -350,7 +350,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				NWN2GameScript script = new NWN2GameScript(line.Actions[0].Script);
 				script.Demand();
-				FlipScript flipScript = scriptHelper.GetFlipScript(script,false);
+				FlipScript flipScript = scriptHelper.GetFlipScript(script,Attachment.Ignore);
 				
 				window.OpenFlipScript(new ScriptTriggerTuple(flipScript,trigger));
 				
@@ -629,7 +629,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 			
 			try {
-				OpenDeleteScriptDialog(false);
+				OpenDeleteScriptDialog(Attachment.Ignore);
 			}
 			catch (Exception x) {
 				MessageBox.Show(String.Format("Something went wrong when opening or deleting a script.{0}{0}{1}",Environment.NewLine,x));
@@ -688,16 +688,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public void OpenDeleteScriptDialog()
 		{
-			OpenDeleteScriptDialog(true);
+			OpenDeleteScriptDialog(Attachment.AttachedToScriptSlot);
 		}
 		
 		
 		/// <summary>
 		/// TODO: should accept window as a parameter as save does.
 		/// </summary>
-		public void OpenDeleteScriptDialog(bool onlyAttachedScripts)
+		public void OpenDeleteScriptDialog(Attachment attachment)
 		{
-			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts(onlyAttachedScripts);
+			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts(attachment);
 			
 			ScriptSelector dialog = new ScriptSelector(tuples);
 			dialog.ShowDialog();
