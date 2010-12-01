@@ -128,6 +128,7 @@
     <Compile Include="Actions\UnmakeHenchman.cs" />
     <Compile Include="Actions\Unpause.cs" />
     <Compile Include="Actions\WalksTo.cs" />
+    <Compile Include="Attachment.cs" />
     <Compile Include="CreateWildcardDialog.cs">
       <DependentUpon>CreateWildcardDialog.xaml</DependentUpon>
       <SubType>Code</SubType>

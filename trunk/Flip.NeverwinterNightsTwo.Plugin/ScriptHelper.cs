@@ -121,24 +121,47 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// 
 		/// </summary>
 		/// <param name="script"></param>
+		/// <param name="attachment">Sets the requirements for a script to be returned.</param>
 		/// <returns></returns>
 		/// <remarks>This method expects that the NWN2GameScript is already Loaded
 		/// (that is, the responsibility for calling Demand() falls to the client.)</remarks>
-		public FlipScript GetFlipScript(NWN2GameScript script, bool onlyReturnIfScriptIsAttached)
+		public FlipScript GetFlipScript(NWN2GameScript script, Attachment attachment)
 		{
 			if (script == null) throw new ArgumentNullException("script");
 			
 			string code, address, naturalLanguage;
 			ScriptWriter.ParseNWScript(script.Data, out code, out address, out naturalLanguage);		
 			
-			if (!onlyReturnIfScriptIsAttached) return new FlipScript(code,script.Name);
+			if (attachment == Attachment.Ignore) return new FlipScript(code,script.Name);
 			
 			NWN2GameModule mod = session.GetModule();					
 			if (mod == null) throw new InvalidOperationException("No module is open.");
-				
-			Nwn2Address nwn2Address = Nwn2Address.TryCreate(address);
-			Nwn2ConversationAddress nwn2ConversationAddress = Nwn2ConversationAddress.TryCreate(address);
+						
+			Nwn2Address nwn2Address;
+			Nwn2ConversationAddress nwn2ConversationAddress;
 			
+			switch (attachment) {
+				case Attachment.Attached:
+					nwn2Address = Nwn2Address.TryCreate(address);
+					nwn2ConversationAddress = Nwn2ConversationAddress.TryCreate(address);					
+					break;
+					
+				case Attachment.AttachedToConversation:
+					nwn2Address = null;
+					nwn2ConversationAddress = Nwn2ConversationAddress.TryCreate(address);		
+					break;
+					
+				case Attachment.AttachedToScriptSlot:
+					nwn2Address = Nwn2Address.TryCreate(address);
+					nwn2ConversationAddress = null;	
+					break;
+					
+				default:
+					nwn2Address = null;
+					nwn2ConversationAddress = null;
+					break;
+			}
+						
 			if (nwn2Address != null) {
 					
 				try {				
@@ -232,15 +255,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 			}
 			
-			else {
-				throw new ArgumentException("Address must represent a valid Nwn2Address or Nwn2ConversationAddress.","address");
-			}
-			
 			return null;
 		}
 		
 					
-		public List<ScriptTriggerTuple> GetAllScripts(bool onlyAttachedScripts)
+		public List<ScriptTriggerTuple> GetAllScripts(Attachment attachment)
 		{			
 			NWN2GameModule mod = NWN2ToolsetMainForm.App.Module;
 			
@@ -256,15 +275,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 					script.Demand();
 					
-					FlipScript flipScript = GetFlipScript(script,onlyAttachedScripts);
+					FlipScript flipScript = GetFlipScript(script,attachment);
 									
 					if (flipScript != null) {
 						
 						TriggerControl trigger;
 						
-						if (onlyAttachedScripts) trigger = GetTrigger(script);
+						if (attachment == Attachment.Ignore) trigger = new BlankTrigger(flipScript.Name);
 						
-						else trigger = new BlankTrigger(flipScript.Name);
+						else trigger = GetTrigger(script);
 						
 						tuples.Add(new ScriptTriggerTuple(flipScript,trigger));
 					}
