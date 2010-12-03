@@ -21,6 +21,16 @@
 				<GradientStop Offset="1" Color="LightBlue"/>
 			</LinearGradientBrush.GradientStops>
 		</LinearGradientBrush>
+		
+		<LinearGradientBrush 
+		x:Key="conditionModeBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Salmon"/>
+				<GradientStop Offset="1" Color="LightPink"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
 	</Window.Resources>
 	
 	<AdornerDecorator>	
