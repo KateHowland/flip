@@ -90,6 +90,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public static bool HasFlipScriptAttachedAsCondition(NWN2ConversationConnector line)
+		{
+			if (line == null) throw new ArgumentNullException("line");
+			
+			try {
+				if (line.Conditions.Count > 0) {
+					NWN2GameScript script = new NWN2GameScript(line.Conditions[0].Script);
+					return WasCreatedByFlip(script);
+				}
+			}
+			catch (Exception) {}
+			
+			return false;
+		}
+		
+		
 		/// <summary>
 		/// 
 		/// </summary>

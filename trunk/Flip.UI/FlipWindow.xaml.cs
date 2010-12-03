@@ -85,6 +85,9 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		protected FrameworkElement conditionModeUI;
+		
+		
 		protected SizedCanvas mainCanvas;
 		public FlipWindow(MoveableProvider provider, 
 		                  ImageProvider imageProvider, 
@@ -143,6 +146,7 @@ namespace Sussex.Flip.UI
 			PreviewDragLeave += DestroyAdorner;			
 			PreviewDrop += DestroyAdorner;	
 						
+			// Set up trigger bar:
 			triggerBar = new TriggerBar(new SpineFitter());
 			triggerBar.SaveButton.Click += SaveScriptToModule;
 			                                        
@@ -152,6 +156,21 @@ namespace Sussex.Flip.UI
 			
 			triggerBar.Changed += ScriptChanged;
 			UpdateNaturalLanguageView(triggerBar);
+			
+			// Set up condition bar:
+			StackPanel sp = new StackPanel();
+			Button b = new Button();
+			b.Content = "Save condition";
+			b.Click += delegate { MessageBox.Show("Saved."); Clear(); LeaveConditionMode(); };
+			sp.Children.Add(b);
+			b = new Button();
+			b.Content = "Cancel";
+			b.Click += delegate { Clear(); LeaveConditionMode(); };
+			sp.Children.Add(b);
+			conditionModeUI = sp;            
+			Canvas.SetTop(conditionModeUI,100);
+			Canvas.SetLeft(conditionModeUI,100);
+			mainCanvas.Children.Add(conditionModeUI);
 			
 			if (mainCanvas.ContextMenu == null) mainCanvas.ContextMenu = new ContextMenu();
 			MenuItem paste = new MenuItem();
@@ -176,6 +195,12 @@ namespace Sussex.Flip.UI
 			{  
 				paste.IsEnabled = (Moveable.CopiedToClipboard != null);
 			};
+			
+			MouseDoubleClick += delegate 
+			{  
+				if (inConditionMode) LeaveConditionMode();
+				else EnterConditionMode();
+			};
 		}
 		
 		
@@ -188,6 +213,32 @@ namespace Sussex.Flip.UI
 					isDirty = value;
 				}
 			}
+		}
+		
+		
+		bool inConditionMode = false;
+		
+		public void EnterConditionMode()
+		{
+			mainMenu.IsEnabled = false;
+			triggerBar.IsEnabled = false;
+			triggerBar.Visibility = Visibility.Hidden;
+			inConditionMode = true;
+			mainGrid.Background = (Brush)Resources["conditionModeBrush"];
+			Title = "Condition mode.";
+			conditionModeUI.Visibility = Visibility.Visible;
+		}
+		
+		
+		public void LeaveConditionMode()
+		{
+			mainMenu.IsEnabled = true;
+			triggerBar.IsEnabled = true;
+			triggerBar.Visibility = Visibility.Visible;
+			inConditionMode = false;
+			mainGrid.Background = (Brush)Resources["skyBrush"];
+			Title = "Flip mode.";
+			conditionModeUI.Visibility = Visibility.Hidden;
 		}
 		
 		

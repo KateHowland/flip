@@ -367,6 +367,47 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public void AddConditionToConversationLine(NWN2ConversationConnector line, NWN2GameConversation conversation)
+		{			
+			if (line == null) throw new ArgumentNullException("line");
+			if (conversation == null) throw new ArgumentNullException("conversation");
+			if (!conversation.AllConnectors.Contains(line)) throw new ArgumentException("Line is not a part of the given conversation.","line");
+									
+			LaunchFlip();
+			
+			bool openingExistingScript = ScriptHelper.HasFlipScriptAttachedAsCondition(line);
+			
+			if (openingExistingScript && window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+					
+			window.EnterConditionMode();
+			
+			
+			
+			
+			
+			
+//			
+//			if (openingExistingScript) {
+//				
+//				NWN2GameScript script = new NWN2GameScript(line.Conditions[0].Script);
+//				script.Demand();
+//				ConditionalFlipScript conditionalFlipScript = scriptHelper.GetConditionalFlipScript(script,Attachment.Ignore);
+//				
+//				window.OpenFlipScript(conditionalFlipScript);
+//				
+//				ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",trigger.GetLogText()));		
+//			}
+//			
+//			else {
+//				
+//				window.SetTrigger(trigger);
+//				window.IsDirty = true;
+//				
+//				ActivityLog.Write(new Activity("NewScript","CreatedVia","UsingConversationLineAsEvent","Event",trigger.GetLogText()));
+//			}
+		}
+		
+		
 		/// <summary>
 		/// Performs setup operations.
 		/// Called by the toolset when it is started.
