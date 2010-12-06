@@ -38,6 +38,7 @@ using NWN2Toolset.NWN2.Data.ConversationData;
 using NWN2Toolset.NWN2.Data.Instances;
 using NWN2Toolset.NWN2.Data.Templates;
 using NWN2Toolset.NWN2.Data.TypedCollections;
+using NWN2Toolset.Plugins;
 using NWN2Toolset.NWN2.Views;
 using OEIShared.IO;
 using OEIShared.Utils;
@@ -1260,6 +1261,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			line.Actions.Clear();
 			
 			line.Actions.Add(scriptFunctor);
+			
+			// If Adventure Author is loaded, its Conversation Writer needs to be refreshed:
+			
+        	try {
+	        	foreach (INWN2Plugin plugin in NWN2ToolsetMainForm.PluginHost.Plugins) {
+	        		
+	        		if (plugin.Name == "AdventureAuthor") {
+	        			
+	        			MethodInfo mi = plugin.GetType().GetMethod("NotifyConversationWriterOfChange",BindingFlags.Public | BindingFlags.Instance);
+	        				        			
+	        			if (mi != null) mi.Invoke(plugin,null);
+	        			
+	        			else throw new MethodAccessException("Couldn't find method NotifyConversationWriterOfChange.");
+	        		}
+	        	}        	
+        	}
+			
+			catch (Exception) {}
 			
 //			if (!loaded) script.Release();			
 		}

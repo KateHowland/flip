@@ -358,27 +358,31 @@ namespace Sussex.Flip.UI
     	
 		public string GetNaturalLanguage()
 		{
-			System.Text.StringBuilder code = new System.Text.StringBuilder();
-			
 			// can't use Pegs as an empty Peg might screw up our formatting:
 			List<Peg> filledPegs = GetFilledPegs(); 
 			
-			for (int i = 0; i < filledPegs.Count; i++) {
-				Peg peg = (Peg)filledPegs[i];
-				
-				bool last = (i == filledPegs.Count - 1);
-				bool penultimate = (i == filledPegs.Count - 2);
-					
-				if (last && filledPegs.Count > 1) code.Append("and ");
-					
-				code.Append(peg.Slot.GetNaturalLanguage());
-					
-				if (last) {}//code.Append(".");
-				else if (penultimate) code.Append(" ");
-				else code.Append(", ");
-			}
+			if (filledPegs.Count == 0) return "nothing happens";
 			
-			return code.ToString();
+			else {
+				System.Text.StringBuilder code = new System.Text.StringBuilder();
+			
+				for (int i = 0; i < filledPegs.Count; i++) {
+					Peg peg = (Peg)filledPegs[i];
+					
+					bool last = (i == filledPegs.Count - 1);
+					bool penultimate = (i == filledPegs.Count - 2);
+						
+					if (last && filledPegs.Count > 1) code.Append("and ");
+						
+					code.Append(peg.Slot.GetNaturalLanguage());
+						
+					if (last) {}//code.Append(".");
+					else if (penultimate) code.Append(" ");
+					else code.Append(", ");
+				}
+				
+				return code.ToString();
+			}
 		}
 		
 		
