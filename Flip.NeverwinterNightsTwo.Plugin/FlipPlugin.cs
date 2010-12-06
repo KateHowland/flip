@@ -408,6 +408,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public string GetNaturalLanguage(string scriptData)
+		{
+			if (String.IsNullOrEmpty(scriptData)) return null;
+			
+			string flipCode, address, naturalLanguage;
+			
+			try {
+				ScriptWriter.ParseNWScript(scriptData, out flipCode, out address, out naturalLanguage);	
+				
+				return ScriptWriter.RemoveTrigger(naturalLanguage);
+			}
+			catch (Exception) {
+				return null;
+			}
+		}
+		
+		
 		/// <summary>
 		/// Performs setup operations.
 		/// Called by the toolset when it is started.
@@ -706,7 +723,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 				ActivityLog.Write(new Activity("SavedScript","SavedAs",savedAs));
 				
-				MessageBox.Show("Script was saved successfully.");
+				//MessageBox.Show("Script was saved successfully.");
 				
 				return true;
 			}

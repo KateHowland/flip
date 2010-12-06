@@ -285,5 +285,20 @@ namespace Sussex.Flip.UI
 				naturalLanguage = naturalLanguage.Trim(null); // remove leading and trailing white space characters
 			}
 		}
+		
+		
+		protected static string TriggerBreak = ":" + Environment.NewLine;
+		
+		
+		public static string RemoveTrigger(string naturalLanguage)
+		{
+			if (String.IsNullOrEmpty(naturalLanguage)) return naturalLanguage;
+			
+			int index = naturalLanguage.IndexOf(TriggerBreak);
+			
+			if (index == -1) return naturalLanguage;
+			
+			else return naturalLanguage.Remove(0,index+TriggerBreak.Length);
+		}
 	}
 }
