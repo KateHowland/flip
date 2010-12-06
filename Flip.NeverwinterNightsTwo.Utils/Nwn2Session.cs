@@ -1271,7 +1271,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	        			
 	        			MethodInfo mi = plugin.GetType().GetMethod("NotifyConversationWriterOfChange",BindingFlags.Public | BindingFlags.Instance);
 	        				        			
-	        			if (mi != null) mi.Invoke(plugin,null);
+	        			if (mi != null) {
+	        				mi.Invoke(plugin,null);
+	        				return;
+	        			}
 	        			
 	        			else throw new MethodAccessException("Couldn't find method NotifyConversationWriterOfChange.");
 	        		}
