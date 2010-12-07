@@ -13,7 +13,7 @@ namespace Sussex.Flip.UI
     /// Interaction logic for TriggerBar.xaml
     /// </summary>
 
-    public partial class TriggerBar : UserControl, ITranslatable
+    public partial class TriggerBar : UserControl, ITranslatable, IScriptFrame
     {
     	protected string currentScriptIsBasedOn;
     	protected TriggerSlot triggerSlot;

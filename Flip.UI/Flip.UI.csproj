@@ -92,6 +92,7 @@
     <Compile Include="DefaultStatementBehaviour.cs" />
     <Compile Include="Fitters\AnyFitter.cs" />
     <Compile Include="ImageProvider.cs" />
+    <Compile Include="IScriptFrame.cs" />
     <Compile Include="NotBlock.xaml.cs">
       <DependentUpon>NotBlock.xaml</DependentUpon>
       <SubType>Code</SubType>

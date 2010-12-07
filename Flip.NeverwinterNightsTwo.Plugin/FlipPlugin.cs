@@ -597,8 +597,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 			window = new FlipWindow(provider,images,
 			                        new FlipWindow.OpenDeleteScriptDelegate(OpenDeleteScriptDialog),
-			                        new FlipWindow.SaveScriptDelegate(SaveScriptDialog),
-			                        new FlipWindow.SaveConditionalScriptDelegate(SaveConditionalScript),
+			                        new FlipWindow.SaveScriptDelegate(SaveScript),
 			                        new Nwn2DeserialisationHelper());
 			
 			window.Closing += delegate(object sender, CancelEventArgs e) 
@@ -695,56 +694,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public bool SaveScriptDialog(FlipWindow window)
-		{
-			if (window == null) throw new ArgumentNullException("window");
-			if (window.TriggerBar == null) throw new ArgumentException("FlipWindow does not have a TriggerBar.","window");
-			if (attacher == null) throw new InvalidOperationException("No attacher to save scripts with.");
-			
-			if (!window.TriggerBar.IsComplete) {
-				ActivityLog.Write(new Activity("TriedToSaveIncompleteScript"));
-				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving.");
-				return false;
-			}
-			
-			AbstractScriptWriter scriptWriter = new ScriptWriter(window.TriggerBar);
-			string code = scriptWriter.GetCombinedCode();
-			
-			FlipScript script = new FlipScript(code,ScriptType.Standard,String.Empty);
-			
-			string address = window.TriggerBar.GetAddress();
-			
-			try {
-				string savedAs = attacher.Attach(script,address);
-				
-				window.TriggerBar.CurrentScriptIsBasedOn = savedAs;
-				window.ConditionalFrame.CurrentScriptIsBasedOn = savedAs;
-				
-				window.IsDirty = false;
-			
-				ActivityLog.Write(new Activity("SavedScript","SavedAs",savedAs));
-				
-				//MessageBox.Show("Script was saved successfully.");
-				
-				return true;
-			}
-			
-			// TODO: NT specific message here if it's running
-			// TODO: test NT.IsRunning method.
-			catch (MatchingInstanceNotFoundException x) {
-				ActivityLog.Write(new Activity("TriedToSaveScriptButTargetCouldNotBeFound","TargetType",x.Address.TargetType.ToString(),"TargetTagOrResRef",x.Address.InstanceTag));
-				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " + 
-				                              "the {0} is open when you try to save, or it won't work.",x.Address.TargetType,x.Address.InstanceTag));
-				return false;
-			}
-			
-			catch (Exception x) {
-				MessageBox.Show(String.Format("Something went wrong when saving the script.{0}{0}{1}",Environment.NewLine,x));
-				return false;
-			}
-		}
-		
-		
 		public void OpenDeleteScriptDialog()
 		{
 			OpenDeleteScriptDialog(Attachment.AttachedToScriptSlot);
@@ -803,41 +752,44 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public bool SaveConditionalScript(FlipWindow window)
+		public bool SaveScript(FlipWindow window)
 		{
 			if (window == null) throw new ArgumentNullException("window");
-			if (window.ConditionalFrame == null) throw new ArgumentException("FlipWindow does not have a ConditionalFrame.","window");
 			if (attacher == null) throw new InvalidOperationException("No attacher to save scripts with.");
 			
-			if (!window.ConditionalFrame.IsComplete) {
+			if (!window.IsComplete) {
 				ActivityLog.Write(new Activity("TriedToSaveIncompleteScript"));
 				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving.");
 				return false;
 			}
 			
-			AbstractScriptWriter scriptWriter = new ConditionalScriptWriter(window.ConditionalFrame);
-			string code = scriptWriter.GetCombinedCode();
-						
-			FlipScript script = new FlipScript(code,ScriptType.Conditional,String.Empty);
+			IScriptFrame scriptFrame = window.GetCurrentScriptFrame();
+				
+			AbstractScriptWriter scriptWriter;			
+			if (window.Mode == ScriptType.Conditional) scriptWriter = new ConditionalScriptWriter(window.ConditionalFrame);
+			else scriptWriter = new ScriptWriter(window.TriggerBar);
 			
-			string address = window.ConditionalFrame.GetAddress();
+			string code = scriptWriter.GetCombinedCode();
+			
+			FlipScript script = new FlipScript(code,window.Mode,String.Empty);
+			
+			string address = scriptFrame.GetAddress();
 			
 			try {
 				string savedAs = attacher.Attach(script,address);
 				
+				window.TriggerBar.CurrentScriptIsBasedOn = savedAs;
 				window.ConditionalFrame.CurrentScriptIsBasedOn = savedAs;
 				
 				window.IsDirty = false;
 			
-				ActivityLog.Write(new Activity("SavedConditionalScript","SavedAs",savedAs));
+				ActivityLog.Write(new Activity("SavedScript","SavedAs",savedAs));
 				
 				//MessageBox.Show("Script was saved successfully.");
 				
 				return true;
 			}
 			
-			// TODO: NT specific message here if it's running
-			// TODO: test NT.IsRunning method.
 			catch (MatchingInstanceNotFoundException x) {
 				ActivityLog.Write(new Activity("TriedToSaveScriptButTargetCouldNotBeFound","TargetType",x.Address.TargetType.ToString(),"TargetTagOrResRef",x.Address.InstanceTag));
 				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " + 
@@ -850,6 +802,106 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				return false;
 			}
 		}
+		
+		
+//		public bool SaveScriptDialog(FlipWindow window)
+//		{
+//			if (window == null) throw new ArgumentNullException("window");
+//			if (window.TriggerBar == null) throw new ArgumentException("FlipWindow does not have a TriggerBar.","window");
+//			if (attacher == null) throw new InvalidOperationException("No attacher to save scripts with.");
+//			
+//			if (!window.TriggerBar.IsComplete) {
+//				ActivityLog.Write(new Activity("TriedToSaveIncompleteScript"));
+//				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving.");
+//				return false;
+//			}
+//			
+//			AbstractScriptWriter scriptWriter = new ScriptWriter(window.TriggerBar);
+//			string code = scriptWriter.GetCombinedCode();
+//			
+//			FlipScript script = new FlipScript(code,ScriptType.Standard,String.Empty);
+//			
+//			string address = window.TriggerBar.GetAddress();
+//			
+//			try {
+//				string savedAs = attacher.Attach(script,address);
+//				
+//				window.TriggerBar.CurrentScriptIsBasedOn = savedAs;
+//				window.ConditionalFrame.CurrentScriptIsBasedOn = savedAs;
+//				
+//				window.IsDirty = false;
+//			
+//				ActivityLog.Write(new Activity("SavedScript","SavedAs",savedAs));
+//				
+//				//MessageBox.Show("Script was saved successfully.");
+//				
+//				return true;
+//			}
+//			
+//			// TODO: NT specific message here if it's running
+//			// TODO: test NT.IsRunning method.
+//			catch (MatchingInstanceNotFoundException x) {
+//				ActivityLog.Write(new Activity("TriedToSaveScriptButTargetCouldNotBeFound","TargetType",x.Address.TargetType.ToString(),"TargetTagOrResRef",x.Address.InstanceTag));
+//				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " + 
+//				                              "the {0} is open when you try to save, or it won't work.",x.Address.TargetType,x.Address.InstanceTag));
+//				return false;
+//			}
+//			
+//			catch (Exception x) {
+//				MessageBox.Show(String.Format("Something went wrong when saving the script.{0}{0}{1}",Environment.NewLine,x));
+//				return false;
+//			}
+//		}
+//		
+//		
+//		public bool SaveConditionalScript(FlipWindow window)
+//		{
+//			if (window == null) throw new ArgumentNullException("window");
+//			if (window.ConditionalFrame == null) throw new ArgumentException("FlipWindow does not have a ConditionalFrame.","window");
+//			if (attacher == null) throw new InvalidOperationException("No attacher to save scripts with.");
+//			
+//			if (!window.ConditionalFrame.IsComplete) {
+//				ActivityLog.Write(new Activity("TriedToSaveIncompleteScript"));
+//				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving.");
+//				return false;
+//			}
+//			
+//			AbstractScriptWriter scriptWriter = new ConditionalScriptWriter(window.ConditionalFrame);
+//			string code = scriptWriter.GetCombinedCode();
+//						
+//			FlipScript script = new FlipScript(code,ScriptType.Conditional,String.Empty);
+//			
+//			string address = window.ConditionalFrame.GetAddress();
+//			
+//			try {
+//				string savedAs = attacher.Attach(script,address);
+//				
+//				window.TriggerBar.CurrentScriptIsBasedOn = savedAs;
+//				window.ConditionalFrame.CurrentScriptIsBasedOn = savedAs;
+//				
+//				window.IsDirty = false;
+//			
+//				ActivityLog.Write(new Activity("SavedConditionalScript","SavedAs",savedAs));
+//				
+//				//MessageBox.Show("Script was saved successfully.");
+//				
+//				return true;
+//			}
+//			
+//			// TODO: NT specific message here if it's running
+//			// TODO: test NT.IsRunning method.
+//			catch (MatchingInstanceNotFoundException x) {
+//				ActivityLog.Write(new Activity("TriedToSaveScriptButTargetCouldNotBeFound","TargetType",x.Address.TargetType.ToString(),"TargetTagOrResRef",x.Address.InstanceTag));
+//				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " + 
+//				                              "the {0} is open when you try to save, or it won't work.",x.Address.TargetType,x.Address.InstanceTag));
+//				return false;
+//			}
+//			
+//			catch (Exception x) {
+//				MessageBox.Show(String.Format("Something went wrong when saving the script.{0}{0}{1}",Environment.NewLine,x));
+//				return false;
+//			}
+//		}
 		
 		
 		/// <summary>

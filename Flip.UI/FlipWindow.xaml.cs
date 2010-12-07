@@ -37,13 +37,6 @@ namespace Sussex.Flip.UI
 		/// save the current script to the target game artifact.
 		/// </summary>
 		public delegate bool SaveScriptDelegate(FlipWindow window);
-				
-		
-		/// <summary>
-		/// The delegate signature of a method to be called which will 
-		/// save the current conditional script to the target game artifact.
-		/// </summary>
-		public delegate bool SaveConditionalScriptDelegate(FlipWindow window);
 		
 		
 		/// <summary>
@@ -56,12 +49,6 @@ namespace Sussex.Flip.UI
 		/// The method to call when the user wants to save a script.
 		/// </summary>
 		protected SaveScriptDelegate saveScriptDelegate;
-		
-		
-		/// <summary>
-		/// The method to call when the user wants to save a conditional script.
-		/// </summary>
-		protected SaveConditionalScriptDelegate saveConditionalScriptDelegate;
 		
 		
 		// TODO: Bad implementation, replace with something better.
@@ -119,7 +106,6 @@ namespace Sussex.Flip.UI
 		                  ImageProvider imageProvider, 
 		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
 		                  SaveScriptDelegate saveScriptDelegate,
-		                  SaveConditionalScriptDelegate saveConditionalScriptDelegate,
 		                  DeserialisationHelper deserialisationHelper,
 		                  ScriptType mode)
 		{
@@ -127,14 +113,12 @@ namespace Sussex.Flip.UI
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
 			if (openDeleteScriptDelegate == null) throw new ArgumentNullException("openDeleteScriptDelegate");
 			if (saveScriptDelegate == null) throw new ArgumentNullException("saveScriptDelegate");
-			if (saveConditionalScriptDelegate == null) throw new ArgumentNullException("saveConditionalScriptDelegate");
 			if (deserialisationHelper == null) throw new ArgumentNullException("deserialisationHelper");
 			
 			this.provider = provider;
 			this.imageProvider = imageProvider;
 			this.openDeleteScriptDelegate = openDeleteScriptDelegate;
 			this.saveScriptDelegate = saveScriptDelegate;
-			this.saveConditionalScriptDelegate = saveConditionalScriptDelegate;
 			ChosenDeserialisationHelper = deserialisationHelper;
 			
 			InitializeComponent();
@@ -178,7 +162,7 @@ namespace Sussex.Flip.UI
 						
 			// Set up trigger bar:
 			triggerBar = new TriggerBar(new SpineFitter());
-			triggerBar.SaveButton.Click += SaveScriptToModule;			                                        
+			triggerBar.SaveButton.Click += SaveScript;			                                        
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
 			mainCanvas.Children.Add(triggerBar);			
@@ -187,7 +171,7 @@ namespace Sussex.Flip.UI
 						
 			// Set up conditional frame:
 			conditionalFrame = new ConditionalFrame();
-			conditionalFrame.SaveButton.Click += SaveConditionalScript;	
+			conditionalFrame.SaveButton.Click += SaveScript;	
 			conditionalFrame.CancelButton.Click += CancelConditionalScript;
 			Canvas.SetTop(conditionalFrame,30);
 			Canvas.SetLeft(conditionalFrame,30);
@@ -227,9 +211,8 @@ namespace Sussex.Flip.UI
 		                  ImageProvider imageProvider, 
 		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
 		                  SaveScriptDelegate saveScriptDelegate,
-		                  SaveConditionalScriptDelegate saveConditionalScriptDelegate,
 		                  DeserialisationHelper deserialisationHelper) 
-			: this(provider,imageProvider,openDeleteScriptDelegate,saveScriptDelegate,saveConditionalScriptDelegate,deserialisationHelper,ScriptType.Standard)
+			: this(provider,imageProvider,openDeleteScriptDelegate,saveScriptDelegate,deserialisationHelper,ScriptType.Standard)
 		{			
 		}
 		
@@ -243,6 +226,29 @@ namespace Sussex.Flip.UI
 					isDirty = value;
 				}
 			}
+		}
+		
+		
+		/// <summary>
+		/// Returns true if there is a complete script currently open, false otherwise.
+		/// </summary>
+		public bool IsComplete {
+			get {
+				return (Mode == ScriptType.Standard && TriggerBar.IsComplete) || 
+					   (Mode == ScriptType.Conditional && ConditionalFrame.IsComplete);
+			}
+		}
+		
+		
+		/// <summary>
+		/// Return the script frame which is currently active, based on what type
+		/// of script the user is creating (conditional or standard).
+		/// </summary>
+		/// <returns></returns>
+		public IScriptFrame GetCurrentScriptFrame()
+		{
+			if (mode == ScriptType.Conditional) return conditionalFrame;
+			else return triggerBar;
 		}
 		
 		
@@ -313,13 +319,13 @@ namespace Sussex.Flip.UI
 			
 			if (result == MessageBoxResult.Yes) {			
 				try {
-					bool cancelled = !SaveScriptToModule();					
+					bool cancelled = !SaveScript();					
 					if (cancelled) return MessageBoxResult.Cancel;
 				}
 				catch (Exception x) {
 					MessageBox.Show(String.Format("Something went wrong when saving script to module.{0}{0}{1}",Environment.NewLine,x));
 					return MessageBoxResult.Cancel;
-				}	
+				}
 					
 				CloseScript();	
 			}
@@ -330,7 +336,7 @@ namespace Sussex.Flip.UI
 			
 			return result;
 		}
-		
+				
 		
 		protected void NewScript(object sender, RoutedEventArgs e)
 		{
@@ -609,10 +615,12 @@ namespace Sussex.Flip.UI
 		}
 		
 				
-		protected void SaveScriptToModule(object sender, RoutedEventArgs e)
+		protected void SaveScript(object sender, RoutedEventArgs e)
 		{			
 			try {
-				SaveScriptToModule();
+				bool saved = SaveScript();
+				
+				if (saved && mode == ScriptType.Conditional) LeaveConditionMode();
 			}
 			catch (Exception x) {
 				MessageBox.Show(String.Format("Something went wrong when saving script to module.{0}{0}{1}",Environment.NewLine,x));
@@ -625,29 +633,9 @@ namespace Sussex.Flip.UI
 		/// </summary>
 		/// <returns>Returns false if the script was incomplete and the save operation was aborted;
 		/// true otherwise.</returns>
-		protected bool SaveScriptToModule()
+		protected bool SaveScript()
 		{			
 			return saveScriptDelegate.Invoke(this);
-		}
-		
-				
-		protected void SaveConditionalScript(object sender, RoutedEventArgs e)
-		{			
-			try {
-				bool cancelled = !SaveConditionalScript();
-				if (!cancelled) {
-					LeaveConditionMode();
-				}
-			}
-			catch (Exception x) {
-				MessageBox.Show(String.Format("Something went wrong when saving script to conversation.{0}{0}{1}",Environment.NewLine,x));
-			}
-		}
-		
-				
-		protected bool SaveConditionalScript()
-		{		
-			return saveConditionalScriptDelegate.Invoke(this);
 		}
 		
 		

@@ -35,7 +35,6 @@ namespace Sussex.Flip.UI.Generic
 			                                   images,
 			                                   new FlipWindow.OpenDeleteScriptDelegate(Open),
 			                                   new FlipWindow.SaveScriptDelegate(Save),
-			                                   new FlipWindow.SaveConditionalScriptDelegate(Save),
 			                                   new Nwn2DeserialisationHelper());
 			
 			window.Show();

@@ -41,7 +41,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Interaction logic for ConditionalFrame.xaml
 	/// </summary>
-	public partial class ConditionalFrame : UserControl, ITranslatable
+	public partial class ConditionalFrame : UserControl, ITranslatable, IScriptFrame
 	{
     	protected ConditionSlot slot;
     	protected string currentScriptIsBasedOn;
