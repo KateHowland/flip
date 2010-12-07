@@ -25,6 +25,7 @@
 
 using System;
 using System.Xml;
+using Sussex.Flip.Core;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Behaviours;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
@@ -68,7 +69,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override string GetAddress()
 		{
-			return addressFactory.GetConversationAddress(conversation,lineGuid).Value;
+			return addressFactory.GetConversationAddress(conversation,lineGuid,ScriptType.Standard).Value;
 		}
 		
 		

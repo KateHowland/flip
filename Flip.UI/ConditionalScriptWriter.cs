@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Flip - a visual programming language for scripting video games
  * Copyright (C) 2009, 2010 University of Sussex
  *
@@ -20,29 +20,28 @@
  * You can also write to Keiron Nicholson at the School of Informatics, 
  * University of Sussex, Sussex House, Brighton, BN1 9RH, United Kingdom.
  * 
- * This file added by Keiron Nicholson on 03/06/2010 at 14:45.
+ * This file added by Keiron Nicholson on 07/12/2010 at 13:07
  */
 
 using System;
 using System.IO;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace Sussex.Flip.UI
 {
 	/// <summary>
-	/// Description of ScriptWriter.
+	/// Description of ConditionalScriptWriter.
 	/// </summary>
-	public class ScriptWriter : AbstractScriptWriter
+	public class ConditionalScriptWriter : AbstractScriptWriter
 	{
-		protected TriggerBar triggerBar;
+		protected ConditionalFrame conditionalFrame;
 		
 		
-		public ScriptWriter(TriggerBar triggerBar)
+		public ConditionalScriptWriter(ConditionalFrame conditionalFrame)
 		{
-			if (triggerBar == null) throw new ArgumentNullException("triggerBar");			
-			this.triggerBar = triggerBar;
+			if (conditionalFrame == null) throw new ArgumentNullException("conditionalFrame");			
+			this.conditionalFrame = conditionalFrame;
 		}
 		
 		
@@ -50,9 +49,9 @@ namespace Sussex.Flip.UI
 		{
 			if (code == null) throw new ArgumentNullException("code");
 			
-			code.AppendLine("void main()");
+			code.AppendLine("int StartingConditional()");
 			code.AppendLine("{");
-			code.AppendLine(triggerBar.Spine.GetCode());
+			code.AppendLine(String.Format("return ({0});",conditionalFrame.Slot.GetCode()));
 			code.AppendLine("}");
 		}
 		
@@ -60,14 +59,14 @@ namespace Sussex.Flip.UI
 		protected override void WriteAddress(StringBuilder code)
 		{
 			if (code == null) throw new ArgumentNullException("code");			
-			code.AppendLine(triggerBar.GetAddress());
+			code.AppendLine(conditionalFrame.Address);
 		}
 		
 		
 		protected override void WriteNaturalLanguage(StringBuilder code)
 		{
 			if (code == null) throw new ArgumentNullException("code");			
-			code.AppendLine(triggerBar.GetNaturalLanguage());
+			code.AppendLine(conditionalFrame.GetNaturalLanguage());
 		}
 		
 		
@@ -77,27 +76,12 @@ namespace Sussex.Flip.UI
 			
 			writer.WriteStartDocument();
 					
-			writer.WriteStartElement("Script");
-			triggerBar.WriteXml(writer);
+			writer.WriteStartElement("ConditionalScript");
+			conditionalFrame.WriteXml(writer);
 			writer.WriteEndElement();
 					
 			writer.WriteEndDocument();				
 			writer.Flush();
-		}
-		
-		
-		protected static string TriggerBreak = ":" + Environment.NewLine;
-		
-		
-		public static string RemoveTrigger(string naturalLanguage)
-		{
-			if (String.IsNullOrEmpty(naturalLanguage)) return naturalLanguage;
-			
-			int index = naturalLanguage.IndexOf(TriggerBreak);
-			
-			if (index == -1) return naturalLanguage;
-			
-			else return naturalLanguage.Remove(0,index+TriggerBreak.Length);
-		}
+		}		
 	}
 }

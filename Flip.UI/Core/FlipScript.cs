@@ -37,7 +37,8 @@ namespace Sussex.Flip.Core
 		
 		protected string code;
 		protected string name;
-		
+		protected ScriptType scriptType;
+				
 		#endregion
 		
 		#region Properties
@@ -57,6 +58,14 @@ namespace Sussex.Flip.Core
 			get { return name; }
 			set { name = value; }
 		}
+		
+		/// <summary>
+		/// The type of the script.
+		/// </summary>
+		public ScriptType ScriptType {
+			get { return scriptType; }
+			set { scriptType = value; }
+		}
 						
 		#endregion
 		
@@ -65,16 +74,7 @@ namespace Sussex.Flip.Core
 		/// <summary>
 		/// Constructs a new <see cref="FlipScript"/> instance.
 		/// </summary>
-		public FlipScript() : this(String.Empty,String.Empty)
-		{
-		}
-		
-		
-		/// <summary>
-		/// Constructs a new <see cref="FlipScript"/> instance.
-		/// </summary>
-		/// <param name="code">The source code of the script.</param>
-		public FlipScript(string code) : this(code,String.Empty)
+		public FlipScript() : this(String.Empty,ScriptType.Standard,String.Empty)
 		{
 		}
 		
@@ -84,9 +84,10 @@ namespace Sussex.Flip.Core
 		/// </summary>
 		/// <param name="code">The source code of the script.</param>
 		/// <param name="name">The name of the script.</param>
-		public FlipScript(string code, string name)
+		public FlipScript(string code, ScriptType scriptType, string name)
 		{
 			this.code = code;
+			this.scriptType = scriptType;
 			this.name = name;
 		}
 		
@@ -102,7 +103,7 @@ namespace Sussex.Flip.Core
 		
 		public FlipScript DeepCopy()
 		{
-			return new FlipScript(code,name);
+			return new FlipScript(code,scriptType,name);
 		}
 		
 		#endregion

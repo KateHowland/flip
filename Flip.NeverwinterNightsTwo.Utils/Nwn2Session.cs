@@ -1285,6 +1285,56 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 //			if (!loaded) script.Release();			
 		}
+			
+		
+		/// <summary>
+		/// Attaches a script to a particular line of dialogue as a condition.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="line">The line of dialogue to attach the script to.</param>
+		public void AttachScriptToConversationAsCondition(NWN2GameScript script, NWN2ConversationLine line)
+		{			
+			if (script == null) {
+				throw new ArgumentNullException("script");
+			}
+			if (line == null) {
+				throw new ArgumentNullException("line");
+			}
+			
+			NWN2ConditionalFunctor scriptFunctor = new NWN2ConditionalFunctor();
+			
+			bool loaded = script.Loaded;
+			if (!loaded) script.Demand();
+			
+			scriptFunctor.Script = script.Resource;
+		
+			line.OwningConnector.Conditions.Clear();
+			
+			line.OwningConnector.Conditions.Add(scriptFunctor);
+			
+			// If Adventure Author is loaded, its Conversation Writer needs to be refreshed:
+			
+        	try {
+	        	foreach (INWN2Plugin plugin in NWN2ToolsetMainForm.PluginHost.Plugins) {
+	        		
+	        		if (plugin.Name == "AdventureAuthor") {
+	        			
+	        			MethodInfo mi = plugin.GetType().GetMethod("NotifyConversationWriterOfChange",BindingFlags.Public | BindingFlags.Instance);
+	        				        			
+	        			if (mi != null) {
+	        				mi.Invoke(plugin,null);
+	        				return;
+	        			}
+	        			
+	        			else throw new MethodAccessException("Couldn't find method NotifyConversationWriterOfChange.");
+	        		}
+	        	}        	
+        	}
+			
+			catch (Exception) {}
+			
+//			if (!loaded) script.Release();			
+		}
 		
 		
 		/// <summary>

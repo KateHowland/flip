@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 using Sussex.Flip.Utils;
+using Sussex.Flip.Core;
 
 namespace Sussex.Flip.UI
 {
@@ -17,9 +18,11 @@ namespace Sussex.Flip.UI
 	public partial class FlipWindow : Window
 	{
 		protected TriggerBar triggerBar;	
+		protected ConditionalFrame conditionalFrame;
 		protected MoveablesPanel blockBox;
 		protected MoveableProvider provider;
 		protected ImageProvider imageProvider;
+		protected ScriptType mode;
 						
 		
 		/// <summary>
@@ -34,6 +37,13 @@ namespace Sussex.Flip.UI
 		/// save the current script to the target game artifact.
 		/// </summary>
 		public delegate bool SaveScriptDelegate(FlipWindow window);
+				
+		
+		/// <summary>
+		/// The delegate signature of a method to be called which will 
+		/// save the current conditional script to the target game artifact.
+		/// </summary>
+		public delegate bool SaveConditionalScriptDelegate(FlipWindow window);
 		
 		
 		/// <summary>
@@ -46,6 +56,12 @@ namespace Sussex.Flip.UI
 		/// The method to call when the user wants to save a script.
 		/// </summary>
 		protected SaveScriptDelegate saveScriptDelegate;
+		
+		
+		/// <summary>
+		/// The method to call when the user wants to save a conditional script.
+		/// </summary>
+		protected SaveConditionalScriptDelegate saveConditionalScriptDelegate;
 		
 		
 		// TODO: Bad implementation, replace with something better.
@@ -85,7 +101,17 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected FrameworkElement conditionModeUI;
+		public ConditionalFrame ConditionalFrame {
+			get { return conditionalFrame; }
+		}
+		
+		
+		/// <summary>
+		/// The current Flip mode, either Standard or Conditional.
+		/// </summary>
+		public ScriptType Mode {
+			get { return mode; }
+		}
 		
 		
 		protected SizedCanvas mainCanvas;
@@ -93,18 +119,22 @@ namespace Sussex.Flip.UI
 		                  ImageProvider imageProvider, 
 		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
 		                  SaveScriptDelegate saveScriptDelegate,
-		                  DeserialisationHelper deserialisationHelper)
+		                  SaveConditionalScriptDelegate saveConditionalScriptDelegate,
+		                  DeserialisationHelper deserialisationHelper,
+		                  ScriptType mode)
 		{
 			if (provider == null) throw new ArgumentNullException("provider");
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
 			if (openDeleteScriptDelegate == null) throw new ArgumentNullException("openDeleteScriptDelegate");
 			if (saveScriptDelegate == null) throw new ArgumentNullException("saveScriptDelegate");
+			if (saveConditionalScriptDelegate == null) throw new ArgumentNullException("saveConditionalScriptDelegate");
 			if (deserialisationHelper == null) throw new ArgumentNullException("deserialisationHelper");
 			
 			this.provider = provider;
 			this.imageProvider = imageProvider;
 			this.openDeleteScriptDelegate = openDeleteScriptDelegate;
 			this.saveScriptDelegate = saveScriptDelegate;
+			this.saveConditionalScriptDelegate = saveConditionalScriptDelegate;
 			ChosenDeserialisationHelper = deserialisationHelper;
 			
 			InitializeComponent();
@@ -148,29 +178,22 @@ namespace Sussex.Flip.UI
 						
 			// Set up trigger bar:
 			triggerBar = new TriggerBar(new SpineFitter());
-			triggerBar.SaveButton.Click += SaveScriptToModule;
-			                                        
+			triggerBar.SaveButton.Click += SaveScriptToModule;			                                        
 			Canvas.SetTop(triggerBar,30);
 			Canvas.SetLeft(triggerBar,30);
-			mainCanvas.Children.Add(triggerBar);
-			
+			mainCanvas.Children.Add(triggerBar);			
 			triggerBar.Changed += ScriptChanged;
 			UpdateNaturalLanguageView(triggerBar);
-			
-			// Set up condition bar:
-			StackPanel sp = new StackPanel();
-			Button b = new Button();
-			b.Content = "Save condition";
-			b.Click += delegate { MessageBox.Show("Saved."); Clear(); LeaveConditionMode(); };
-			sp.Children.Add(b);
-			b = new Button();
-			b.Content = "Cancel";
-			b.Click += delegate { Clear(); LeaveConditionMode(); };
-			sp.Children.Add(b);
-			conditionModeUI = sp;            
-			Canvas.SetTop(conditionModeUI,100);
-			Canvas.SetLeft(conditionModeUI,100);
-			mainCanvas.Children.Add(conditionModeUI);
+						
+			// Set up conditional frame:
+			conditionalFrame = new ConditionalFrame();
+			conditionalFrame.SaveButton.Click += SaveConditionalScript;	
+			conditionalFrame.CancelButton.Click += CancelConditionalScript;
+			Canvas.SetTop(conditionalFrame,30);
+			Canvas.SetLeft(conditionalFrame,30);
+			mainCanvas.Children.Add(conditionalFrame);			
+			conditionalFrame.Changed += ScriptChanged;
+			UpdateNaturalLanguageView(conditionalFrame);
 			
 			if (mainCanvas.ContextMenu == null) mainCanvas.ContextMenu = new ContextMenu();
 			MenuItem paste = new MenuItem();
@@ -196,11 +219,18 @@ namespace Sussex.Flip.UI
 				paste.IsEnabled = (Moveable.CopiedToClipboard != null);
 			};
 			
-			MouseDoubleClick += delegate 
-			{  
-				if (inConditionMode) LeaveConditionMode();
-				else EnterConditionMode();
-			};
+			this.mode = mode;
+		}
+		
+		
+		public FlipWindow(MoveableProvider provider, 
+		                  ImageProvider imageProvider, 
+		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
+		                  SaveScriptDelegate saveScriptDelegate,
+		                  SaveConditionalScriptDelegate saveConditionalScriptDelegate,
+		                  DeserialisationHelper deserialisationHelper) 
+			: this(provider,imageProvider,openDeleteScriptDelegate,saveScriptDelegate,saveConditionalScriptDelegate,deserialisationHelper,ScriptType.Standard)
+		{			
 		}
 		
 		
@@ -216,29 +246,51 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		bool inConditionMode = false;
-		
 		public void EnterConditionMode()
 		{
+			Clear();
+			
 			mainMenu.IsEnabled = false;
+			
+			// TODO:
+			// Enable and disable block categories.
+			
 			triggerBar.IsEnabled = false;
 			triggerBar.Visibility = Visibility.Hidden;
-			inConditionMode = true;
+			
+			conditionalFrame.IsEnabled = true;
+			conditionalFrame.Visibility = Visibility.Visible;
+			
+			UpdateNaturalLanguageView(conditionalFrame);
+			
+			mode = ScriptType.Conditional;
+			
 			mainGrid.Background = (Brush)Resources["conditionModeBrush"];
 			Title = "Condition mode.";
-			conditionModeUI.Visibility = Visibility.Visible;
 		}
 		
 		
 		public void LeaveConditionMode()
 		{
+			Clear();
+			
 			mainMenu.IsEnabled = true;
+			
+			// TODO:
+			// Enable and disable block categories.
+			
 			triggerBar.IsEnabled = true;
 			triggerBar.Visibility = Visibility.Visible;
-			inConditionMode = false;
+			
+			conditionalFrame.IsEnabled = false;
+			conditionalFrame.Visibility = Visibility.Hidden;
+			
+			UpdateNaturalLanguageView(triggerBar);
+			
+			mode = ScriptType.Standard;
+			
 			mainGrid.Background = (Brush)Resources["skyBrush"];
 			Title = "Flip mode.";
-			conditionModeUI.Visibility = Visibility.Hidden;
 		}
 		
 		
@@ -315,6 +367,7 @@ namespace Sussex.Flip.UI
 				triggerBar.Spine.SetPegCount(3);
 				
 				triggerBar.CurrentScriptIsBasedOn = String.Empty;
+				conditionalFrame.CurrentScriptIsBasedOn = String.Empty;
 				
 				IsDirty = false;	
 			}
@@ -322,7 +375,8 @@ namespace Sussex.Flip.UI
 				MessageBox.Show("Something went wrong when closing the script.\n\n" + x);
 			}
 		}
-		
+				
+		#region Deprecated		
 		
 //		/// <summary>
 //		/// Deprecated.
@@ -411,26 +465,28 @@ namespace Sussex.Flip.UI
 //			}
 //		}
 		
+//		public void OpenFlipScript(string path)
+//		{
+//			if (String.IsNullOrEmpty(path)) throw new ArgumentException("Invalid path.","path");
+//			if (!File.Exists(path)) throw new ArgumentException("Invalid path - file does not exist.","path");
+//			
+//			using (XmlReader reader = new XmlTextReader(path)) {
+//				LoadFlipCodeFromReader(reader);
+//			}			
+//			
+//			// Update the property 'CurrentScriptIsBasedOn', since the next time
+//			// the script is saved it will be as a new script based on the one
+//			// that we've just opened. (This essentially means that we never use
+//			// the value we're deserialising in code - it's so we can analyse
+//			// the script file at a later date.)
+//			string scriptName = Path.GetFileNameWithoutExtension(path);
+//			triggerBar.CurrentScriptIsBasedOn = scriptName;
+//			conditionalFrame.CurrentScriptIsBasedOn = scriptName;
+//			
+//			IsDirty = false;
+//		}
 		
-		public void OpenFlipScript(string path)
-		{
-			if (String.IsNullOrEmpty(path)) throw new ArgumentException("Invalid path.","path");
-			if (!File.Exists(path)) throw new ArgumentException("Invalid path - file does not exist.","path");
-			
-			using (XmlReader reader = new XmlTextReader(path)) {
-				LoadFlipCodeFromReader(reader);
-			}			
-			
-			// Update the property 'CurrentScriptIsBasedOn', since the next time
-			// the script is saved it will be as a new script based on the one
-			// that we've just opened. (This essentially means that we never use
-			// the value we're deserialising in code - it's so we can analyse
-			// the script file at a later date.)
-			string scriptName = Path.GetFileNameWithoutExtension(path);
-			triggerBar.CurrentScriptIsBasedOn = scriptName;
-			
-			IsDirty = false;
-		}
+		#endregion
 		
 		
 		public void OpenFlipScript(ScriptTriggerTuple tuple)
@@ -439,10 +495,24 @@ namespace Sussex.Flip.UI
 			
 			CloseScript();
 			
+			ScriptType scriptType;
+			
+			if (tuple.Trigger != null) {
+				scriptType = ScriptType.Standard;
+			}
+			
+			else if (tuple.Script != null) {
+				scriptType = tuple.Script.ScriptType;
+			}
+			
+			else { // Both trigger and script are null, so do nothing.				
+				return;
+			}
+						
 			if (tuple.Script != null) {				
 				using (TextReader tr = new StringReader(tuple.Script.Code)) {
 					XmlReader reader = new XmlTextReader(tr);
-					LoadFlipCodeFromReader(reader);
+					LoadFlipCodeFromReader(reader,scriptType);
 				}				
 			
 				// Update the property 'CurrentScriptIsBasedOn', since the next time
@@ -450,7 +520,8 @@ namespace Sussex.Flip.UI
 				// that we've just opened. (This essentially means that we never use
 				// the value we're deserialising in code - it's so we can analyse
 				// the script file at a later date.)
-				triggerBar.CurrentScriptIsBasedOn = tuple.Script.Name;				
+				triggerBar.CurrentScriptIsBasedOn = tuple.Script.Name;	
+				conditionalFrame.CurrentScriptIsBasedOn = tuple.Script.Name;
 			}
 			
 			if (tuple.Trigger != null) {
@@ -461,15 +532,23 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void LoadFlipCodeFromReader(XmlReader reader)
+		protected void LoadFlipCodeFromReader(XmlReader reader, ScriptType scriptType)
 		{
 			if (reader == null) throw new ArgumentNullException("reader");
 			
 			CloseScript();
 						
-			reader.MoveToContent();				
-			triggerBar.ReadXml(reader);
-			triggerBar.AssignImage(imageProvider);
+			reader.MoveToContent();		
+			
+			if (scriptType == ScriptType.Conditional) {
+				conditionalFrame.ReadXml(reader);
+				conditionalFrame.AssignImage(imageProvider);
+			}
+			
+			else {
+				triggerBar.ReadXml(reader);
+				triggerBar.AssignImage(imageProvider);
+			}
 		}
 		
 		
@@ -499,7 +578,10 @@ namespace Sussex.Flip.UI
 			try {
 				if (!IsDirty) IsDirty = true;
 				
-				string nl = UpdateNaturalLanguageView(triggerBar);
+				ITranslatable nlProvider = sender as ITranslatable;
+				if (nlProvider == null) throw new InvalidOperationException("Sender does not implement ITranslatable.");
+				
+				string nl = UpdateNaturalLanguageView(nlProvider);
 				
 				if (nl != previousNaturalLanguageValue) {
 					ActivityLog.Write(new Activity("ScriptDump","NLOutput",nl));	
@@ -548,10 +630,37 @@ namespace Sussex.Flip.UI
 			return saveScriptDelegate.Invoke(this);
 		}
 		
+				
+		protected void SaveConditionalScript(object sender, RoutedEventArgs e)
+		{			
+			try {
+				bool cancelled = !SaveConditionalScript();
+				if (!cancelled) {
+					LeaveConditionMode();
+				}
+			}
+			catch (Exception x) {
+				MessageBox.Show(String.Format("Something went wrong when saving script to conversation.{0}{0}{1}",Environment.NewLine,x));
+			}
+		}
+		
+				
+		protected bool SaveConditionalScript()
+		{		
+			return saveConditionalScriptDelegate.Invoke(this);
+		}
+		
+		
+		protected void CancelConditionalScript(object sender, RoutedEventArgs e)
+		{
+			LeaveConditionMode();
+		}
+		
 		
 		protected void Clear()
 		{
 			triggerBar.Clear();
+			conditionalFrame.Clear();
 			ClearCanvas();
 		}
 		

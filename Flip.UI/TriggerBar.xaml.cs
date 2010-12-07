@@ -124,25 +124,6 @@ namespace Sussex.Flip.UI
         {
         	return triggerSlot.GetAddress();
         }
-
-
-		public string GetCode()
-		{
-			System.Text.StringBuilder code = new System.Text.StringBuilder();
-			
-			code.AppendLine("#include \"ginc_param_const\"");
-			code.AppendLine("#include \"ginc_actions\"");
-			code.AppendLine("#include \"NW_I0_GENERIC\"");		
-			code.AppendLine("#include \"flip_functions\"");	
-			code.AppendLine("#include \"ginc_henchman\"");
-			code.AppendLine();
-			code.AppendLine("void main()");
-			code.AppendLine("{");
-			code.AppendLine(spine.GetCode());
-			code.AppendLine("}");
-			
-			return code.ToString();
-		}
     	
         
 		public string GetNaturalLanguage()
@@ -173,6 +154,12 @@ namespace Sussex.Flip.UI
 				
 				return code.ToString();
 			}
+		}
+		
+		
+		public string GetCode()
+		{
+			return String.Empty;
 		}
 		
 		

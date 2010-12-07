@@ -24,6 +24,7 @@
  */
 
 using System;
+using Sussex.Flip.Core;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -40,6 +41,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		private string val;
 		private string conversation;		
 		private Guid lineID;
+		private ScriptType attachedAs;
 		
 		
 		public string Value {
@@ -53,6 +55,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		public Guid LineID {
 			get { return lineID; }
 		}
+		
+		public ScriptType AttachedAs {
+			get { return attachedAs; }
+		}
 			
 		
 		public Nwn2ConversationAddress(string address)
@@ -64,7 +70,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			string[] components = address.Split(separatorChars,StringSplitOptions.None);
 			
-			if (components.Length != 3) throw new ArgumentException(formatError,"address");
+			if (components.Length != 4) throw new ArgumentException(formatError,"address");
 			
 			string targetTypeString = components[0];
 			
@@ -73,6 +79,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			try {
 				conversation = components[1];
 				lineID = new Guid(components[2]);
+				attachedAs = (ScriptType)Enum.Parse(typeof(ScriptType),components[3]);
 			}
 			catch (Exception e) {
 				throw new ArgumentException(formatError,"address",e);
