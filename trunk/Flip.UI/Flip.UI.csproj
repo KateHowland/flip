@@ -72,6 +72,7 @@
       <DependentUpon>AboutWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AbstractScriptWriter.cs" />
     <Compile Include="AndBlock.xaml.cs">
       <DependentUpon>AndBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -80,6 +81,12 @@
       <DependentUpon>Bag.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConditionalFrame.xaml.cs">
+      <DependentUpon>ConditionalFrame.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConditionalScriptWriter.cs" />
+    <Compile Include="Core\ScriptMode.cs" />
     <Compile Include="DeserialisationHelper.cs" />
     <Compile Include="BooleanBlock.cs" />
     <Compile Include="DefaultStatementBehaviour.cs" />
@@ -233,6 +240,7 @@
     <Page Include="Bag.xaml" />
     <Page Include="ChangeNumberDialog.xaml" />
     <Page Include="ChangeStringDialog.xaml" />
+    <Page Include="ConditionalFrame.xaml" />
     <Page Include="ConditionSlot.xaml" />
     <Page Include="DoWhileControl.xaml" />
     <Page Include="DropZone.xaml" />

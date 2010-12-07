@@ -367,6 +367,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// <param name="line">The line of dialogue to attach the script to.</param>
 		void AttachScriptToConversation(NWN2GameScript script, NWN2ConversationLine line);
 			
+		
+		/// <summary>
+		/// Attaches a script to a particular line of dialogue as a condition.
+		/// </summary>
+		/// <param name="script">The script to attach.</param>
+		/// <param name="line">The line of dialogue to attach the script to.</param>
+		void AttachScriptToConversationAsCondition(NWN2GameScript script, NWN2ConversationLine line);
+			
 			
 		/// <summary>
 		/// Clears the value of a named script slot on a given instance.

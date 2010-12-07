@@ -24,6 +24,7 @@
  */
 
 using System;
+using Sussex.Flip.Core;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 {
@@ -56,9 +57,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		}
 		
 		
-		public Nwn2ConversationAddress GetConversationAddress(string conversationName, Guid lineID)
+		public Nwn2ConversationAddress GetConversationAddress(string conversationName, Guid lineID, ScriptType scriptType)
 		{
-			return new Nwn2ConversationAddress(String.Format("Conversation{0}{1}{0}{2}",Nwn2ConversationAddress.Separator,conversationName,lineID.ToString()));
+			return new Nwn2ConversationAddress(String.Format("Conversation{0}{1}{0}{2}{0}{3}",Nwn2ConversationAddress.Separator,conversationName,lineID.ToString(),scriptType));
 		}
 	}
 }

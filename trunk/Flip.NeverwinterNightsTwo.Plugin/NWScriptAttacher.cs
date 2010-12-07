@@ -185,7 +185,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						throw new ArgumentException("Line with ID " + convAddress.LineID + " was not found in current module.","address");
 					}
 					
-					session.AttachScriptToConversation(script,line);
+					if (convAddress.AttachedAs == ScriptType.Conditional) session.AttachScriptToConversationAsCondition(script,line);
+						
+					else session.AttachScriptToConversation(script,line);
 				}
 				
 				else {

@@ -137,7 +137,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// 
 		/// </summary>
 		/// <param name="script"></param>
-		/// <param name="attachment">Sets the requirements for a script to be returned.</param>
+		/// <param name="attachment">Only return a script if it is attached
+		/// in the manner indicated by this parameter.</param>
 		/// <returns></returns>
 		/// <remarks>This method expects that the NWN2GameScript is already Loaded
 		/// (that is, the responsibility for calling Demand() falls to the client.)</remarks>
@@ -148,7 +149,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			string code, address, naturalLanguage;
 			ScriptWriter.ParseNWScript(script.Data, out code, out address, out naturalLanguage);		
 			
-			if (attachment == Attachment.Ignore) return new FlipScript(code,script.Name);
+			ScriptType scriptType = GetScriptType(script);
+			
+			if (attachment == Attachment.Ignore) return new FlipScript(code,scriptType,script.Name);
 			
 			NWN2GameModule mod = session.GetModule();					
 			if (mod == null) throw new InvalidOperationException("No module is open.");
@@ -185,7 +188,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						
 						IResourceEntry resource = typeof(NWN2ModuleInformation).GetProperty(nwn2Address.TargetSlot).GetValue(mod.ModuleInfo,null) as IResourceEntry;					
 						if (resource != null && resource.ResRef.Value == script.Name) {
-							return new FlipScript(code,script.Name);
+							return new FlipScript(code,scriptType,script.Name);
 						}
 					}
 					
@@ -195,7 +198,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						if (area != null) {						
 							IResourceEntry resource = typeof(NWN2GameArea).GetProperty(nwn2Address.TargetSlot).GetValue(area,null) as IResourceEntry;						
 							if (resource != null && resource.ResRef.Value == script.Name) {
-								return new FlipScript(code,script.Name);
+								return new FlipScript(code,scriptType,script.Name);
 							}
 						}
 					}
@@ -216,7 +219,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							if (blueprint != null) {			
 								IResourceEntry resource = blueprint.GetType().GetProperty(nwn2Address.TargetSlot).GetValue(blueprint,null) as IResourceEntry;
 								if (resource != null && resource.ResRef.Value == script.Name) {
-									return new FlipScript(code,script.Name);
+									return new FlipScript(code,scriptType,script.Name);
 								}								
 							}
 						}
@@ -236,7 +239,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								foreach (INWN2Instance instance in instances) {							
 									IResourceEntry resource = instance.GetType().GetProperty(nwn2Address.TargetSlot).GetValue(instance,null) as IResourceEntry;						
 									if (resource != null && resource.ResRef.Value == script.Name) {
-										return new FlipScript(code,script.Name);
+										return new FlipScript(code,scriptType,script.Name);
 									}
 								}
 							}
@@ -267,11 +270,28 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				IResourceEntry resource = line.Actions[0].Script;
 				if (resource != null && resource.ResRef.Value == script.Name) {
-					return new FlipScript(code,script.Name);
+					return new FlipScript(code,scriptType,script.Name);
 				}
 			}
 			
 			return null;
+		}	
+		
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="script"></param>
+		/// <returns></returns>
+		/// <remarks>This method expects that the NWN2GameScript is already Loaded
+		/// (that is, the responsibility for calling Demand() falls to the client.)</remarks>
+		public ScriptType GetScriptType(NWN2GameScript script)
+		{
+			if (script == null) throw new ArgumentNullException("script");
+						
+			if (script.Data.Contains("int StartingConditional()")) return ScriptType.Conditional;
+			else if (script.Data.Contains("void main()")) return ScriptType.Standard;
+			else throw new ArgumentException("Format of script was not recognised.","script");
 		}
 		
 					
