@@ -368,14 +368,12 @@ namespace Sussex.Flip.UI
 		public void CloseScript()
 		{			
 			try {
-				Clear();
-				
 				triggerBar.Spine.SetPegCount(3);
 				
 				triggerBar.CurrentScriptIsBasedOn = String.Empty;
 				conditionalFrame.CurrentScriptIsBasedOn = String.Empty;
 				
-				IsDirty = false;	
+				Clear();				
 			}
 			catch (Exception x) {
 				MessageBox.Show("Something went wrong when closing the script.\n\n" + x);
@@ -650,6 +648,7 @@ namespace Sussex.Flip.UI
 			triggerBar.Clear();
 			conditionalFrame.Clear();
 			ClearCanvas();
+			IsDirty = false;
 		}
 		
 		
