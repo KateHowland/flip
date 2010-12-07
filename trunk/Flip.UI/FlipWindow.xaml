@@ -71,7 +71,7 @@
 				
 					<MenuItem
 					Header="Save"
-					Click="SaveScriptToModule"/>
+					Click="SaveScript"/>
 					
 					<MenuItem
 					Header="Close"
