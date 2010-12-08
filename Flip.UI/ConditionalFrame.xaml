@@ -34,8 +34,8 @@
 			Content="Save"/>
 		
 			<Button
-			x:Name="cancelButton"
-			Content="Cancel"/>
+			x:Name="finishButton"
+			Content="Finish"/>
 		
 		</StackPanel>
 	

@@ -58,8 +58,8 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-    	public Button CancelButton {
-    		get { return cancelButton; }
+    	public Button FinishButton {
+    		get { return finishButton; }
     	}
     	
     	
