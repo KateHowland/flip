@@ -101,12 +101,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		/// <summary>
 		/// The delegate signature of a method to be called when a particular
-		/// line of conversation is to be used as the trigger for a script.
+		/// line of conversation is to have a script attached.
 		/// </summary>
-		/// <param name="line">The line of dialogue to use as a trigger.</param>
+		/// <param name="line">The line of dialogue to attach a script to.</param>
 		/// <param name="conversation">The conversation this line of dialogue is part of.</param>
-		public delegate void ProvideTriggerDelegate(NWN2ConversationConnector line, NWN2GameConversation conversation);
-		
+		public delegate void AddScriptToConversation(NWN2ConversationConnector line, NWN2GameConversation conversation);
+				
 		/// <summary>
 		/// The delegate signature of a method to be called when a blueprint 
 		/// (or blueprint collection) is to be used to create an instance 
@@ -122,10 +122,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public delegate void UpdateBlockWhenTagChangesDelegate(NWN2PropertyValueChangedEventArgs e);
 		
 		/// <summary>
-		/// The method to call when a line of conversation is to be used as a trigger
-		/// for a script.
+		/// The method to call when a line of conversation is to have a script added.
 		/// </summary>
-		protected ProvideTriggerDelegate useDialogueAsTriggerDelegate = null;
+		protected AddScriptToConversation addScriptToLine = null;
+		
+		/// <summary>
+		/// The method to call when a line of conversation is to have a condition added.
+		/// </summary>
+		protected AddScriptToConversation addConditionToLine = null;
 		
 		/// <summary>
 		/// The method to call when a blueprint is to be used to create an instance 
@@ -173,22 +177,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <summary>
 		/// Constructs a new <see cref="ToolsetUIModifier"/> instance.
 		/// </summary>
-		/// <param name="useDialogueAsTriggerDelegate">A delegate which will be invoked when 
-		/// the user tries to use a line of dialogue in the conversation editor as the trigger 
-		/// to fire a script.</param>
-		/// <param name="createBlockFromBlueprintDelegate">A delegate which will be invoked when 
+		/// <param name="addScriptToLine">A method which will be invoked when 
+		/// the user tries to add a script to a line of dialogue.</param>
+		/// <param name="AddScriptToConversation">A method which will be invoked when 
+		/// the user tries to add a condition to a line of dialogue.</param>
+		/// <param name="createBlockFromBlueprintDelegate">A method which will be invoked when 
 		/// a blueprint is to be used to create an instance block in Flip.</param>
-		/// <param name="updateBlockDelegate">A delegate which will be invoked when 
+		/// <param name="updateBlockDelegate">A method which will be invoked when 
 		/// a blueprint is to be used to create an instance block in Flip.</param>
-		public ToolsetUIModifier(ProvideTriggerDelegate useDialogueAsTriggerDelegate, 
+		public ToolsetUIModifier(AddScriptToConversation addScriptToLine, 
+		                         AddScriptToConversation addConditionToLine,
 		                         CreateBlockFromBlueprintDelegate createBlockFromBlueprintDelegate, 
 		                         UpdateBlockWhenTagChangesDelegate updateBlockDelegate)
 		{			
-			if (useDialogueAsTriggerDelegate == null) throw new ArgumentNullException("useDialogueAsTriggerDelegate");
+			if (addScriptToLine == null) throw new ArgumentNullException("addScriptToLine");
+			if (addConditionToLine == null) throw new ArgumentNullException("addConditionToLine");
 			if (createBlockFromBlueprintDelegate == null) throw new ArgumentNullException("createBlockFromBlueprintDelegate");
 			if (updateBlockDelegate == null) throw new ArgumentNullException("updateBlockDelegate");
 			
-			this.useDialogueAsTriggerDelegate = useDialogueAsTriggerDelegate;
+			this.addScriptToLine = addScriptToLine;
+			this.addConditionToLine = addConditionToLine;
 			this.createBlockFromBlueprintDelegate = createBlockFromBlueprintDelegate;
 			this.updateBlockDelegate = updateBlockDelegate;
 			
@@ -293,17 +301,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				GlacialTreeList tree = (GlacialTreeList)viewer.Controls["panelResults"].Controls["treeListResults"];
 				if (tree == null) throw new ApplicationException("Couldn't find GlacialTreeList.");
 								
-				winforms.MenuItem item = new winforms.MenuItem("Add Flip script");
-				item.Name = "AddEditScriptMenuItem";
+				winforms.MenuItem addEditScript = new winforms.MenuItem("Add script");
+				winforms.MenuItem deleteScript = new winforms.MenuItem("Delete script");
+				winforms.MenuItem addEditCondition = new winforms.MenuItem("Add condition");
+				winforms.MenuItem deleteCondition = new winforms.MenuItem("Delete condition");
 				
-				item.Click += delegate
+				addEditScript.Click += delegate
 				{
-					if (tree.SelectedNodes.Count == 0) {
-						MessageBox.Show("Select a line of dialogue first.");
-					}
-					
-					else if (tree.SelectedNodes.Count > 1) {
-						MessageBox.Show("Select only one line of dialogue.");						
+					if (tree.SelectedNodes.Count != 1) {
+						MessageBox.Show("Select a single line of the conversation.");
 					}
 					
 					else {
@@ -312,51 +318,137 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 													
 							NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
 							
-							if (connector == null) {
-								MessageBox.Show("You can't add a Flip script to the root. Select a line of dialogue instead.");
-							}
-							
-							else {							
-								useDialogueAsTriggerDelegate.Invoke(connector,viewer.Conversation);
-							}
+							if (connector != null) addScriptToLine.Invoke(connector,viewer.Conversation);
 						}
 						catch (Exception x) {							
-							MessageBox.Show("Something went wrong when trying to use a conversation line as an event.\n\n" + x);
+							MessageBox.Show("Something went wrong when adding/editing the script.\n\n" + x);
+						}
+					}
+				};
+				
+				addEditCondition.Click += delegate
+				{
+					if (tree.SelectedNodes.Count != 1) {
+						MessageBox.Show("Select a single line of the conversation.");
+					}
+					
+					else {
+						try {
+							GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
+													
+							NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
+							
+							if (connector != null) addConditionToLine.Invoke(connector,viewer.Conversation);
+						}
+						catch (Exception x) {							
+							MessageBox.Show("Something went wrong when adding/editing the script.\n\n" + x);
+						}
+					}
+				};
+				
+				deleteScript.Click += delegate
+				{
+					if (tree.SelectedNodes.Count != 1) {
+						MessageBox.Show("Select a single line of the conversation.");
+					}					
+					
+					else {
+						try {
+							GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
+													
+							NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
+							
+							if (connector != null && connector.Actions.Count > 0) {
+								        	
+						 		MessageBoxResult result = MessageBox.Show("Delete the script on this line?","Delete?", MessageBoxButton.YesNo);
+								if (result == MessageBoxResult.Yes) {
+									connector.Actions.Clear();
+									viewer.RefreshTreeItemForConnector(connector);		
+								}									
+							}							
+						}
+						catch (Exception x) {							
+							MessageBox.Show("Something went wrong when deleting the script.\n\n" + x);
+						}
+					}
+				};
+				
+				deleteCondition.Click += delegate
+				{
+					if (tree.SelectedNodes.Count != 1) {
+						MessageBox.Show("Select a single line of the conversation.");
+					}					
+					
+					else {
+						try {
+							GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
+													
+							NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
+							
+							if (connector != null && connector.Conditions.Count > 0) {
+								        	
+						 		MessageBoxResult result = MessageBox.Show("Delete the condition on this line?","Delete?", MessageBoxButton.YesNo);
+								if (result == MessageBoxResult.Yes) {
+									connector.Conditions.Clear();
+									viewer.RefreshTreeItemForConnector(connector);		
+								}									
+							}							
+						}
+						catch (Exception x) {							
+							MessageBox.Show("Something went wrong when deleting the condition.\n\n" + x);
 						}
 					}
 				};
 				
 				tree.ContextMenu.Popup += delegate
 				{  
-					if (tree.SelectedNodes.Count == 1) {
+					if (tree.SelectedNodes.Count != 1) {
+						addEditScript.Enabled = false;
+						addEditCondition.Enabled = false;
+						deleteScript.Enabled = false;
+						deleteCondition.Enabled = false;
+					}
+					
+					else {
 						GTLTreeNode node = (GTLTreeNode)tree.SelectedNodes[0];
 												
 						NWN2ConversationConnector connector = node.Tag as NWN2ConversationConnector;
 						
 						if (connector == null) {
-							item.Enabled = false;
-							item.Text = "Add Flip script";
+							addEditScript.Enabled = false;
+							addEditCondition.Enabled = false;
+						}						
+						else {
+							addEditScript.Enabled = true;
+							addEditCondition.Enabled = true;
 						}
 						
-						else {
-							item.Enabled = true;
-							
-							if (ScriptHelper.HasFlipScriptAttachedAsAction(connector)) {
-								item.Text = "Edit Flip script";
-							}
-							else {
-								item.Text = "Add Flip script";
-							}
+						if (connector != null && ScriptHelper.HasFlipScriptAttachedAsAction(connector)) {
+							addEditScript.Text = "Edit script";
+							deleteScript.Enabled = true;
 						}
-					}					
-					
-					else {
-						item.Enabled = false;
-						item.Text = "Add Flip script";
-					}
+						else {
+							addEditScript.Text = "Add script";
+							deleteScript.Enabled = false;
+						}
+						
+						if (connector != null && ScriptHelper.HasFlipScriptAttachedAsCondition(connector)) {
+							addEditCondition.Text = "Edit condition";
+							deleteCondition.Enabled = true;	
+						}
+						else {
+							addEditCondition.Text = "Add condition";
+							deleteCondition.Enabled = false;	
+						}
+					}	
 				};
 				
-				tree.ContextMenu.MenuItems.Add(item);
+				tree.ContextMenu.MenuItems.Add("-");
+				tree.ContextMenu.MenuItems.Add(addEditScript);
+				tree.ContextMenu.MenuItems.Add(deleteScript);
+				tree.ContextMenu.MenuItems.Add("-");
+				tree.ContextMenu.MenuItems.Add(addEditCondition);
+				tree.ContextMenu.MenuItems.Add(deleteCondition);
 			}
 			catch (Exception x) {
 				MessageBox.Show("Error when trying to integrate Flip with conversation editor.",x.ToString());

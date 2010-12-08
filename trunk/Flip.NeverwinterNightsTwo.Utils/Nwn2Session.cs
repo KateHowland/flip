@@ -799,6 +799,57 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		}
 		
 		
+//		/// <summary>
+//		/// Gets a line of dialogue in the given conversation.
+//		/// </summary>
+//		/// <param name="conversation">The conversation which has the line.</param>
+//		/// <param name="lineID">The unique ID of the desired line of dialogue.</param>
+//		/// <returns>The desired line of dialogue, or null 
+//		/// if the line could not be found.</returns>
+//		public NWN2ConversationLine GetConversationLine(NWN2GameConversation conversation, Guid lineID)
+//		{
+//			if (conversation == null) {
+//				throw new ArgumentNullException("conversation","Null conversation was provided.");
+//			}				
+//			if (lineID == null) {
+//				throw new ArgumentNullException("lineID","Null line ID was provided.");
+//			}	
+//			
+//			NWN2GameModule module = GetModule();
+//				
+//			if (module == null) {
+//				throw new InvalidOperationException("No module is currently open.");
+//			}				
+//			if (!module.Conversations.Contains(conversation)) {
+//				return null;
+//			}
+//			else {
+//				if (NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(conversation) == null) {
+//					conversation.Demand();
+//				}
+//				
+//				NWN2ConversationLine line = conversation.GetLineFromGUID(lineID);
+//				
+//				if (line != null) {					
+//					string x = "Looked for line with ID: " + lineID + "\n" + "And found it! Amongst these:\n";
+//					foreach (NWN2ConversationConnector cc in conversation.AllConnectors) {
+//						x += cc.Line.LineGuid + "\n";
+//					}
+//					System.Windows.MessageBox.Show(x.ToString());
+//				}
+//				else {
+//					string x = "Looked for line with ID: " + lineID + "\n" + "But couldn't find amongst these:\n";
+//					foreach (NWN2ConversationConnector cc in conversation.AllConnectors) {
+//						x += cc.Line.LineGuid + "\n";
+//					}
+//					System.Windows.MessageBox.Show(x.ToString());
+//				}
+//				
+//				return line;
+//			}
+//		}
+		
+		
 		/// <summary>
 		/// Gets the scripts in the current module.
 		/// </summary>
@@ -1242,13 +1293,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="script">The script to attach.</param>
 		/// <param name="line">The line of dialogue to attach the script to.</param>
-		public void AttachScriptToConversation(NWN2GameScript script, NWN2ConversationLine line)
+		/// <param name="conversation">The conversation this line is a part of.</param>
+		public void AttachScriptToConversation(NWN2GameScript script, NWN2ConversationLine line, NWN2GameConversation conversation)
 		{
 			if (script == null) {
 				throw new ArgumentNullException("script");
 			}
 			if (line == null) {
 				throw new ArgumentNullException("line");
+			}
+			if (conversation == null) {
+				throw new ArgumentNullException("conversation");
 			}
 			
 			NWN2ScriptFunctor scriptFunctor = new NWN2ScriptFunctor();
@@ -1283,6 +1338,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			catch (Exception) {}
 			
+			// If the Conversation Editor is open, it needs to be refreshed:
+			try {
+				NWN2ConversationViewer cv = NWN2ToolsetMainForm.App.GetViewerForResource(conversation) as NWN2ConversationViewer;
+				if (cv != null) {
+					cv.RefreshTreeItemForConnector(line.OwningConnector);
+				}
+			}
+			
+			catch (Exception) {}
+			
 //			if (!loaded) script.Release();			
 		}
 			
@@ -1292,13 +1357,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="script">The script to attach.</param>
 		/// <param name="line">The line of dialogue to attach the script to.</param>
-		public void AttachScriptToConversationAsCondition(NWN2GameScript script, NWN2ConversationLine line)
+		/// <param name="conversation">The conversation this line is a part of.</param>
+		public void AttachScriptToConversationAsCondition(NWN2GameScript script, NWN2ConversationLine line, NWN2GameConversation conversation)
 		{			
 			if (script == null) {
 				throw new ArgumentNullException("script");
 			}
 			if (line == null) {
 				throw new ArgumentNullException("line");
+			}
+			if (conversation == null) {
+				throw new ArgumentNullException("conversation");
 			}
 			
 			NWN2ConditionalFunctor scriptFunctor = new NWN2ConditionalFunctor();
@@ -1312,8 +1381,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			line.OwningConnector.Conditions.Add(scriptFunctor);
 			
-			// If Adventure Author is loaded, its Conversation Writer needs to be refreshed:
-			
+			// If Adventure Author is loaded, its Conversation Writer needs to be refreshed:			
         	try {
 	        	foreach (INWN2Plugin plugin in NWN2ToolsetMainForm.PluginHost.Plugins) {
 	        		
@@ -1330,6 +1398,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	        		}
 	        	}        	
         	}
+			
+			catch (Exception) {}
+			
+			// If the Conversation Editor is open, it needs to be refreshed:
+			try {
+				NWN2ConversationViewer cv = NWN2ToolsetMainForm.App.GetViewerForResource(conversation) as NWN2ConversationViewer;
+				if (cv != null) {
+					cv.RefreshTreeItemForConnector(line.OwningConnector);
+				}
+			}
 			
 			catch (Exception) {}
 			
