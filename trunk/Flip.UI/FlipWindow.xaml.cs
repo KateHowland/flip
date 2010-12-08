@@ -172,7 +172,7 @@ namespace Sussex.Flip.UI
 			// Set up conditional frame:
 			conditionalFrame = new ConditionalFrame();
 			conditionalFrame.SaveButton.Click += SaveScript;	
-			conditionalFrame.CancelButton.Click += CancelConditionalScript;
+			conditionalFrame.FinishButton.Click += LeaveConditionModeWithDialog;
 			Canvas.SetTop(conditionalFrame,30);
 			Canvas.SetLeft(conditionalFrame,30);
 			mainCanvas.Children.Add(conditionalFrame);			
@@ -616,9 +616,7 @@ namespace Sussex.Flip.UI
 		protected void SaveScript(object sender, RoutedEventArgs e)
 		{			
 			try {
-				bool saved = SaveScript();
-				
-				if (saved && mode == ScriptType.Conditional) LeaveConditionMode();
+				SaveScript();
 			}
 			catch (Exception x) {
 				MessageBox.Show(String.Format("Something went wrong when saving script to module.{0}{0}{1}",Environment.NewLine,x));
@@ -637,9 +635,41 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void CancelConditionalScript(object sender, RoutedEventArgs e)
+		protected void LeaveConditionModeWithDialog(object sender, RoutedEventArgs e)
+		{		
+			LeaveConditionModeWithDialog();
+		}
+		
+		
+		protected void LeaveConditionModeWithDialog()
 		{
+			if (IsDirty) {
+				MessageBoxResult result = MessageBox.Show("Save this condition?",
+											              "Save?",
+											              MessageBoxButton.YesNoCancel,
+											              MessageBoxImage.Question,
+											              MessageBoxResult.Cancel);
+				
+				switch (result) {
+					case MessageBoxResult.Cancel:
+						return;
+						
+					case MessageBoxResult.Yes:	
+						try {
+							bool cancelled = !SaveScript();					
+							if (cancelled) return;
+						}
+						catch (Exception x) {
+							MessageBox.Show(String.Format("Something went wrong when saving.{0}{0}{1}",Environment.NewLine,x));
+							return;
+						}
+						break;
+				}
+			}
+			
+			CloseScript();
 			LeaveConditionMode();
+			Close();
 		}
 		
 		
