@@ -356,6 +356,11 @@ namespace Sussex.Flip.UI
 					parentDescription = triggerBar.GetLogText();
 				}
 				
+				ConditionalFrame conditionalFrame = UIHelper.TryFindParent<ConditionalFrame>(this);
+				if (conditionalFrame != null) {
+					parentDescription = conditionalFrame.GetLogText();
+				}
+				
 				else {					
 					DependencyObject parent = UIHelper.GetParentObject(this);
 					if (parent != null) parentDescription = parent.ToString();
