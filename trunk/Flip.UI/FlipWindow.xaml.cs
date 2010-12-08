@@ -665,12 +665,6 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		protected void ViewCode(object sender, RoutedEventArgs e)
-		{
-			MessageBox.Show(triggerBar.GetCode());
-		}
-		
-		
 		protected void ClearCanvas(object sender, RoutedEventArgs e)
 		{
 			ClearCanvas();
