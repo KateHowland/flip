@@ -425,6 +425,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		/// <summary>
+		/// When a conversation is closed, close the current script if it was
+		/// connected to a conversation.
+		/// </summary>
+		public void ConversationClosing()
+		{
+			if (window != null) {
+				if (window.Mode == ScriptType.Conditional) {
+					window.CloseScript();
+					window.LeaveConditionMode();
+				}
+				else if (window.TriggerBar.TriggerControl != null && window.TriggerBar.TriggerControl.GetType() == typeof(DialogueWasSpoken)) {
+					window.CloseScript();
+				}
+			}
+		}
+		
+		
+		/// <summary>
 		/// Performs setup operations.
 		/// Called by the toolset when it is started.
 		/// </summary>
