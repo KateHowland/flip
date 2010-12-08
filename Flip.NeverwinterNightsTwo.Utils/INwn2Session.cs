@@ -365,7 +365,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="script">The script to attach.</param>
 		/// <param name="line">The line of dialogue to attach the script to.</param>
-		void AttachScriptToConversation(NWN2GameScript script, NWN2ConversationLine line);
+		/// <param name="conversation">The conversation this line is a part of.</param>
+		void AttachScriptToConversation(NWN2GameScript script, NWN2ConversationLine line, NWN2GameConversation conversation);
 			
 		
 		/// <summary>
@@ -373,7 +374,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		/// </summary>
 		/// <param name="script">The script to attach.</param>
 		/// <param name="line">The line of dialogue to attach the script to.</param>
-		void AttachScriptToConversationAsCondition(NWN2GameScript script, NWN2ConversationLine line);
+		/// <param name="conversation">The conversation this line is a part of.</param>
+		void AttachScriptToConversationAsCondition(NWN2GameScript script, NWN2ConversationLine line, NWN2GameConversation conversation);
 			
 			
 		/// <summary>

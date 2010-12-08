@@ -460,7 +460,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ProvideSpecialFunctionsScriptFile();
 			
 			// Modify the user interface:
-			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.ProvideTriggerDelegate(UseConversationLineAsTrigger),
+			ToolsetUIModifier UI = new ToolsetUIModifier(new ToolsetUIModifier.AddScriptToConversation(UseConversationLineAsTrigger),
+			                                             new ToolsetUIModifier.AddScriptToConversation(AddConditionToConversationLine),
 			                                             new ToolsetUIModifier.CreateBlockFromBlueprintDelegate(CreateInstanceBlocksFromBlueprints),
 			                                             new ToolsetUIModifier.UpdateBlockWhenTagChangesDelegate(UpdateBlockWithNewTag));
 			try {
