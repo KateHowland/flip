@@ -203,7 +203,8 @@ namespace Sussex.Flip.UI
 				paste.IsEnabled = (Moveable.CopiedToClipboard != null);
 			};
 			
-			this.mode = mode;
+			if (mode == ScriptType.Conditional) EnterConditionMode();
+			else LeaveConditionMode();
 		}
 		
 		
