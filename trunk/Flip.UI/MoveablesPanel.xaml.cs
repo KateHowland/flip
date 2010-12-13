@@ -80,7 +80,8 @@ namespace Sussex.Flip.UI
 			{  
 				tabs.SelectedItem = bag;
 				radioButton.BitmapEffect = highlight;
-				ActivityLog.Write(new Activity("SelectedCategory","Category",bagName));
+				//ActivityLog.Write(new Activity("SelectedCategory","Category",bagName));
+				Log.WriteAction(LogAction.selected,"blockcategory",bagName);
 			};
 			radioButton.Unchecked += delegate 
 			{  

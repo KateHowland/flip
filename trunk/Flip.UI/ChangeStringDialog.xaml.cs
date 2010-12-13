@@ -60,7 +60,8 @@ namespace Sussex.Flip.UI
     		else {
     			string oldValue = block.Value;
 	    		block.Value = valueTextBox.Text;
-				ActivityLog.Write(new Activity("ChangedValueOfStringBlock","OldValue",oldValue,"NewValue",block.Value));
+				//ActivityLog.Write(new Activity("ChangedValueOfStringBlock","OldValue",oldValue,"NewValue",block.Value));
+				Log.WriteAction(LogAction.edited,"stringblock","changed value from " + oldValue + " to " + block.Value);
 	    		Close();
     		}
     	}

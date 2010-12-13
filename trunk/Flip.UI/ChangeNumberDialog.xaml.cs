@@ -65,7 +65,8 @@ namespace Sussex.Flip.UI
     			else {
     				string oldValue = block.Value.ToString();
 	    			block.Value = newValue;
-	    			ActivityLog.Write(new Activity("ChangedValueOfNumberBlock","OldValue",oldValue,"NewValue",block.Value.ToString()));
+	    			//ActivityLog.Write(new Activity("ChangedValueOfNumberBlock","OldValue",oldValue,"NewValue",block.Value.ToString()));
+					Log.WriteAction(LogAction.edited,"numberblock","changed value from " + oldValue + " to " + block.Value);
     				Close();
     			}
     		}

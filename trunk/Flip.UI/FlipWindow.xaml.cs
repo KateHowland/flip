@@ -190,7 +190,8 @@ namespace Sussex.Flip.UI
 						Point position = Mouse.GetPosition(this);
 						copied.MoveTo(position);				
 						PlaceInWorkspace(copied);
-						ActivityLog.Write(new Activity("PlacedBlock","Block",copied.GetLogText(),"PlacedOn","Canvas"));
+						//ActivityLog.Write(new Activity("PlacedBlock","Block",copied.GetLogText(),"PlacedOn","Canvas"));
+						Log.WriteAction(LogAction.placed,"block",copied.GetLogText() + " on canvas");
 					}
 				}
 				catch (Exception x) {
@@ -342,7 +343,8 @@ namespace Sussex.Flip.UI
 		protected void NewScript(object sender, RoutedEventArgs e)
 		{
 			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
-			ActivityLog.Write(new Activity("NewScript","CreatedVia","FileMenu","Event",String.Empty));
+			//ActivityLog.Write(new Activity("NewScript","CreatedVia","FileMenu","Event",String.Empty));
+			Log.WriteAction(LogAction.added,"script","via file menu");
 		}
 		
 		
@@ -362,7 +364,8 @@ namespace Sussex.Flip.UI
 		protected void CloseScript(object sender, RoutedEventArgs e)
 		{
 			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
-			ActivityLog.Write(new Activity("ClosedScript"));
+			//ActivityLog.Write(new Activity("ClosedScript"));
+			Log.WriteAction(LogAction.closed,"script");
 		}
 		
 		
@@ -589,7 +592,8 @@ namespace Sussex.Flip.UI
 				string nl = UpdateNaturalLanguageView(nlProvider);
 				
 				if (nl != previousNaturalLanguageValue) {
-					ActivityLog.Write(new Activity("ScriptDump","NLOutput",nl));	
+					//ActivityLog.Write(new Activity("ScriptDump","NLOutput",nl));	
+					Log.WriteMessage("script output: " + nl.Replace(Environment.NewLine,String.Empty)); // remove new line characters
 					previousNaturalLanguageValue = nl;
 				}
 			}
@@ -846,10 +850,12 @@ namespace Sussex.Flip.UI
 						moveable.MoveTo(position);
 						
 						if (movingWithinCanvas) {
-							ActivityLog.Write(new Activity("MovedWithinCanvas","Block",moveable.GetLogText()));	
+							//ActivityLog.Write(new Activity("MovedWithinCanvas","Block",moveable.GetLogText()));	
+							Log.WriteAction(LogAction.moved,"block",moveable.GetLogText() + " to different spot on canvas");
 						}
 						else {
-							ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","Canvas"));						
+							//ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","Canvas"));	
+							Log.WriteAction(LogAction.placed,"block",moveable.GetLogText() + " on canvas");
 						}
 					}
 				}
@@ -868,7 +874,8 @@ namespace Sussex.Flip.UI
 						Moveable moveable = (Moveable)e.Data.GetData(typeof(Moveable));
 						if (!blockBox.HasMoveable(moveable)) {
 							moveable.Remove();
-							ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","BackInBox"));
+							//ActivityLog.Write(new Activity("PlacedBlock","Block",moveable.GetLogText(),"PlacedOn","BackInBox"));
+			    			Log.WriteAction(LogAction.placed,"block",moveable.GetLogText() + " back in box");
 						}
 						e.Handled = true;
 					}
