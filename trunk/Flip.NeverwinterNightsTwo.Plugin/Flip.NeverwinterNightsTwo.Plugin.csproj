@@ -170,6 +170,7 @@
     <Compile Include="Objects\WildcardBehaviour.cs" />
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
     <Compile Include="ScriptHelper.cs">
+      <DependentUpon>NWScriptTranslator.cs</DependentUpon>
     </Compile>
     <Compile Include="ScriptSelector.xaml.cs">
       <DependentUpon>ScriptSelector.xaml</DependentUpon>

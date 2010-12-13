@@ -735,38 +735,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 				return null;
 			}
 			else {
+				
+				// Check whether there's an up-to-date version currently being edited in the
+				// conversation editor, and if so return that. Otherwise, use the saved version,
+				// which will be the up-to-date version if using the conversation *writer*.
+				
+				// Note also that GetViewerFromResource appears to be broken and is not used here.
+				
+				foreach (INWN2Viewer v in NWN2ToolsetMainForm.App.GetAllViewers()) {
+					NWN2GameConversation conv = v.ViewedResource as NWN2GameConversation;
+											
+					if (conv != null && conv.Name == name) return conv;
+				}
+				
 				return module.Conversations[name];
 			}
 		}
-		
-		
-//		/// <summary>
-//		/// Gets a conversation in the current module.
-//		/// </summary>
-//		/// <param name="name">The name of the conversation.</param>
-//		/// <returns>The named conversation, or null 
-//		/// if the conversation could not be found.</returns>
-//		public NWN2GameConversation GetConversation(string name)
-//		{
-//			if (name == null) {
-//				throw new ArgumentNullException("name","No conversation name was provided (was null).");
-//			}	
-//			if (name == String.Empty) {
-//				throw new ArgumentException("name","No conversation name was provided (was empty).");
-//			}		
-//				
-//			NWN2GameModule module = GetModule();
-//				
-//			if (module == null) {
-//				throw new InvalidOperationException("No module is currently open.");
-//			}				
-//			if (!module.Conversations.ContainsCaseInsensitive(name)) {
-//				return null;
-//			}
-//			else {
-//				return module.Conversations[name];
-//			}
-//		}
 		
 		
 		/// <summary>
@@ -784,70 +768,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			if (lineID == null) {
 				throw new ArgumentNullException("lineID","Null line ID was provided.");
 			}	
-			
-			NWN2GameModule module = GetModule();
 				
-			if (module == null) {
-				throw new InvalidOperationException("No module is currently open.");
-			}				
-			if (!module.Conversations.Contains(conversation)) {
-				return null;
-			}
-			else {
-				return conversation.GetLineFromGUID(lineID);
-			}
+			return conversation.GetLineFromGUID(lineID);
 		}
-		
-		
-//		/// <summary>
-//		/// Gets a line of dialogue in the given conversation.
-//		/// </summary>
-//		/// <param name="conversation">The conversation which has the line.</param>
-//		/// <param name="lineID">The unique ID of the desired line of dialogue.</param>
-//		/// <returns>The desired line of dialogue, or null 
-//		/// if the line could not be found.</returns>
-//		public NWN2ConversationLine GetConversationLine(NWN2GameConversation conversation, Guid lineID)
-//		{
-//			if (conversation == null) {
-//				throw new ArgumentNullException("conversation","Null conversation was provided.");
-//			}				
-//			if (lineID == null) {
-//				throw new ArgumentNullException("lineID","Null line ID was provided.");
-//			}	
-//			
-//			NWN2GameModule module = GetModule();
-//				
-//			if (module == null) {
-//				throw new InvalidOperationException("No module is currently open.");
-//			}				
-//			if (!module.Conversations.Contains(conversation)) {
-//				return null;
-//			}
-//			else {
-//				if (NWN2Toolset.NWN2ToolsetMainForm.App.GetViewerForResource(conversation) == null) {
-//					conversation.Demand();
-//				}
-//				
-//				NWN2ConversationLine line = conversation.GetLineFromGUID(lineID);
-//				
-//				if (line != null) {					
-//					string x = "Looked for line with ID: " + lineID + "\n" + "And found it! Amongst these:\n";
-//					foreach (NWN2ConversationConnector cc in conversation.AllConnectors) {
-//						x += cc.Line.LineGuid + "\n";
-//					}
-//					System.Windows.MessageBox.Show(x.ToString());
-//				}
-//				else {
-//					string x = "Looked for line with ID: " + lineID + "\n" + "But couldn't find amongst these:\n";
-//					foreach (NWN2ConversationConnector cc in conversation.AllConnectors) {
-//						x += cc.Line.LineGuid + "\n";
-//					}
-//					System.Windows.MessageBox.Show(x.ToString());
-//				}
-//				
-//				return line;
-//			}
-//		}
 		
 		
 		/// <summary>
