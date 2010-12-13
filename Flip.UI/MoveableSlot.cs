@@ -262,7 +262,8 @@ namespace Sussex.Flip.UI
 							Contents = moveable;
 						}
 							
-						ActivityLog.Write(new Activity("PlacedBlock","Block",Contents.GetLogText(),"PlacedOn",this.GetLogText()));
+						//ActivityLog.Write(new Activity("PlacedBlock","Block",Contents.GetLogText(),"PlacedOn",this.GetLogText()));
+						Log.WriteAction(LogAction.placed,"block",Contents.GetLogText() + " on " + this.GetLogText());
 					}
 					e.Handled = true;
         		}
@@ -368,7 +369,7 @@ namespace Sussex.Flip.UI
 				}
 			}
 			
-			return "Slot on " + parentDescription;
+			return parentDescription;
 		}
 		
 		#endregion

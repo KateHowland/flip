@@ -284,7 +284,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					string bag = String.Format(Nwn2MoveableProvider.InstanceBagNamingFormat,blueprint.ObjectType);
 					if (window.BlockBox.HasBag(bag)) {
 						window.BlockBox.AddMoveable(bag,block,true);
-						ActivityLog.Write(new Activity("CreatedBlockFromBlueprint","Block",block.GetLogText()));
+						//ActivityLog.Write(new Activity("CreatedBlockFromBlueprint","Block",block.GetLogText()));
+						Log.WriteMessage("created blueprint block (" + block.GetLogText() + ")");
 					}
 				}
 			}
@@ -322,9 +323,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				window.OpenFlipScript(tuple);
 				
-				string triggerTextForLog = trigger == null ? String.Empty : trigger.GetLogText();
-				
-				ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",triggerTextForLog));
+				//ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",triggerTextForLog));
+						
+				if (trigger != null) {
+					Log.WriteAction(LogAction.opened,"script",script.Name + " (attached to '" + trigger.GetLogText() + "')");
+				}
+				else {							
+					Log.WriteAction(LogAction.opened,"script",script.Name);
+				}
 			}
 			catch (Exception x) {
 				throw new ApplicationException("Failed to open script '" + script.Name + "'.",x);
@@ -356,7 +362,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				window.OpenFlipScript(new ScriptTriggerTuple(flipScript,trigger));
 				
-				ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",trigger.GetLogText()));		
+				//ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",trigger.GetLogText()));	
+				Log.WriteAction(LogAction.opened,"script",script.Name + " (attached to line '" + line.Line.Text.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage) + "')");
 			}
 			
 			else {
@@ -364,7 +371,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				window.SetTrigger(trigger);
 				window.IsDirty = true;
 				
-				ActivityLog.Write(new Activity("NewScript","CreatedVia","UsingConversationLineAsEvent","Event",trigger.GetLogText()));
+				//ActivityLog.Write(new Activity("NewScript","CreatedVia","UsingConversationLineAsEvent","Event",trigger.GetLogText()));
+				string lineText; 
+				try {
+					lineText = line.Line.Text.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage).Value;
+				}
+				catch (Exception) {
+					lineText = String.Empty;
+				}
+				Log.WriteAction(LogAction.added,"script","to a line of conversation ('" + lineText + "')");
 			}
 		}
 		
@@ -395,14 +410,23 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				window.OpenFlipScript(new ScriptTriggerTuple(flipScript,null));
 				
-				ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",String.Empty));		
+				//ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",String.Empty));
+				Log.WriteAction(LogAction.opened,"script",script.Name + "(attached as condition to line '" + line.Line.Text.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage) + "')");
 			}
 			
 			else {
 				
 				window.IsDirty = true;
 				
-				ActivityLog.Write(new Activity("NewScript","CreatedVia","AddingConditionToConversationLine","Event",String.Empty));
+				//ActivityLog.Write(new Activity("NewScript","CreatedVia","AddingConditionToConversationLine","Event",String.Empty));
+				string lineText; 
+				try {
+					lineText = line.Line.Text.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage).Value;
+				}
+				catch (Exception) {
+					lineText = String.Empty;
+				}
+				Log.WriteAction(LogAction.added,"script","as condition to a line of conversation ('" + lineText + "')");
 			}
 		}
 		
@@ -477,7 +501,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					flipButton.Activate += delegate 
 					{ 
 						LaunchFlip(); 
-						ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Toolbar"));
+						//ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Toolbar"));
+						Log.WriteAction(LogAction.launched,"flip","from toolbar");
 					};
 				}
 			}
@@ -521,7 +546,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				try {
 					LaunchFlip();
-					ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Menu"));
+					//ActivityLog.Write(new Activity("LaunchedFlip","LaunchedFrom","Menu"));
+					Log.WriteAction(LogAction.launched,"flip","from plugin menu");
 				}
 				catch (Exception x) {
 					MessageBox.Show("Something went wrong when trying to launch Flip.\n\n" + x);
@@ -530,31 +556,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			pluginMenuItem.Items.Add(launchFlip);	
 			
-			StartLogging();
+			//StartLogging();
 		}
 		
 		
-		PathChecker pathChecker = new PathChecker();
-		protected void StartLogging()
-		{
-			try {				
-				string saveTo = Path.Combine(FlipLogsPath,Environment.UserName);
-				try {
-					if (!Directory.Exists(saveTo)) Directory.CreateDirectory(saveTo);
-				}
-				catch (Exception) {
-					saveTo = FlipLogsPath;
-				}
-				
-				string path = Path.Combine(saveTo,ActivityLog.GetFilename());
-				path = pathChecker.GetUnusedFilePath(path);
-				
-				ActivityLog.StartLog(path);
-			}
-			catch (Exception x) {
-				MessageBox.Show("Failed to begin log of Flip activity.\n\n" + x);
-			}
-		}
+//		PathChecker pathChecker = new PathChecker();
+//		protected void StartLogging()
+//		{
+//			try {				
+//				string saveTo = Path.Combine(FlipLogsPath,Environment.UserName);
+//				try {
+//					if (!Directory.Exists(saveTo)) Directory.CreateDirectory(saveTo);
+//				}
+//				catch (Exception) {
+//					saveTo = FlipLogsPath;
+//				}
+//				
+//				string path = Path.Combine(saveTo,ActivityLog.GetFilename());
+//				path = pathChecker.GetUnusedFilePath(path);
+//				
+//				ActivityLog.StartLog(path);
+//			}
+//			catch (Exception x) {
+//				MessageBox.Show("Failed to begin log of Flip activity.\n\n" + x);
+//			}
+//		}
 		
 		
 		protected void ProvideSpecialFunctionsScriptFile()
@@ -629,7 +655,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				if (window.AskWhetherToSaveCurrentScript() != MessageBoxResult.Cancel) {
 					window.CloseScript();
 					window.Visibility = Visibility.Hidden;
-					ActivityLog.Write(new Activity("ClosedFlip"));
+					Log.WriteAction(LogAction.exited,"flip");
 				}
 			};
 			
@@ -661,7 +687,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						
 						string bag = Nwn2MoveableProvider.SpecialBagName;					
 						window.BlockBox.AddMoveable(bag,block,true);
-						ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogText()));
+						//ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogText()));
+						Log.WriteMessage("created wildcard block (" + block.GetLogText() + ")");
 					}
 				}
 				catch (Exception x) {
@@ -683,18 +710,28 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};			
 			window.DevelopmentMenu.Items.Add(openTriggerlessScripts);
 						
-			MenuItem showLogWindow = new MenuItem();
-			showLogWindow.Header = "Show log window";
-			showLogWindow.Click += delegate 
-			{  
-				try {
-					new ActivityLogWindow().Show();
-				}
-				catch (Exception x) {
-					MessageBox.Show("Something went wrong when launching the log window.\n\n" + x);
-				}
-			};			
-			window.DevelopmentMenu.Items.Add(showLogWindow);
+//			MenuItem showLogWindow = new MenuItem();
+//			showLogWindow.Header = "Show log window";
+//			showLogWindow.Click += delegate 
+//			{  
+//				try {
+//					new ActivityLogWindow().Show();
+//				}
+//				catch (Exception x) {
+//					MessageBox.Show("Something went wrong when launching the log window.\n\n" + x);
+//				}
+//			};			
+//			window.DevelopmentMenu.Items.Add(showLogWindow);
+				
+			// Start recording debug messages and user actions:
+			try {
+				string logsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"Adventure Author");			
+				Tools.EnsureDirectoryExists(logsPath);					
+				LogWriter.StartRecording("flip");
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when setting up a Flip user log.\n" + x);
+			}
 		}
 		
 		
@@ -738,10 +775,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						window.OpenFlipScript(dialog.Selected.DeepCopy());
 						
 						if (dialog.Selected.Trigger != null) {
-							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
+							//ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
+							Log.WriteAction(LogAction.opened,"script",dialog.Selected.Script.Name + " (attached to '" + dialog.Selected.Trigger.GetLogText() + "')");
 						}
 						else {							
-							ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
+							//ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
+							Log.WriteAction(LogAction.opened,"script",dialog.Selected.Script.Name);
 						}
 					}
 					catch (Exception x) {						
@@ -754,10 +793,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						session.DeleteScript(dialog.Selected.Script.Name);
 						
 						if (dialog.Selected.Trigger != null) {
-							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
+							//ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
+							Log.WriteAction(LogAction.deleted,"script",dialog.Selected.Script.Name + " (was attached to '" + dialog.Selected.Trigger.GetLogText() + "')");
 						}
 						else {							
-							ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
+							//ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
+							Log.WriteAction(LogAction.deleted,"script",dialog.Selected.Script.Name);
 						}
 						
 						MessageBox.Show("Script deleted.");
@@ -777,7 +818,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (attacher == null) throw new InvalidOperationException("No attacher to save scripts with.");
 			
 			if (!window.IsComplete) {
-				ActivityLog.Write(new Activity("TriedToSaveIncompleteScript"));
+				//ActivityLog.Write(new Activity("TriedToSaveIncompleteScript"));
+				Log.WriteMessage("tried to save incomplete script");
 				MessageBox.Show("Your script isn't finished! Fill in all the blanks before saving.");
 				return false;
 			}
@@ -802,7 +844,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 				window.IsDirty = false;
 			
-				ActivityLog.Write(new Activity("SavedScript","SavedAs",savedAs));
+				//ActivityLog.Write(new Activity("SavedScript","SavedAs",savedAs));
+				Log.WriteAction(LogAction.saved,"script","as "+ savedAs);
 				
 				//MessageBox.Show("Script was saved successfully.");
 				
@@ -810,8 +853,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			catch (MatchingInstanceNotFoundException x) {
-				ActivityLog.Write(new Activity("TriedToSaveScriptButTargetCouldNotBeFound","TargetType",x.Address.TargetType.ToString(),"TargetTagOrResRef",x.Address.InstanceTag));
-				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " + 
+				//ActivityLog.Write(new Activity("TriedToSaveScriptButTargetCouldNotBeFound","TargetType",x.Address.TargetType.ToString(),"TargetTagOrResRef",x.Address.InstanceTag));
+				Log.WriteMessage("tried to save script but couldn't find target (was looking for " + x.Address.TargetType + " with tag/resref " + x.Address.InstanceTag + ")");
+				MessageBox.Show(String.Format("There's no {0} like this (with tag '{1}') in any area that's open.\nMake sure that the area containing " +
 				                              "the {0} is open when you try to save, or it won't work.",x.Address.TargetType,x.Address.InstanceTag));
 				return false;
 			}
@@ -959,7 +1003,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{			
 			// Stop logging Flip actions:
 			try {
-				ActivityLog.StopLog();
+				LogWriter.StopRecording();
+				//ActivityLog.StopLog();
 			}
 			catch (Exception x) {
 				MessageBox.Show("Something went wrong when closing Flip activity log.\n\n" + x);

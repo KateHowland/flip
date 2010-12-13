@@ -43,6 +43,7 @@ using OEIShared.Utils;
 using VisualHint.SmartPropertyGrid;
 using TD.SandBar;
 using winforms = System.Windows.Forms;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -362,9 +363,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								        	
 						 		MessageBoxResult result = MessageBox.Show("Delete the script on this line?","Delete?", MessageBoxButton.YesNo);
 								if (result == MessageBoxResult.Yes) {
+	 								string scriptName = connector.Actions[0].Script.FullName;
 									connector.Actions.Clear();
-									viewer.RefreshTreeItemForConnector(connector);		
-								}									
+									viewer.RefreshTreeItemForConnector(connector);	
+	 								Log.WriteAction(LogAction.deleted,"script",scriptName + " (was attached to line '" + connector.Line.Text.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage) + "')");		
+						 		}
 							}							
 						}
 						catch (Exception x) {							
@@ -389,9 +392,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								        	
 						 		MessageBoxResult result = MessageBox.Show("Delete the condition on this line?","Delete?", MessageBoxButton.YesNo);
 								if (result == MessageBoxResult.Yes) {
+	 								string scriptName = connector.Conditions[0].Script.FullName;
 									connector.Conditions.Clear();
-									viewer.RefreshTreeItemForConnector(connector);		
-								}									
+									viewer.RefreshTreeItemForConnector(connector);	
+									Log.WriteAction(LogAction.deleted,"script",scriptName + " (was attached as condition to line '" + connector.Line.Text.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage) + "')");
+						 		}									
 							}							
 						}
 						catch (Exception x) {							

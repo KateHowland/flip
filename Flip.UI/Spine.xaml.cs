@@ -219,7 +219,8 @@ namespace Sussex.Flip.UI
 				}
 			    
 			    try {
-			    	ActivityLog.Write(new Activity("PlacedBlock","Block",target.Slot.Contents.GetLogText(),"PlacedOn",target.Slot.GetLogText()));
+			    	Log.WriteAction(LogAction.placed,"block",target.Slot.Contents.GetLogText() + " on " + target.Slot.GetLogText());
+			    	//ActivityLog.Write(new Activity("PlacedBlock","Block",target.Slot.Contents.GetLogText(),"PlacedOn",target.Slot.GetLogText()));
 			    }
 			    catch (Exception) {}
 			    
@@ -298,7 +299,8 @@ namespace Sussex.Flip.UI
 				string parentText;
 				if (Pegs.Count > 0) parentText = ((Peg)Pegs[0]).Slot.GetLogText();
 				else parentText = String.Empty;
-				ActivityLog.Write(new Activity("ShrunkPegs","On",parentText));
+				Log.WriteMessage("removed all empty pegs on " + parentText);
+				//ActivityLog.Write(new Activity("ShrunkPegs","On",parentText));
 			}
 			catch (Exception) {}
 		}
@@ -308,7 +310,8 @@ namespace Sussex.Flip.UI
 		{
 			Peg peg = AddPeg(true,0);
 			try {
-				ActivityLog.Write(new Activity("AddedPeg","On",peg.Slot.GetLogText()));
+				Log.WriteAction(LogAction.added,"peg","on " + peg.Slot.GetLogText());
+				//ActivityLog.Write(new Activity("AddedPeg","On",peg.Slot.GetLogText()));
 			}
 			catch (Exception) {}
 		}
