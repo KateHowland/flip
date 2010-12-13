@@ -179,6 +179,40 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						throw new ArgumentException("Conversation '" + convAddress.Conversation + "' was not found in current module.","address");
 					}
 					
+//					foreach (NWN2Toolset.NWN2.Views.INWN2Viewer v in NWN2Toolset.NWN2ToolsetMainForm.App.GetAllViewers()) {
+//						NWN2Toolset.NWN2.Views.NWN2ConversationViewer cv = v as NWN2Toolset.NWN2.Views.NWN2ConversationViewer;
+//						if (cv != null) {
+//							System.Windows.MessageBox.Show("From viewer...\n" + cv.Conversation.Name + 
+//							                               "\nConnectors: " + cv.Conversation.AllConnectors.Count + "\n" +
+//							                               "Entries: " + cv.Conversation.Entries.Count + "\n" +
+//							                               "Replies: " + cv.Conversation.Replies.Count + "\n" +
+//							                               "Loaded: " + conversation.Loaded);
+//						}
+//					}
+//					
+//					
+//							System.Windows.MessageBox.Show("From module, before insisting on load...\n" + conversation.Name + 
+//							                               "\nConnectors: " + conversation.AllConnectors.Count + "\n" +
+//							                               "Entries: " + conversation.Entries.Count + "\n" +
+//							                               "Replies: " + conversation.Replies.Count + "\n" +
+//							                               "Loaded: " + conversation.Loaded);
+//					
+//					
+//					
+//					if (!conversation.Loaded) conversation.Demand();
+//					
+//					
+//							System.Windows.MessageBox.Show("From module, after insisting on load...\n" + conversation.Name + 
+//							                               "\nConnectors: " + conversation.AllConnectors.Count + "\n" +
+//							                               "Entries: " + conversation.Entries.Count + "\n" +
+//							                               "Replies: " + conversation.Replies.Count + "\n" +
+//							                               "Loaded: " + conversation.Loaded);
+					
+					
+					
+					
+					
+					
 					NWN2ConversationLine line = session.GetConversationLine(conversation,convAddress.LineID);
 					
 					if (line == null) {
