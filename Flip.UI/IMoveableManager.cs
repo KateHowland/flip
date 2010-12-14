@@ -22,6 +22,7 @@ namespace Sussex.Flip.UI
 		void DisplayBag(string bagName);
 		void RemoveBag(string bagName);
 		void AddMoveable(string bagName, Moveable moveable);
+		void AddMoveable(string bagName, Moveable moveable, bool bringIntoView);
 		void RemoveMoveable(string bagName, Moveable moveable);
 		void EmptyBag(string bagName);
 		UIElementCollection GetMoveables(string bagName);

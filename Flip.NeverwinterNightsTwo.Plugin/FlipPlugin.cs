@@ -230,6 +230,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						
 						else if (o is NWN2GameArea) {
 							NWN2GameArea area = (NWN2GameArea)o;
+							
+							// Refuse changes to tags or areas unless they are to match the resource name:
+							if (e.PropertyName == "Tag" && ((string)e.NewValue) != area.Name) {
+								area.Tag = area.Name;
+								return;
+							}							
+							else if (e.PropertyName == "Display Name" && (Nwn2Strings.GetStringFromOEIString((OEIShared.Utils.OEIExoLocString)e.NewValue) != area.Name)) {
+								area.DisplayName = Nwn2Strings.GetOEIStringFromString(area.Name);
+								return;
+							}
+							
 							AreaBehaviour behaviour = blocks.CreateAreaBehaviour(area);
 													
 							if (window.BlockBox.HasBag(Nwn2MoveableProvider.AreasBagName)) {

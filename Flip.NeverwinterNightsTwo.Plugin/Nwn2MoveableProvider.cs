@@ -482,9 +482,58 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};
 			
 			
+			// Ensure that an area always has the same resource name and tag:
 			reporter.AreaNameChanged += delegate(object oObject, NameChangedEventArgs eArgs) 
 			{  
-				MessageBox.Show("Area name changed from " + eArgs.OldName + " to " + eArgs.NewName + ".");
+				NWN2GameArea area = eArgs.Item as NWN2GameArea;
+				if (area == null) return;
+				
+				string blockHasTag = area.Tag;
+				
+				if (area.Tag != area.Name) area.Tag = area.Name;
+				OEIShared.Utils.OEIExoLocString oeiStr = Nwn2Strings.GetOEIStringFromString(area.Name);
+				if (area.DisplayName != oeiStr) area.DisplayName = oeiStr;
+				
+				// Note that this will only work for areas that are currently open...
+				// we'll deal with changing the name of closed areas when they open.
+				
+				
+				// Update the area block, if the area is open:				
+				bool open = false;
+				foreach (NWN2AreaViewer av in NWN2ToolsetMainForm.App.GetAllAreaViewers()) {
+					if (av.Area == area) {
+						open = true;
+						break;
+					}
+				}
+				if (!open) return;
+							
+				AreaBehaviour behaviour = blocks.CreateAreaBehaviour(area);
+													
+				if (manager.HasBag(AreasBagName)) {
+					UIElementCollection existingBlocks = manager.GetMoveables(AreasBagName);
+													
+					bool updated = false;
+						
+					foreach (UIElement u in existingBlocks) {
+						ObjectBlock existing = u as ObjectBlock;								
+						if (existing == null) continue;
+						AreaBehaviour existingBehaviour = existing.Behaviour as AreaBehaviour;
+						if (existingBehaviour == null) continue;
+																	
+						// If you find an area with the same tag, replace its behaviour to update it:
+						if (existingBehaviour.Tag == blockHasTag) {
+							existing.Behaviour = behaviour;
+							updated = true;
+							break;
+						}
+					}
+					
+					if (!updated) {
+						ObjectBlock block = blocks.CreateAreaBlock(behaviour);
+						manager.AddMoveable(AreasBagName,block,false);
+					}
+				}
 			};
 			
 			
@@ -584,6 +633,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (nwn2Area.Tag == null) {
 				throw new ApplicationException("The last-opened area took too long to load, and could not be shown as a Flip block.");
 			}
+			
+			// Once loaded, ensure that area always has the same resource name and tag:	
+			if (nwn2Area.Tag != nwn2Area.Name) nwn2Area.Tag = nwn2Area.Name;			
+			OEIShared.Utils.OEIExoLocString oeiStr = Nwn2Strings.GetOEIStringFromString(nwn2Area.Name);
+			if (nwn2Area.DisplayName != oeiStr) nwn2Area.DisplayName = oeiStr;
 			
 			Action action = new Action
 			(
