@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.Games.NeverwinterNightsTwo
 {
@@ -12,43 +13,25 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
     /// </summary>
     public partial class ScriptSelector : Window
     {	
-    	public enum Action {
-    		OpenScript,
-    		DeleteScript,
-    		None
-    	}
-    	
-    	
     	protected List<ScriptTriggerTuple> tuples;
+    	protected FlipWindow window;
+    	protected INwn2Session session;
     	protected ScriptTriggerTuple selected;
-    	protected Action actionToTake;
     	
     	
     	private static Thickness thickness = new Thickness(3);
-    	
-    	
-		public ScriptTriggerTuple Selected {
-			get { return selected; }
-		}
-    	
-    	
-		public Action ActionToTake {
-			get { return actionToTake; }
-		}
-    	
-    	
-    	public ScriptSelector() : this(new List<ScriptTriggerTuple>(0))
-    	{    		
-    	}
     	    	
     	
-    	public ScriptSelector(List<ScriptTriggerTuple> tuples)
+    	public ScriptSelector(List<ScriptTriggerTuple> tuples, INwn2Session session, FlipWindow window)
         {
     		if (tuples == null) throw new ArgumentNullException("tuples");
+    		if (session == null) throw new ArgumentNullException("session");
+    		if (window == null) throw new ArgumentNullException("window");
     		this.tuples = tuples;
+    		this.session = session;
+    		this.window = window;
     		
     		selected = null;
-    		actionToTake = Action.None;
     		
             InitializeComponent();
             
@@ -97,8 +80,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         		// that possesses it.
         		
         		selected = GetOwner(t);
-        		actionToTake = Action.DeleteScript;
-        		Close();
+        		
+        		try {
+					session.DeleteScript(selected.Script.Name);					
+					scriptsListBox.Items.Remove(scriptsListBox.SelectedItem);
+						
+					if (selected.Trigger != null) 
+						Log.WriteAction(LogAction.deleted,"script",selected.Script.Name + " (was attached to '" + selected.Trigger.GetLogText() + "')");
+					else
+						Log.WriteAction(LogAction.deleted,"script",selected.Script.Name);
+        		}
+        		catch (Exception x) {
+        			MessageBox.Show("Something went wrong when deleting script.\n" + x);
+        		}
         	}
     	}
 
@@ -138,9 +132,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         		// TriggerControl directly and search for the ScriptSlotTuple
         		// that possesses it.
         		
-        		selected = GetOwner(t);
-        		actionToTake = Action.OpenScript;
-        		Close();
+        		selected = GetOwner(t);        		
+        		
+        		try {
+	        		if (selected.Trigger is BlankTrigger) selected.Trigger = null;							
+					window.OpenFlipScript(selected.DeepCopy());
+					
+					if (selected.Trigger != null) 
+						Log.WriteAction(LogAction.opened,"script",selected.Script.Name + " (attached to '" + selected.Trigger.GetLogText() + "')");
+					else 
+						Log.WriteAction(LogAction.opened,"script",selected.Script.Name);
+					
+        			Close();
+        		}
+        		catch (Exception x) {
+        			MessageBox.Show("Something went wrong when opening script.\n" + x);
+        		}        		
         	}
         }
         
@@ -156,8 +163,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         
         protected void CancelOpen(object sender, EventArgs e)
         {
-        	selected = null;
-        	actionToTake = Action.None;
         	Close();
         }
     }
