@@ -753,59 +753,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		/// <summary>
-		/// TODO: should accept window as a parameter as save does.
-		/// </summary>
 		public void OpenDeleteScriptDialog(Attachment attachment)
 		{
 			List<ScriptTriggerTuple> tuples = new ScriptHelper(triggers).GetAllScripts(attachment);
 			
-			ScriptSelector dialog = new ScriptSelector(tuples);
-			dialog.ShowDialog();
+			ScriptSelector dialog = new ScriptSelector(tuples,session,window);
 			
-			if (dialog.Selected != null) {
-				
-				if (dialog.ActionToTake == ScriptSelector.Action.OpenScript) {
-					try {
-						if (dialog.Selected.Trigger is BlankTrigger) dialog.Selected.Trigger = null;
-						
-						window.OpenFlipScript(dialog.Selected.DeepCopy());
-						
-						if (dialog.Selected.Trigger != null) {
-							//ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
-							Log.WriteAction(LogAction.opened,"script",dialog.Selected.Script.Name + " (attached to '" + dialog.Selected.Trigger.GetLogText() + "')");
-						}
-						else {							
-							//ActivityLog.Write(new Activity("OpenedScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
-							Log.WriteAction(LogAction.opened,"script",dialog.Selected.Script.Name);
-						}
-					}
-					catch (Exception x) {						
-						MessageBox.Show(String.Format("Something went wrong when opening a script.{0}{0}{1}",Environment.NewLine,x));
-					}
-				}
-				
-				else if (dialog.ActionToTake == ScriptSelector.Action.DeleteScript) {
-					try {
-						session.DeleteScript(dialog.Selected.Script.Name);
-						
-						if (dialog.Selected.Trigger != null) {
-							//ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",dialog.Selected.Trigger.GetLogText()));
-							Log.WriteAction(LogAction.deleted,"script",dialog.Selected.Script.Name + " (was attached to '" + dialog.Selected.Trigger.GetLogText() + "')");
-						}
-						else {							
-							//ActivityLog.Write(new Activity("DeleteScript","ScriptName",dialog.Selected.Script.Name,"Event",String.Empty));
-							Log.WriteAction(LogAction.deleted,"script",dialog.Selected.Script.Name);
-						}
-						
-						MessageBox.Show("Script deleted.");
-					}
-					catch (Exception x) {						
-						MessageBox.Show(String.Format("Something went wrong when deleting a script.{0}{0}{1}",Environment.NewLine,x));
-					}					
-				}
-				
-			}
+			dialog.ShowDialog();
 		}
 		
 		
