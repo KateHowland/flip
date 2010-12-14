@@ -812,7 +812,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			catch (Exception x) {
-				MessageBox.Show(String.Format("Something went wrong when saving the script.{0}{0}{1}",Environment.NewLine,x));
+				
+				string errorMessage = x.ToString();
+				
+				if (errorMessage.Contains("flip_functions")) {
+					try {
+						string path = Path.Combine(NWN2Toolset.NWN2.IO.NWN2ResourceManager.Instance.OverrideDirectory.DirectoryName,"flip_functions.nss");
+						if (!File.Exists(path)) {
+							MessageBox.Show("File " + path + " is missing. Scripts will not compile successfully. Please re-install Flip.");
+							return false;
+						}
+					}
+					catch (Exception) {}
+				}
+				
+				MessageBox.Show(String.Format("Something went wrong when saving the script.{0}{0}{1}",Environment.NewLine,errorMessage));
 				return false;
 			}
 		}
