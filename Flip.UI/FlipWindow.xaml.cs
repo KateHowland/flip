@@ -568,6 +568,12 @@ namespace Sussex.Flip.UI
 		}
 		
 		
+		protected void CopyNaturalLanguage(object sender, RoutedEventArgs e)
+		{
+			System.Windows.Clipboard.SetText(nlTextBlock.Text);
+		}
+		
+		
 		protected void DisplayAboutScreen(object sender, RoutedEventArgs e)
 		{
 			new AboutWindow().ShowDialog();
