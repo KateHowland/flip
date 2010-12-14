@@ -37,7 +37,7 @@ namespace Sussex.Flip.UI
             
             slot = new PegSlot(fitter);
             slot.MinHeight = 70;
-            slot.MinWidth = 130;
+            slot.MinWidth = 190;
             Grid.SetRow(slot,0);
             Grid.SetRowSpan(slot,2);
             Grid.SetColumn(slot,1);
