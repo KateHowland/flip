@@ -231,11 +231,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						else if (o is NWN2GameArea) {
 							NWN2GameArea area = (NWN2GameArea)o;
 							AreaBehaviour behaviour = blocks.CreateAreaBehaviour(area);
-							
-							string bag = Nwn2MoveableProvider.SpecialBagName;
-						
-							if (window.BlockBox.HasBag(bag)) {
-								UIElementCollection existingBlocks = window.BlockBox.GetMoveables(bag);
+													
+							if (window.BlockBox.HasBag(Nwn2MoveableProvider.AreasBagName)) {
+								UIElementCollection existingBlocks = window.BlockBox.GetMoveables(Nwn2MoveableProvider.AreasBagName);
 								
 								string tag;
 								if (e.PropertyName == "Tag") tag = e.OldValue as string;
@@ -259,7 +257,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 								
 								if (!updated) {
 									ObjectBlock block = blocks.CreateAreaBlock(behaviour);
-									window.BlockBox.AddMoveable(bag,block,false);
+									window.BlockBox.AddMoveable(Nwn2MoveableProvider.AreasBagName,block,false);
 								}
 							}
 						}
@@ -684,9 +682,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					
 					if (!String.IsNullOrEmpty(dialog.WildcardTag)) {
 						ObjectBlock block = blocks.CreateWildcardBlock(dialog.WildcardTag);
-						
-						string bag = Nwn2MoveableProvider.SpecialBagName;					
-						window.BlockBox.AddMoveable(bag,block,true);
+										
+						window.BlockBox.AddMoveable(Nwn2MoveableProvider.ValuesBagName,block,true);
 						//ActivityLog.Write(new Activity("CreatedWildcardBlock","Block",block.GetLogText()));
 						Log.WriteMessage("created wildcard block (" + block.GetLogText() + ")");
 					}

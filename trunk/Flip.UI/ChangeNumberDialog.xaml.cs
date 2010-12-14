@@ -42,7 +42,7 @@ namespace Sussex.Flip.UI
     		valueTextBox.MaxLength = Math.Max(min.ToString().Length,max.ToString().Length);
     		
     		valueTextBox.Text = block.Value.ToString();
-    		
+    		    		
             valueTextBox.KeyDown += new KeyEventHandler(HitEnterKey);
     	}
     	

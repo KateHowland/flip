@@ -263,6 +263,8 @@ namespace Sussex.Flip.UI
 			// TODO:
 			// Enable and disable block categories.
 			
+			blockBox.DisplayBag(MoveableProvider.ConditionsBagName);
+			
 			triggerBar.IsEnabled = false;
 			triggerBar.Visibility = Visibility.Hidden;
 			
@@ -274,7 +276,6 @@ namespace Sussex.Flip.UI
 			mode = ScriptType.Conditional;
 			
 			mainGrid.Background = (Brush)Resources["conditionModeBrush"];
-			Title = "Condition mode.";
 		}
 		
 		
@@ -287,6 +288,8 @@ namespace Sussex.Flip.UI
 			// TODO:
 			// Enable and disable block categories.
 			
+			blockBox.DisplayBag(MoveableProvider.ActionsBagName);
+			
 			triggerBar.IsEnabled = true;
 			triggerBar.Visibility = Visibility.Visible;
 			
@@ -298,7 +301,6 @@ namespace Sussex.Flip.UI
 			mode = ScriptType.Standard;
 			
 			mainGrid.Background = (Brush)Resources["skyBrush"];
-			Title = "Flip mode.";
 		}
 		
 		

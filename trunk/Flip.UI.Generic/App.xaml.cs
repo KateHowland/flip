@@ -38,18 +38,6 @@ namespace Sussex.Flip.UI.Generic
 			                                   new Nwn2DeserialisationHelper());
 			
 			window.Show();
-			
-			window.MouseDoubleClick += delegate 
-			{  
-				foreach (UIElement element in window.BlockBox.GetMoveables("Special")) {
-					ObjectBlock block = element as ObjectBlock;
-					if (block != null) {						
-						ImageGetter getter = new ImageGetter();
-						
-						block.DisplayImage = getter.GetImage("Creature","c_lich",true);
-					}
-				}
-			};
 		}
 		
 		

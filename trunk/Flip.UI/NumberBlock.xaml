@@ -72,7 +72,7 @@
 	   		<Button
 	   		Grid.Row="1"
 		    Grid.Column="0"
-	   		Content="change"	   		
+	   		Content="edit"	   		
 	   		Click="ChangeValue"
 	   		Height="18"
 	   		Width="40"	   		
