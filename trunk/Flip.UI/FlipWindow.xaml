@@ -87,7 +87,13 @@
 					
 				<MenuItem 
 				x:Name="editMenu"
-				Header="Edit"/>
+				Header="Edit">
+				
+					<MenuItem
+					Header="Copy natural language"
+					Click="CopyNaturalLanguage"/>
+				
+				</MenuItem>
 					
 				<MenuItem 
 				x:Name="developmentMenu"
