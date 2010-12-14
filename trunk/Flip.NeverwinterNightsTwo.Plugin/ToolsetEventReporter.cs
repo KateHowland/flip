@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NWN2Toolset;
+using NWN2Toolset.Data;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
@@ -143,6 +144,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// viewed resource is closed in the toolset.
 		/// </summary>
 		public event EventHandler<ResourceViewerClosedEventArgs> ResourceViewerClosed;
+		
+		/// <summary>
+		/// Raised when the name of an area changes.
+		/// </summary>
+		public event NameChangedEventHandler AreaNameChanged;
+		
+		/// <summary>
+		/// Raised when the name of a conversation changes.
+		/// </summary>
+		public event NameChangedEventHandler ConversationNameChanged;
+		
+		/// <summary>
+		/// Raised when the name of a script changes.
+		/// </summary>
+		public event NameChangedEventHandler ScriptNameChanged;
 				
 		
 		protected virtual void OnModuleChanged(object sender, ModuleChangedEventArgs e)
@@ -263,7 +279,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			if (handler != null) {
 				handler(sender,e);
 			}
-		}
+		}				
+		
+		protected virtual void OnAreaNameChanged(object sender, NameChangedEventArgs e)
+		{
+			NameChangedEventHandler handler = AreaNameChanged;
+			if (handler != null) {
+				handler(sender,e);
+			}
+		}	
+		
+		protected virtual void OnConversationNameChanged(object sender, NameChangedEventArgs e)
+		{
+			NameChangedEventHandler handler = ConversationNameChanged;
+			if (handler != null) {
+				handler(sender,e);
+			}
+		}			
+		
+		protected virtual void OnScriptNameChanged(object sender, NameChangedEventArgs e)
+		{
+			NameChangedEventHandler handler = ScriptNameChanged;
+			if (handler != null) {
+				handler(sender,e);
+			}
+		}			
 		
 		#endregion
 				
@@ -348,6 +388,53 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					dictionary.Inserted += dAdded;
 					dictionary.Removed += dRemoved;
 				}
+				
+				// Watch for changes to the names of areas, conversations and scripts:				
+				foreach (NWN2GameArea area in mod.Areas) Watch(area);
+				foreach (NWN2GameConversation conversation in mod.Conversations) Watch(conversation);
+				foreach (NWN2GameScript script in mod.Scripts) Watch(script);
+				
+				mod.Areas.Inserted += delegate(OEIDictionaryWithEvents cDictionary, object key, object value) 
+				{  
+					NWN2GameArea area = value as NWN2GameArea;
+					if (area != null) Watch(area);
+				};
+				
+				mod.Conversations.Inserted += delegate(OEIDictionaryWithEvents cDictionary, object key, object value) 
+				{  
+					NWN2GameConversation conversation = value as NWN2GameConversation;
+					if (conversation != null) Watch(conversation);
+				};
+				
+				mod.Scripts.Inserted += delegate(OEIDictionaryWithEvents cDictionary, object key, object value) 
+				{  
+					NWN2GameScript script = value as NWN2GameScript;
+					if (script != null) Watch(script);
+				};
+			}
+		}
+		
+		
+		protected void Watch(NWN2GameArea area)
+		{
+			if (area != null) {				
+				area.NameChanged += delegate(object oObject, NameChangedEventArgs eArgs) { OnAreaNameChanged(oObject,eArgs); };				
+			}
+		}
+		
+		
+		protected void Watch(NWN2GameConversation conversation)
+		{
+			if (conversation != null) {				
+				conversation.NameChanged += delegate(object oObject, NameChangedEventArgs eArgs) { OnConversationNameChanged(oObject,eArgs); };				
+			}
+		}
+		
+		
+		protected void Watch(NWN2GameScript script)
+		{
+			if (script != null) {				
+				script.NameChanged += delegate(object oObject, NameChangedEventArgs eArgs) { OnScriptNameChanged(oObject,eArgs); };				
 			}
 		}
 

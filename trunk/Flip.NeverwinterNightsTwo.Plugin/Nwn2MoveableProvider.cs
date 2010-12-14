@@ -35,6 +35,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using NWN2Toolset;
+using NWN2Toolset.Data;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.Instances;
@@ -479,6 +480,44 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					}
 				}
 			};
+			
+			
+			reporter.AreaNameChanged += delegate(object oObject, NameChangedEventArgs eArgs) 
+			{  
+				MessageBox.Show("Area name changed from " + eArgs.OldName + " to " + eArgs.NewName + ".");
+			};
+			
+			
+			// If a script has its name changed, change it back:
+			reporter.ScriptNameChanged += delegate(object oObject, NameChangedEventArgs eArgs) 
+			{  					
+				Thread thread = new Thread(new ParameterizedThreadStart(ReverseScriptNameChange));
+				thread.IsBackground = false;
+				thread.Start(eArgs);	
+			};
+		}
+		
+		
+		string ignoreThisNewScriptName = null;
+		public void ReverseScriptNameChange(object e)
+		{
+			NameChangedEventArgs eArgs = e as NameChangedEventArgs;
+			if (eArgs == null) return;
+			
+			if (ignoreThisNewScriptName == eArgs.NewName) {
+				ignoreThisNewScriptName = null;
+				return;
+			}
+			
+			NWN2GameScript script = eArgs.Item as NWN2GameScript;
+			if (script != null) {
+				Thread.Sleep(1000);
+				try {
+					ignoreThisNewScriptName = eArgs.OldName;
+					script.Name = eArgs.OldName;
+				}
+				catch (Exception) { }
+			}
 		}
 		
 		
