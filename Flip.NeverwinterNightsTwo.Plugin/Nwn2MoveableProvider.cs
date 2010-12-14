@@ -61,7 +61,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected static string[] nwn2BlockTypes;
 			
 		
-		public const string SpecialBagName = "Special";
+		public const string ValuesBagName = "Values";
+		public const string AreasBagName = "Areas";
 		public const string BlueprintBagNamingFormat = "{0} blueprints";
 		public const string InstanceBagNamingFormat = "{0}s";
 		
@@ -115,7 +116,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				manager.AddBag(String.Format(InstanceBagNamingFormat,nwn2Type),true);
 			}
 			
-			manager.AddBag(SpecialBagName,true);
+			manager.AddBag(AreasBagName,true);
+			manager.AddBag(ValuesBagName,true);
 			
 			manager.DisplayBag(ActionsBagName);	
 		}
@@ -154,9 +156,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected void CreateSpecialBlocks()
 		{		
-			manager.AddMoveable(SpecialBagName,blocks.CreatePlayerBlock());
-			manager.AddMoveable(SpecialBagName,new NumberBlock(123));
-			manager.AddMoveable(SpecialBagName,new StringBlock("abc"));
+			manager.AddMoveable(ValuesBagName,new NumberBlock(123));
+			manager.AddMoveable(ValuesBagName,new StringBlock("abc"));
 		}
 		
 		
@@ -191,7 +192,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		
 		protected void CreateInstancesFromOpenAreas()
-		{
+		{			
+			manager.AddMoveable("Creatures",blocks.CreatePlayerBlock());
+			
 			if (!Utils.Nwn2ToolsetFunctions.ToolsetIsOpen()) return;
 			
 			foreach (NWN2AreaViewer viewer in NWN2Toolset.NWN2ToolsetMainForm.App.GetAllAreaViewers()) {
@@ -240,7 +243,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			foreach (NWN2GameArea area in NWN2Toolset.NWN2ToolsetMainForm.App.Module.Areas.Values) {
 				ObjectBlock block = blocks.CreateAreaBlock(area);
-				manager.AddMoveable(SpecialBagName,block);
+				manager.AddMoveable(AreasBagName,block);
 			}
 		}
 		
@@ -266,23 +269,17 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					delegate()
 					{		
 						if (manager != null) {
+							
+							manager.EmptyBag(AreasBagName);
+							
 							foreach (NWN2ObjectType type in Enum.GetValues(typeof(NWN2ObjectType))) {
 								string bag = String.Format(InstanceBagNamingFormat,type);
 								if (manager.HasBag(bag)) {
 									manager.EmptyBag(bag);
 								}
 							}
-							
-							List<ObjectBlock> areas = new List<ObjectBlock>();
-							foreach (Moveable moveable in manager.GetMoveables(SpecialBagName)) {
-								ObjectBlock block = moveable as ObjectBlock;
-								if (block == null) continue;
-								if (block.Behaviour is AreaBehaviour) areas.Add(block);
-							}
-							
-							foreach (ObjectBlock area in areas) {
-								manager.RemoveMoveable(SpecialBagName,area);
-							}
+			
+							manager.AddMoveable("Creatures",blocks.CreatePlayerBlock());
 						}
 					}
 				);					
@@ -438,7 +435,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{  
 				if (manager == null) return;
 				
-				foreach (Moveable moveable in manager.GetMoveables(SpecialBagName)) {
+				foreach (Moveable moveable in manager.GetMoveables(AreasBagName)) {
 					ObjectBlock block = moveable as ObjectBlock;
 					if (block == null) continue;
 					AreaBehaviour area = block.Behaviour as AreaBehaviour;
@@ -448,7 +445,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					// area, but there's no immediately apparent way around this:
 					// (TODO: Could check that module doesn't have a script or conversation of the same name.)
 					if (area.Identifier == e.ResourceName) {
-						manager.RemoveMoveable(SpecialBagName,moveable);
+						manager.RemoveMoveable(AreasBagName,moveable);
 						break;
 					}
 				}
@@ -554,7 +551,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				delegate()
 				{
 					ObjectBlock areaBlock = blocks.CreateAreaBlock(nwn2Area);
-					manager.AddMoveable(SpecialBagName,areaBlock);
+					manager.AddMoveable(AreasBagName,areaBlock);
 					
 					foreach (NWN2InstanceCollection instanceCollection in nwn2Area.AllInstances) {
 						
