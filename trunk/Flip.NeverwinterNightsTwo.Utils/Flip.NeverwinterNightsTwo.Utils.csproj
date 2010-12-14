@@ -107,6 +107,7 @@
     <Compile Include="Nwn2ScriptSlot.cs" />
     <Compile Include="Nwn2Session.cs" />
     <Compile Include="Nwn2SessionAdapter.cs" />
+    <Compile Include="Nwn2Strings.cs" />
     <Compile Include="Nwn2ToolsetFunctions.cs" />
     <Compile Include="InstanceEventArgs.cs" />
     <Compile Include="Nwn2Type.cs" />
