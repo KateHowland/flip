@@ -256,10 +256,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		protected void TrackToolsetChanges(ToolsetEventReporter reporter)
 		{			
 			if (!reporter.IsRunning) reporter.Start();
-			
-			
-				
-				
+							
 			reporter.ModuleChanged += delegate(object oSender, ModuleChangedEventArgs eArgs) 
 			{  
 				/* Fires when a module closes, but that doesn't mean that the new module has
@@ -639,6 +636,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			OEIShared.Utils.OEIExoLocString oeiStr = Nwn2Strings.GetOEIStringFromString(nwn2Area.Name);
 			if (nwn2Area.DisplayName != oeiStr) nwn2Area.DisplayName = oeiStr;
 			
+			// Create area block:
 			Action action = new Action
 			(
 				delegate()

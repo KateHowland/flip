@@ -93,18 +93,7 @@ namespace Sussex.Flip.UI
         	
             triggerBarPanel.Children.Add(triggerSlot);
             
-			saveButton = new Button();
-			saveButton.Content = "Save";
-			saveButton.Foreground = Brushes.White;
-			saveButton.FontWeight = FontWeights.ExtraBold;
-			saveButton.FontSize = 16;
-			saveButton.Margin = new Thickness(35,5,5,5);
-			saveButton.Height = 40;
-			saveButton.Width = 70;
-			saveButton.AllowDrop = false;
-			saveButton.Background = Brushes.Firebrick.Clone();//(Brush)Resources["buttonGradient"];
-			saveButton.Background.Opacity = 0.8;
-			saveButton.Background.Freeze();
+            saveButton = new BigButton("Save");
             
             triggerBarPanel.Children.Add(saveButton);
             

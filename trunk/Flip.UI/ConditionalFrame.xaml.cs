@@ -46,6 +46,7 @@ namespace Sussex.Flip.UI
     	protected ConditionSlot slot;
     	protected string currentScriptIsBasedOn;
     	protected string address;
+    	protected Button saveButton, finishButton;
 		
        
 		public bool IsComplete {
@@ -98,6 +99,11 @@ namespace Sussex.Flip.UI
         	address = String.Empty;
         	
             InitializeComponent();
+            
+            saveButton = new BigButton("Save");
+            finishButton = new BigButton("Finish");
+            buttonsPanel.Children.Add(saveButton);
+            buttonsPanel.Children.Add(finishButton);
             
             BooleanExpressionFitter fitter = new BooleanExpressionFitter();
             

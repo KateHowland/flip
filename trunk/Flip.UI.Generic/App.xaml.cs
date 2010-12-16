@@ -38,6 +38,12 @@ namespace Sussex.Flip.UI.Generic
 			                                   new Nwn2DeserialisationHelper());
 			
 			window.Show();
+			
+			window.MouseDoubleClick += delegate 
+			{
+				if (window.Mode == ScriptType.Conditional) window.LeaveConditionMode();
+				else window.EnterConditionMode();
+			};
 		}
 		
 		
