@@ -25,19 +25,10 @@
 		Foreground="White"/>	
 	
 		<StackPanel
+		Name="buttonsPanel"
 		Grid.Row="2"
 		Grid.Column="0"
-		Orientation="Horizontal">
-		
-			<Button
-			x:Name="saveButton"
-			Content="Save"/>
-		
-			<Button
-			x:Name="finishButton"
-			Content="Finish"/>
-		
-		</StackPanel>
+		Orientation="Horizontal"/>
 	
 	</Grid>
 </UserControl>

@@ -81,6 +81,7 @@
       <DependentUpon>Bag.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BigButton.cs" />
     <Compile Include="ConditionalFrame.xaml.cs">
       <DependentUpon>ConditionalFrame.xaml</DependentUpon>
       <SubType>Code</SubType>
