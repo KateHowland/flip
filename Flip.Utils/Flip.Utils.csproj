@@ -69,7 +69,9 @@
     <Compile Include="Activity.cs" />
     <Compile Include="ActivityEventArgs.cs" />
     <Compile Include="Bean.cs" />
-    <Compile Include="FileExtensionFilters.cs" />
+    <Compile Include="FileExtensionFilters.cs">
+      <DependentUpon>IDeepCopyable.cs</DependentUpon>
+    </Compile>
     <Compile Include="IDeepCopyable.cs" />
     <Compile Include="Logging\AATools.cs" />
     <Compile Include="Logging\Log.cs" />

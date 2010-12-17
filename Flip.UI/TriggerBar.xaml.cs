@@ -94,6 +94,7 @@ namespace Sussex.Flip.UI
             triggerBarPanel.Children.Add(triggerSlot);
             
             saveButton = new BigButton("Save");
+			saveButton.Margin = new Thickness(35,5,5,5);
             
             triggerBarPanel.Children.Add(saveButton);
             

@@ -35,6 +35,7 @@ using System.Windows.Media;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Sussex.Flip.Utils;
 
 namespace Sussex.Flip.UI
 {
@@ -81,6 +82,23 @@ namespace Sussex.Flip.UI
 		}
     	
     	
+		public string Dialogue {
+			get { return dialogueTextBlock.Text; }
+			set { 
+				if (value == null) value = "...";		
+				
+				if (value.Length > 150) value = StringUtils.Truncate(value,150) + "...";
+				
+				if (value.Length < 100) dialogueTextBlock.FontSize = 22.0d;
+				else if (value.Length < 50) dialogueTextBlock.FontSize = 24.0d;
+				else if (value.Length < 30) dialogueTextBlock.FontSize = 28.0d;
+				else dialogueTextBlock.FontSize = 20.0d;
+				
+				dialogueTextBlock.Text = String.Format("\"{0}\"",value);
+			}
+		}
+    	
+    	
 		public event EventHandler Changed;
 		
 		
@@ -102,18 +120,32 @@ namespace Sussex.Flip.UI
             
             saveButton = new BigButton("Save");
             finishButton = new BigButton("Finish");
+			saveButton.Margin = new Thickness(0,15,15,15);
+			finishButton.Margin = new Thickness(0,15,0,15);
             buttonsPanel.Children.Add(saveButton);
             buttonsPanel.Children.Add(finishButton);
             
             BooleanExpressionFitter fitter = new BooleanExpressionFitter();
             
             slot = new ConditionSlot(fitter);
+            slot.AllowDrop = true;
+            slot.Margin = new Thickness(10,10,10,0);
+            slot.Width = 550;
+            slot.Height = 100;
             
-            slot.Changed += delegate(object sender, EventArgs e) { OnChanged(e); };
+            dragMessageTextBlock.AllowDrop = true;
+            dragMessageTextBlock.IsHitTestVisible = false;
             
-            Grid.SetRow(slot,1);
-            Grid.SetColumn(slot,0);
-            grid.Children.Add(slot);
+            slot.Changed += delegate(object sender, EventArgs e) 
+            { 
+        		if (slot.Contents == null) dragMessageTextBlock.Visibility = Visibility.Visible;        		
+        		else dragMessageTextBlock.Visibility = Visibility.Hidden;
+            	
+            	OnChanged(e);
+            };
+            
+            Grid.SetRow(slot,2);
+            mainGrid.Children.Add(slot);
         }
     	
         

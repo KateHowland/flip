@@ -40,7 +40,6 @@ namespace Sussex.Flip.UI
 			Foreground = Brushes.White;
 			FontWeight = FontWeights.ExtraBold;
 			FontSize = 16;
-			Margin = new Thickness(35,5,5,5);
 			Height = 40;
 			Width = 70;
 			AllowDrop = false;
