@@ -256,12 +256,17 @@ namespace Sussex.Flip.UI
 		
 		public void EnterConditionMode()
 		{
+			EnterConditionMode(String.Empty);
+		}
+		
+		
+		public void EnterConditionMode(string dialogue)
+		{
+			conditionalFrame.Dialogue = dialogue;
+			
 			Clear();
 			
 			mainMenu.IsEnabled = false;
-			
-			// TODO:
-			// Enable and disable block categories.
 			
 			blockBox.DisplayBag(MoveableProvider.ConditionsBagName);
 			
@@ -274,8 +279,6 @@ namespace Sussex.Flip.UI
 			UpdateNaturalLanguageView(conditionalFrame);
 			
 			mode = ScriptType.Conditional;
-			
-			mainGrid.Background = (Brush)Resources["conditionModeBrush"];
 		}
 		
 		
@@ -284,10 +287,7 @@ namespace Sussex.Flip.UI
 			Clear();
 			
 			mainMenu.IsEnabled = true;
-			
-			// TODO:
-			// Enable and disable block categories.
-			
+						
 			blockBox.DisplayBag(MoveableProvider.ActionsBagName);
 			
 			triggerBar.IsEnabled = true;
@@ -299,8 +299,6 @@ namespace Sussex.Flip.UI
 			UpdateNaturalLanguageView(triggerBar);
 			
 			mode = ScriptType.Standard;
-			
-			mainGrid.Background = (Brush)Resources["skyBrush"];
 		}
 		
 		

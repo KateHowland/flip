@@ -38,5 +38,52 @@ namespace Sussex.Flip.Utils
 			
 			return body.Substring(start,length);
 		}
+		
+		
+		/// <summary>
+		/// Check whether a character is a punctuation mark.
+		/// </summary>
+		/// <param name="text">The character to check</param>
+		/// <returns>True if the character is one of .,:;()!?&-, false otherwise</returns>
+		private static bool IsPunctuation(char character)
+		{
+			char[] punctuation = new char[] {'.',',',':',';','(',')','!','?','&','-'};
+			foreach (char c in punctuation) {
+				if (character == c) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+        
+        /// <summary>
+        /// Truncates a line of text to within a given length, if possible stopping at the end of whole word.
+        /// </summary>
+        /// <param name="text">The text to truncate.</param>
+        /// <param name="maxLength">The maximum length of the returned line.</param>
+        /// <returns>The original line if its length is less than maxLength, otherwise a truncated version of the line - 
+        /// to the end of a word if possible (in which case it will probably be shorter than maxLength), or to the
+        /// maximum possible length of the line if not.</returns>
+		public static string Truncate(string text, int maxLength)
+		{
+			if (text.Length > maxLength) {
+				int lastSpace = text.LastIndexOf(' ',maxLength-10);
+				if (lastSpace != -1) {
+					if (lastSpace > 0 && IsPunctuation(text[lastSpace-1])) { // don't end on a punctuation mark if possible
+						return text.Substring(0,lastSpace-1);
+					}
+					else {
+						return text.Substring(0,lastSpace);
+					}
+				}
+				else {
+					return text.Substring(0,maxLength);
+				}
+			}
+			else {
+				return text;
+			}
+		}
 	}
 }
