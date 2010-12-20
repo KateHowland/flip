@@ -38,7 +38,7 @@ namespace Sussex.Flip.UI.Generic
 			                                   new Nwn2DeserialisationHelper());
 			
 			window.Show();
-			window.EnterConditionMode("You found my sword! Thank you!");
+			//window.EnterConditionMode("You found my sword! Thank you!");
 			
 			window.MouseDoubleClick += delegate 
 			{
