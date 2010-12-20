@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Sussex.Flip.UI
 {
@@ -31,8 +22,12 @@ namespace Sussex.Flip.UI
         	SetDefaultAppearance();
         	MoveableChanged += delegate 
         	{  
-        		if (Contents == null) dragMessageTextBlock.Visibility = Visibility.Visible;        		
-        		else dragMessageTextBlock.Visibility = Visibility.Hidden;
+        		if (Contents == null) {
+        			dragMessageTextBlock.Visibility = Visibility.Visible;
+        		}
+        		else {
+        			dragMessageTextBlock.Visibility = Visibility.Hidden;
+        		}
         	};
         	Contents = null;
 		}

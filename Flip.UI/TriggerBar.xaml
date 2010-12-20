@@ -11,23 +11,12 @@
 		EndPoint="1,1">
 			<LinearGradientBrush.GradientStops>
 				<GradientStop Offset="0" Color="Gold"/>
-				<GradientStop Offset="0.05" Color="LemonChiffon"/>
+				<GradientStop Offset="0.05" Color="Yellow"/>
 				<GradientStop Offset="0.2" Color="Gold"/>
-				<GradientStop Offset="0.4" Color="LemonChiffon"/>
+				<GradientStop Offset="0.4" Color="Yellow"/>
 				<GradientStop Offset="0.7" Color="Gold"/>
-				<GradientStop Offset="0.8" Color="LemonChiffon"/>
-				<GradientStop Offset="0.9" Color="White"/>
+				<GradientStop Offset="0.8" Color="Yellow"/>
 				<GradientStop Offset="0.95" Color="Gold"/>
-			</LinearGradientBrush.GradientStops>
-		</LinearGradientBrush>	
-		<LinearGradientBrush 
-		x:Key="buttonGradient"
-		StartPoint="0,0"
-		EndPoint="1,1">
-			<LinearGradientBrush.GradientStops>
-				<GradientStop Offset="0" Color="LemonChiffon"/>
-				<GradientStop Offset="0.3" Color="Gold"/>
-				<GradientStop Offset="1" Color="LemonChiffon"/>
 			</LinearGradientBrush.GradientStops>
 		</LinearGradientBrush>	
 	</UserControl.Resources>
@@ -37,7 +26,7 @@
 		
 		<Border
 		x:Name="border"
-		Width="650"
+		Width="500"
 		Height="100"
 		VerticalAlignment="Top"
 		BorderThickness="2"

@@ -3,20 +3,43 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:flipui="clr-namespace:Sussex.Flip.UI">
 	
+	<flipui:MoveableSlot.Resources>
+	
+		<SolidColorBrush 
+		x:Key="blackBrush"
+		Opacity="0.15"
+		Color="Black"/>
+	
+		<LinearGradientBrush 
+		x:Key="darkerYellowGradient"
+		Opacity="0.5"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Goldenrod"/>
+				<GradientStop Offset="0.3" Color="DarkGoldenrod"/>
+				<GradientStop Offset="1" Color="Goldenrod"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>	
+		
+	</flipui:MoveableSlot.Resources>	
+	
 	<Grid>
 	
 	    <Border
 		x:Name="border"
-		Height="80"
-		Width="400"
-	    BorderThickness="3"
-		Background="Pink"
+		Height="79"
+		Width="264"
+		CornerRadius="35,0,35,0"
+	    BorderThickness="2"
+		Background="{StaticResource blackBrush}"
 		Grid.ZIndex="2"/>
 	
 		<TextBlock
 		x:Name="dragMessageTextBlock"
-		FontSize="20"
-		Foreground="SlateGray"
+		FontSize="16"
+		FontStyle="Italic"
+		Foreground="#FF555555"
 		Text="Drag and drop an event here"
 		VerticalAlignment="Center"
 		HorizontalAlignment="Center"

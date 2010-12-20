@@ -58,7 +58,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
         	raiserSlot.Padding = new Thickness(4);
         	raiserSlot.LayoutTransform = scaleTransform;
             
-            InitializeComponent();
+        	InitializeComponent();
             
             this.text1.Text = text1;
             this.text2.Text = text2;
