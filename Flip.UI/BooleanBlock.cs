@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Sussex.Flip.UI
@@ -35,7 +36,14 @@ namespace Sussex.Flip.UI
 	{		
 		public BooleanBlock()
 		{
-			this.Background = Brushes.Blue;
+//    		GradientStopCollection stops = new GradientStopCollection(3);
+//    		stops.Add(new GradientStop(Colors.Pink,0));
+//    		stops.Add(new GradientStop(Colors.White,0.5));
+//    		stops.Add(new GradientStop(Colors.Pink,1));
+//    		this.Background = new LinearGradientBrush(stops,new Point(0,0),new Point(1,1));
+
+			this.Background = Brushes.Maroon;
+			this.Height = 80;
 		}
 	}
 }

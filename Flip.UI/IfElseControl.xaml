@@ -54,7 +54,7 @@
 				<Setter Property="VerticalAlignment" Value="Top"/>
 				<Setter Property="BorderBrush" Value="Black"/>				
 				<Setter Property="Background" Value="{StaticResource redGradient}"/>			
-				<Setter Property="Height" Value="80"/>
+				<Setter Property="Height" Value="86"/>
 				
 			</Style>
 		

@@ -3,9 +3,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:flipui="clr-namespace:Sussex.Flip.UI">
 	
-    <StackPanel
-	x:Name="stackPanel"
-	Orientation="Horizontal"
-	Background="Transparent"/>
+	<Border
+	BorderThickness="1"
+	BorderBrush="Black">
+	
+	    <StackPanel
+		x:Name="stackPanel"
+		Orientation="Horizontal"
+		Background="Transparent"/>
+	
+	</Border>
 
 </flipui:BooleanBlock>
