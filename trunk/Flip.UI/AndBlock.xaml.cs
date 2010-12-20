@@ -37,9 +37,10 @@ namespace Sussex.Flip.UI
             TextBlock text = new TextBlock();
             text.Text = "AND";
             text.FontSize = 18;
-            text.Padding = new Thickness(4);
+            text.FontWeight = FontWeights.ExtraBold;
+            text.Padding = new Thickness(8);
             text.Background = Brushes.Transparent;
-            text.Foreground = Brushes.Lime;
+            text.Foreground = Brushes.Yellow;
             text.VerticalAlignment = VerticalAlignment.Center;
             
             stackPanel.Children.Add(slot1);
