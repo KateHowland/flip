@@ -326,34 +326,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		#region INwn2Service methods
 		
-		/// <summary>
-		/// Creates a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="path">The path to create the module at. If 'location'
-		/// is set to ModuleLocationType.Directory, this must be the path for
-		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		public void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location)
-		{			
-			try {
-				session.CreateModule(path,location);
-			}
-			catch (ArgumentNullException e) {
-				throw new FaultException<ArgumentNullException>(e,e.Message);
-			}
-			catch (ArgumentException e) {
-				throw new FaultException<ArgumentException>(e,e.Message);
-			}
-			catch (IOException e) {
-				throw new FaultException<IOException>(e,e.Message);
-			}
-			catch (NotSupportedException e) {
-				throw new FaultException<NotSupportedException>(e,e.Message);
-			}
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}
+//		/// <summary>
+//		/// Creates a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="path">The path to create the module at. If 'location'
+//		/// is set to ModuleLocationType.Directory, this must be the path for
+//		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		public void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location)
+//		{			
+//			try {
+//				session.CreateModule(path,location);
+//			}
+//			catch (ArgumentNullException e) {
+//				throw new FaultException<ArgumentNullException>(e,e.Message);
+//			}
+//			catch (ArgumentException e) {
+//				throw new FaultException<ArgumentException>(e,e.Message);
+//			}
+//			catch (IOException e) {
+//				throw new FaultException<IOException>(e,e.Message);
+//			}
+//			catch (NotSupportedException e) {
+//				throw new FaultException<NotSupportedException>(e,e.Message);
+//			}
+//			catch (Exception e) {
+//				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+//			}
+//		}
 		
 		
 		/// <summary>
@@ -370,62 +370,62 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			}
 		}
 		
-		
-		/// <summary>
-		/// Opens a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The path of the module to open.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		public void OpenModule(string path, ModuleLocationType location)
-		{
-			try {
-				session.OpenModule(path,location);
-			}
-			catch (ArgumentNullException e) {
-				throw new FaultException<ArgumentNullException>(e,e.Message);
-			}
-			catch (ArgumentException e) {
-				throw new FaultException<ArgumentException>(e,e.Message);
-			}
-			catch (IOException e) {
-				throw new FaultException<IOException>(e,e.Message);
-			}
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}
-		
-		
-		/// <summary>
-		/// Saves changes to the current game module.
-		/// </summary>
-		/// <remarks>Saves to the default modules directory.</remarks>
-		public void SaveModule()
-		{
-			try {
-				session.SaveModule(session.GetModule());
-			}
-			catch (ArgumentException e) {
-				throw new FaultException<ArgumentException>(e,e.Message);
-			}
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}
+//		
+//		/// <summary>
+//		/// Opens a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="name">The path of the module to open.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		public void OpenModule(string path, ModuleLocationType location)
+//		{
+//			try {
+//				session.OpenModule(path,location);
+//			}
+//			catch (ArgumentNullException e) {
+//				throw new FaultException<ArgumentNullException>(e,e.Message);
+//			}
+//			catch (ArgumentException e) {
+//				throw new FaultException<ArgumentException>(e,e.Message);
+//			}
+//			catch (IOException e) {
+//				throw new FaultException<IOException>(e,e.Message);
+//			}
+//			catch (Exception e) {
+//				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+//			}
+//		}
 		
 		
-		/// <summary>
-		/// Closes the current module.
-		/// </summary>
-		public void CloseModule()
-		{
-			try {
-				session.CloseModule();
-			}
-			catch (Exception e) {
-				throw new FaultException("(" + e.GetType() + ") " + e.Message);
-			}
-		}
+//		/// <summary>
+//		/// Saves changes to the current game module.
+//		/// </summary>
+//		/// <remarks>Saves to the default modules directory.</remarks>
+//		public void SaveModule()
+//		{
+//			try {
+//				session.SaveModule(session.GetModule());
+//			}
+//			catch (ArgumentException e) {
+//				throw new FaultException<ArgumentException>(e,e.Message);
+//			}
+//			catch (Exception e) {
+//				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+//			}
+//		}
+//		
+//		
+//		/// <summary>
+//		/// Closes the current module.
+//		/// </summary>
+//		public void CloseModule()
+//		{
+//			try {
+//				session.CloseModule();
+//			}
+//			catch (Exception e) {
+//				throw new FaultException("(" + e.GetType() + ") " + e.Message);
+//			}
+//		}
 		
 		
 		/// <summary>

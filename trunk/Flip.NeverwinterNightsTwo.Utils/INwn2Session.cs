@@ -45,14 +45,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	/// </summary>
 	public interface INwn2Session
 	{		
-		/// <summary>
-		/// Creates a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="path">The path to create the module at. If 'location'
-		/// is set to ModuleLocationType.Directory, this must be the path for
-		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		void CreateModule(string path, ModuleLocationType location);
+//		/// <summary>
+//		/// Creates a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="path">The path to create the module at. If 'location'
+//		/// is set to ModuleLocationType.Directory, this must be the path for
+//		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		void CreateModule(string path, ModuleLocationType location);
 									
 		
 		/// <summary>
@@ -62,34 +62,34 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		string CreateAndOpenTemporaryModule();
 			
 				
-		/// <summary>
-		/// Opens a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The path of the module to open.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		void OpenModule(string path, ModuleLocationType location);
-		
-		
-		/// <summary>
-		/// Saves a Neverwinter Nights 2 game module to its
-		/// current location.
-		/// </summary>
-		/// <param name="module">The module to save.</param>.
-		void SaveModule(NWN2GameModule module);
-		
-		
-		/// <summary>
-		/// Saves a Neverwinter Nights 2 game module to a given path.
-		/// </summary>
-		/// <param name="module">The module to save.</param>
-		/// <param name="path">The path to save the module to.</param>
-		void SaveModule(NWN2GameModule module, string path);
-		
-				
-		/// <summary>
-		/// Closes the current module.
-		/// </summary>
-		void CloseModule();
+//		/// <summary>
+//		/// Opens a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="name">The path of the module to open.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		void OpenModule(string path, ModuleLocationType location);
+//		
+//		
+//		/// <summary>
+//		/// Saves a Neverwinter Nights 2 game module to its
+//		/// current location.
+//		/// </summary>
+//		/// <param name="module">The module to save.</param>.
+//		void SaveModule(NWN2GameModule module);
+//		
+//		
+//		/// <summary>
+//		/// Saves a Neverwinter Nights 2 game module to a given path.
+//		/// </summary>
+//		/// <param name="module">The module to save.</param>
+//		/// <param name="path">The path to save the module to.</param>
+//		void SaveModule(NWN2GameModule module, string path);
+//		
+//				
+//		/// <summary>
+//		/// Closes the current module.
+//		/// </summary>
+//		void CloseModule();
 		
 		
 		/// <summary>
