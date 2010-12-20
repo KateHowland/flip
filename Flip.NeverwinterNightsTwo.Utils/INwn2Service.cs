@@ -40,19 +40,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 	                 CallbackContract=typeof(INwn2Callbacks))]
 	public interface INwn2Service
 	{
-		/// <summary>
-		/// Creates a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="path">The path to create the module at. If 'location'
-		/// is set to ModuleLocationType.Directory, this must be the path for
-		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		[OperationContract]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.IO.IOException))]
-		[FaultContract(typeof(System.NotSupportedException))]
-		void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
+//		/// <summary>
+//		/// Creates a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="path">The path to create the module at. If 'location'
+//		/// is set to ModuleLocationType.Directory, this must be the path for
+//		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		[OperationContract]
+//		[FaultContract(typeof(System.ArgumentNullException))]
+//		[FaultContract(typeof(System.ArgumentException))]
+//		[FaultContract(typeof(System.IO.IOException))]
+//		[FaultContract(typeof(System.NotSupportedException))]
+//		void CreateModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
 		
 		
 		/// <summary>
@@ -63,32 +63,32 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		string CreateAndOpenTemporaryModule();
 		
 		
-		/// <summary>
-		/// Opens a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The path of the module to open.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		[OperationContract]
-		[FaultContract(typeof(System.ArgumentNullException))]
-		[FaultContract(typeof(System.ArgumentException))]
-		[FaultContract(typeof(System.IO.IOException))]
-		void OpenModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
+//		/// <summary>
+//		/// Opens a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="name">The path of the module to open.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		[OperationContract]
+//		[FaultContract(typeof(System.ArgumentNullException))]
+//		[FaultContract(typeof(System.ArgumentException))]
+//		[FaultContract(typeof(System.IO.IOException))]
+//		void OpenModule(string path, NWN2Toolset.NWN2.IO.ModuleLocationType location);
 		
 		
-		/// <summary>
-		/// Saves changes to the current game module.
-		/// </summary>
-		/// <remarks>Saves to the default modules directory.</remarks>
-		[OperationContract]
-		[FaultContract(typeof(System.ArgumentException))]
-		void SaveModule();
+//		/// <summary>
+//		/// Saves changes to the current game module.
+//		/// </summary>
+//		/// <remarks>Saves to the default modules directory.</remarks>
+//		[OperationContract]
+//		[FaultContract(typeof(System.ArgumentException))]
+//		void SaveModule();
 		
 		
-		/// <summary>
-		/// Closes the current module.
-		/// </summary>
-		[OperationContract]
-		void CloseModule();
+//		/// <summary>
+//		/// Closes the current module.
+//		/// </summary>
+//		[OperationContract]
+//		void CloseModule();
 		
 		
 		/// <summary>

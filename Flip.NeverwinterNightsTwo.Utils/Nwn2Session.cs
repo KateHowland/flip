@@ -85,48 +85,48 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		
 		#region Methods
 		
-		/// <summary>
-		/// Creates a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="path">The path to create the module at. If 'location'
-		/// is set to ModuleLocationType.Directory, this must be the path for
-		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		public void CreateModule(string path, ModuleLocationType location)
-		{			
-			if (location == ModuleLocationType.Temporary) {	
-				throw new NotSupportedException("Creating temporary modules is not supported - use " +
-				                                "CreateAndOpenTemporaryModule instead.");
-			}			
-			if (path == null) {
-				throw new ArgumentNullException("path");
-			}			
-			if (path == String.Empty) {
-				throw new ArgumentException("Path cannot be an empty string.","path");
-			}			
-			if (location == ModuleLocationType.Directory && Directory.Exists(path) ||
-			    location == ModuleLocationType.File && File.Exists(path)) {
-				throw new IOException("The path provided was already occupied (" + path + ").");
-			}
-						
-			string name = Path.GetFileNameWithoutExtension(path);
-			
-			NWN2GameModule module;
-			
-			lock (padlock) {							
-				NWN2ToolsetMainForm.App.DoNewModule(true);
-				module = GetModule();
-				
-				module.Name = name;
-				module.LocationType = location;
-				module.ModuleInfo.Tag = name;
-				module.ModuleInfo.Description = new OEIExoLocString();
-			}
-				
-			SaveModule(module,path);
-			
-			CloseModule();
-		}
+//		/// <summary>
+//		/// Creates a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="path">The path to create the module at. If 'location'
+//		/// is set to ModuleLocationType.Directory, this must be the path for
+//		/// a folder to be created within NWN2Toolset.NWN2ToolsetMainForm.ModulesDirectory.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		public void CreateModule(string path, ModuleLocationType location)
+//		{			
+//			if (location == ModuleLocationType.Temporary) {	
+//				throw new NotSupportedException("Creating temporary modules is not supported - use " +
+//				                                "CreateAndOpenTemporaryModule instead.");
+//			}			
+//			if (path == null) {
+//				throw new ArgumentNullException("path");
+//			}			
+//			if (path == String.Empty) {
+//				throw new ArgumentException("Path cannot be an empty string.","path");
+//			}			
+//			if (location == ModuleLocationType.Directory && Directory.Exists(path) ||
+//			    location == ModuleLocationType.File && File.Exists(path)) {
+//				throw new IOException("The path provided was already occupied (" + path + ").");
+//			}
+//						
+//			string name = Path.GetFileNameWithoutExtension(path);
+//			
+//			NWN2GameModule module;
+//			
+//			lock (padlock) {							
+//				NWN2ToolsetMainForm.App.DoNewModule(true);
+//				module = GetModule();
+//				
+//				module.Name = name;
+//				module.LocationType = location;
+//				module.ModuleInfo.Tag = name;
+//				module.ModuleInfo.Description = new OEIExoLocString();
+//			}
+//				
+//			SaveModule(module,path);
+//			
+//			CloseModule();
+//		}
 				
 		
 		/// <summary>
@@ -143,121 +143,121 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 		}
 				
 		
-		/// <summary>
-		/// Opens a Neverwinter Nights 2 game module.
-		/// </summary>
-		/// <param name="name">The path of the module, including file extension
-		/// if appropriate.</param>
-		/// <param name="location">The serialisation form of the module.</param>
-		public void OpenModule(string path, ModuleLocationType location)
-		{
-			if (path == null) throw new ArgumentNullException("path");
-			if (path == String.Empty) throw new ArgumentException("Path cannot be an empty string.","path");
-			
-			if (location == ModuleLocationType.Directory && !(Directory.Exists(path))) {
-				throw new IOException("Directory at " + path + " does not exist.");
-			}
-			else if (location == ModuleLocationType.File && !(File.Exists(path))) {
-				throw new IOException("File at " + path + " does not exist.");
-			}
-			
-			ThreadedOpenHelper opener;						
-			
-			NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
-					
-			lock (padlock) {
-				try {				
-					if (NWN2ToolsetMainForm.App.CloseModule(true)) {					
-						string parameter;
-						if (location == ModuleLocationType.Directory) {
-							parameter = Path.GetFileName(path);
-						}
-						else {
-							parameter = path;
-						}
-						
-				        opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,parameter,location);
-				        
-				        ThreadedProgressDialog progress = new ThreadedProgressDialog();
-				        progress.Text = "Opening " + location + " module";	
-				        progress.Message = "Opening module '" + Path.GetFileName(path) + "'...";
-				        progress.WorkerThread = new ThreadedProgressDialog.WorkerThreadDelegate(opener.Go);
-				        progress.ShowDialog();
-				        
-				        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetModule());
-			        }
-				}
-			    catch (Exception) {
-			        NWN2ToolsetMainForm.App.DoNewModule(false);
-			    }
-			    finally {
-			    	NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
-			    }
-			}
-		}
+//		/// <summary>
+//		/// Opens a Neverwinter Nights 2 game module.
+//		/// </summary>
+//		/// <param name="name">The path of the module, including file extension
+//		/// if appropriate.</param>
+//		/// <param name="location">The serialisation form of the module.</param>
+//		public void OpenModule(string path, ModuleLocationType location)
+//		{
+//			if (path == null) throw new ArgumentNullException("path");
+//			if (path == String.Empty) throw new ArgumentException("Path cannot be an empty string.","path");
+//			
+//			if (location == ModuleLocationType.Directory && !(Directory.Exists(path))) {
+//				throw new IOException("Directory at " + path + " does not exist.");
+//			}
+//			else if (location == ModuleLocationType.File && !(File.Exists(path))) {
+//				throw new IOException("File at " + path + " does not exist.");
+//			}
+//			
+//			ThreadedOpenHelper opener;						
+//			
+//			NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
+//					
+//			lock (padlock) {
+//				try {				
+//					if (NWN2ToolsetMainForm.App.CloseModule(true)) {					
+//						string parameter;
+//						if (location == ModuleLocationType.Directory) {
+//							parameter = Path.GetFileName(path);
+//						}
+//						else {
+//							parameter = path;
+//						}
+//						
+//				        opener = new ThreadedOpenHelper(NWN2ToolsetMainForm.App,parameter,location);
+//				        
+//				        ThreadedProgressDialog progress = new ThreadedProgressDialog();
+//				        progress.Text = "Opening " + location + " module";	
+//				        progress.Message = "Opening module '" + Path.GetFileName(path) + "'...";
+//				        progress.WorkerThread = new ThreadedProgressDialog.WorkerThreadDelegate(opener.Go);
+//				        progress.ShowDialog();
+//				        
+//				        NWN2ToolsetMainForm.App.SetupHandlersForGameResourceContainer(GetModule());
+//			        }
+//				}
+//			    catch (Exception) {
+//			        NWN2ToolsetMainForm.App.DoNewModule(false);
+//			    }
+//			    finally {
+//			    	NWN2ToolsetMainForm.App.AutosaveTemporarilyDisabled = false;
+//			    }
+//			}
+//		}
 				
 		
-		/// <summary>
-		/// Saves a Neverwinter Nights 2 game module to its
-		/// current location.
-		/// </summary>
-		/// <param name="module">The module to save.</param>.
-		public void SaveModule(NWN2GameModule module)
-		{
-			SaveModule(module,GetModulePath(module));
-		}
+//		/// <summary>
+//		/// Saves a Neverwinter Nights 2 game module to its
+//		/// current location.
+//		/// </summary>
+//		/// <param name="module">The module to save.</param>.
+//		public void SaveModule(NWN2GameModule module)
+//		{
+//			SaveModule(module,GetModulePath(module));
+//		}
 		
 		
-		/// <summary>
-		/// Saves a Neverwinter Nights 2 game module to a given path.
-		/// </summary>
-		/// <param name="module">The module to save.</param>
-		/// <param name="path">The path to save the module to.</param>
-		public void SaveModule(NWN2GameModule module, string path)
-		{	
-			string extension = Path.GetExtension(path);
-			string parent = Path.GetDirectoryName(path);
-						
-			switch (module.LocationType) {					
-				case ModuleLocationType.Directory:
-					if (extension != String.Empty) {
-						throw new ArgumentException("Path must be a folder, not a file.","path");
-					}
-					if (parent != NWN2ToolsetMainForm.ModulesDirectory) {
-						throw new ArgumentException("Path must be a folder located within the " +
-						                            "modules directory specified at NWN2Toolset." + 
-						                            "NWN2ToolsetMainForm.ModulesDirectory.","path");
-					}
-					break;
-					
-				case ModuleLocationType.File:
-					if (extension.ToLower() != ".mod") {
-						throw new ArgumentException("Path must be a .mod file.","path");
-					}					
-					break;
-					
-				default:
-					throw new ArgumentException("Saving " + module.LocationType + 
-					                            " modules is not supported.","location");
-			}
-			
-			foreach (NWN2GameArea area in module.Areas.Values) {
-				if (area.Loaded) area.OEISerialize();
-			}					
-			foreach (NWN2GameScript script in module.Scripts.Values) {
-				if (script.Loaded) script.OEISerialize();
-			}			
-			
-			if (NWN2CampaignManager.Instance.ActiveCampaign != null) {
-				NWN2CampaignManager.Instance.ActiveCampaign.SaveBlueprints();
-				NWN2ToolsetMainForm.App.ContentManager.SaveCampaignList(NWN2CampaignManager.Instance.ActiveCampaign.Repository,true);
-			}
-			NWN2ToolsetMainForm.App.RunVerification(NWN2Toolset.Plugins.NWN2ModuleVerificationType.Fast);
-			
-			module.OEISerialize(path);
-			module.Name = Path.GetFileNameWithoutExtension(path);
-			NWN2ToolsetMainForm.App.ContentManager.InitializeModule(module.Repository);
-		}
+//		/// <summary>
+//		/// Saves a Neverwinter Nights 2 game module to a given path.
+//		/// </summary>
+//		/// <param name="module">The module to save.</param>
+//		/// <param name="path">The path to save the module to.</param>
+//		public void SaveModule(NWN2GameModule module, string path)
+//		{	
+//			string extension = Path.GetExtension(path);
+//			string parent = Path.GetDirectoryName(path);
+//						
+//			switch (module.LocationType) {					
+//				case ModuleLocationType.Directory:
+//					if (extension != String.Empty) {
+//						throw new ArgumentException("Path must be a folder, not a file.","path");
+//					}
+//					if (parent != NWN2ToolsetMainForm.ModulesDirectory) {
+//						throw new ArgumentException("Path must be a folder located within the " +
+//						                            "modules directory specified at NWN2Toolset." + 
+//						                            "NWN2ToolsetMainForm.ModulesDirectory.","path");
+//					}
+//					break;
+//					
+//				case ModuleLocationType.File:
+//					if (extension.ToLower() != ".mod") {
+//						throw new ArgumentException("Path must be a .mod file.","path");
+//					}					
+//					break;
+//					
+//				default:
+//					throw new ArgumentException("Saving " + module.LocationType + 
+//					                            " modules is not supported.","location");
+//			}
+//			
+//			foreach (NWN2GameArea area in module.Areas.Values) {
+//				if (area.Loaded) area.OEISerialize();
+//			}					
+//			foreach (NWN2GameScript script in module.Scripts.Values) {
+//				if (script.Loaded) script.OEISerialize();
+//			}			
+//			
+//			if (NWN2CampaignManager.Instance.ActiveCampaign != null) {
+//				NWN2CampaignManager.Instance.ActiveCampaign.SaveBlueprints();
+//				NWN2ToolsetMainForm.App.ContentManager.SaveCampaignList(NWN2CampaignManager.Instance.ActiveCampaign.Repository,true);
+//			}
+//			NWN2ToolsetMainForm.App.RunVerification(NWN2Toolset.Plugins.NWN2ModuleVerificationType.Fast);
+//			
+//			module.OEISerialize(path);
+//			module.Name = Path.GetFileNameWithoutExtension(path);
+//			NWN2ToolsetMainForm.App.ContentManager.InitializeModule(module.Repository);
+//		}
 		
 		
 		/// <summary>
