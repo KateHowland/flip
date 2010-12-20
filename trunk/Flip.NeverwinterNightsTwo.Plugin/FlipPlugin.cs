@@ -30,6 +30,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using NWN2Toolset;
+using NWN2Toolset.Data;
 using NWN2Toolset.NWN2.Data;
 using NWN2Toolset.NWN2.Data.Blueprints;
 using NWN2Toolset.NWN2.Data.ConversationData;
@@ -226,6 +227,10 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 									window.BlockBox.AddMoveable(bag,block,false);
 								}
 							}
+							
+							
+							if (e.PropertyName == "Tag") UpdateScriptsFollowingTagChange(instance,(string)e.OldValue,(string)e.NewValue,true);
+							
 						}
 						
 						else if (o is NWN2GameArea) {
@@ -277,6 +282,58 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			catch (Exception x) {
 				MessageBox.Show("Something went wrong when updating a block.\n\n" + x);
+			}
+		}
+		
+
+		protected void UpdateScriptsFollowingTagChange(object obj, string oldName, string newName, bool createNewCopy)
+		{			
+			if (obj == null) throw new ArgumentNullException("obj");
+			if (oldName == null) throw new ArgumentNullException("oldName");
+			if (newName == null) throw new ArgumentNullException("newName");
+			
+			foreach (System.Reflection.PropertyInfo property in obj.GetType().GetProperties()) {
+								
+				if (property.Name.StartsWith("On")) {
+					
+					try {
+						NWN2GameArea area = obj as NWN2GameArea;
+						if (area != null && !session.AreaIsOpen(area)) area.Demand();
+						
+						OEIShared.IO.IResourceEntry res = property.GetValue(obj,null) as OEIShared.IO.IResourceEntry;
+						
+						if (res != null) {
+										
+							NWN2GameScript script = new NWN2GameScript(res);
+								
+							if (ScriptHelper.WasCreatedByFlip(script)) {
+								
+								if (!script.Loaded) script.Demand();
+											
+								string flipCode, address, naturalLanguage;
+								AbstractScriptWriter.ParseNWScript(script.Data, out flipCode, out address, out naturalLanguage);
+																
+								string newAddress = address.Replace(oldName,newName);																				
+								string newData = script.Data.Replace(address,newAddress);										
+									
+								if (createNewCopy) { // for instances, create a new copy of the existing script and point at that	
+									NWN2GameScript newScript = session.AddScript(attacher.GetUnusedName(),newData);
+									property.SetValue(obj,newScript.Resource,null);									
+								}
+								
+								else { // for areas, change the existing script	
+									string n = script.Name;
+									session.DeleteScript(n);									
+									NWN2GameScript newScript = session.AddScript(n,newData);									
+									property.SetValue(obj,newScript.Resource,null);	
+								}
+							}
+						}
+					}
+					catch (Exception x) {
+						MessageBox.Show("Something went wrong when trying to update the scripts on " + newName + ".\n"+x);
+					}
+				}
 			}
 		}
 		
@@ -407,7 +464,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			if (openingExistingScript && window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 					
-			window.EnterConditionMode();
+			window.EnterConditionMode(Nwn2Strings.GetStringFromOEIString(line.Line.Text));
 			
 			window.ConditionalFrame.Address = addressFactory.GetConversationAddress(conversation.Name,line.Line.LineGuid,ScriptType.Conditional).Value;
 						
@@ -645,7 +702,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			Nwn2ImageProvider images = new Nwn2ImageProvider(new NarrativeThreadsHelper());
 			blocks = new Nwn2ObjectBlockFactory(images);
 				
-			ToolsetEventReporter reporter = new ToolsetEventReporter();
+			ToolsetEventReporter reporter = new ToolsetEventReporter();			
 			
 			provider = new Nwn2MoveableProvider(blocks,statements,triggers,reporter);
 				
@@ -740,6 +797,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			catch (Exception x) {
 				MessageBox.Show("Something went wrong when setting up a Flip user log.\n" + x);
 			}
+			
+			reporter.AreaNameChanged += delegate(object oObject, NameChangedEventArgs eArgs) 
+			{  
+				UpdateScriptsFollowingTagChange(oObject,eArgs.OldName,eArgs.NewName,false);
+			};
 		}
 		
 		
