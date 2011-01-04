@@ -64,7 +64,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 0;
 			components = new List<StatementComponent>(1) 
 			{ 
-				new StatementComponent("set the time to noon"),
+				new StatementComponent("turn clock to daytime"),
 			};
 		}
 		
@@ -85,7 +85,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return "it suddenly becomes noon";
+			return "the sky turns to daytime";
 		}
 		
 		

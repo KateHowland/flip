@@ -63,7 +63,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 2;
 			components = new List<StatementComponent>(4) 
 			{ 
-				new StatementComponent("give a copy of"),
+				new StatementComponent("give"),
 				new StatementComponent(fitters.OnlyItems),
 				new StatementComponent("to"),
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers)
@@ -96,7 +96,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("a new copy of {0} appears in the inventory of {1}",args);
+			return String.Format("a copy of {0} appears in the inventory of {1}",args);
 		}
 		
 		

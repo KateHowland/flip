@@ -63,7 +63,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			parameterCount = 2;
 			components = new List<StatementComponent>(4) 
 			{ 
-				new StatementComponent("create a copy of"),
+				new StatementComponent("create"),
 				new StatementComponent(fitters.OnlyPlaceables),
 				new StatementComponent("at the location of"),
 				new StatementComponent(fitters.OnlyInstancesOrPlayers)
@@ -97,7 +97,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("a new copy of {0} appears at the location of {1}",args);
+			return String.Format("a copy of {0} appears at the location of {1}",args);
 		}
 		
 		
