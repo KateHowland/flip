@@ -310,7 +310,7 @@ namespace Sussex.Flip.UI
 		{
 			Peg peg = AddPeg(true,0);
 			try {
-				Log.WriteAction(LogAction.added,"peg","on " + peg.Slot.GetLogText());
+				Log.WriteAction(LogAction.added,"peg");
 				//ActivityLog.Write(new Activity("AddedPeg","On",peg.Slot.GetLogText()));
 			}
 			catch (Exception) {}

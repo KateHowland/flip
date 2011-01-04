@@ -873,6 +873,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				Log.WriteAction(LogAction.saved,"script","as "+ savedAs);
 				
 				//MessageBox.Show("Script was saved successfully.");
+				try {
+					string nl = window.NaturalLanguage;
+					if (String.IsNullOrEmpty(nl)) window.NaturalLanguage = "Saved.";
+					else window.NaturalLanguage = nl + Environment.NewLine + "Saved.";
+				}
+				catch (Exception) {}
 				
 				return true;
 			}

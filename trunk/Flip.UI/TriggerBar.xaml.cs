@@ -139,7 +139,7 @@ namespace Sussex.Flip.UI
 						spineNL = spine.GetNaturalLanguage();
 					}
 						
-					code.AppendLine(spineNL+".");
+					code.Append(spineNL+".");
 				}
 				
 				return code.ToString();
