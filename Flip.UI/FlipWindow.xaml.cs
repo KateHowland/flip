@@ -568,7 +568,7 @@ namespace Sussex.Flip.UI
 		
 		protected void CopyNaturalLanguage(object sender, RoutedEventArgs e)
 		{
-			System.Windows.Clipboard.SetText(nlTextBlock.Text);
+			System.Windows.Clipboard.SetText(NaturalLanguage);
 		}
 		
 		
@@ -613,8 +613,20 @@ namespace Sussex.Flip.UI
 		{
 			if (translatable == null) return null;
 			string nl = translatable.GetNaturalLanguage();
-			this.nlTextBlock.Text = nl;
+			NaturalLanguage = nl;
 			return nl;
+		}
+		
+		
+		public string NaturalLanguage {
+			get { 
+				if (nlTextBlock.Text == null) return String.Empty;
+				else return nlTextBlock.Text;
+			}
+			set { 
+				if (value == null) nlTextBlock.Text = String.Empty;
+				else nlTextBlock.Text = value; 
+			}
 		}
 		
 		
