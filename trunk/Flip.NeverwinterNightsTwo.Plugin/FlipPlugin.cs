@@ -719,8 +719,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				// Unless the user changes their mind about closing the script,
 				// in which case don't even do that:
 				if (window.AskWhetherToSaveCurrentScript() != MessageBoxResult.Cancel) {
-					window.CloseScript();
+					window.CloseScript();					
 					window.Visibility = Visibility.Hidden;
+					window.LeaveConditionMode();
 					Log.WriteAction(LogAction.exited,"flip");
 				}
 			};

@@ -264,7 +264,7 @@ namespace Sussex.Flip.UI
 		{
 			conditionalFrame.Dialogue = dialogue;
 			
-			Clear();
+			CloseScript();
 			
 			mainMenu.IsEnabled = false;
 			
@@ -284,7 +284,7 @@ namespace Sussex.Flip.UI
 		
 		public void LeaveConditionMode()
 		{
-			Clear();
+			CloseScript();
 			
 			mainMenu.IsEnabled = true;
 						

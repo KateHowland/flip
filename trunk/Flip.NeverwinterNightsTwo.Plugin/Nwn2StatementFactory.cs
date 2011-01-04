@@ -185,6 +185,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public Statement HasEquippedItem()
+		{
+			return new Statement(new HasEquippedItem());
+		}	
+		
+		
+		public Statement IsNear()
+		{
+			return new Statement(new IsNear());
+		}	
+		
+		
+		public Statement IsLocked()
+		{
+			return new Statement(new IsLocked());
+		}
+		
+		
 		public Statement BecomesCommoner()
 		{
 			return new Statement(new BecomesCommoner());
@@ -278,13 +296,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement AreaTransition()
 		{
 			return new Statement(new AreaTransition());
-		}
-		
-		
-		public Statement IsLocked()
-		{
-			return new Statement(new IsLocked());
-		}
+		}	
 		
 		
 		public Statement CreateCreatureAtLocation()
@@ -308,19 +320,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public Statement CreateItemInInventory()
 		{
 			return new Statement(new CreateItemInInventory());
-		}
-		
-		
-		public Statement HasEquippedItem()
-		{
-			return new Statement(new HasEquippedItem());
 		}	
-		
-		
-		public Statement IsNear()
-		{
-			return new Statement(new IsNear());
-		}			
 		
 		#endregion
 	}
