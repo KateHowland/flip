@@ -130,7 +130,7 @@ namespace Sussex.Flip.UI
             slot = new ConditionSlot(fitter);
             slot.AllowDrop = true;
             slot.Margin = new Thickness(10,10,10,0);
-            slot.Width = 550;
+            slot.MinWidth = 550;
             slot.Height = 100;
             
             dragMessageTextBlock.AllowDrop = true;

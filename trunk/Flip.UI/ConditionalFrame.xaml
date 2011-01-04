@@ -43,7 +43,6 @@
 					
 			<Grid
 			Grid.Row="0"
-			Width="500"
 			Height="80"
 			Margin="10">
 			
