@@ -50,7 +50,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			components = new List<StatementComponent>(4) 
 			{ 
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("is carrying at least"),
+				new StatementComponent("has got at least"),
 				new StatementComponent(fitters.OnlyNumbers),
 				new StatementComponent("gold coins")
 			};
@@ -75,7 +75,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			//if (args[1] == "some number") args[1] = "some number of";
 			
-			return String.Format("{0} currently owns at least {1} gold pieces",args);
+			return String.Format("{0} has got at least {1} gold pieces",args);
 		}
 		
 		

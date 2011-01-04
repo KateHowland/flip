@@ -71,7 +71,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("{0} currently has {1} in its inventory",args);
+			return String.Format("{0} is carrying {1} in its inventory",args);
 		}
 		
 		

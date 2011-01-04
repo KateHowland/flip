@@ -50,7 +50,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			components = new List<StatementComponent>(3) 
 			{ 
 				new StatementComponent(fitters.OnlyCreaturesOrPlayers),
-				new StatementComponent("has equipped"),
+				new StatementComponent("is using"),
 				new StatementComponent(fitters.OnlyItems)
 			};
 		}
@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				throw new ArgumentException("Must pass exactly " + parameterCount + " parameters.","args");
 			}
 			
-			return String.Format("{0} currently has {1} equipped",args);
+			return String.Format("{0} is using {1}",args);
 		}
 		
 		
