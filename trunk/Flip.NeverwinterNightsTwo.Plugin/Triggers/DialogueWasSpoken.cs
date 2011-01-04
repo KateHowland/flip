@@ -53,7 +53,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public DialogueWasSpoken(string dialogue, string conversation, Guid lineGuid) : base(String.Format("When \"{0}\" is spoken",UIHelper.Truncate(dialogue,30)))
+		public DialogueWasSpoken(string dialogue, string conversation, Guid lineGuid) : base(String.Format("When \"{0}\" is spoken",UIHelper.Truncate(dialogue,15)))
 		{
 			this.dialogue = dialogue;
 			this.conversation = conversation;
@@ -63,7 +63,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public override string GetNaturalLanguage()
 		{
-			return String.Format("When someone says \"{0}\"",UIHelper.Truncate(dialogue,30));
+			return String.Format("When someone says \"{0}\"",UIHelper.Truncate(dialogue,40));
 		}
 		
 		
