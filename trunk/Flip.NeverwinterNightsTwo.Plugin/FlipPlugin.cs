@@ -106,8 +106,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected NWScriptAttacher attacher;
 		
-		public static string FlipLogsPath = @"C:\Sussex University\Flip\Logs\";
-		
 		public static string FlipBackupScriptsPath = @"C:\Sussex University\Flip\Scripts\";
 		
 		#endregion

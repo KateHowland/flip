@@ -80,7 +80,10 @@ namespace Sussex.Flip.UI
             border.MinWidth = ObjectBlock.DefaultSize.Width + border.BorderThickness.Left + border.BorderThickness.Right;
             border.MinHeight = ObjectBlock.DefaultSize.Height + border.BorderThickness.Top + border.BorderThickness.Bottom;
             
-            fitterText.Text = fitter.GetMoveableDescription();
+            string text = fitter.GetMoveableDescription();
+            if (text == "something") text = "some thing";
+            
+            fitterText.Text = text;
             fitterText.Foreground = Brushes.DarkSlateBlue;
             fitterText.MaxWidth = border.MinWidth;
             fitterText.MaxHeight = border.MinHeight;

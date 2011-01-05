@@ -16,7 +16,7 @@
 	VerticalAlignment="Center"
 	HorizontalAlignment="Center"
 	TextAlignment="Center"
-	TextWrapping="WrapWithOverFlow"/>
+	TextWrapping="WrapWithOverflow"/>
     
     </Grid>
     
