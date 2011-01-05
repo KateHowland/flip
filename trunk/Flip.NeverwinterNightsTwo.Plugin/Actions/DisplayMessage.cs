@@ -72,7 +72,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent("display"),
 				new StatementComponent(fitters.OnlyStrings),
-				new StatementComponent("as pop-up message"),
+				new StatementComponent("on screen"),
 			};
 		}
 		
