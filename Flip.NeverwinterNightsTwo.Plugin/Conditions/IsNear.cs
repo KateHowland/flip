@@ -54,9 +54,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			components = new List<StatementComponent>(5) 
 			{ 
 				new StatementComponent(fitters.OnlyInstancesOrPlayers),
-				new StatementComponent("is less than"),
+				new StatementComponent("is within"),
 				new StatementComponent(fitters.OnlyNumbers),
-				new StatementComponent("metres away from"),
+				new StatementComponent("metres of"),
 				new StatementComponent(fitters.OnlyInstancesOrPlayers)
 			};
 		}

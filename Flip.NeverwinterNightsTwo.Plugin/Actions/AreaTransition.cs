@@ -77,7 +77,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent("teleport player to"),
 				new StatementComponent(fitters.OnlyAreas),
-				new StatementComponent("at the location of"),
+				new StatementComponent("next to"),
 				new StatementComponent(fitters.OnlyInstances)
 			};
 		}

@@ -65,7 +65,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{ 
 				new StatementComponent("create"),
 				new StatementComponent(fitters.OnlyPlaceables),
-				new StatementComponent("at the location of"),
+				new StatementComponent("next to"),
 				new StatementComponent(fitters.OnlyInstancesOrPlayers)
 			};
 		}
