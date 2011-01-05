@@ -7,7 +7,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition x:Name="extension" Height="0"/>
 			<RowDefinition MinHeight="20"/>
-			<RowDefinition Height="20"/>
+			<RowDefinition/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="16"/>
@@ -28,10 +28,10 @@
 			<Border.ContextMenu>	
 				<ContextMenu>			
 					<MenuItem 
-					Header="Grow"
+					Header="Add peg"
 					Click="GrowSpine"/>			
 					<MenuItem 
-					Header="Shrink"
+					Header="Remove empty pegs"
 					Click="ShrinkSpine"/>			
 				</ContextMenu>
 			</Border.ContextMenu>
@@ -55,18 +55,22 @@
 			
 			<StackPanel.Resources>
 				<Style TargetType="Button">
-					<Setter Property="Height" Value="15"/>
-					<Setter Property="Width" Value="15"/>
-					<Setter Property="Margin" Value="1"/>
-					<Setter Property="Opacity" Value="0.7"/>
+					<Setter Property="Height" Value="10"/>
+					<Setter Property="Width" Value="10"/>				
 					<Setter Property="Background" Value="Transparent"/>
-					<Setter Property="Foreground" Value="Transparent"/>
+					<Setter Property="Margin" Value="1"/>
 				</Style>
+			   
+				<ControlTemplate x:Key="borderlessButton" TargetType="Button">              
+					<ContentPresenter Content="{TemplateBinding Content}"/>         
+				</ControlTemplate>   
+			
 			</StackPanel.Resources>
 		
 			<Button
 			ToolTip="Add peg"
-			Click="GrowSpine">
+			Click="GrowSpine"
+			Template="{StaticResource borderlessButton}">
 				<Button.Content>
 					<Image Source="images\+.png"/>
 				</Button.Content>
@@ -74,7 +78,8 @@
 		
 			<Button
 			ToolTip="Remove empty pegs"
-			Click="ShrinkSpine">
+			Click="ShrinkSpine"
+			Template="{StaticResource borderlessButton}">
 				<Button.Content>
 					<Image Source="images\-.png"/>
 				</Button.Content>
