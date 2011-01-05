@@ -308,7 +308,7 @@ namespace Sussex.Flip.UI
 		
 		protected void GrowSpine(object sender, RoutedEventArgs e)
 		{
-			Peg peg = AddPeg(true,0);
+			Peg peg = AddPeg(true,Pegs.Count);
 			try {
 				Log.WriteAction(LogAction.added,"peg");
 				//ActivityLog.Write(new Activity("AddedPeg","On",peg.Slot.GetLogText()));

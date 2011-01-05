@@ -232,6 +232,8 @@
     <EmbeddedResource Include="images\fliplogo.ico">
       <LogicalName>fliplogoicon</LogicalName>
     </EmbeddedResource>
+    <Resource Include="images\+.png" />
+    <Resource Include="images\-.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images" />

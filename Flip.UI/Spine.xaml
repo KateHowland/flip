@@ -7,6 +7,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition x:Name="extension" Height="0"/>
 			<RowDefinition MinHeight="20"/>
+			<RowDefinition Height="20"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="16"/>
@@ -45,6 +46,41 @@
 		Grid.Row="1"
 		Grid.Column="1"
 		Orientation="Vertical"/>
+	
+		<StackPanel
+		Grid.Row="1"
+		Grid.Column="0"
+		VerticalAlignment="Bottom"
+		Orientation="Vertical">
+			
+			<StackPanel.Resources>
+				<Style TargetType="Button">
+					<Setter Property="Height" Value="15"/>
+					<Setter Property="Width" Value="15"/>
+					<Setter Property="Margin" Value="1"/>
+					<Setter Property="Opacity" Value="0.7"/>
+					<Setter Property="Background" Value="Transparent"/>
+					<Setter Property="Foreground" Value="Transparent"/>
+				</Style>
+			</StackPanel.Resources>
+		
+			<Button
+			ToolTip="Add peg"
+			Click="GrowSpine">
+				<Button.Content>
+					<Image Source="images\+.png"/>
+				</Button.Content>
+			</Button>
+		
+			<Button
+			ToolTip="Remove empty pegs"
+			Click="ShrinkSpine">
+				<Button.Content>
+					<Image Source="images\-.png"/>
+				</Button.Content>
+			</Button>
+		
+		</StackPanel>
 	
 	</Grid>
 
