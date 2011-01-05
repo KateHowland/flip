@@ -53,7 +53,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
-		public DialogueWasSpoken(string dialogue, string conversation, Guid lineGuid) : base(String.Format("When \"{0}\" is spoken",UIHelper.Truncate(dialogue,15)))
+		public DialogueWasSpoken(string dialogue, string conversation, Guid lineGuid) : base(String.Format("When \"{0}\" is said",UIHelper.Truncate(dialogue,12)))
 		{
 			this.dialogue = dialogue;
 			this.conversation = conversation;
