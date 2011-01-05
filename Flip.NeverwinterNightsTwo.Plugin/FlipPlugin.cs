@@ -416,8 +416,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			if (openingExistingScript && window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 			
-			window.LeaveConditionMode();
-			
 			TriggerControl trigger = triggers.GetTrigger(line,conversation);
 			
 			if (openingExistingScript) {
@@ -719,9 +717,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				// Unless the user changes their mind about closing the script,
 				// in which case don't even do that:
 				if (window.AskWhetherToSaveCurrentScript() != MessageBoxResult.Cancel) {
-					window.CloseScript();					
+					//window.CloseScript();					
 					window.Visibility = Visibility.Hidden;
-					window.LeaveConditionMode();
+					//window.LeaveConditionMode();
 					Log.WriteAction(LogAction.exited,"flip");
 				}
 			};

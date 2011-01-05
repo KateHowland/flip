@@ -172,7 +172,7 @@ namespace Sussex.Flip.UI
 			// Set up conditional frame:
 			conditionalFrame = new ConditionalFrame();
 			conditionalFrame.SaveButton.Click += SaveScript;	
-			conditionalFrame.FinishButton.Click += LeaveConditionModeWithDialog;
+			//conditionalFrame.FinishButton.Click += LeaveConditionModeWithDialog;
 			Canvas.SetTop(conditionalFrame,30);
 			Canvas.SetLeft(conditionalFrame,30);
 			mainCanvas.Children.Add(conditionalFrame);			
@@ -266,7 +266,7 @@ namespace Sussex.Flip.UI
 			
 			CloseScript();
 			
-			mainMenu.IsEnabled = false;
+			//mainMenu.IsEnabled = false;
 			
 			blockBox.DisplayBag(MoveableProvider.ConditionsBagName);
 			
@@ -286,7 +286,7 @@ namespace Sussex.Flip.UI
 		{
 			CloseScript();
 			
-			mainMenu.IsEnabled = true;
+			//mainMenu.IsEnabled = true;
 						
 			blockBox.DisplayBag(MoveableProvider.ActionsBagName);
 			
@@ -309,7 +309,8 @@ namespace Sussex.Flip.UI
 		public MessageBoxResult AskWhetherToSaveCurrentScript()
 		{
 			if (!IsDirty) {
-				CloseScript();
+				CloseScript();			
+				if (Mode == ScriptType.Conditional) LeaveConditionMode();
 				return MessageBoxResult.None;
 			}
 			
@@ -319,7 +320,9 @@ namespace Sussex.Flip.UI
 										              MessageBoxImage.Question,
 										              MessageBoxResult.Cancel);
 			
-			if (result == MessageBoxResult.Yes) {			
+			if (result == MessageBoxResult.Cancel) return result;
+			
+			else if (result == MessageBoxResult.Yes) {			
 				try {
 					bool cancelled = !SaveScript();					
 					if (cancelled) return MessageBoxResult.Cancel;
@@ -336,6 +339,8 @@ namespace Sussex.Flip.UI
 				CloseScript();
 			}
 			
+			if (Mode == ScriptType.Conditional) LeaveConditionMode();
+				
 			return result;
 		}
 				
@@ -344,13 +349,14 @@ namespace Sussex.Flip.UI
 		{
 			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 			//ActivityLog.Write(new Activity("NewScript","CreatedVia","FileMenu","Event",String.Empty));
+			
 			Log.WriteAction(LogAction.added,"script","via file menu");
 		}
 		
 		
 		protected void OpenScriptFromModule(object sender, RoutedEventArgs e)
 		{			
-			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
+			if (AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;	
 			
 			try {
 				openDeleteScriptDelegate.Invoke();

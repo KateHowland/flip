@@ -47,7 +47,7 @@ namespace Sussex.Flip.UI
     	protected ConditionSlot slot;
     	protected string currentScriptIsBasedOn;
     	protected string address;
-    	protected Button saveButton, finishButton;
+    	protected Button saveButton;//, finishButton;
 		
        
 		public bool IsComplete {
@@ -60,9 +60,9 @@ namespace Sussex.Flip.UI
     	}
     	
     	
-    	public Button FinishButton {
-    		get { return finishButton; }
-    	}
+//    	public Button FinishButton {
+//    		get { return finishButton; }
+//    	}
     	
     	
 		public ConditionSlot Slot {
@@ -119,11 +119,11 @@ namespace Sussex.Flip.UI
             InitializeComponent();
             
             saveButton = new BigButton("Save");
-            finishButton = new BigButton("Finish");
+            //finishButton = new BigButton("Finish");
 			saveButton.Margin = new Thickness(0,15,15,15);
-			finishButton.Margin = new Thickness(0,15,0,15);
+			//finishButton.Margin = new Thickness(0,15,0,15);
             buttonsPanel.Children.Add(saveButton);
-            buttonsPanel.Children.Add(finishButton);
+            //buttonsPanel.Children.Add(finishButton);
             
             BooleanExpressionFitter fitter = new BooleanExpressionFitter();
             
