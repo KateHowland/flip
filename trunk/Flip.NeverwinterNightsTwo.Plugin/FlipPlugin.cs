@@ -106,7 +106,20 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		protected NWScriptAttacher attacher;
 		
-		public static string FlipBackupScriptsPath = @"C:\Sussex University\Flip\Scripts\";
+		/// <summary>
+		/// The folder that holds Flip data for this user.
+		/// </summary>
+		protected string systemFolder;
+		
+		/// <summary>
+		/// The folder that holds Flip (and Adventure Author) logs for this user.
+		/// </summary>
+		protected string logsFolder;
+		
+		/// <summary>
+		/// The folder that holds copies of Flip scripts created by this user.
+		/// </summary>
+		protected string scriptsFolder;
 		
 		#endregion
 		
@@ -176,6 +189,21 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			preferences = new object();
 			service = new ServiceController();
 			window = null;
+			
+			string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			systemFolder = Path.Combine(myDocuments,"Adventure Author");
+			logsFolder = Path.Combine(systemFolder,"User logs");
+			scriptsFolder = Path.Combine(systemFolder,"Scripts");
+			
+			try {
+				Tools.EnsureDirectoryExists(systemFolder);
+				Tools.EnsureDirectoryExists(logsFolder);
+				Tools.EnsureDirectoryExists(scriptsFolder);
+			}
+			catch (Exception x) {
+				MessageBox.Show("Could not create necessary Flip folders within this user's My Documents folder. " +
+				                "Logs and copies of scripts will not be saved, and the software may not work as intended.\n\n" + x);
+			}
 		}
 			
 		#endregion
@@ -688,7 +716,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			session = new Nwn2Session();
 			FlipTranslator translator = new NWScriptTranslator();
-			attacher = new NWScriptAttacher(translator,session,FlipBackupScriptsPath);
+			attacher = new NWScriptAttacher(translator,session,scriptsFolder);
 								
 			Nwn2Fitters fitters = new Nwn2Fitters();				
 			triggers = new Nwn2TriggerFactory(fitters);
@@ -787,8 +815,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 			// Start recording debug messages and user actions:
 			try {
-				string logsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"Adventure Author");			
-				Tools.EnsureDirectoryExists(logsPath);					
 				LogWriter.StartRecording("flip");
 			}
 			catch (Exception x) {
