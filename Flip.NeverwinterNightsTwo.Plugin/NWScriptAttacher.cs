@@ -86,7 +86,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			this.backups = backups;
 			
 			pathChecker = new PathChecker();
-			createFoldersForUsers = true;
+			createFoldersForUsers = false; // not necessary as now backing up to user profile
 			nt = new NarrativeThreadsHelper();
 		}
 		
