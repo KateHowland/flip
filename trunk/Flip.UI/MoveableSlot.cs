@@ -344,32 +344,22 @@ namespace Sussex.Flip.UI
 		
 		public virtual string GetLogText()
 		{
-			string parentDescription;
-			
 			Moveable moveable = UIHelper.TryFindParent<Moveable>(this);
-			if (moveable != null) {
-				parentDescription = moveable.GetLogText();
-			}
-			
-			else {
-				TriggerBar triggerBar = UIHelper.TryFindParent<TriggerBar>(this);
-				if (triggerBar != null) {
-					parentDescription = triggerBar.GetLogText();
-				}
+			if (moveable != null) return moveable.GetLogText();
 				
-				ConditionalFrame conditionalFrame = UIHelper.TryFindParent<ConditionalFrame>(this);
-				if (conditionalFrame != null) {
-					parentDescription = conditionalFrame.GetLogText();
-				}
-				
-				else {					
-					DependencyObject parent = UIHelper.GetParentObject(this);
-					if (parent != null) parentDescription = parent.ToString();
-					else parentDescription = "unknown";
-				}
-			}
+			ConditionalFrame conditionalFrame = UIHelper.TryFindParent<ConditionalFrame>(this);
+			if (conditionalFrame != null) return conditionalFrame.GetLogText();
 			
-			return parentDescription;
+			Spine spine = UIHelper.TryFindParent<Spine>(this); 
+			if (spine != null) return "Script"; // if we find a Spine but not a Moveable it must be the main script
+				
+			TriggerBar triggerBar = UIHelper.TryFindParent<TriggerBar>(this);
+			if (triggerBar != null) return triggerBar.GetLogText();
+				
+			DependencyObject parent = UIHelper.GetParentObject(this);
+			if (parent != null) return parent.ToString();
+			
+			return "unknown";
 		}
 		
 		#endregion
