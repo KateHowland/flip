@@ -803,6 +803,8 @@ namespace Sussex.Flip.UI
     	protected void GetDragSource(object sender, MouseEventArgs e)
     	{
     		try {
+    			if (e.LeftButton == MouseButtonState.Released) return;
+    			
 	    		FrameworkElement f = e.OriginalSource as FrameworkElement;
 	    		    		
 	    		if (f == null) return;
