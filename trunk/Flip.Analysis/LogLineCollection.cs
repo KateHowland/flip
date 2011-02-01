@@ -31,14 +31,14 @@ namespace Sussex.Flip.Analysis
 	/// <summary>
 	/// Description of LogLineCollection.
 	/// </summary>
-	public class LogLineCollection : ObservableCollection<string>
+	public class LogLineCollection : ObservableCollection<LogLine>
 	{
 		public LogLineCollection(string log)
 		{
 			if (log != null) {
 				
-				foreach (string s in log.Split(new string[] { Environment.NewLine }, StringSplitOptions.None)) {
-					this.Add(s);
+				foreach (string s in log.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)) {					
+					this.Add(LogLine.GetLogLine(s));
 				}				
 			}
 		}

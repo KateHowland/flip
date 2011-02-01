@@ -32,9 +32,21 @@ namespace Sussex.Flip.Analysis
 	/// </summary>
 	public class LogLine : IComparable
 	{
-		DateTime time;
-		string text;
+		DateTime time;		
+		string text;		
 		static DateTimeParser parser;
+		
+		
+		public DateTime Time {
+			get { return time; }
+			set { time = value; }
+		}
+		
+		
+		public string Text {
+			get { return text; }
+			set { text = value; }
+		}
 		
 		
 		static LogLine()
@@ -62,9 +74,24 @@ namespace Sussex.Flip.Analysis
 			if (line == null) throw new ArgumentNullException("line");
 			
 			DateTime time = parser.GetDateTime(line);
+			
 			string timeStr = parser.GetDateTimeString(line);
-			string text = line.Remove(0,timeStr.Length+1);
+			
+			string text;
+			try {
+				text = line.Remove(0,timeStr.Length+3);
+			}
+			catch (Exception) {
+				text = String.Empty;
+			}
+			
 			return new LogLine(time,text);
+		}
+		
+		
+		public override string ToString()
+		{
+			return time.ToLongTimeString() + ": " + text;
 		}
 	}
 }
