@@ -60,7 +60,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="DateTimeParser.cs" />
-    <Compile Include="LogCombiner.cs" />
+    <Compile Include="LogLine.cs" />
+    <Compile Include="LogLineComparer.cs" />
+    <Compile Include="LogReader.cs" />
     <Compile Include="LogLineCollection.cs" />
     <Compile Include="PathToFilenameConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

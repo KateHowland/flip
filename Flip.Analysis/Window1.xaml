@@ -90,6 +90,7 @@
 			Height="300"
 			Width="210"
 			Margin="5"
+			SelectionMode="Extended"
 			ItemTemplate="{StaticResource fileNameTemplate}"
 			/>
 			

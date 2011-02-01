@@ -41,7 +41,7 @@ namespace Sussex.Flip.Analysis
 		
 		
 		CollectionViewSource cvs;
-		LogCombiner combiner;
+		LogReader logReader;
 		string filePath;
 		
 		public string FilePath {
@@ -60,18 +60,26 @@ namespace Sussex.Flip.Analysis
 			{ 
 				cvs = (CollectionViewSource)Resources["logLineSource"];
 				
-				logFileListView.SelectionChanged += logFileListView_SelectionChanged;
+				logFileListView.SelectionChanged += DisplaySelectedLogs;
 			};
 			
-			combiner = new LogCombiner();
+			logReader = new LogReader();
 		}
 
 		
-		protected void logFileListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		protected void DisplaySelectedLogs(object sender, SelectionChangedEventArgs e)
 		{
-			string filePath = (string)logFileListView.SelectedValue;
-			string log = combiner.Combine(filePath,filePath);
-			DisplayLog(log);
+			List<string> logs = new List<string>(logFileListView.SelectedItems.Count);
+			
+			foreach (object o in logFileListView.SelectedItems) {
+				string path = (string)o;
+				string log = logReader.GetFileContents(path);
+				logs.Add(log);
+			}
+			
+			string combined = logReader.GetCombinedLog(logs);
+			
+			DisplayLog(combined);
 		}
 		
 
@@ -84,31 +92,6 @@ namespace Sussex.Flip.Analysis
 			}
 			catch (Exception x) {
 				MessageBox.Show("Tried to populate list of log files, but directory was invalid.\n\n" + x);
-			}
-		}
-		
-		
-		public void Translate(object sender, RoutedEventArgs e)
-		{
-			OpenFileDialog dialog = new OpenFileDialog();
-			bool? result = dialog.ShowDialog();
-			
-			// TODO options on dialog.
-			
-			if (result.HasValue && result.Value) {
-				
-				string file1 = dialog.FileName;
-				
-				result = dialog.ShowDialog();
-								
-				if (result.HasValue && result.Value) {
-					
-					string file2 = dialog.FileName;
-					
-					string log = combiner.Combine(file1,file2);
-					
-					DisplayLog(log);
-				}
 			}
 		}
 		
