@@ -42,14 +42,49 @@ namespace Sussex.Flip.Analysis
 		
 		CollectionViewSource cvs;
 		LogCombiner combiner;
+		string filePath;
+		
+		public string FilePath {
+			get { return filePath; }
+			set { 
+				filePath = value; 
+				UpdateFileList(filePath);
+			}
+		}
 		
 		
 		public Window1()
 		{			
 			// Access to the CollectionViewSource allows filters to be added/removed/refreshed:
-			Loaded += delegate { cvs = (CollectionViewSource)Resources["logLineSource"]; };
+			Loaded += delegate 
+			{ 
+				cvs = (CollectionViewSource)Resources["logLineSource"];
+				
+				logFileListView.SelectionChanged += logFileListView_SelectionChanged;
+			};
 			
 			combiner = new LogCombiner();
+		}
+
+		
+		protected void logFileListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			string filePath = (string)logFileListView.SelectedValue;
+			string log = combiner.Combine(filePath,filePath);
+			DisplayLog(log);
+		}
+		
+
+		protected void UpdateFileList(string path)
+		{
+			try {
+				pathTextBlock.Text = path;
+				string[] files = Directory.GetFiles(path);
+				logFileListView.ItemsSource = files;
+			}
+			catch (Exception x) {
+				MessageBox.Show("Tried to populate list of log files, but directory was invalid.\n\n" + x);
+			}
 		}
 		
 		
@@ -72,8 +107,26 @@ namespace Sussex.Flip.Analysis
 					
 					string log = combiner.Combine(file1,file2);
 					
-					LogLines = new LogLineCollection(log);
+					DisplayLog(log);
 				}
+			}
+		}
+		
+		
+		public void DisplayLog(string log)
+		{
+			LogLines = new LogLineCollection(log);
+		}
+		
+		
+		public void SelectFolder(object sender, RoutedEventArgs e)
+		{
+			System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+			
+			dialog.ShowNewFolderButton = false;
+			
+			if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+				FilePath = dialog.SelectedPath;
 			}
 		}
 		
