@@ -28,6 +28,34 @@
 				</TextBlock.Text>
 			</TextBlock>
 		</DataTemplate>
+		
+		<DataTemplate x:Key="logLineTemplate">
+			
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>			
+			
+				<TextBlock Grid.Column="0"
+						   TextWrapping="Wrap"
+						   FontFamily="Comic Sans MS"
+						   FontSize="11"	           
+						   Padding="8,4,0,4"
+				           Background="LightGreen"
+						   Text="{Binding Time}"/>
+				
+				<TextBlock Grid.Column="1"
+						   TextWrapping="Wrap"
+						   FontFamily="Comic Sans MS"
+						   FontSize="11"	
+				           Background="Salmon"
+						   Padding="8,4,0,4"
+						   Text="{Binding Text}"/>
+			
+			</Grid>
+		
+		</DataTemplate>
 	
 	</Window.Resources>
 	
@@ -52,6 +80,7 @@
 			<ListView
 			x:Name="logLineList"
 			ItemsSource="{Binding Source={StaticResource logLineSource}, Mode=OneWay}"
+			ItemTemplate="{StaticResource logLineTemplate}"
 			/>
 		
 		</ScrollViewer>
