@@ -8,6 +8,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,6 +17,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
+using Microsoft.Win32;
 
 namespace Sussex.Flip.Analysis
 {
@@ -24,28 +26,106 @@ namespace Sussex.Flip.Analysis
 	/// </summary>
 	public partial class Window1 : Window
 	{
-		/*
-		 * Application for analysing Flip scripts and logs.
-		 * 
-		 * Some data to capture and present for each user:
-		 * - how many scripts they ended up with
-		 * - total time spent with Flip open
-		 * - total number of actions taken
-		 * - total number of illegal saves
-		 * - a timeline-based walkthrough of their Flip actions
-		 * 
-		 * ...and for each script:
-		 * - the number of times it was edited
-		 * - the number of illegal saves
-		 *  
-		 * ...and for each version of the script:		 
-		 * - the natural language representation		 
-		 * - the number of lines in the script
-		 * - which types of block were used and how many
-		 */
+		/// <summary>
+		/// The task collection that is currently open.
+		/// </summary>
+		public LogLineCollection LogLines {
+			get { return (LogLineCollection)DataContext; }
+			set { 
+				DataContext = value;				
+//				if (value != null) {
+//					value.CollectionChanged += UpdateFilters;
+//				}
+			}
+		} 
+		
+		
+		CollectionViewSource cvs;
+		LogCombiner combiner;
+		
 		
 		public Window1()
+		{			
+			// Access to the CollectionViewSource allows filters to be added/removed/refreshed:
+			Loaded += delegate { cvs = (CollectionViewSource)Resources["logLineSource"]; };
+			
+			combiner = new LogCombiner();
+		}
+		
+		
+		public void Translate(object sender, RoutedEventArgs e)
 		{
+			OpenFileDialog dialog = new OpenFileDialog();
+			bool? result = dialog.ShowDialog();
+			
+			// TODO options on dialog.
+			
+			if (result.HasValue && result.Value) {
+				
+				string file1 = dialog.FileName;
+				
+				result = dialog.ShowDialog();
+								
+				if (result.HasValue && result.Value) {
+					
+					string file2 = dialog.FileName;
+					
+					string log = combiner.Combine(file1,file2);
+					
+					LogLines = new LogLineCollection(log);
+				}
+			}
+		}
+		
+		
+		/// <summary>
+		/// Apply a filter that will hide any tasks not containing 
+		/// a user-entered search string.
+		/// </summary>
+		protected void SearchActivated(object sender, RoutedEventArgs e)
+		{
+			cvs.Filter -= new FilterEventHandler(SearchFilter);
+			cvs.Filter += new FilterEventHandler(SearchFilter);
+		}
+				
+		
+		/// <summary>
+		/// Stop filtering by search string.
+		/// </summary>
+		protected void SearchDeactivated(object sender, RoutedEventArgs e)
+		{
+			cvs.Filter -= new FilterEventHandler(SearchFilter);
+		}
+				
+		
+		/// <summary>
+		/// Respond to the search string changing.
+		/// </summary>
+		protected void SearchStringChanged(object sender, RoutedEventArgs e)
+		{
+			if (FilteringBySearchString()) cvs.View.Refresh();			
+		}
+		
+		
+		protected void SearchFilter(object sender, FilterEventArgs e)
+		{			
+			if (FilteringBySearchString() && searchStringBox.Text.Length > 0) {
+				
+				string logLine = (string)e.Item;
+				
+				if (!logLine.Contains(searchStringBox.Text)) {
+					
+					e.Accepted = false;
+					
+					// Never set e.Accepted to true, or you may override the results of another filter.
+				}
+			}
+		}
+		
+		
+		protected bool FilteringBySearchString()
+		{
+			return searchFilterCheckBox.IsChecked.HasValue && searchFilterCheckBox.IsChecked.Value;
 		}
 	}
 }

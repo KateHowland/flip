@@ -1,9 +1,84 @@
 ﻿<Window x:Class="Sussex.Flip.Analysis.Window1"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Title="Flip.Analysis" Height="300" Width="300"
+	Title="Flip log reader" Width="800" Height="600"
+	Background="LightBlue"
 	>
-	<Grid>
+	
+	<Window.Resources>	
 		
+		<CollectionViewSource 
+		x:Key="logLineSource"
+		Source="{Binding Path=., Mode=TwoWay}"/>
+	
+	</Window.Resources>
+	
+	<Grid>
+	
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="100"/>
+		</Grid.RowDefinitions>
+		
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="100"/>
+		</Grid.ColumnDefinitions>
+				
+		<ScrollViewer 
+		Grid.Row="0"
+		Grid.Column="0"
+		VerticalScrollBarVisibility="Auto"
+		HorizontalScrollBarVisibility="Hidden">
+			
+			<ListView
+			x:Name="logLineList"
+			ItemsSource="{Binding Source={StaticResource logLineSource}, Mode=OneWay}"
+			/>
+		
+		</ScrollViewer>
+		
+		<StackPanel
+		Grid.Row="1"
+		Grid.Column="0"
+		Grid.ColumnSpan="2"
+		Orientation="Vertical">
+			
+			<StackPanel
+			Orientation="Horizontal">
+				
+				<CheckBox
+				Name="searchFilterCheckBox"
+				Content="Search: "
+				Checked="SearchActivated"
+				Unchecked="SearchDeactivated"/>	
+			
+				<TextBox
+				Name="searchStringBox"
+				TextChanged="SearchStringChanged"
+				Width="200"/>
+			
+			</StackPanel>
+		
+		</StackPanel>
+	
+		<StackPanel
+		Grid.Row="0"
+		Grid.Column="1"
+		Orientation="Vertical">
+				
+			<ListView
+			Height="100"
+			Width="90"/>
+			
+			<Button 
+			Width="75"
+			Height="30"
+			Content="Browse" 
+			Click="Translate"/>
+		
+		</StackPanel>
+			
 	</Grid>
+
 </Window>
