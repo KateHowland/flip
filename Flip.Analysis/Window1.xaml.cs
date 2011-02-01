@@ -43,6 +43,7 @@ namespace Sussex.Flip.Analysis
 		CollectionViewSource cvs;
 		LogReader logReader;
 		string filePath;
+		string defaultPath;
 		
 		public string FilePath {
 			get { return filePath; }
@@ -61,6 +62,10 @@ namespace Sussex.Flip.Analysis
 				cvs = (CollectionViewSource)Resources["logLineSource"];
 				
 				logFileListView.SelectionChanged += DisplaySelectedLogs;
+				
+				defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),@"Adventure Author/User logs");
+				
+				if (Directory.Exists(defaultPath)) FilePath = defaultPath;
 			};
 			
 			logReader = new LogReader();
@@ -147,9 +152,9 @@ namespace Sussex.Flip.Analysis
 		{			
 			if (FilteringBySearchString() && searchStringBox.Text.Length > 0) {
 				
-				string logLine = (string)e.Item;
+				LogLine logLine = (LogLine)e.Item;
 				
-				if (!logLine.Contains(searchStringBox.Text)) {
+				if (!logLine.Text.Contains(searchStringBox.Text)) {
 					
 					e.Accepted = false;
 					
