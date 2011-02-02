@@ -136,6 +136,12 @@
 			Click="SelectFolder"
 			Margin="5"/>
 		
+			<CheckBox
+			x:Name="filenameFilterCheckBox"
+			Checked="FilterByFilenameChanged"
+			Unchecked="FilterByFilenameChanged"
+			Content="Only show Flip logs"/>
+		
 		</StackPanel>
 			
 	</Grid>

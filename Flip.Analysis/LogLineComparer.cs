@@ -41,7 +41,13 @@ namespace Sussex.Flip.Analysis
 		
 		public int Compare(string x, string y)
 		{
-			return LogLine.GetLogLine(x).CompareTo(LogLine.GetLogLine(y));
+			LogLine x1 = LogLine.TryGetLogLine(x);
+			LogLine y1 = LogLine.TryGetLogLine(y);
+			
+			if (x1 == null) throw new ArgumentException("The string to be compared was not a LogLine.","x");
+			if (y1 == null) throw new ArgumentException("The string to be compared was not a LogLine.","y");
+			
+			return x1.CompareTo(y1); 
 		}
 	}
 }

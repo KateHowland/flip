@@ -64,6 +64,17 @@ namespace Sussex.Flip.Analysis
 		}
 		
 		
+		public DateTime? TryGetDateTime(string logStr)
+		{
+			try {
+				return GetDateTime(logStr);
+			}
+			catch (Exception) {
+				return null;
+			}
+		}
+		
+		
 		public string GetDateTimeString(string logStr)
 		{
 			if (logStr == null) throw new ArgumentNullException("logStr");

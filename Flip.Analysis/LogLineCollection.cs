@@ -24,6 +24,8 @@
  */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Sussex.Flip.Analysis
@@ -31,16 +33,25 @@ namespace Sussex.Flip.Analysis
 	/// <summary>
 	/// Description of LogLineCollection.
 	/// </summary>
-	public class LogLineCollection : ObservableCollection<LogLine>
+	public class LogLineCollection : List<LogLine>
 	{
-		public LogLineCollection(string log)
-		{
-			if (log != null) {
+		protected static string[] separator = new string[] { Environment.NewLine };
 				
-				foreach (string s in log.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)) {					
-					this.Add(LogLine.GetLogLine(s));
-				}				
-			}
+		
+		public static LogLineCollection GetLogLineCollection(string log)
+		{
+			if (log == null) throw new ArgumentNullException("log");
+			
+			LogLineCollection c = new LogLineCollection();
+			
+			string[] split = log.Split(separator,StringSplitOptions.RemoveEmptyEntries);
+			
+			foreach (string s in split) {						
+				LogLine logLine = LogLine.TryGetLogLine(s);
+				if (logLine != null) c.Add(logLine);				
+			}	
+			
+			return c;
 		}
 	}
 }

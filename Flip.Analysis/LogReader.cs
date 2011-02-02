@@ -59,58 +59,22 @@ namespace Sussex.Flip.Analysis
 		}
 				
 		
-		public string GetCombinedLog(List<string> logs)
+		public LogLineCollection GetCollectedLog(List<string> texts)
 		{
-			if (logs == null) throw new ArgumentNullException("logs");
-			
-			int count = logs.Count;
-			
-			if (count == 0) return String.Empty;
-			if (count == 1) return logs[0];
-			
-			List<string> allLogLines = new List<string>();
-			
-			foreach (string log in logs) {
-				string[] logLines = log.Split(newLine,StringSplitOptions.RemoveEmptyEntries);
-				allLogLines.AddRange(logLines);
+			if (texts == null) throw new ArgumentNullException("texts");
+						
+			LogLineCollection all = new LogLineCollection();
+						
+			foreach (string text in texts) {
+				
+				LogLineCollection c = LogLineCollection.GetLogLineCollection(text);
+				
+				all.AddRange(c);
 			}
 			
-			string[] allLogLinesArray = allLogLines.ToArray();
+			all.Sort();
 			
-			Array.Sort(allLogLinesArray,new LogLineComparer());
-			
-			StringBuilder combined = new StringBuilder();
-			
-			foreach (string logLine in allLogLinesArray) {
-				combined.AppendLine(logLine);
-			}
-			
-			return combined.ToString();
-		}
-					
-		
-		public string GetEarliestLogLine(List<string> logLines)
-		{
-			if (logLines == null) throw new ArgumentNullException("logLines");
-			if (logLines.Count == 0) throw new ArgumentException("Log lines collection is empty.","logLines");
-			if (logLines.Count == 1) return logLines[0];
-			
-			string earliestLine = logLines[0];
-			DateTime earliestTime = parser.GetDateTime(earliestLine);
-			
-			for (int i = 1; i < logLines.Count; i++) {
-				
-				string logLine = logLines[i];
-				
-				DateTime time = parser.GetDateTime(logLine);
-				
-				if (time.CompareTo(earliestTime) < 0) {
-					earliestLine = logLine;
-					earliestTime = time;
-				}
-			}
-			
-			return earliestLine;
+			return all;
 		}
 	}
 }

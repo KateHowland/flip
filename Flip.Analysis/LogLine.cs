@@ -69,11 +69,12 @@ namespace Sussex.Flip.Analysis
 		}
 		
 		
-		public static LogLine GetLogLine(string line)
+		public static LogLine TryGetLogLine(string line)
 		{
-			if (line == null) throw new ArgumentNullException("line");
+			if (line == null) return null;
 			
-			DateTime time = parser.GetDateTime(line);
+			DateTime? time = parser.TryGetDateTime(line);
+			if (time == null) return null;
 			
 			string timeStr = parser.GetDateTimeString(line);
 			
@@ -85,7 +86,7 @@ namespace Sussex.Flip.Analysis
 				text = String.Empty;
 			}
 			
-			return new LogLine(time,text);
+			return new LogLine(time.Value,text);
 		}
 		
 		
