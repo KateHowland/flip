@@ -8,6 +8,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -29,7 +30,7 @@ namespace Sussex.Flip.Analysis
 		/// <summary>
 		/// The task collection that is currently open.
 		/// </summary>
-		public LogLineCollection LogLines {
+		public LogLineCollection Log {
 			get { return (LogLineCollection)DataContext; }
 			set { 
 				DataContext = value;				
@@ -74,26 +75,27 @@ namespace Sussex.Flip.Analysis
 		
 		protected void DisplaySelectedLogs(object sender, SelectionChangedEventArgs e)
 		{
-			List<string> logs = new List<string>(logFileListView.SelectedItems.Count);
+			List<string> texts = new List<string>(logFileListView.SelectedItems.Count);
 			
 			foreach (object o in logFileListView.SelectedItems) {
-				string path = (string)o;
-				string log = logReader.GetFileContents(path);
-				logs.Add(log);
+				string path = (string)o;				
+				string text = logReader.GetFileContents(path);				
+				texts.Add(text);
 			}
 			
-			string combined = logReader.GetCombinedLog(logs);
+			LogLineCollection c = logReader.GetCollectedLog(texts);
 			
-			DisplayLog(combined);
+			DisplayLog(c);
 		}
 		
 
 		protected void UpdateFileList(string path)
 		{
 			try {
-				pathTextBlock.Text = path;
+				pathTextBlock.Text = path;				
 				string[] files = Directory.GetFiles(path);
-				logFileListView.ItemsSource = files;
+				logFileListView.ItemsSource = files;					
+				RefreshFileFilter();
 			}
 			catch (Exception x) {
 				MessageBox.Show("Tried to populate list of log files, but directory was invalid.\n\n" + x);
@@ -101,9 +103,11 @@ namespace Sussex.Flip.Analysis
 		}
 		
 		
-		public void DisplayLog(string log)
+		public void DisplayLog(LogLineCollection log)
 		{
-			LogLines = new LogLineCollection(log);
+			if (log == null) throw new ArgumentNullException("log");
+			
+			Log = log;
 		}
 		
 		
@@ -167,6 +171,68 @@ namespace Sussex.Flip.Analysis
 		protected bool FilteringBySearchString()
 		{
 			return searchFilterCheckBox.IsChecked.HasValue && searchFilterCheckBox.IsChecked.Value;
+		}
+		
+		
+		protected void FilterByFilenameChanged(object sender, RoutedEventArgs e)
+		{
+			RefreshFileFilter();
+		}
+		
+		
+		protected void RefreshFileFilter()
+		{
+			if ((bool)filenameFilterCheckBox.IsChecked) OnlyShowFlipLogs();
+			else ShowAnyLog();
+		}
+		
+		
+		/// <summary>
+		/// Apply a filter that will hide any files not ending in 'flip'.
+		/// </summary>
+		protected void OnlyShowFlipLogs()
+		{
+			ICollectionView view = CollectionViewSource.GetDefaultView(logFileListView.ItemsSource);
+			
+			view.Filter = item =>
+			{				
+				string str = item as string;
+				if (str == null) return false;
+				
+				if (!HasLogFileExtension(str)) return false;
+				
+				return Path.GetFileNameWithoutExtension(str).EndsWith("flip");
+			};			
+		}
+				
+		
+		/// <summary>
+		/// Stop filtering by filename.
+		/// </summary>
+		protected void ShowAnyLog()
+		{
+			ICollectionView view = CollectionViewSource.GetDefaultView(logFileListView.ItemsSource);
+			
+			view.Filter = item =>
+			{				
+				string str = item as string;
+				if (str == null) return false;
+				
+				return HasLogFileExtension(str);
+			};			
+		}
+		
+		
+		protected bool HasLogFileExtension(string str)
+		{
+			try {
+				string ext = Path.GetExtension(str);
+				bool hasExt = ext == ".log" || ext == ".xml";	
+				return hasExt;
+			}
+			catch (Exception) {
+				return false;
+			}
 		}
 	}
 }
