@@ -107,6 +107,12 @@
 			
 			</StackPanel>
 		
+			<CheckBox
+			x:Name="naturalLanguageFilterCheckBox"
+			Checked="FilterByNaturalLanguageChanged"
+			Unchecked="FilterByNaturalLanguageChanged"
+			Content="Show natural language"/>
+		
 		</StackPanel>
 	
 		<StackPanel

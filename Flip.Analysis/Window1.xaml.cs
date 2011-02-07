@@ -234,5 +234,54 @@ namespace Sussex.Flip.Analysis
 				return false;
 			}
 		}
+		
+		
+		protected void FilterByNaturalLanguageChanged(object sender, RoutedEventArgs e)
+		{
+			RefreshNaturalLanguageFilter();
+		}
+		
+		
+		protected void RefreshNaturalLanguageFilter()
+		{
+			if ((bool)naturalLanguageFilterCheckBox.IsChecked) ShowNaturalLanguage();
+			else HideNaturalLanguage();
+		}
+		
+		
+		/// <summary>
+		/// Apply a filter that does not hide natural language.
+		/// </summary>
+		protected void ShowNaturalLanguage()
+		{
+			ICollectionView view = CollectionViewSource.GetDefaultView(logLineList.ItemsSource);
+			
+			view.Filter = item =>
+			{				
+				LogLine logLine = item as LogLine;
+				if (logLine == null) return false;
+				
+				return true;
+			};			
+		}
+				
+		
+		/// <summary>
+		/// Apply a filter that hides natural language.
+		/// </summary>
+		protected void HideNaturalLanguage()
+		{
+			ICollectionView view = CollectionViewSource.GetDefaultView(logLineList.ItemsSource);
+			
+			view.Filter = item =>
+			{				
+				LogLine logLine = item as LogLine;
+				if (logLine == null) return false;
+				
+				if (logLine.Text.StartsWith(">script output:")) return false;
+				
+				return true;
+			};			
+		}
 	}
 }
