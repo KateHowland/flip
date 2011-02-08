@@ -191,20 +191,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		                         CreateBlockFromBlueprintDelegate createBlockFromBlueprintDelegate, 
 		                         UpdateBlockWhenTagChangesDelegate updateBlockDelegate)
 		{			
-			if (addScriptToLine == null) throw new ArgumentNullException("addScriptToLine");
-			if (addConditionToLine == null) throw new ArgumentNullException("addConditionToLine");
-			if (createBlockFromBlueprintDelegate == null) throw new ArgumentNullException("createBlockFromBlueprintDelegate");
-			if (updateBlockDelegate == null) throw new ArgumentNullException("updateBlockDelegate");
-			
-			this.addScriptToLine = addScriptToLine;
-			this.addConditionToLine = addConditionToLine;
-			this.createBlockFromBlueprintDelegate = createBlockFromBlueprintDelegate;
-			this.updateBlockDelegate = updateBlockDelegate;
-			
-			FindFields();
-			
-			floatingGridHandler = new DockingManager.ContentHandler(HideScriptSlotsOnFloatingGrid);
-			mainGridHandler = new PropertyGrid.SelectedObjectChangedEventHandler(HideScriptSlotsOnMainGrid);
+			try {
+				if (addScriptToLine == null) throw new ArgumentNullException("addScriptToLine");
+				if (addConditionToLine == null) throw new ArgumentNullException("addConditionToLine");
+				if (createBlockFromBlueprintDelegate == null) throw new ArgumentNullException("createBlockFromBlueprintDelegate");
+				if (updateBlockDelegate == null) throw new ArgumentNullException("updateBlockDelegate");
+				
+				this.addScriptToLine = addScriptToLine;
+				this.addConditionToLine = addConditionToLine;
+				this.createBlockFromBlueprintDelegate = createBlockFromBlueprintDelegate;
+				this.updateBlockDelegate = updateBlockDelegate;
+				
+				FindFields();
+				
+				floatingGridHandler = new DockingManager.ContentHandler(HideScriptSlotsOnFloatingGrid);
+				mainGridHandler = new PropertyGrid.SelectedObjectChangedEventHandler(HideScriptSlotsOnMainGrid);
+			}
+			catch (Exception x) {
+				MessageBox.Show("Something went wrong when modifying the toolset UI." + Environment.NewLine + x);
+				throw x;
+			}
 		}
 		
 		#endregion
@@ -496,7 +502,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 				
 			foreach (FieldInfo field in typeof(NWN2ToolsetMainForm).GetFields(BindingFlags.Instance | BindingFlags.NonPublic)) {
-				
+								
 				if (field.FieldType == typeof(NWN2PropertyGrid)) {
 					NWN2PropertyGrid mainPropertyGrid = (NWN2PropertyGrid)field.GetValue(NWN2ToolsetMainForm.App);
 					/*
@@ -583,7 +589,13 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				    scriptMenuItems.Count == 2) return;
 			}
 			
-			throw new ApplicationException("Failed to find a crucial field via reflection.");
+			string missingField = null;
+			if (innerPropertyGridFieldInfo == null) missingField = "inner property grid field info";
+			else if (dockingManager == null) missingField = "dockingManager";
+			else if (scriptPanels.Count != 2) missingField = "script panels";
+			else if (scriptMenuItems.Count != 2) missingField = "script menu items";
+			
+			throw new ApplicationException(String.Format("Failed to find a crucial field ('{0}') via reflection.",missingField));
 		}
 		
 		
