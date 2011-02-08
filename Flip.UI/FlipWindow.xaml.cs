@@ -938,5 +938,28 @@ namespace Sussex.Flip.UI
 				MessageBox.Show("Something went wrong when placing a moveable on the canvas.\n\n" + x);
 			} 
 		}
+		
+		
+		public Dictionary<string,int> GetStatsForCurrentScript()
+		{
+			Dictionary<string,int> stats = new Dictionary<string,int>();
+			
+			int lines = 0;
+			
+			if (Mode == ScriptType.Standard) {
+				foreach (Peg peg in TriggerBar.Spine.GetFilledPegs()) {
+					// lines += peg.GetLines();
+					lines++; // stop counting this when the above is implemented
+				}
+			}
+			
+			else {
+				if (ConditionalFrame.Slot.Contents != null) lines = 1; // a single conditional
+			}
+			
+			stats.Add("LinesOnTopLevel",lines);
+			
+			return stats;
+		}
 	}
 }

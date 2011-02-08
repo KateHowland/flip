@@ -337,7 +337,7 @@ namespace Sussex.Flip.UI
         }
         
         
-        protected List<Peg> GetFilledPegs()
+        public List<Peg> GetFilledPegs()
         {
         	List<Peg> filled = new List<Peg>();
         	foreach (Peg peg in Pegs) {
