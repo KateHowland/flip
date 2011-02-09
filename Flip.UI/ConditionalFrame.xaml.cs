@@ -226,11 +226,10 @@ namespace Sussex.Flip.UI
         
 		public Statistics GetStatistics()
 		{
-			Statistics stats = new Statistics();
-			
-			stats.Line = slot.Contents == null ? 0 : 1;
-			
-			return stats;
+			Statistics s = new Statistics();			
+			s.Line = slot.Contents == null ? 0 : 1;			
+			s.Add(slot.GetStatistics());
+			return s;
 		}
 	}
 }

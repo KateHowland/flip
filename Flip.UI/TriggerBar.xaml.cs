@@ -212,15 +212,9 @@ namespace Sussex.Flip.UI
         
 		public Statistics GetStatistics()
 		{
-			Statistics stats = Spine.GetStatistics();
-			stats.Add(TriggerControl.GetStatistics());
-			
-//				foreach (Peg peg in TriggerBar.Spine.GetFilledPegs()) {
-//					// lines += peg.GetLines();
-//					lines++; // stop counting this when the above is implemented
-//				}
-			
-			return stats;
+			Statistics s = Spine.GetStatistics();
+			s.Add(triggerSlot.GetStatistics());
+			return s;
 		}
     }
 }
