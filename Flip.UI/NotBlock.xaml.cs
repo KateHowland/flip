@@ -149,5 +149,14 @@ namespace Sussex.Flip.UI
 		{
 			return "NOT";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{		
+			Statistics s = new Statistics();
+			s.Not++;
+			s.Add(slot1.GetStatistics());
+			return s;
+		}
     }
 }

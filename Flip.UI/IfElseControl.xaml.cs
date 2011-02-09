@@ -307,5 +307,16 @@ namespace Sussex.Flip.UI
 		{
 			return "If..Then..Else";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{		
+			Statistics s = new Statistics();
+			s.IfThenElse++;
+			s.Add(slot.GetStatistics());
+			s.Add(Consequences.GetStatistics());
+			s.Add(Alternative.GetStatistics());
+			return s;
+		}
     }
 }

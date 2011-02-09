@@ -382,5 +382,18 @@ namespace Sussex.Flip.UI
 			if (Behaviour == null) return String.Empty;
 			else return Behaviour.GetLogText();
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{
+			Statistics s = new Statistics();
+			
+			if (StatementType == StatementType.Action) s.Action++;
+			else if (StatementType == StatementType.Condition) s.Condition++;
+			
+			foreach (BlockSlot slot in GetSlots()) s.Add(slot.GetStatistics());
+			
+			return s;
+		}
     }
 }

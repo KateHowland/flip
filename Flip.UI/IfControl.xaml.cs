@@ -155,5 +155,15 @@ namespace Sussex.Flip.UI
 		{
 			return "If..Then";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{		
+			Statistics s = new Statistics();
+			s.IfThen++;
+			s.Add(slot.GetStatistics());
+			s.Add(Consequences.GetStatistics());
+			return s;
+		}
     }
 }

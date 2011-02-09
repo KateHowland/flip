@@ -217,5 +217,13 @@ namespace Sussex.Flip.UI
 			if (Behaviour == null) return String.Empty;
 			else return Behaviour.GetLogText();
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{
+			Statistics s = new Statistics();
+			s.Add(this);
+			return s;
+		}
     }
 }

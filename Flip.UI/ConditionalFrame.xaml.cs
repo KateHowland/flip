@@ -222,5 +222,15 @@ namespace Sussex.Flip.UI
 			
 			if (slot.Contents != null) slot.Contents.AssignImage(imageProvider);
 		}
+        
+        
+		public Statistics GetStatistics()
+		{
+			Statistics stats = new Statistics();
+			
+			stats.Line = slot.Contents == null ? 0 : 1;
+			
+			return stats;
+		}
 	}
 }

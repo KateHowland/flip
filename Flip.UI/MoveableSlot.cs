@@ -361,6 +361,13 @@ namespace Sussex.Flip.UI
 			
 			return "unknown";
 		}
+        
+        
+		public Statistics GetStatistics()
+		{
+			if (Contents != null) return Contents.GetStatistics();
+			else return new Statistics();
+		}
 		
 		#endregion
     }

@@ -136,5 +136,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		{
 			return "Event (" + GetNaturalLanguage() + ")";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{
+			Statistics s = new Statistics();
+			s.EventBlock++;
+			s.Add(raiserSlot.GetStatistics());
+			return s;
+		}
     }
 }

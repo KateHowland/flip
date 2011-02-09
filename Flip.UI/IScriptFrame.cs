@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace Sussex.Flip.UI
 {
@@ -33,5 +34,6 @@ namespace Sussex.Flip.UI
 	public interface IScriptFrame
 	{
 		string GetAddress();
+        Statistics GetStatistics();
 	}
 }

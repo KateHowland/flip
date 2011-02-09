@@ -483,5 +483,18 @@ namespace Sussex.Flip.UI
 			
 			writer.WriteEndElement();
 		}
+        
+        
+		public Statistics GetStatistics()
+		{		
+			Statistics s = new Statistics();
+			
+			List<Peg> pegs = GetFilledPegs();
+			s.Line += pegs.Count;
+			
+			foreach (Peg peg in pegs) s.Add(peg.Slot.GetStatistics());
+			
+			return s;
+		}
     }
 }
