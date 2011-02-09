@@ -813,6 +813,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			{  
 				UpdateScriptsFollowingTagChange(oObject,eArgs.OldName,eArgs.NewName,false);
 			};
+			
+			
+			// TODO
+			// temp
+			window.TriggerBar.Changed += delegate 
+			{
+				window.NaturalLanguage = window.GetStatistics().ToString();
+			};
+			
+			window.ConditionalFrame.Changed += delegate 
+			{  
+				window.NaturalLanguage = window.GetStatistics().ToString();
+			};
 		}
 		
 		

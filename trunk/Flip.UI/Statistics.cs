@@ -169,11 +169,5 @@ namespace Sussex.Flip.UI
 			
 			return s.ToString();			
 		}
-		
-		
-		public static string GetName(object obj)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }
