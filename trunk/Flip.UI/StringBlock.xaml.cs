@@ -158,6 +158,14 @@ namespace Sussex.Flip.UI
 		{
 			return "String (" + Value + ")";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{
+			Statistics s = new Statistics();
+			s.StringBlock++;
+			return s;
+		}
     }
 }
 

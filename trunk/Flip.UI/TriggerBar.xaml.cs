@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -206,6 +207,20 @@ namespace Sussex.Flip.UI
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
 			
 			Spine.AssignImage(imageProvider);
+		}
+        
+        
+		public Statistics GetStatistics()
+		{
+			Statistics stats = Spine.GetStatistics();
+			stats.Add(TriggerControl.GetStatistics());
+			
+//				foreach (Peg peg in TriggerBar.Spine.GetFilledPegs()) {
+//					// lines += peg.GetLines();
+//					lines++; // stop counting this when the above is implemented
+//				}
+			
+			return stats;
 		}
     }
 }

@@ -38,5 +38,13 @@ namespace Sussex.Flip.UI
 	{
 		public abstract string GetAddress();
 		public abstract void Clear();
+        
+        
+		public override Statistics GetStatistics()
+		{
+			Statistics s = new Statistics();
+			s.EventBlock++;
+			return s;
+		}
 	}
 }

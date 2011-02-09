@@ -775,6 +775,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};			
 			window.DevelopmentMenu.Items.Add(analyseAllScripts);
 						
+			MenuItem analyseScript = new MenuItem();
+			analyseScript.Header = "Analyse script";
+			analyseScript.Click += delegate 
+			{  
+				try {
+					AnalyseScript();
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when analysing script.\n\n" + x);
+				}
+			};			
+			window.DevelopmentMenu.Items.Add(analyseScript);
+						
 //			MenuItem showLogWindow = new MenuItem();
 //			showLogWindow.Header = "Show log window";
 //			showLogWindow.Click += delegate 
@@ -976,7 +989,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		#endregion
 		
-		#region Useful methods for outside access
+		public void AnalyseScript()
+		{
+			MessageBox.Show(window.GetStatistics().ToString());
+		}
+		
 		
 		public void AnalyseAllScripts()
 		{
@@ -984,25 +1001,22 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			List<ScriptTriggerTuple> scripts = scriptHelper.GetAllScripts(Attachment.Attached);
 				
-			Dictionary<string,int> all = new Dictionary<string,int>();
-			all.Add("LinesOnTopLevel",0);
+			Statistics all = new Statistics();
 			
 			foreach (ScriptTriggerTuple s in scripts) {
+				
 				window.OpenFlipScript(s);
-				Dictionary<string,int> d = window.GetStatsForCurrentScript();
-				int lines = d["LinesOnTopLevel"];
 				
-				all["LinesOnTopLevel"] += lines;
+				Statistics stats = window.GetStatistics();
+				all.Add(stats);
+				text += Environment.NewLine + "'" + s.Script.Name + "': " + stats.ToString();
 				
-				text += Environment.NewLine + "'" + s.Script.Name + "': " + lines;
 				window.CloseScript();
 			}
 			
-			text += Environment.NewLine + Environment.NewLine + "Total: " + all["LinesOnTopLevel"];
+			text += Environment.NewLine + Environment.NewLine + "Total: " + all.ToString();
 			
 			MessageBox.Show(text);
 		}
-		
-		#endregion
 	}
 }

@@ -151,6 +151,14 @@ namespace Sussex.Flip.UI
 		{
 			return "Number (" + Value + ")";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{
+			Statistics s = new Statistics();
+			s.NumberBlock++;
+			return s;
+		}
     }
 }
 

@@ -192,5 +192,15 @@ namespace Sussex.Flip.UI
 		{
 			return "OR";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{		
+			Statistics s = new Statistics();
+			s.Or++;
+			s.Add(slot1.GetStatistics());
+			s.Add(slot2.GetStatistics());
+			return s;
+		}
     }
 }

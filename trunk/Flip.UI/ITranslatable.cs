@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace Sussex.Flip.UI
 {
@@ -48,5 +49,7 @@ namespace Sussex.Flip.UI
 		/// <remarks>Note that this method makes no attempt to judge whether the values
 		/// are valid in their slots, only that those slots have been filled.</remarks>
 		bool IsComplete { get; }
+		
+		Statistics GetStatistics();
 	}
 }

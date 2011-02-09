@@ -147,5 +147,15 @@ namespace Sussex.Flip.UI
 		{
 			return "Do..While";
 		}
+        
+        
+		public override Statistics GetStatistics()
+		{		
+			Statistics s = new Statistics();
+			s.DoWhileLoop++;
+			s.Add(slot.GetStatistics());
+			s.Add(Consequences.GetStatistics());
+			return s;
+		}
     }
 }
