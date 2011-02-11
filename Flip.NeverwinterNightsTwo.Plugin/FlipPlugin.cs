@@ -628,9 +628,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				catch (Exception x) {
 					MessageBox.Show("Something went wrong when changing script access settings.\n\n" + x);
 				}
-			};
+			};			
 			
-			pluginMenuItem.Items.Add(scriptAccessMenuItem);
+			pluginMenuItem.Items.Add(scriptAccessMenuItem);		
 			
 			TD.SandBar.MenuButtonItem launchFlip = new TD.SandBar.MenuButtonItem("Flip");
 			launchFlip.Activate += delegate 
@@ -646,6 +646,19 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};
 			
 			pluginMenuItem.Items.Add(launchFlip);	
+									
+			TD.SandBar.MenuButtonItem trawlForScripts = new TD.SandBar.MenuButtonItem();
+			trawlForScripts.Text = "Trawl for scripts";
+			trawlForScripts.Activate += delegate 
+			{  
+				try {
+					TrawlForScripts();
+				}
+				catch (Exception x) {
+					MessageBox.Show("Something went wrong when trawling scripts.\n\n" + x);
+				}
+			};			
+			pluginMenuItem.Items.Add(trawlForScripts);
 			
 			//StartLogging();
 		}
@@ -812,19 +825,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			reporter.AreaNameChanged += delegate(object oObject, NameChangedEventArgs eArgs) 
 			{  
 				UpdateScriptsFollowingTagChange(oObject,eArgs.OldName,eArgs.NewName,false);
-			};
-			
-			
-			// TODO
-			// temp
-			window.TriggerBar.Changed += delegate 
-			{
-				window.NaturalLanguage = window.GetStatistics().ToString();
-			};
-			
-			window.ConditionalFrame.Changed += delegate 
-			{  
-				window.NaturalLanguage = window.GetStatistics().ToString();
 			};
 		}
 		
@@ -1028,6 +1028,18 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			}
 			
 			text += Environment.NewLine + Environment.NewLine + "Total: " + all.ToString();
+			
+			MessageBox.Show(text);
+		}
+		
+		
+		public void TrawlForScripts()
+		{
+			List<FlipScript> scripts = scriptHelper.GetAllScriptsFromModule(Attachment.Attached);
+			
+			string text = scripts.Count.ToString() + " scripts, named as follows.\n";
+			
+			foreach (FlipScript script in scripts) text += script.Name + " (" + script.ScriptType + ")\n";
 			
 			MessageBox.Show(text);
 		}
