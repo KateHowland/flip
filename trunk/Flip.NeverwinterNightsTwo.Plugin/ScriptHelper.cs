@@ -137,6 +137,261 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// 
 		/// </summary>
 		/// <param name="script"></param>
+		/// <returns></returns>
+		/// <remarks>This method expects that the NWN2GameScript is already Loaded
+		/// (that is, the responsibility for calling Demand() falls to the client.)</remarks>
+		public FlipScript GetFlipScript(NWN2GameScript script)
+		{
+			if (script == null) throw new ArgumentNullException("script");
+			
+			string code, address, naturalLanguage;
+			ScriptWriter.ParseNWScript(script.Data, out code, out address, out naturalLanguage);		
+			
+			ScriptType scriptType = GetScriptType(script);
+			
+			return new FlipScript(code,scriptType,script.Name);
+		}
+		
+		
+		public List<FlipScript> GetFlipScripts(NWN2GameScriptDictionary dict)
+		{
+			if (dict == null) throw new ArgumentNullException("dict");
+			
+			List<FlipScript> flipScripts = new List<FlipScript>(dict.Count);
+			
+			foreach (NWN2GameScript script in dict.Values) {
+				try {
+					FlipScript fs = GetFlipScript(script);
+					flipScripts.Add(fs);
+				}
+				catch (Exception) {}
+			}
+			
+			return flipScripts;
+		}
+		
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="dict"></param>
+		/// <param name="attachment"></param>
+		/// <returns></returns>
+		/// <remarks>Note that this automatically opens and closes areas/conversations etc. - it is only
+		/// for use with analysis methods, not for users.</remarks>
+		public List<FlipScript> GetAllScriptsFromModule(Attachment attachment)
+		{			
+			NWN2GameModule mod = session.GetModule();
+			if (mod == null) throw new InvalidOperationException("No module is open.");
+			
+			NWN2GameScriptDictionary dict = mod.Scripts;
+			
+			if (attachment == Attachment.Ignore) return GetFlipScripts(dict);
+			
+			Dictionary<Nwn2Address,FlipScript> moduleScripts = new Dictionary<Nwn2Address,FlipScript>();
+			Dictionary<Nwn2Address,FlipScript> areaScripts = new Dictionary<Nwn2Address,FlipScript>();
+			Dictionary<Nwn2ConversationAddress,FlipScript> conversationScripts = new Dictionary<Nwn2ConversationAddress,FlipScript>();
+						
+			foreach (NWN2GameScript nwn2Script in dict.Values) {
+				
+				try {					
+					nwn2Script.Demand();
+					
+					string code, address, naturalLanguage;
+					ScriptWriter.ParseNWScript(nwn2Script.Data, out code, out address, out naturalLanguage);		
+					
+					ScriptType scriptType = GetScriptType(nwn2Script);
+					
+					FlipScript script = new FlipScript(code,scriptType,nwn2Script.Name);
+					
+					Nwn2ConversationAddress ca = Nwn2ConversationAddress.TryCreate(address);
+					if (ca != null) {
+						conversationScripts.Add(ca,script);
+					}
+					
+					else {
+						Nwn2Address a = Nwn2Address.TryCreate(address);
+						
+						if (a != null) {
+							
+							if (a.TargetType == Nwn2Type.Module) moduleScripts.Add(a,script);
+							
+							else areaScripts.Add(a,script);
+						}
+					}
+					
+					nwn2Script.Release();
+				}
+				catch (Exception) {}
+				
+			}
+			
+			List<FlipScript> scripts = new List<FlipScript>(dict.Count); // this is what we'll return
+							
+			if (attachment == Attachment.AttachedToConversation || attachment == Attachment.Attached) {
+				
+				// Index by conversation name, so we can check all the scripts for a conversation in one go.
+				
+				Dictionary<string,List<Nwn2ConversationAddress>> convNameIndex = new Dictionary<string,List<Nwn2ConversationAddress>>();
+				
+				foreach (Nwn2ConversationAddress address in conversationScripts.Keys) {		
+					
+					if (!convNameIndex.ContainsKey(address.Conversation)) convNameIndex.Add(address.Conversation,new List<Nwn2ConversationAddress>());	
+					
+					convNameIndex[address.Conversation].Add(address);						
+				}
+				
+				foreach (string convName in convNameIndex.Keys) {
+					
+					NWN2GameConversation conv = mod.Conversations[convName];
+					
+					if (conv == null) continue;
+					
+					conv.Demand();	
+					
+					foreach (Nwn2ConversationAddress address in convNameIndex[convName]) {
+						
+						FlipScript script = conversationScripts[address];
+			
+						NWN2ConversationLine line = conv.GetLineFromGUID(address.LineID);
+						
+						if (line == null) continue;
+						
+						if (address.AttachedAs == ScriptType.Standard && line.Actions.Count > 0) {
+												
+							IResourceEntry resource = line.Actions[0].Script;
+							if (resource != null && resource.ResRef.Value == script.Name) {
+								scripts.Add(script);
+							}	
+							
+						}
+						
+						else if (address.AttachedAs == ScriptType.Conditional && line.OwningConnector.Conditions.Count > 0) {
+														
+							IResourceEntry resource = line.OwningConnector.Conditions[0].Script;
+							if (resource != null && resource.ResRef.Value == script.Name) {
+								scripts.Add(script);
+							}	
+						
+						}
+					}
+					
+					conv.Release();
+				}
+				
+			}
+			
+			if (attachment == Attachment.AttachedToScriptSlot || attachment == Attachment.Attached) {
+				
+				// First, just check for scripts attached to the module - easy:
+				
+				foreach (Nwn2Address address in moduleScripts.Keys) {
+											
+					FlipScript script = moduleScripts[address];
+					
+					IResourceEntry resource = typeof(NWN2ModuleInformation).GetProperty(address.TargetSlot).GetValue(mod.ModuleInfo,null) as IResourceEntry;					
+					
+					if (resource != null && resource.ResRef.Value == script.Name) {
+						scripts.Add(script);
+					}
+					
+				}		
+				
+				
+				// Next, check whether any script is attached to a Narrative Threads blueprint, and 
+				// if you find one, add it to the collection and remove it from consideration:
+					
+				List<Nwn2Address> processed = new List<Nwn2Address>();
+				
+				foreach (Nwn2Address address in areaScripts.Keys) {
+					
+					FlipScript script = areaScripts[address];	
+					
+					// First check that if a blueprint which uses this tag as resref exists, it was created by Narrative Threads:												
+					if (nt.CreatedByNarrativeThreads(address.TargetType,address.InstanceTag)) {
+						
+						NWN2ObjectType objectType = Nwn2ScriptSlot.GetObjectType(address.TargetType).Value;							
+						INWN2Blueprint blueprint = session.GetBlueprint(address.InstanceTag.ToLower(),objectType);	
+						
+						if (blueprint != null) {			
+							
+							IResourceEntry resource = blueprint.GetType().GetProperty(address.TargetSlot).GetValue(blueprint,null) as IResourceEntry;
+							
+							if (resource != null && resource.ResRef.Value == script.Name) {
+								scripts.Add(script);
+								processed.Add(address);
+							}								
+						}
+					}				
+				}					
+				
+				foreach (Nwn2Address p in processed) areaScripts.Remove(p); // has been added, so don't check for it more than once
+					
+				
+				// Then, open each area in turn, and see whether a script is attached to it. If it is, add
+				// it to the collection and remove it from consideration:
+				
+				foreach (NWN2GameArea area in mod.Areas.Values) {
+					
+					if (areaScripts.Count == 0) break;
+					
+					session.OpenArea(area);
+					
+					processed = new List<Nwn2Address>();
+					
+					foreach (Nwn2Address address in areaScripts.Keys) {	
+						
+						FlipScript script = areaScripts[address];
+						
+						if (address.TargetType == Nwn2Type.Area) {
+										
+							IResourceEntry resource = typeof(NWN2GameArea).GetProperty(address.TargetSlot).GetValue(area,null) as IResourceEntry;	
+							
+							if (resource != null && resource.ResRef.Value == script.Name) {
+								scripts.Add(script);
+								processed.Add(address); // don't check whether to add it more than once
+							}
+							
+						}
+						
+						else {
+							
+							NWN2InstanceCollection instances = session.GetObjectsByAddressInArea(address,area.Tag);
+							
+							if (instances != null) {
+															
+								// Check the script is still attached to the target object in the slot it claims to be,
+								// in at least one instance, and if so add it to the set of scripts to be opened:
+														
+								foreach (INWN2Instance instance in instances) {		
+									
+									IResourceEntry resource = instance.GetType().GetProperty(address.TargetSlot).GetValue(instance,null) as IResourceEntry;						
+									
+									if (resource != null && resource.ResRef.Value == script.Name) {	
+										scripts.Add(script);
+										processed.Add(address);
+										break;
+									}
+								}
+							}								
+						}							
+					}
+					
+					foreach (Nwn2Address p in processed) areaScripts.Remove(p); // has been added, so don't check for it more than once
+					
+					session.CloseArea(area);
+					
+				}			
+			}				
+				
+			return scripts;
+		}
+										
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="script"></param>
 		/// <param name="attachment">Only return a script if it is attached
 		/// in the manner indicated by this parameter.</param>
 		/// <returns></returns>
