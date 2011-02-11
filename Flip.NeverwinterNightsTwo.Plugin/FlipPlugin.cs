@@ -1035,11 +1035,11 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public void TrawlForScripts()
 		{
-			List<FlipScript> scripts = scriptHelper.GetAllScriptsFromModule(Attachment.Attached);
+			List<ScriptTriggerTuple> scripts = scriptHelper.GetAllScriptsFromModule(Attachment.Attached);
 			
 			string text = scripts.Count.ToString() + " scripts, named as follows.\n";
 			
-			foreach (FlipScript script in scripts) text += script.Name + " (" + script.ScriptType + ")\n";
+			foreach (ScriptTriggerTuple tuple in scripts) text += tuple.Script.Name + " (" + tuple.Script.ScriptType + ")\n";
 			
 			MessageBox.Show(text);
 		}

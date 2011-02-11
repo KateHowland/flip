@@ -171,6 +171,24 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
 		
 		
+		public List<ScriptTriggerTuple> GetTuples(NWN2GameScriptDictionary dict)
+		{
+			if (dict == null) throw new ArgumentNullException("dict");
+			
+			List<ScriptTriggerTuple> flipScripts = new List<ScriptTriggerTuple>(dict.Count);
+			
+			foreach (NWN2GameScript script in dict.Values) {
+				try {
+					FlipScript fs = GetFlipScript(script);
+					flipScripts.Add(new ScriptTriggerTuple(fs));
+				}
+				catch (Exception) {}
+			}
+			
+			return flipScripts;
+		}
+		
+		
 		/// <summary>
 		/// 
 		/// </summary>
@@ -179,14 +197,14 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		/// <returns></returns>
 		/// <remarks>Note that this automatically opens and closes areas/conversations etc. - it is only
 		/// for use with analysis methods, not for users.</remarks>
-		public List<FlipScript> GetAllScriptsFromModule(Attachment attachment)
+		public List<ScriptTriggerTuple> GetAllScriptsFromModule(Attachment attachment)
 		{			
 			NWN2GameModule mod = session.GetModule();
 			if (mod == null) throw new InvalidOperationException("No module is open.");
 			
 			NWN2GameScriptDictionary dict = mod.Scripts;
 			
-			if (attachment == Attachment.Ignore) return GetFlipScripts(dict);
+			if (attachment == Attachment.Ignore) return GetTuples(dict);
 			
 			Dictionary<Nwn2Address,FlipScript> moduleScripts = new Dictionary<Nwn2Address,FlipScript>();
 			Dictionary<Nwn2Address,FlipScript> areaScripts = new Dictionary<Nwn2Address,FlipScript>();
@@ -220,13 +238,15 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 						}
 					}
 					
-					nwn2Script.Release();
+					nwn2Script.Release();				
+					
 				}
 				catch (Exception) {}
 				
 			}
 			
-			List<FlipScript> scripts = new List<FlipScript>(dict.Count); // this is what we'll return
+			//List<FlipScript> scripts = new List<FlipScript>(dict.Count); // this is what we'll return
+			List<ScriptTriggerTuple> scripts = new List<ScriptTriggerTuple>(dict.Count); // this is what we'll return
 							
 			if (attachment == Attachment.AttachedToConversation || attachment == Attachment.Attached) {
 				
@@ -261,7 +281,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 												
 							IResourceEntry resource = line.Actions[0].Script;
 							if (resource != null && resource.ResRef.Value == script.Name) {
-								scripts.Add(script);
+								scripts.Add(new ScriptTriggerTuple(script,triggerFactory.GetTriggerFromAddress(address)));
 							}	
 							
 						}
@@ -270,7 +290,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 														
 							IResourceEntry resource = line.OwningConnector.Conditions[0].Script;
 							if (resource != null && resource.ResRef.Value == script.Name) {
-								scripts.Add(script);
+								scripts.Add(new ScriptTriggerTuple(script,triggerFactory.GetTriggerFromAddress(address)));
 							}	
 						
 						}
@@ -292,7 +312,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 					IResourceEntry resource = typeof(NWN2ModuleInformation).GetProperty(address.TargetSlot).GetValue(mod.ModuleInfo,null) as IResourceEntry;					
 					
 					if (resource != null && resource.ResRef.Value == script.Name) {
-						scripts.Add(script);
+						scripts.Add(new ScriptTriggerTuple(script,triggerFactory.GetTriggerFromAddress(address)));
 					}
 					
 				}		
@@ -318,7 +338,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							IResourceEntry resource = blueprint.GetType().GetProperty(address.TargetSlot).GetValue(blueprint,null) as IResourceEntry;
 							
 							if (resource != null && resource.ResRef.Value == script.Name) {
-								scripts.Add(script);
+								scripts.Add(new ScriptTriggerTuple(script,triggerFactory.GetTriggerFromAddress(address)));
 								processed.Add(address);
 							}								
 						}
@@ -348,7 +368,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							IResourceEntry resource = typeof(NWN2GameArea).GetProperty(address.TargetSlot).GetValue(area,null) as IResourceEntry;	
 							
 							if (resource != null && resource.ResRef.Value == script.Name) {
-								scripts.Add(script);
+								scripts.Add(new ScriptTriggerTuple(script,triggerFactory.GetTriggerFromAddress(address)));
 								processed.Add(address); // don't check whether to add it more than once
 							}
 							
@@ -368,7 +388,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 									IResourceEntry resource = instance.GetType().GetProperty(address.TargetSlot).GetValue(instance,null) as IResourceEntry;						
 									
 									if (resource != null && resource.ResRef.Value == script.Name) {	
-										scripts.Add(script);
+										scripts.Add(new ScriptTriggerTuple(script,triggerFactory.GetTriggerFromAddress(address)));
 										processed.Add(address);
 										break;
 									}
