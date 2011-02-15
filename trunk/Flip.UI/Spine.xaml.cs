@@ -485,9 +485,9 @@ namespace Sussex.Flip.UI
 		}
         
         
-		public Statistics GetStatistics()
+		public ScriptStats GetStatistics()
 		{		
-			Statistics s = new Statistics();
+			ScriptStats s = new ScriptStats();
 			
 			List<Peg> pegs = GetFilledPegs();
 			s.Line += pegs.Count;

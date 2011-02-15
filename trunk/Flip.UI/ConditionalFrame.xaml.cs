@@ -224,9 +224,9 @@ namespace Sussex.Flip.UI
 		}
         
         
-		public Statistics GetStatistics()
+		public ScriptStats GetStatistics()
 		{
-			Statistics s = new Statistics();			
+			ScriptStats s = new ScriptStats();			
 			s.Line = slot.Contents == null ? 0 : 1;			
 			s.Add(slot.GetStatistics());
 			return s;

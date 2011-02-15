@@ -138,9 +138,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		}
         
         
-		public override Statistics GetStatistics()
+		public override ScriptStats GetStatistics()
 		{
-			Statistics s = new Statistics();
+			ScriptStats s = new ScriptStats();
 			s.EventBlock++;
 			s.Add(raiserSlot.GetStatistics());
 			return s;

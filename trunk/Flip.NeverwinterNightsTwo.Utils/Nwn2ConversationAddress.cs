@@ -70,7 +70,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			
 			string[] components = address.Split(separatorChars,StringSplitOptions.None);
 			
-			if (components.Length != 4) throw new ArgumentException(formatError,"address");
+			if (components.Length < 3 || components.Length > 4) throw new ArgumentException(formatError,"address");
 			
 			string targetTypeString = components[0];
 			
@@ -79,7 +79,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo.Utils
 			try {
 				conversation = components[1];
 				lineID = new Guid(components[2]);
-				attachedAs = (ScriptType)Enum.Parse(typeof(ScriptType),components[3]);
+				
+				if (components.Length > 3) attachedAs = (ScriptType)Enum.Parse(typeof(ScriptType),components[3]);
+				else attachedAs = ScriptType.Standard; // earlier versions could not attach conditions and did not have this field
 			}
 			catch (Exception e) {
 				throw new ArgumentException(formatError,"address",e);

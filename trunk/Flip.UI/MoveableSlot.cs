@@ -363,10 +363,10 @@ namespace Sussex.Flip.UI
 		}
         
         
-		public Statistics GetStatistics()
+		public ScriptStats GetStatistics()
 		{
 			if (Contents != null) return Contents.GetStatistics();
-			else return new Statistics();
+			else return new ScriptStats();
 		}
 		
 		#endregion

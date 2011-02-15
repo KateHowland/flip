@@ -32,7 +32,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of FlipStatsDictionary.
 	/// </summary>
-	public struct Statistics
+	public struct ScriptStats
 	{
 		private int line, and, or, not, numberBlock, stringBlock, ifthen, ifthenelse, whileloop, dowhileloop, objectblock, action, condition, eventBlock;
 				
@@ -105,10 +105,14 @@ namespace Sussex.Flip.UI
 		public int EventBlock {
 			get { return eventBlock; }
 			set { eventBlock = value; }
-		}	
+		}
+		
+		public int Boolean {
+			get { return And + Or + Not; }
+		}
 									
 		
-		public void Add(Statistics stats)
+		public void Add(ScriptStats stats)
 		{
 			line += stats.line;
 			and += stats.and;
@@ -129,13 +133,33 @@ namespace Sussex.Flip.UI
 		
 		public void Add(ObjectBlock block)
 		{
+			if (block == null) throw new ArgumentNullException("block");
 			objectblock++; // could replace by discriminating between object block types
 		}
 		
 		
+//		public void (Statement statement)
+//		{
+//			if (statement == null) throw new ArgumentNullException("statement");
+//			
+//			if (statement.StatementType == StatementType.Action) {
+//				
+//			}
+//			else if (statement.StatementType == StatementType.Condition) {
+//				
+//			}
+//		}		
+		
+		
 		public override string ToString()
 		{
-			return GetString(false);
+			return GetTidyString();
+		}
+		
+		
+		public string GetTidyString()
+		{
+			return String.Format("{0} lines long, with {1} action(s), {2} condition(s) and {3} boolean(s).",Line,Action,Condition,Boolean);
 		}
 		
 		
@@ -151,7 +175,7 @@ namespace Sussex.Flip.UI
 						
 			bool first = true;
 			
-			foreach (PropertyInfo p in GetType().GetProperties(BindingFlags.Public|BindingFlags.Instance)) {
+			foreach (PropertyInfo p in typeof(ScriptStats).GetProperties(BindingFlags.Public|BindingFlags.Instance)) {
 				if (p.PropertyType == typeof(int)) {
 					
 					int val = (int)p.GetValue(this,null);

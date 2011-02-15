@@ -210,9 +210,9 @@ namespace Sussex.Flip.UI
 		}
         
         
-		public Statistics GetStatistics()
+		public ScriptStats GetStatistics()
 		{
-			Statistics s = Spine.GetStatistics();
+			ScriptStats s = Spine.GetStatistics();
 			s.Add(triggerSlot.GetStatistics());
 			return s;
 		}

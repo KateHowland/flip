@@ -646,19 +646,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};
 			
 			pluginMenuItem.Items.Add(launchFlip);	
-									
-			TD.SandBar.MenuButtonItem trawlForScripts = new TD.SandBar.MenuButtonItem();
-			trawlForScripts.Text = "Trawl for scripts";
-			trawlForScripts.Activate += delegate 
-			{  
-				try {
-					TrawlForScripts();
-				}
-				catch (Exception x) {
-					MessageBox.Show("Something went wrong when trawling scripts.\n\n" + x);
-				}
-			};			
-			pluginMenuItem.Items.Add(trawlForScripts);
 			
 			//StartLogging();
 		}
@@ -1010,36 +997,26 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public void AnalyseAllScripts()
 		{
-			string text = "Analysis of attached scripts." + Environment.NewLine;
+			string text = "Analysis of attached scripts.";
 			
-			List<ScriptTriggerTuple> scripts = scriptHelper.GetAllScripts(Attachment.Attached);
+			List<ScriptTriggerTuple> scripts = scriptHelper.GetAllScriptsFromModule(Attachment.Attached);
 				
-			Statistics all = new Statistics();
+			ModuleStats ms = new ModuleStats();
+			ms.AttachedScripts += scripts.Count;
+			ms.Name = session.GetModule().Name;
 			
 			foreach (ScriptTriggerTuple s in scripts) {
 				
 				window.OpenFlipScript(s);
 				
-				Statistics stats = window.GetStatistics();
-				all.Add(stats);
-				text += Environment.NewLine + "'" + s.Script.Name + "': " + stats.ToString();
+				ScriptStats stats = window.GetStatistics();
+				ms.Add(stats);
+				text += Environment.NewLine + "'" + s.Script.Name + "': " + stats;
 				
 				window.CloseScript();
 			}
 			
-			text += Environment.NewLine + Environment.NewLine + "Total: " + all.ToString();
-			
-			MessageBox.Show(text);
-		}
-		
-		
-		public void TrawlForScripts()
-		{
-			List<ScriptTriggerTuple> scripts = scriptHelper.GetAllScriptsFromModule(Attachment.Attached);
-			
-			string text = scripts.Count.ToString() + " scripts, named as follows.\n";
-			
-			foreach (ScriptTriggerTuple tuple in scripts) text += tuple.Script.Name + " (" + tuple.Script.ScriptType + ")\n";
+			text += Environment.NewLine + Environment.NewLine + ms;
 			
 			MessageBox.Show(text);
 		}

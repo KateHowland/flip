@@ -40,9 +40,9 @@ namespace Sussex.Flip.UI
 		public abstract void Clear();
         
         
-		public override Statistics GetStatistics()
+		public override ScriptStats GetStatistics()
 		{
-			Statistics s = new Statistics();
+			ScriptStats s = new ScriptStats();
 			s.EventBlock++;
 			return s;
 		}
