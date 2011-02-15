@@ -38,12 +38,6 @@ namespace Sussex.Flip.UI.Generic
 			                                   new Nwn2DeserialisationHelper());
 			
 			window.Show();
-			
-			window.MouseDoubleClick += delegate 
-			{
-				if (window.Mode == ScriptType.Conditional) window.LeaveConditionMode();
-				else window.EnterConditionMode("You found my sword! Thank you! I will reward you handsomely. And then I will drone on and on and on, for hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours hours and hours and hours and hours and hours. Cool? Cool!");
-			};
 		}
 		
 		

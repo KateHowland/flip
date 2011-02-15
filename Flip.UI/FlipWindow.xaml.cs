@@ -522,7 +522,10 @@ namespace Sussex.Flip.UI
 			else { // Both trigger and script are null, so do nothing.				
 				return;
 			}
-						
+			
+			if (scriptType == ScriptType.Conditional) EnterConditionMode();
+			else LeaveConditionMode();
+			
 			if (tuple.Script != null) {				
 				using (TextReader tr = new StringReader(tuple.Script.Code)) {
 					XmlReader reader = new XmlTextReader(tr);
@@ -549,7 +552,7 @@ namespace Sussex.Flip.UI
 		protected void LoadFlipCodeFromReader(XmlReader reader, ScriptType scriptType)
 		{
 			if (reader == null) throw new ArgumentNullException("reader");
-			
+						
 			CloseScript();
 						
 			reader.MoveToContent();		

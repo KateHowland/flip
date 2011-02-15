@@ -388,8 +388,7 @@ namespace Sussex.Flip.UI
 		{
 			ScriptStats s = new ScriptStats();
 			
-			if (StatementType == StatementType.Action) s.Action++;
-			else if (StatementType == StatementType.Condition) s.Condition++;
+			s.Add(this);
 			
 			foreach (BlockSlot slot in GetSlots()) s.Add(slot.GetStatistics());
 			

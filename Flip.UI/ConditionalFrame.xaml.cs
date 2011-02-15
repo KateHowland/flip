@@ -226,9 +226,12 @@ namespace Sussex.Flip.UI
         
 		public ScriptStats GetStatistics()
 		{
-			ScriptStats s = new ScriptStats();			
-			s.Line = slot.Contents == null ? 0 : 1;			
-			s.Add(slot.GetStatistics());
+			ScriptStats s = new ScriptStats();
+			s.Add(this);
+			if (slot.Contents != null) {
+				s.Line = 1;
+				s.Add(slot.GetStatistics());
+			}
 			return s;
 		}
 	}

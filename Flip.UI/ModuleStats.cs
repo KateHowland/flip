@@ -32,7 +32,7 @@ namespace Sussex.Flip.UI
 	/// <summary>
 	/// Description of ModuleStats.
 	/// </summary>
-	public struct ModuleStats
+	public class ModuleStats
 	{
 		private string name;		
 		private int attachedScripts;
@@ -53,6 +53,14 @@ namespace Sussex.Flip.UI
 			set { stats = value; }
 		}		
 					
+		
+		public ModuleStats()
+		{
+			name = String.Empty;
+			attachedScripts = 0;
+			stats = new ScriptStats();
+		}
+		
 		
 		public void Add(ModuleStats ms)
 		{
