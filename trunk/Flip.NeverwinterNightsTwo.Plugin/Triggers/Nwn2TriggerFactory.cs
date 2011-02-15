@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using Sussex.Flip.Games.NeverwinterNightsTwo;
 using Sussex.Flip.Games.NeverwinterNightsTwo.Utils;
 using Sussex.Flip.UI;
 using NWN2Toolset.NWN2.Data;
@@ -141,6 +142,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		public TriggerControl GetTriggerFromAddress(Nwn2ConversationAddress address)
 		{
 			if (address == null) throw new ArgumentNullException("address");
+			
+			if (address.AttachedAs == Sussex.Flip.Core.ScriptType.Conditional) return null;
 			
 			NWN2GameModule mod = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
 			if (mod == null) throw new InvalidOperationException("No module is open.");

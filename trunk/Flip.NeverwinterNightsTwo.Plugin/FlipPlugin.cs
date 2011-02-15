@@ -997,8 +997,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public void AnalyseAllScripts()
 		{
-			string text = "Analysis of attached scripts.";
-			
 			List<ScriptTriggerTuple> scripts = scriptHelper.GetAllScriptsFromModule(Attachment.Attached);
 				
 			ModuleStats ms = new ModuleStats();
@@ -1006,19 +1004,16 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ms.Name = session.GetModule().Name;
 			
 			foreach (ScriptTriggerTuple s in scripts) {
-				
 				window.OpenFlipScript(s);
 				
 				ScriptStats stats = window.GetStatistics();
+								
 				ms.Add(stats);
-				text += Environment.NewLine + "'" + s.Script.Name + "': " + stats;
 				
 				window.CloseScript();
 			}
 			
-			text += Environment.NewLine + Environment.NewLine + ms;
-			
-			MessageBox.Show(text);
+			MessageBox.Show(ms.ToString());
 		}
 	}
 }

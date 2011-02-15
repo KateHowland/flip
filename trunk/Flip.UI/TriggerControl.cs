@@ -43,7 +43,7 @@ namespace Sussex.Flip.UI
 		public override ScriptStats GetStatistics()
 		{
 			ScriptStats s = new ScriptStats();
-			s.EventBlock++;
+			s.Add(this);
 			return s;
 		}
 	}
