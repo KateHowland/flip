@@ -266,15 +266,15 @@ namespace Sussex.Flip.UI
 			else s.AppendLine(GetShortOutput());
 			s.AppendLine();
 			
-			s.AppendLine("Actions:");
+			s.AppendLine("-Actions-");
 			if (Actions.Keys.Count == 0) s.AppendLine("None." + Environment.NewLine);
 			else s.AppendLine(GetActionsOutput(showAll));
 			
-			s.AppendLine("Conditions:");
+			s.AppendLine("-Conditions-");
 			if (Conditions.Keys.Count == 0) s.AppendLine("None." + Environment.NewLine);
 			else s.AppendLine(GetConditionsOutput(showAll));
 			
-			s.AppendLine("Events:");
+			s.AppendLine("-Events-");
 			if (Events.Keys.Count == 0) s.AppendLine("None.");
 			else s.AppendLine(GetEventsOutput(showAll));
 			

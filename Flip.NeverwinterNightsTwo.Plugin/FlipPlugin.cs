@@ -1003,17 +1003,48 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			ms.AttachedScripts += scripts.Count;
 			ms.Name = session.GetModule().Name;
 			
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			
 			foreach (ScriptTriggerTuple s in scripts) {
 				window.OpenFlipScript(s);
 				
+				sb.AppendLine(GetPaddedName(s.Script.Name));
+				sb.AppendLine();
+				
 				ScriptStats stats = window.GetStatistics();
+				
+				sb.Append(stats.ToString());
+				sb.AppendLine(dashes);
+				sb.AppendLine();
+				sb.AppendLine();
 								
 				ms.Add(stats);
 				
 				window.CloseScript();
 			}
 			
-			MessageBox.Show(ms.ToString());
+			string header = String.Format("{0}{1}{2}{1}{0}{1}{1}{3}{1}",dashes,Environment.NewLine,GetPaddedName("Module '" + ms.Name + "'"),ms);
+				
+			sb.Insert(0,header);
+						
+			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),ms.Name+".txt");
+			
+			using (StreamWriter writer = File.CreateText(path)) {
+				writer.Write(sb.ToString());
+			}
+			
+			System.Diagnostics.Process.Start(path);
+		}
+		
+		
+		string dashes = "----------------------------------------------------------------";
+		private string GetPaddedName(string name)
+		{
+			if (name == null) throw new ArgumentNullException("name");
+			
+			name = String.Format("-- {0} {1}",name,dashes);
+			
+			return name.Substring(0,64);
 		}
 	}
 }
