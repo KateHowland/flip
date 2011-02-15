@@ -193,6 +193,6 @@ namespace Sussex.Flip.UI
 		public abstract string GetLogText();
         
         
-		public abstract Statistics GetStatistics();
+		public abstract ScriptStats GetStatistics();
 	}
 }

@@ -245,7 +245,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				
 			}
 			
-			//List<FlipScript> scripts = new List<FlipScript>(dict.Count); // this is what we'll return
 			List<ScriptTriggerTuple> scripts = new List<ScriptTriggerTuple>(dict.Count); // this is what we'll return
 							
 			if (attachment == Attachment.AttachedToConversation || attachment == Attachment.Attached) {
@@ -262,12 +261,12 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				}
 				
 				foreach (string convName in convNameIndex.Keys) {
-					
+										
 					NWN2GameConversation conv = mod.Conversations[convName];
 					
 					if (conv == null) continue;
 					
-					conv.Demand();	
+					conv.Demand();						
 					
 					foreach (Nwn2ConversationAddress address in convNameIndex[convName]) {
 						
@@ -324,6 +323,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				List<Nwn2Address> processed = new List<Nwn2Address>();
 				
 				foreach (Nwn2Address address in areaScripts.Keys) {
+					
+					if (Nwn2ScriptSlot.GetObjectType(address.TargetType) == null) continue; // ignore area, module etc.
 					
 					FlipScript script = areaScripts[address];	
 					

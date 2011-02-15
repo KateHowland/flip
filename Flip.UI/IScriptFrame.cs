@@ -34,6 +34,6 @@ namespace Sussex.Flip.UI
 	public interface IScriptFrame
 	{
 		string GetAddress();
-        Statistics GetStatistics();
+        ScriptStats GetStatistics();
 	}
 }

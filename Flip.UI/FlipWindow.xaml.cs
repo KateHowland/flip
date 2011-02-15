@@ -940,7 +940,7 @@ namespace Sussex.Flip.UI
 		}
 		
 		
-		public Statistics GetStatistics()
+		public ScriptStats GetStatistics()
 		{
 			return GetCurrentScriptFrame().GetStatistics();
 		}

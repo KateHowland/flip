@@ -384,9 +384,9 @@ namespace Sussex.Flip.UI
 		}
         
         
-		public override Statistics GetStatistics()
+		public override ScriptStats GetStatistics()
 		{
-			Statistics s = new Statistics();
+			ScriptStats s = new ScriptStats();
 			
 			if (StatementType == StatementType.Action) s.Action++;
 			else if (StatementType == StatementType.Condition) s.Condition++;

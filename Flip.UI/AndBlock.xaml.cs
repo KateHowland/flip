@@ -194,9 +194,9 @@ namespace Sussex.Flip.UI
 		}
         
         
-		public override Statistics GetStatistics()
+		public override ScriptStats GetStatistics()
 		{		
-			Statistics s = new Statistics();
+			ScriptStats s = new ScriptStats();
 			s.And++;
 			s.Add(slot1.GetStatistics());
 			s.Add(slot2.GetStatistics());
