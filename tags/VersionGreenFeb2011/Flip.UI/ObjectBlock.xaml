@@ -1,0 +1,79 @@
+<flipui:Moveable x:Class="Sussex.Flip.UI.ObjectBlock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
+	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+	ToolTipService.InitialShowDelay="700">
+	
+	<flipui:Moveable.Resources>
+		
+		<Image 
+		x:Key="defaultimg" 
+		Source="images/imagemissing.bmp"/>
+	
+		<LinearGradientBrush 
+		x:Key="backBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="AntiqueWhite"/>
+				<GradientStop Offset="1" Color="Moccasin"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+	</flipui:Moveable.Resources>
+	
+	<Border
+	x:Name="blockEdge"
+	BorderThickness="0.5"
+	BorderBrush="Black"
+	CornerRadius="5"
+	Background="{StaticResource backBrush}">
+		    	
+	   	<Grid
+	   	Background="Transparent">	
+		    		
+	   	<Grid.RowDefinitions>
+	   		<RowDefinition Height="*"/>
+	   		<RowDefinition Height="10"/>
+	   		<RowDefinition Height="10"/>
+	   	</Grid.RowDefinitions>
+	   	<Grid.ColumnDefinitions>
+	   		<ColumnDefinition Width="*"/>
+	   	</Grid.ColumnDefinitions>
+			    	
+		    <Label    	
+	   		Grid.Row="0"
+		    Grid.Column="0"
+	    	Content="{Binding DisplayImage}"
+	    	Padding="3"
+	   		VerticalAlignment="Stretch"
+	   		HorizontalAlignment="Stretch"
+	    	/>	    		
+		    	
+	   		<TextBlock
+	   		Grid.Row="1"
+		    Grid.Column="0"
+	   		Text="{Binding Path=Behaviour.DisplayName}"
+	   		Background="Transparent"
+	   		Foreground="DarkBlue"
+	   		TextAlignment="Center"
+    		FontSize="8"
+    		Padding="2,0,2,0"
+    		/>   		
+	    	
+    		<TextBlock
+    		Grid.Row="2"
+		    Grid.Column="0"
+    		Text="{Binding Path=Behaviour.Identifier}"
+    		Background="Transparent"
+    		Foreground="DarkRed"
+    		TextAlignment="Center"
+    		FontSize="8"
+    		Padding="2,0,2,2"
+    		/>
+		    	
+    	</Grid>			
+	</Border>	
+
+</flipui:Moveable>

@@ -1,0 +1,153 @@
+<Window x:Class="Sussex.Flip.UI.FlipWindow"
+	xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
+	Title="Flip" 
+    MinWidth="800"
+    MinHeight="600"
+    Width="1024"
+    Height="768"
+	AllowDrop="False"
+	Icon="images/chicken.bmp"
+	>	
+	
+	<Window.Resources>
+		<LinearGradientBrush 
+		x:Key="skyBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="LightSkyBlue"/>
+				<GradientStop Offset="1" Color="LightBlue"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+		
+		<LinearGradientBrush 
+		x:Key="conditionModeBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Salmon"/>
+				<GradientStop Offset="1" Color="LightPink"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	</Window.Resources>
+	
+	<AdornerDecorator>	
+		
+		<Grid
+		Name="mainGrid"
+		Background="{StaticResource skyBrush}">
+			
+			<Grid.RowDefinitions>
+				<RowDefinition Height="20"/>
+				<RowDefinition/>
+				<RowDefinition Height="200"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="315"/>
+			</Grid.ColumnDefinitions>			
+	
+			<Menu  
+			x:Name="mainMenu"
+			Grid.Row="0" 
+			Grid.Column="0" 
+			Grid.ColumnSpan="2" 
+			VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch">
+				
+				<MenuItem 
+				x:Name="fileMenu"
+				Header="File">
+				
+					<MenuItem
+					Header="New"
+					Click="NewScript"/>
+				
+					<MenuItem
+					Header="Open"
+					Click="OpenScriptFromModule"/>
+				
+					<MenuItem
+					Header="Save"
+					Click="SaveScript"/>
+					
+					<MenuItem
+					Header="Close"
+					Click="CloseScript"/>
+									
+					<Separator/>
+				
+					<MenuItem
+					Header="Exit"
+					Click="ExitFlip"/>
+				
+				</MenuItem>
+					
+				<MenuItem 
+				x:Name="editMenu"
+				Header="Edit">
+				
+					<MenuItem
+					Header="Copy natural language"
+					Click="CopyNaturalLanguage"/>
+				
+				</MenuItem>
+					
+				<MenuItem 
+				x:Name="developmentMenu"
+				Header="Development">
+				
+					<MenuItem
+					Header="Clear canvas"
+					Click="ClearCanvas"/>
+								
+				</MenuItem>
+					
+				<MenuItem 
+				x:Name="aboutMenu"
+				Header="About"
+				Click="DisplayAboutScreen"/>
+				
+			</Menu>
+				
+			<Border
+			x:Name="nlBorder"
+			Grid.Row="2"
+			Grid.Column="0"
+			BorderThickness="3"
+			BorderBrush="Black"
+			Margin="10">				
+			
+				<ScrollViewer
+				HorizontalScrollBarVisibility="Disabled"
+				VerticalScrollBarVisibility="Auto">
+				
+					<TextBlock
+					x:Name="nlTextBlock"
+					Background="Ivory"
+					Foreground="Maroon"
+					PreviewDrop="Dropped"
+					FontSize="24"
+					FontFamily="Comic Sans"
+					Padding="10"
+					TextWrapping="Wrap"
+					VerticalAlignment="Stretch"
+					HorizontalAlignment="Stretch"/>
+				
+				</ScrollViewer>
+			
+			</Border>
+			
+			<ScrollViewer
+			x:Name="scrollViewer"
+			Grid.Row="1"
+			Grid.Column="0"
+			HorizontalScrollBarVisibility="Auto"
+			VerticalScrollBarVisibility="Auto"/>
+		
+		</Grid>
+	
+	</AdornerDecorator>
+</Window>

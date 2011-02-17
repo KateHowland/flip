@@ -1,0 +1,65 @@
+<UserControl x:Class="Sussex.Flip.UI.Peg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:flipui="clr-namespace:Sussex.Flip.UI"
+    HorizontalAlignment="Left"
+	>
+	
+	<UserControl.Resources>
+		
+		<LinearGradientBrush 
+		x:Key="metallicBrush"
+		StartPoint="0,0"
+		EndPoint="1,1">
+			<LinearGradientBrush.GradientStops>
+				<GradientStop Offset="0" Color="Gray"/>
+				<GradientStop Offset="0.3" Color="Silver"/>
+				<GradientStop Offset="0.5" Color="White"/>
+				<GradientStop Offset="0.7" Color="Silver"/>
+				<GradientStop Offset="1" Color="Gray"/>
+			</LinearGradientBrush.GradientStops>
+		</LinearGradientBrush>
+	
+		<PointCollection 
+		x:Key="pegPoints">
+			<Point>0,13</Point>
+			<Point>7,13</Point>
+			<Point>12,8</Point>
+			<Point>12,0</Point>
+			<Point>20,0</Point>
+			<Point>20,40</Point>
+			<Point>12,40</Point>
+			<Point>12,32</Point>
+			<Point>7,27</Point>
+			<Point>0,27</Point>
+		</PointCollection>
+	
+	</UserControl.Resources>
+	
+    <Grid
+	x:Name="mainGrid">
+    	
+    	<Grid.RowDefinitions>
+    		<RowDefinition/>
+    		<RowDefinition Height="*"/>
+    		<RowDefinition/>
+    	</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+    		<ColumnDefinition/>
+    		<ColumnDefinition/>
+    	</Grid.ColumnDefinitions>
+	
+    	<Polygon
+	    	x:Name="pegShape"
+	    	Grid.Row="0"
+			Grid.Column="0"
+			Grid.RowSpan="1"
+    		VerticalAlignment="Center"
+			Points="{StaticResource pegPoints}"
+			Stroke="Black" 
+			StrokeThickness="1"
+	    	Fill="{StaticResource metallicBrush}"/>
+	
+    </Grid>
+    
+</UserControl>

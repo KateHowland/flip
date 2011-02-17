@@ -1,0 +1,13 @@
+<flipui:Moveable x:Class="Sussex.Flip.UI.Statement"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:flipui="clr-namespace:Sussex.Flip.UI"
+	AllowDrop="True"
+	HorizontalAlignment="Center"
+	VerticalAlignment="Center">
+	
+    <StackPanel
+	x:Name="mainPanel"
+	Orientation="Horizontal"/>
+
+</flipui:Moveable>
