@@ -92,10 +92,9 @@
     <Compile Include="BooleanBlock.cs" />
     <Compile Include="DefaultStatementBehaviour.cs" />
     <Compile Include="Fitters\AnyFitter.cs" />
-    <Compile Include="ModuleStats.cs" />
-    <Compile Include="ScriptStats.cs" />
     <Compile Include="ImageProvider.cs" />
     <Compile Include="IScriptFrame.cs" />
+    <Compile Include="ModuleStats.cs" />
     <Compile Include="NotBlock.xaml.cs">
       <DependentUpon>NotBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -104,6 +103,7 @@
       <DependentUpon>OrBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ScriptStats.cs" />
     <Compile Include="ScriptTriggerTuple.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="ChangeNumberDialog.xaml.cs">

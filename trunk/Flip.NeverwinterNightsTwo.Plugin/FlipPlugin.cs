@@ -438,6 +438,8 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 							
 			LaunchFlip();
 			
+			window.LeaveConditionMode();
+			
 			bool openingExistingScript = ScriptHelper.HasFlipScriptAttachedAsAction(line);
 			
 			if (openingExistingScript && window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
@@ -488,8 +490,6 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			
 			if (openingExistingScript && window.AskWhetherToSaveCurrentScript() == MessageBoxResult.Cancel) return;
 					
-			window.EnterConditionMode(Nwn2Strings.GetStringFromOEIString(line.Line.Text));
-			
 			window.ConditionalFrame.Address = addressFactory.GetConversationAddress(conversation.Name,line.Line.LineGuid,ScriptType.Conditional).Value;
 						
 			if (openingExistingScript) {
@@ -499,6 +499,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 				FlipScript flipScript = scriptHelper.GetFlipScript(script,Attachment.Ignore);
 				
 				window.OpenFlipScript(new ScriptTriggerTuple(flipScript,null));
+				window.ConditionalFrame.Dialogue = Nwn2Strings.GetStringFromOEIString(line.Line.Text);
 				
 				//ActivityLog.Write(new Activity("OpenedScript","ScriptName",script.Name,"Event",String.Empty));
 				Log.WriteAction(LogAction.opened,"script",script.Name + "(attached as condition to line '" + line.Line.Text.GetSafeString(OEIShared.Utils.BWLanguages.CurrentLanguage) + "')");
@@ -507,6 +508,9 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			else {
 				
 				window.IsDirty = true;
+				
+				window.EnterConditionMode();
+				window.ConditionalFrame.Dialogue = Nwn2Strings.GetStringFromOEIString(line.Line.Text);
 				
 				//ActivityLog.Write(new Activity("NewScript","CreatedVia","AddingConditionToConversationLine","Event",String.Empty));
 				string lineText; 
@@ -997,43 +1001,50 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 		
 		public void AnalyseAllScripts()
 		{
+			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),session.GetModule().Name+".txt");
+			AnalyseAllScripts(path);
+		}
+		
+		
+		public ModuleStats AnalyseAllScripts(string path)
+		{
+//			if (path == null) throw new ArgumentNullException("path");
+			
 			List<ScriptTriggerTuple> scripts = scriptHelper.GetAllScriptsFromModule(Attachment.Attached);
 				
 			ModuleStats ms = new ModuleStats();
 			ms.AttachedScripts += scripts.Count;
 			ms.Name = session.GetModule().Name;
 			
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+//			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			
 			foreach (ScriptTriggerTuple s in scripts) {
 				window.OpenFlipScript(s);
 				
-				sb.AppendLine(GetPaddedName(s.Script.Name));
-				sb.AppendLine();
+//				sb.AppendLine(GetPaddedName(s.Script.Name));
+//				sb.AppendLine();
 				
 				ScriptStats stats = window.GetStatistics();
 				
-				sb.Append(stats.ToString());
-				sb.AppendLine(dashes);
-				sb.AppendLine();
-				sb.AppendLine();
+//				sb.Append(stats.ToString());
+//				sb.AppendLine(dashes);
+//				sb.AppendLine();
+//				sb.AppendLine();
 								
 				ms.Add(stats);
 				
 				window.CloseScript();
 			}
 			
-			string header = String.Format("{0}{1}{2}{1}{0}{1}{1}{3}{1}",dashes,Environment.NewLine,GetPaddedName("Module '" + ms.Name + "'"),ms);
-				
-			sb.Insert(0,header);
-						
-			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),ms.Name+".txt");
+//			string header = String.Format("{0}{1}{2}{1}{0}{1}{1}{3}{1}",dashes,Environment.NewLine,GetPaddedName("Module '" + ms.Name + "'"),ms);
+//				
+//			sb.Insert(0,header);
+//									
+//			using (StreamWriter writer = File.CreateText(path)) {
+//				writer.Write(sb.ToString());
+//			}
 			
-			using (StreamWriter writer = File.CreateText(path)) {
-				writer.Write(sb.ToString());
-			}
-			
-			System.Diagnostics.Process.Start(path);
+			return ms;
 		}
 		
 		
