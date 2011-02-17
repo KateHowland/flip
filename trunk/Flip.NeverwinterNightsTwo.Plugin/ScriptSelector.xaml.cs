@@ -48,9 +48,7 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 	            	trigger.Padding = thickness;
 	            	scriptsListBox.Items.Add(trigger);
             	}
-            	catch (Exception x) {
-            		MessageBox.Show(x.ToString());
-            	}
+            	catch (Exception) {}
             }
         }
     	

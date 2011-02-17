@@ -766,31 +766,31 @@ namespace Sussex.Flip.Games.NeverwinterNightsTwo
 			};			
 			window.DevelopmentMenu.Items.Add(openTriggerlessScripts);
 						
-			MenuItem analyseAllScripts = new MenuItem();
-			analyseAllScripts.Header = "Analyse all scripts";
-			analyseAllScripts.Click += delegate 
-			{  
-				try {
-					AnalyseAllScripts();
-				}
-				catch (Exception x) {
-					MessageBox.Show("Something went wrong when analysing scripts.\n\n" + x);
-				}
-			};			
-			window.DevelopmentMenu.Items.Add(analyseAllScripts);
-						
-			MenuItem analyseScript = new MenuItem();
-			analyseScript.Header = "Analyse script";
-			analyseScript.Click += delegate 
-			{  
-				try {
-					AnalyseScript();
-				}
-				catch (Exception x) {
-					MessageBox.Show("Something went wrong when analysing script.\n\n" + x);
-				}
-			};			
-			window.DevelopmentMenu.Items.Add(analyseScript);
+//			MenuItem analyseAllScripts = new MenuItem();
+//			analyseAllScripts.Header = "Analyse all scripts";
+//			analyseAllScripts.Click += delegate 
+//			{  
+//				try {
+//					AnalyseAllScripts();
+//				}
+//				catch (Exception x) {
+//					MessageBox.Show("Something went wrong when analysing scripts.\n\n" + x);
+//				}
+//			};			
+//			window.DevelopmentMenu.Items.Add(analyseAllScripts);
+//						
+//			MenuItem analyseScript = new MenuItem();
+//			analyseScript.Header = "Analyse script";
+//			analyseScript.Click += delegate 
+//			{  
+//				try {
+//					AnalyseScript();
+//				}
+//				catch (Exception x) {
+//					MessageBox.Show("Something went wrong when analysing script.\n\n" + x);
+//				}
+//			};			
+//			window.DevelopmentMenu.Items.Add(analyseScript);
 						
 //			MenuItem showLogWindow = new MenuItem();
 //			showLogWindow.Header = "Show log window";
