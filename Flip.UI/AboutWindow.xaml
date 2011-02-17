@@ -62,8 +62,8 @@
 			and Louis 'Great' Goffin<LineBreak/>
     		Additional work by George Killick
     	</TextBlock>
-		<TextBlock FontSize="10" Style="{StaticResource baseStyle}">2009-2010</TextBlock>
-		<TextBlock FontSize="10" Style="{StaticResource baseStyle}">Beta release</TextBlock>
+		<TextBlock FontSize="10" Style="{StaticResource baseStyle}">2009-2011</TextBlock>
+		<TextBlock FontSize="10" FontWeight="Bold" Foreground="Green" Style="{StaticResource baseStyle}">Version Green</TextBlock>
 		<TextBlock FontSize="14" MouseDown="LaunchWebsite" Style="{StaticResource hyperlinkStyle}">www.flipproject.org.uk</TextBlock>
 		<TextBlock FontSize="14" MouseDown="LaunchEmail" Style="{StaticResource hyperlinkStyle}">flip@sussex.ac.uk</TextBlock>
 		<Button Width="100" Height="30" Margin="5" Click="CloseWindow">OK</Button>
