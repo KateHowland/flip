@@ -36,9 +36,9 @@ namespace Sussex.Flip.UI
 	public class ScriptStats
 	{
 		private int line, and, or, not, numberBlock, stringBlock, ifthen, ifthenelse, whileloop, dowhileloop, objectblock, action, condition, eventBlock = 0;
-		private Dictionary<string,int> actions = new Dictionary<string,int>();		
-		private Dictionary<string,int> conditions = new Dictionary<string,int>();		
-		private Dictionary<string,int> events = new Dictionary<string,int>();
+		private Dictionary<string,int> actions = GetActionsDictionary();
+		private Dictionary<string,int> conditions = GetConditionsDictionary();
+		private Dictionary<string,int> events = GetEventsDictionary();
 		
 		
 		public Dictionary<string,int> Actions {
@@ -311,6 +311,134 @@ namespace Sussex.Flip.UI
 			}
 			
 			return s.ToString();			
+		}
+		
+		
+		public List<object> GetSpreadsheetRows()
+		{
+			List<object> rowNames = new List<object>();
+						
+			rowNames.Add("Actions");
+			rowNames.Add("Conditions");
+			rowNames.Add("Events");
+			rowNames.Add("Booleans");
+			rowNames.Add("Length");
+			rowNames.Add(String.Empty);
+			
+			foreach (KeyValuePair<string,int> kvp in actions) rowNames.Add(kvp.Key);
+			rowNames.Add(String.Empty);
+			foreach (KeyValuePair<string,int> kvp in conditions) rowNames.Add(kvp.Key);
+			rowNames.Add(String.Empty);
+			foreach (KeyValuePair<string,int> kvp in events) rowNames.Add(kvp.Key);
+			return rowNames;
+		}
+		
+		
+		public List<object> GetSpreadsheetData()
+		{
+			List<object> data = new List<object>();
+									
+			data.Add(Action);
+			data.Add(Condition);
+			data.Add(EventBlock);
+			data.Add(Boolean);
+			data.Add(Line);
+			data.Add(String.Empty);
+			
+			foreach (KeyValuePair<string,int> kvp in actions) data.Add(kvp.Value);
+			data.Add(String.Empty);
+			foreach (KeyValuePair<string,int> kvp in conditions) data.Add(kvp.Value);
+			data.Add(String.Empty);
+			foreach (KeyValuePair<string,int> kvp in events) data.Add(kvp.Value);
+			return data;
+		}
+		
+		
+		public static string[] actionNames = new string[] 
+		{ 
+			"AreaTransition",
+			"Attacks",
+			"BecomesCommoner",
+			"BecomesDefender",
+			"BecomesHostile",
+			"CreateCreatureAtLocation",
+			"CreateItemAtLocation",
+			"CreateItemInInventory",
+			"CreatePlaceableAtLocation",
+			"Delete",
+			"DisplayMessage",
+			"EndGame",
+			"GiveGold",
+			"GiveXP",
+			"Heal",
+			"JumpsTo",
+			"Kill",
+			"Lock",
+			"MakeHenchman",
+			"OpenStore",
+			"Pause",
+			"PicksUp",
+			"RunsTo",
+			"SetTimeToMidnight",
+			"SetTimeToNoon",
+			"SetTimeToSunrise",
+			"SetTimeToSunset",
+			"TakeGold",
+			"Unlock",
+			"UnmakeHenchman",
+			"Unpause",
+			"WalksTo" 
+		};
+		
+		
+		public static string[] conditionNames = new string[] 
+		{ 
+			"HasEquippedItem",
+			"HasGold",
+			"IsDead",
+			"IsLocked",
+			"IsNear",
+			"OwnsItem"
+		};
+		
+		
+		public static string[] eventNames = new string[] 
+		{ 
+			"CreatureDies",
+			"DoorOrPlaceableIsUnlocked",
+			"PlaceableUsed",
+			"TriggerEntered",
+			"TriggerExited",
+			"AreaEntered",
+			"ItemAcquired",
+			"ItemUnacquired",
+			"ModuleHeartbeat",
+			"DialogueWasSpoken",
+			"DialogueConditionalCheck"
+		};
+				
+		
+		public static Dictionary<string,int> GetActionsDictionary()
+		{
+			Dictionary<string,int> dict = new Dictionary<string,int>();
+			foreach (string a in actionNames) dict.Add(a,0);
+			return dict;
+		}
+		
+		
+		public static Dictionary<string,int> GetConditionsDictionary()
+		{
+			Dictionary<string,int> dict = new Dictionary<string,int>();
+			foreach (string c in conditionNames) dict.Add(c,0);
+			return dict;
+		}
+		
+		
+		public static Dictionary<string,int> GetEventsDictionary()
+		{
+			Dictionary<string,int> dict = new Dictionary<string,int>();
+			foreach (string e in eventNames) dict.Add(e,0);
+			return dict;
 		}
 	}
 }

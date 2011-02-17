@@ -106,8 +106,7 @@ namespace Sussex.Flip.UI
 		                  ImageProvider imageProvider, 
 		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
 		                  SaveScriptDelegate saveScriptDelegate,
-		                  DeserialisationHelper deserialisationHelper,
-		                  ScriptType mode)
+		                  DeserialisationHelper deserialisationHelper) 
 		{
 			if (provider == null) throw new ArgumentNullException("provider");
 			if (imageProvider == null) throw new ArgumentNullException("imageProvider");
@@ -204,21 +203,10 @@ namespace Sussex.Flip.UI
 				paste.IsEnabled = (Moveable.CopiedToClipboard != null);
 			};
 			
-			if (mode == ScriptType.Conditional) EnterConditionMode();
-			else LeaveConditionMode();
+			LeaveConditionMode();
 		}
 		
-		
-		public FlipWindow(MoveableProvider provider, 
-		                  ImageProvider imageProvider, 
-		                  OpenDeleteScriptDelegate openDeleteScriptDelegate,
-		                  SaveScriptDelegate saveScriptDelegate,
-		                  DeserialisationHelper deserialisationHelper) 
-			: this(provider,imageProvider,openDeleteScriptDelegate,saveScriptDelegate,deserialisationHelper,ScriptType.Standard)
-		{			
-		}
-		
-		
+				
 		protected bool isDirty = false;
 		
 		public bool IsDirty {
@@ -256,14 +244,6 @@ namespace Sussex.Flip.UI
 		
 		public void EnterConditionMode()
 		{
-			EnterConditionMode(String.Empty);
-		}
-		
-		
-		public void EnterConditionMode(string dialogue)
-		{
-			conditionalFrame.Dialogue = dialogue;
-			
 			CloseScript();
 			
 			//mainMenu.IsEnabled = false;
@@ -379,6 +359,7 @@ namespace Sussex.Flip.UI
 		{			
 			try {
 				triggerBar.Spine.SetPegCount(3);
+				conditionalFrame.Dialogue = String.Empty;
 				
 				triggerBar.CurrentScriptIsBasedOn = String.Empty;
 				conditionalFrame.CurrentScriptIsBasedOn = String.Empty;

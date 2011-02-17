@@ -79,5 +79,33 @@ namespace Sussex.Flip.UI
 		{
 			return String.Format("'{0}': {1} scripts attached. In total: {2}",Name,AttachedScripts,CumulativeStats);
 		}
+		
+		
+		public List<object> GetSpreadsheetRows()
+		{
+			List<object> rowNames = new List<object>();
+			rowNames.Add("Module");
+			rowNames.Add(String.Empty);
+			
+			rowNames.Add("Scripts");
+			rowNames.Add(String.Empty);
+			rowNames.AddRange(CumulativeStats.GetSpreadsheetRows());
+			
+			return rowNames;
+		}
+		
+		
+		public List<object> GetSpreadsheetData()
+		{
+			List<object> data = new List<object>();
+			data.Add(name);
+			data.Add(String.Empty);
+			
+			data.Add(attachedScripts);
+			data.Add(String.Empty);
+			data.AddRange(CumulativeStats.GetSpreadsheetData());
+			
+			return data;
+		}
 	}
 }
