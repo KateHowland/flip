@@ -1,0 +1,3 @@
+Flip is a visual programming language for scripting events in computer role-playing games, targeted primarily at younger users. Flip complements existing game creation toolkits, providing a user-friendly way to script rules and events in these games.
+
+The overall aim of the Flip project is to explore a novel way of helping young people learn how to program, while at the same time fostering their “computational thinking” skills.
